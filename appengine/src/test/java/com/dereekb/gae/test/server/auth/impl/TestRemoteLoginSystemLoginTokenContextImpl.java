@@ -1,7 +1,10 @@
 package com.dereekb.gae.test.server.auth.impl;
 
+import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 import com.dereekb.gae.test.server.auth.TestLoginTokenContext;
 import com.dereekb.gae.test.server.auth.TestLoginTokenPair;
 
@@ -12,51 +15,39 @@ import com.dereekb.gae.test.server.auth.TestLoginTokenPair;
  * @author dereekb
  *
  */
-public class TestRemoteLoginSystemLoginTokenContextImpl extends AbstractTestLoginTokenContextImpl
+public class TestRemoteLoginSystemLoginTokenContextImpl extends AbstractLoginPointerTestLoginTokenContextImpl
         implements TestLoginTokenContext {
 
-	@Override
-	public LoginToken getLoginToken() {
-		// TODO Auto-generated method stub
-		return null;
+	public TestRemoteLoginSystemLoginTokenContextImpl(LoginTokenService<LoginToken> service) {
+		super(service);
 	}
 
+	// MARK: TestLoginTokenContext
 	@Override
 	public TestLoginTokenPair generateLogin(String username,
 	                                        Long roles) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public void clearLogin() {
-		// TODO Auto-generated method stub
+		LoginPointer pointer = new LoginPointer(username);
+		pointer.setLoginPointerType(LoginPointerType.PASSWORD);
 
+		Login login = new Login();
+
+		// TODO: Setup login...
+
+		return new TestLoginTokenPairImpl(login, pointer);
 	}
 
 	@Override
 	public void setLogin(LoginToken token) {
-		// TODO Auto-generated method stub
+		String pointerId = token.getLoginPointerId();
+		LoginPointer pointer = new LoginPointer(pointerId);
 
+		// TODO: Set pointer, etc.
+
+		this.setLogin(pointer);
 	}
 
-	@Override
-	public void setLogin(LoginPointer pointer) {
-		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public String getToken() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String generateAnonymousToken() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 
 }

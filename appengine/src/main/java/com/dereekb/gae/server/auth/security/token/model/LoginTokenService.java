@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.auth.security.token.model;
 
+import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 
 /**
@@ -25,9 +26,27 @@ public interface LoginTokenService<T extends LoginToken>
 	 *
 	 * @param pointer
 	 *            {@link LoginPointer}. Never {@code null}.
+	 * @param refreshAllowed
+	 *            whether or not refreshing is allowed with the result token.
 	 * @return Encoded string token. Never {@code null}.
 	 */
 	public String encodeLoginToken(LoginPointer pointer,
+	                               boolean refreshAllowed);
+
+	/**
+	 * Builds and encodes a {@link LoginToken} from a {@link LoginPointer}.
+	 *
+	 * @param pointer
+	 *            {@link LoginPointer}. Never {@code null}.
+	 * @param login
+	 *            {@link Login} for the pointer. May be {@code null} if the
+	 *            pointer has no login yet.
+	 * @param refreshAllowed
+	 *            whether or not refreshing is allowed with the result token.
+	 * @return Encoded string token. Never {@code null}.
+	 */
+	public String encodeLoginToken(LoginPointer pointer,
+	                               Login login,
 	                               boolean refreshAllowed);
 
 }

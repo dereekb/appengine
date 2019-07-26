@@ -42,14 +42,35 @@ public abstract class ExtendedAbstractLoginTokenBuilder<T extends LoginTokenImpl
 	protected void initLoginToken(T loginToken,
 	                              LoginPointer pointer) {
 
+		ModelKey loginKey = pointer.getLoginOwnerKey();
+		Login login = null;
+
+		if (loginKey != null) {
+			login = this.loginGetter.get(loginKey);
+		}
+
+		this.initLoginToken(loginToken, login, pointer);
+	}
+
+	@Override
+	protected void initLoginToken(T loginToken,
+	                              Login login,
+	                              LoginPointer pointer) {
+
 		String pointerId = pointer.getIdentifier();
 		loginToken.setLoginPointer(pointerId);
 		loginToken.setPointerType(pointer.getLoginPointerType());
 
-		ModelKey loginKey = pointer.getLoginOwnerKey();
-		this.initLoginTokenWithLogin(loginToken, loginKey);
+		this.initLoginTokenWithLogin(loginToken, login);
 	}
 
+	/**
+	 * @deprecated Use {@link #initLoginToken} instead.
+	 *
+	 * @param loginToken
+	 * @param loginKey
+	 */
+	@Deprecated
 	protected void initLoginTokenWithLogin(T loginToken,
 	                                       ModelKey loginKey) {
 		if (loginKey != null) {

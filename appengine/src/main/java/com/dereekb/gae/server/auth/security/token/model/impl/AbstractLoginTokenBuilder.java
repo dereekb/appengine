@@ -2,6 +2,7 @@ package com.dereekb.gae.server.auth.security.token.model.impl;
 
 import java.util.Date;
 
+import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilder;
@@ -60,7 +61,23 @@ public abstract class AbstractLoginTokenBuilder<T extends LoginTokenImpl>
 		return loginToken;
 	}
 
+	@Override
+	public T buildLoginToken(LoginPointer pointer,
+	                         Login login,
+	                         boolean refreshAllowed) {
+		T loginToken = this.makeLoginToken();
+		loginToken.setRefreshAllowed(refreshAllowed);
+
+		this.initLoginToken(loginToken, login, pointer);
+
+		return loginToken;
+	}
+
 	protected abstract void initLoginToken(T loginToken,
+	                                       LoginPointer pointer);
+
+	protected abstract void initLoginToken(T loginToken,
+	                                       Login login,
 	                                       LoginPointer pointer);
 
 	protected T makeLoginToken() {

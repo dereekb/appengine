@@ -95,6 +95,8 @@ public final class Login extends DescribedDatabaseModel
 	@IgnoreSave({ IfEmpty.class })
 	private Set<Key<Login>> children = new HashSet<Key<Login>>();
 
+	// TODO: Consider adding model key string for the User model type to reduce amount of querying required
+
 	public Login() {}
 
 	public Login(Long identifier) {

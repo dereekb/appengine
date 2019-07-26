@@ -33,6 +33,9 @@ import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServi
 public class LocalAppLoginTokenSecurityConfigurerImpl
         implements AppLoginTokenSecurityConfigurer {
 
+	private String loginTokenEncoderDecoderBeanId = "loginTokenEncoderDecoder";
+	private String loginTokenBuilderBeanId = "loginTokenBuilder";
+
 	// MARK: AppLoginTokenSecurityConfigurer
 	@Override
 	public void configureLoginTokenSecurityServiceComponents(AppConfiguration appConfig,
@@ -54,18 +57,15 @@ public class LocalAppLoginTokenSecurityConfigurerImpl
 		        .comment("TODO: Add production source.");
 
 		builder.comment("LoginToken Service");
-		String loginTokenEncoderDecoderBeanId = "loginTokenEncoderDecoder";
-
-		SpringBeansXMLBeanBuilder<?> loginTokenEncoderDecoderBuilder = builder.bean(loginTokenEncoderDecoderBeanId);
+		SpringBeansXMLBeanBuilder<?> loginTokenEncoderDecoderBuilder = builder
+		        .bean(this.loginTokenEncoderDecoderBeanId);
 		appSecurityBeansConfigurer.configureTokenEncoderDecoder(appConfig, loginTokenEncoderDecoderBuilder);
 
-		String loginTokenBuilderBeanId = "loginTokenBuilder";
-
-		SpringBeansXMLBeanBuilder<?> loginTokenBuilderBuilder = builder.bean(loginTokenBuilderBeanId);
-		appSecurityBeansConfigurer.configureTokenBuilder(appConfig, loginTokenBuilderBuilder);
+		SpringBeansXMLBeanBuilder<?> loginTokenBuilderBuilder = builder.bean(this.loginTokenBuilderBeanId);
+		appSecurityBeansConfigurer.configureTokenBuilder(appConfig, loginTokenBuilderBuilder, false);
 
 		builder.bean(appConfig.getAppBeans().getLoginTokenServiceBeanId()).beanClass(LoginTokenServiceImpl.class).c()
-		        .ref(loginTokenBuilderBeanId).ref(loginTokenEncoderDecoderBeanId);
+		        .ref(this.loginTokenBuilderBeanId).ref(this.loginTokenEncoderDecoderBeanId);
 
 		// Alias the decoder
 		builder.alias(appConfig.getAppBeans().getLoginTokenServiceBeanId(),
@@ -112,8 +112,7 @@ public class LocalAppLoginTokenSecurityConfigurerImpl
 		appSecurityBeansConfigurer.configureNewLoginGenerator(appConfig, builder, newLoginGeneratorId);
 
 		builder.bean(appConfig.getAppBeans().getUtilityBeans().getLoginRolesServiceBeanId())
-		        .beanClass(LoginRolesServiceImpl.class).c()
-		        .ref("loginRegistry")
+		        .beanClass(LoginRolesServiceImpl.class).c().ref("loginRegistry")
 		        .ref(appConfig.getAppBeans().getUtilityBeans().getLoginAdminRolesBeanId());
 
 		builder.comment("Refresh Token Service");

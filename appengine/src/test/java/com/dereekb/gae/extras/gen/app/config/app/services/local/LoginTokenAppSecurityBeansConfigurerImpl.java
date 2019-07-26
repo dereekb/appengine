@@ -28,6 +28,8 @@ import com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthen
 public class LoginTokenAppSecurityBeansConfigurerImpl
         implements AppSecurityBeansConfigurer {
 
+	public static final String TEST_LOGIN_TOKEN_BUILDER_LOGIN_GETTER_BEAN_ID = "testLoginTokenBuilderLoginGetter";
+
 	private String loginTokenSignatureFactoryBeanId = "loginTokenSignatureFactory";
 	private String refreshTokenSignatureFactoryBeanId = "refreshTokenSignatureFactory";
 	private String clientLoginTokenValidationServiceBeanId = "clientLoginTokenValidationService";
@@ -204,8 +206,24 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 
 	@Override
 	public void configureTokenBuilder(AppConfiguration appConfig,
-	                                  SpringBeansXMLBeanBuilder<?> beanBuilder) {
-		beanBuilder.beanClass(this.loginTokenBuilderClass).c().ref("loginGetter");
+	                                  SpringBeansXMLBeanBuilder<?> beanBuilder,
+	                                  boolean forTests) {
+		String loginGetterBeanId = this.getTokenBuilderLoginGetterBeanId(appConfig, forTests);
+		beanBuilder.beanClass(this.loginTokenBuilderClass).c().ref(loginGetterBeanId);
+	}
+
+	protected String getTokenBuilderLoginGetterBeanId(AppConfiguration appConfig, boolean forTests)
+	{
+		String loginGetterBeanId;
+
+		if (forTests && !appConfig.isLoginServer()) {
+			loginGetterBeanId = TEST_LOGIN_TOKEN_BUILDER_LOGIN_GETTER_BEAN_ID;
+		} else {
+			loginGetterBeanId = "loginGetter";	// Login Server already has this
+			                                  	// available
+		}
+
+		return loginGetterBeanId;
 	}
 
 	@Override
