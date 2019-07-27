@@ -22,8 +22,8 @@ public abstract class AbstractUserLoginTokenBuilder<U, T extends LoginTokenImpl>
 
 	private LoginUserLoader<U> userLoader;
 
-	public AbstractUserLoginTokenBuilder(Getter<Login> loginGetter,
-	        LoginUserLoader<U> userLoader) throws IllegalArgumentException {
+	public AbstractUserLoginTokenBuilder(Getter<Login> loginGetter, LoginUserLoader<U> userLoader)
+	        throws IllegalArgumentException {
 		super(loginGetter);
 		this.setUserLoader(userLoader);
 	}
@@ -67,11 +67,13 @@ public abstract class AbstractUserLoginTokenBuilder<U, T extends LoginTokenImpl>
 	                                       Login login) {
 		super.initLoginTokenWithLogin(loginToken, login);
 
-		try {
-			U user = this.userLoader.loadUserForLogin(login);
-			this.initLoginTokenWithUser(loginToken, user);
-		} catch (UnavailableModelException e) {
-			// Do nothing?
+		if (login != null) {
+			try {
+				U user = this.userLoader.loadUserForLogin(login);
+				this.initLoginTokenWithUser(loginToken, user);
+			} catch (UnavailableModelException e) {
+				// Do nothing?
+			}
 		}
 	}
 
