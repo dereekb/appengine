@@ -81,7 +81,7 @@ public class NewLoginGeneratorImpl
 	// MARK: NewLoginGeneratorDelegate
 	@Override
 	public Login makeNewLogin(LoginPointer pointer) {
-		return new Login(new Long(pointer.hashCode()));
+		return new Login();
 	}
 
 	@Override

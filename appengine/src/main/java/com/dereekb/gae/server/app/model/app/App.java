@@ -13,6 +13,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyGenerationType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyInfo;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
 import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
@@ -282,7 +283,7 @@ public class App extends DatedDatabaseModel
 	// Objectify Model
 	@Override
 	public Key<App> getObjectifyKey() {
-		return Key.create(App.class, this.identifier);
+		return ObjectifyKeyUtility.createKey(App.class, this.identifier);
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class ModelKeyEventImpl extends EventImpl
 	// MARK: ModelKeyEvent
 	@Override
 	public String getModelType() {
-		return this.getEventData().getEventDataType();
+		return this.getEventData().getModelType();
 	}
 
 	// MARK: Override

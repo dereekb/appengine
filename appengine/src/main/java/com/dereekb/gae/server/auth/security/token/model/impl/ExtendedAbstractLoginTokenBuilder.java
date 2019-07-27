@@ -84,10 +84,13 @@ public abstract class ExtendedAbstractLoginTokenBuilder<T extends LoginTokenImpl
 
 	protected void initLoginTokenWithLogin(T loginToken,
 	                                       Login login) {
-		loginToken.setLogin(login.getIdentifier());
+		if (login != null)
+		{
+			loginToken.setLogin(login.getIdentifier());
 
-		Long roles = login.getRoles();
-		loginToken.setRoles(roles);
+			Long roles = login.getRoles();
+			loginToken.setRoles(roles);
+		}
 	}
 
 }

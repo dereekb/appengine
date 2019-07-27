@@ -51,7 +51,7 @@ public class TestRemoteLoginSystemLoginTokenContextImpl extends AbstractLoginPoi
 	                                  LoginPointer pointer) {
 
 		// Use the hash code of the pointer to have some sort of consistency
-		Login login = new Login(new Long(pointer.hashCode()));
+		Login login = new Login(new Long(Math.abs(pointer.hashCode())));
 
 		login.setRoot(true);
 		login.setRoles(roles);
