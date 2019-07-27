@@ -212,10 +212,12 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		builder.comment("Configured Aliases");
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelGetterBeanId());
 
+		// Still available if internal model
+		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelStorerBeanId());
+		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelUpdaterBeanId());
+		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelDeleterBeanId());
+
 		if (modelConfig.isInternalModelOnly() == false) {
-			builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelStorerBeanId());
-			builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelUpdaterBeanId());
-			builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelDeleterBeanId());
 
 			// TODO: Update configuration if internal model is not read-only.
 

@@ -70,7 +70,7 @@ public class LoginPointer extends OwnedDatabaseModel
 	private String password;
 
 	/**
-	 * Pointer data, if applicable.
+	 * Arbitrary pointer data, if applicable.
 	 */
 	@IgnoreSave({ IfEmpty.class })
 	private String data;

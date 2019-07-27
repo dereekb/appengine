@@ -18,6 +18,7 @@ import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderIm
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl;
 import com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl;
+import com.dereekb.gae.test.server.auth.impl.TestRemoteLoginSystemLoginTokenContextImpl;
 
 /**
  * Default {@link AppSecurityBeansConfigurer} implementation.
@@ -43,6 +44,7 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 	private Class<?> loginTokenUserDetailsBuilderClass = LoginTokenUserDetailsBuilderImpl.class;
 
 	private Class<?> loginSecurityModelQueryTaskOverrideClass = LoginSecurityModelQueryTaskOverrideImpl.class;
+	private Class<?> testRemoteLoginSystemLoginTokenContextClass = TestRemoteLoginSystemLoginTokenContextImpl.class;
 
 	private SystemLoginTokenFactoryConfigurer systemLoginTokenFactoryConfigurer;
 
@@ -62,6 +64,7 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		this.setLoginTokenAuthenticationProviderClass(LoginTokenAuthenticationProviderImpl.class);
 		this.setLoginTokenUserDetailsBuilderClass(LoginTokenUserDetailsBuilderImpl.class);
 		this.setLoginSecurityModelQueryTaskOverrideClass(LoginSecurityModelQueryTaskOverrideImpl.class);
+		this.setTestRemoteLoginSystemLoginTokenContextClass(TestRemoteLoginSystemLoginTokenContextImpl.class);
 	}
 
 	@Override
@@ -183,6 +186,18 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		this.systemLoginTokenFactoryConfigurer = systemLoginTokenFactoryConfigurer;
 	}
 
+	public Class<?> getTestRemoteLoginSystemLoginTokenContextClass() {
+		return this.testRemoteLoginSystemLoginTokenContextClass;
+	}
+
+	public void setTestRemoteLoginSystemLoginTokenContextClass(Class<?> testRemoteLoginSystemLoginTokenContextClass) {
+		if (testRemoteLoginSystemLoginTokenContextClass == null) {
+			throw new IllegalArgumentException("testRemoteLoginSystemLoginTokenContextClass cannot be null.");
+		}
+
+		this.testRemoteLoginSystemLoginTokenContextClass = testRemoteLoginSystemLoginTokenContextClass;
+	}
+
 	// MARK: AppSecurityBeansConfigurer
 	@Override
 	public Class<?> getLoginSecurityModelQueryTaskOverrideClass() {
@@ -208,15 +223,16 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 	public void configureTokenBuilder(AppConfiguration appConfig,
 	                                  SpringBeansXMLBeanBuilder<?> beanBuilder,
 	                                  boolean forTests) {
-		String loginGetterBeanId = this.getTokenBuilderLoginGetterBeanId(appConfig, forTests);
+		String loginGetterBeanId = "loginGetter"; // this.getTokenBuilderLoginGetterBeanId(appConfig, forTests);
 		beanBuilder.beanClass(this.loginTokenBuilderClass).c().ref(loginGetterBeanId);
 	}
 
-	protected String getTokenBuilderLoginGetterBeanId(AppConfiguration appConfig, boolean forTests)
-	{
+	@Deprecated
+	protected String getTokenBuilderLoginGetterBeanId(AppConfiguration appConfig,
+	                                                  boolean forTests) {
 		String loginGetterBeanId;
 
-		if (forTests && !appConfig.isLoginServer()) {
+		if (this.shouldMakeTestLoginTokenBuilderLoginGetter(forTests, appConfig)) {
 			loginGetterBeanId = TEST_LOGIN_TOKEN_BUILDER_LOGIN_GETTER_BEAN_ID;
 		} else {
 			loginGetterBeanId = "loginGetter";	// Login Server already has this
@@ -224,6 +240,12 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		}
 
 		return loginGetterBeanId;
+	}
+
+	@Deprecated
+	protected boolean shouldMakeTestLoginTokenBuilderLoginGetter(boolean forTests, AppConfiguration appConfig)
+	{
+		return forTests && !appConfig.isLoginServer();
 	}
 
 	@Override
@@ -293,6 +315,13 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 			map.keyRefValueRefEntry(googleOAuthPointerTypeBeanId, googleOAuthServiceBeanId);
 		}
 
+	}
+
+	@Override
+	public void configureTestRemoteLoginSystemLoginTokenContext(AppConfiguration appConfig,
+	                                                            SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> loginTokenContextBuilder) {
+		loginTokenContextBuilder.beanClass(this.testRemoteLoginSystemLoginTokenContextClass).primary(false).c()
+		        .ref("testLoginTokenService");
 	}
 
 }

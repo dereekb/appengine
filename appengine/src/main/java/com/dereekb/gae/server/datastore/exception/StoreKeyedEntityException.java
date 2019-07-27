@@ -15,6 +15,12 @@ public class StoreKeyedEntityException extends RuntimeException {
 
 	private UniqueModel model;
 
+	public StoreKeyedEntityException() {}
+
+	public StoreKeyedEntityException(String message) {
+		super(message);
+	}
+
 	public StoreKeyedEntityException(UniqueModel model) {
 		this.setModel(model);
 	}

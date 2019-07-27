@@ -30,9 +30,11 @@ public class TestRemoteLoginSystemLoginTokenContextImpl extends AbstractLoginPoi
 		LoginPointer pointer = new LoginPointer(username);
 		pointer.setLoginPointerType(LoginPointerType.PASSWORD);
 
-		Login login = new Login();
+		Login login = this.generateTestLogin(username, roles, pointer);
 
-		// TODO: Setup login...
+		if (login != null) {
+			pointer.setLogin(login.getObjectifyKey());
+		}
 
 		return new TestLoginTokenPairImpl(login, pointer);
 	}
@@ -41,13 +43,20 @@ public class TestRemoteLoginSystemLoginTokenContextImpl extends AbstractLoginPoi
 	public void setLogin(LoginToken token) {
 		String pointerId = token.getLoginPointerId();
 		LoginPointer pointer = new LoginPointer(pointerId);
-
-		// TODO: Set pointer, etc.
-
 		this.setLogin(pointer);
 	}
 
+	protected Login generateTestLogin(String username,
+	                                  Long roles,
+	                                  LoginPointer pointer) {
 
+		// Use the hash code of the pointer to have some sort of consistency
+		Login login = new Login(new Long(pointer.hashCode()));
 
+		login.setRoot(true);
+		login.setRoles(roles);
+
+		return login;
+	}
 
 }

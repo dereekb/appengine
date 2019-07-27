@@ -16,32 +16,33 @@ import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSen
 public class NewLoginGeneratorImpl
         implements NewLoginGenerator, NewLoginGeneratorDelegate {
 
-	private Storer<Login> loginSaver;
+	private Storer<Login> loginStorer;
 	private TaskRequestSender<Login> reviewTask;
+
 	private NewLoginGeneratorDelegate delegate = this;
 
-	public NewLoginGeneratorImpl(Storer<Login> loginSaver, TaskRequestSender<Login> reviewTask) {
-		this(loginSaver, reviewTask, null);
+	public NewLoginGeneratorImpl(Storer<Login> loginStorer, TaskRequestSender<Login> reviewTask) {
+		this(loginStorer, reviewTask, null);
 	}
 
-	public NewLoginGeneratorImpl(Storer<Login> loginSaver,
+	public NewLoginGeneratorImpl(Storer<Login> loginStorer,
 	        TaskRequestSender<Login> reviewTask,
 	        NewLoginGeneratorDelegate delegate) {
-		this.setLoginSaver(loginSaver);
+		this.setLoginStorer(loginStorer);
 		this.setReviewTask(reviewTask);
 		this.setDelegate(delegate);
 	}
 
-	public Storer<Login> getLoginSaver() {
-		return this.loginSaver;
+	public Storer<Login> getLoginStorer() {
+		return this.loginStorer;
 	}
 
-	public void setLoginSaver(Storer<Login> loginSaver) throws IllegalArgumentException {
-		if (loginSaver == null) {
-			throw new IllegalArgumentException("LoginSaver cannot be null.");
+	public void setLoginStorer(Storer<Login> loginStorer) throws IllegalArgumentException {
+		if (loginStorer == null) {
+			throw new IllegalArgumentException("LoginStorer cannot be null.");
 		}
 
-		this.loginSaver = loginSaver;
+		this.loginStorer = loginStorer;
 	}
 
 	public TaskRequestSender<Login> getReviewTask() {
@@ -49,10 +50,6 @@ public class NewLoginGeneratorImpl
 	}
 
 	public void setReviewTask(TaskRequestSender<Login> reviewTask) throws IllegalArgumentException {
-		if (reviewTask == null) {
-			throw new IllegalArgumentException("ReviewTask cannot be null.");
-		}
-
 		this.reviewTask = reviewTask;
 	}
 
@@ -72,7 +69,7 @@ public class NewLoginGeneratorImpl
 	@Override
 	public Login makeLogin(LoginPointer pointer) {
 		Login login = this.delegate.makeNewLogin(pointer);
-		this.loginSaver.store(login);
+		this.loginStorer.store(login);
 
 		if (this.reviewTask != null) {
 			this.reviewTask.sendTask(login);
@@ -84,12 +81,12 @@ public class NewLoginGeneratorImpl
 	// MARK: NewLoginGeneratorDelegate
 	@Override
 	public Login makeNewLogin(LoginPointer pointer) {
-		return new Login();
+		return new Login(new Long(pointer.hashCode()));
 	}
 
 	@Override
 	public String toString() {
-		return "NewLoginGeneratorImpl [loginSaver=" + this.loginSaver + ", reviewTask=" + this.reviewTask
+		return "NewLoginGeneratorImpl [loginStorer=" + this.loginStorer + ", reviewTask=" + this.reviewTask
 		        + ", delegate=" + this.delegate + "]";
 	}
 

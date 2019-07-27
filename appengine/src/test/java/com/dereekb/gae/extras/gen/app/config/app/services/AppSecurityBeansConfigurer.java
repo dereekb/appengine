@@ -62,4 +62,7 @@ public interface AppSecurityBeansConfigurer
 	                                       SpringBeansXMLBuilder builder,
 	                                       String newLoginGeneratorId);
 
+	public void configureTestRemoteLoginSystemLoginTokenContext(AppConfiguration appConfig,
+	                                                            SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> loginTokenContextBuilder);
+
 }
