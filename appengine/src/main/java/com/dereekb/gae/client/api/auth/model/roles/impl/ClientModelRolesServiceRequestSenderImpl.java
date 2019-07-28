@@ -178,9 +178,7 @@ public class ClientModelRolesServiceRequestSenderImpl extends AbstractSecuredCli
 		}
 
 		private ApiModelRolesResponseData serializeRolesResponseData() {
-			Map<String, ClientApiResponseData> included = this.response.getIncludedData();
-
-			ClientApiResponseData clientRolesData = included.get(ApiModelRolesResponseData.DATA_TYPE);
+			ClientApiResponseData clientRolesData = this.response.getPrimaryData();
 
 			ObjectMapper mapper = ClientModelRolesServiceRequestSenderImpl.this.getObjectMapper();
 			JsonNode jsonNode = clientRolesData.getJsonNode();
