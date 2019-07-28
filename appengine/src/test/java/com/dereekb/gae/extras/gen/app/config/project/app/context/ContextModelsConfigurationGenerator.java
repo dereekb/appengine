@@ -177,9 +177,10 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 				folder.addFile(new CrudConfigurationGenerator(modelConfig).generateConfigurationFile());
 			}
 
-			// Extensions
-			folder.addFolder(this.makeModelExtensionsConfigurationsFolder(modelConfig));
 		}
+
+		// Extensions
+		folder.addFolder(this.makeModelExtensionsConfigurationsFolder(modelConfig));
 
 		return folder;
 	}
@@ -245,8 +246,10 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			builder.imp("/extensions/link.xml");
 			builder.imp("/extensions/generation.xml");
 			builder.imp("/extensions/search.xml");
-			builder.imp("/extensions/security.xml");
 		}
+
+		// Security always generated
+		builder.imp("/extensions/security.xml");
 
 		return builder;
 	}
@@ -394,10 +397,14 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 	public GenFolderImpl makeModelExtensionsConfigurationsFolder(LocalModelConfiguration modelConfig) {
 		GenFolderImpl folder = new GenFolderImpl("extensions");
 
-		folder.addFile(new DataExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
-		folder.addFile(new GenerationExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
-		folder.addFile(new LinkExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
-		folder.addFile(new SearchExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
+		if (modelConfig.isInternalModelOnly() == false) {
+			folder.addFile(new DataExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
+			folder.addFile(new GenerationExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
+			folder.addFile(new LinkExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
+			folder.addFile(new SearchExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
+		}
+
+		// Always add security
 		folder.addFile(new SecurityExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
 
 		return folder;

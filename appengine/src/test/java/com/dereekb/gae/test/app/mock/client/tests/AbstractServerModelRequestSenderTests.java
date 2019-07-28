@@ -191,7 +191,7 @@ public abstract class AbstractServerModelRequestSenderTests<T extends MutableUni
 	}
 
 	@Test
-	public void testAtomicModelClientReadRequest() throws Exception {
+	public void testAtomicModelClientReadRequestFailures() throws Exception {
 		if (this.readRequestUtility != null) {
 			this.readRequestUtility.testAtomicReadRequestFailures(this.getRequestSecurity());
 		}
