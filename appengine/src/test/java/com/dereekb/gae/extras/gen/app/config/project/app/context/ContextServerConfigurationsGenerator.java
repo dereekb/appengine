@@ -456,14 +456,16 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			if (hasSecureLocalModelConfigs) {
 				http.getRawXMLBuilder().c("Secured Owned Model Patterns");
+				http.intercept(serviceApiPath + "/model/roles", HasRoleConfig.make("ROLE_USER"), HttpMethod.PUT);
 				http.intercept().matcherRef(securedModelPatternMatcherBeanId).access(HasRoleConfig.make("ROLE_USER"));
 			}
 
 			http.getRawXMLBuilder().c("Other Extension Resources");
 			http.intercept(serviceApiPath + "/search/**", HasRoleConfig.make("ROLE_ADMIN"));
 
-			// Login Registration Patterns
+			// Login Token and Registration Patterns
 			if (this.getAppConfig().isLoginServer()) {
+
 				http.getRawXMLBuilder().c("Register Patterns");
 				http.intercept(serviceApiPath + "/login/auth/register", HasRoleConfig.make("ROLE_NEW_USER"),
 				        HttpMethod.POST);
@@ -471,7 +473,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				        HttpMethod.POST);
 
 				http.getRawXMLBuilder().c("Token Patterns");
-				http.intercept(serviceApiPath + "/login/auth/model/*", HasRoleConfig.make("ROLE_USER"), HttpMethod.PUT);
+				// http.intercept(serviceApiPath + "/login/auth/model/*", HasRoleConfig.make("ROLE_USER"), HttpMethod.PUT); // DEPRECATED
 				http.intercept(serviceApiPath + "/login/auth/token/refresh", HasRoleConfig.make("ROLE_USER"),
 				        HttpMethod.GET);
 				http.intercept(serviceApiPath + "/login/auth/token/reset", HasRoleConfig.make("ROLE_USER"),

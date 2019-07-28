@@ -212,7 +212,7 @@ public class AppConfigurationImpl
 		return this.isRootServer;
 	}
 
-	public void setRootServer(boolean isRootServer) {
+	public void setIsRootServer(boolean isRootServer) {
 		this.isRootServer = isRootServer;
 	}
 

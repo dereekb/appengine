@@ -68,14 +68,14 @@
     <!--LoginKey Requests rejected for some roles.-->
     <security:intercept-url access="!hasAnyRole('ROLE_LOGINTYPE_API','ROLE_ANON')" request-matcher-ref="loginKeyObjectApiPathRequestMatcher"/>
     <!--Secured Owned Model Patterns-->
+    <security:intercept-url access="hasRole('ROLE_USER')" method="PUT" pattern="/api/test/v1/model/roles"/>
     <security:intercept-url access="hasRole('ROLE_USER')" request-matcher-ref="securedModelPatternMatcher"/>
     <!--Other Extension Resources-->
     <security:intercept-url access="hasRole('ROLE_ADMIN')" pattern="/api/test/v1/search/**"/>
     <!--Register Patterns-->
     <security:intercept-url access="hasRole('ROLE_NEW_USER')" method="POST" pattern="/api/test/v1/login/auth/register"/>
     <security:intercept-url access="hasRole('ROLE_USER')" method="POST" pattern="/api/test/v1/login/auth/register/token"/>
-    <!--Taken Patterns-->
-    <security:intercept-url access="hasRole('ROLE_USER')" method="PUT" pattern="/api/test/v1/login/auth/model/*"/>
+    <!--Token Patterns-->
     <security:intercept-url access="hasRole('ROLE_USER')" method="GET" pattern="/api/test/v1/login/auth/token/refresh"/>
     <security:intercept-url access="hasRole('ROLE_USER')" method="POST" pattern="/api/test/v1/login/auth/token/reset"/>
     <security:intercept-url access="hasRole('ROLE_ADMIN')" method="POST" pattern="/api/test/v1/login/auth/token/reset/*"/>
@@ -230,11 +230,11 @@
   <!--Secure Model Types-->
   <util:list id="secureModelTypes">
     <ref bean="appHookType"/>
-    <ref bean="fooType"/>
-    <ref bean="loginPointerType"/>
     <ref bean="loginType"/>
     <ref bean="appType"/>
+    <ref bean="fooType"/>
     <ref bean="loginKeyType"/>
+    <ref bean="loginPointerType"/>
   </util:list>
   <!--Exception Handler-->
   <bean class="com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExceptionHandler" id="loginTokenExceptionHandler"/>

@@ -118,6 +118,7 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		configuration.setAppDevelopmentProxyUrl(developmentProxy);
 		configuration.setAppDevelopmentServerHostUrl(developmentHost);
 
+		configuration.setIsRootServer(true);
 		configuration.setIsLoginServer(true);
 		configuration.setRemoteServices(remoteEventService);
 

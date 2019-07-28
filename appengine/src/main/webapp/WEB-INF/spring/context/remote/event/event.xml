@@ -2,7 +2,7 @@
   <!--Remote Service Security-->
   <alias alias="eventServiceSystemTokenFactory" name="systemLoginTokenFactory"/>
   <!--Service Model Roles Security-->
-  <bean class="com.dereekb.gae.client.api.auth.model.impl.ClientModelRolesContextServiceRequestSenderImpl" id="eventServiceClientModelRolesContextService">
+  <bean class="com.dereekb.gae.client.api.auth.model.roles.impl.ClientModelRolesServiceRequestSenderImpl" id="eventServiceClientModelRolesService">
     <constructor-arg index="0" ref="modelKeyTypeConverter"/>
     <constructor-arg index="1" ref="eventServiceSecuredClientApiRequestSender"/>
   </bean>
