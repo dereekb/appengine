@@ -3,7 +3,7 @@ package com.dereekb.gae.test.app.mock.client.tests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.dereekb.gae.client.api.auth.model.ClientModelRolesContextServiceRequestSender;
+import com.dereekb.gae.client.api.auth.model.roles.ClientModelRolesServiceRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientDeleteRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientReadRequestSender;
@@ -47,7 +47,7 @@ public abstract class AbstractModelRequestSenderTests<T extends MutableUniqueMod
 	// Model Roles
 	@Autowired(required = true)
 	@Qualifier("clientModelRolesContextServiceRequestSender")
-	protected ClientModelRolesContextServiceRequestSender modelRolesRequestSender;
+	protected ClientModelRolesServiceRequestSender modelRolesRequestSender;
 
 	public TestModelGenerator<T> getTestModelGenerator() {
 		return this.testModelGenerator;
@@ -105,11 +105,11 @@ public abstract class AbstractModelRequestSenderTests<T extends MutableUniqueMod
 		this.linkRequestSender = linkRequestSender;
 	}
 
-	public ClientModelRolesContextServiceRequestSender getModelRolesRequestSender() {
+	public ClientModelRolesServiceRequestSender getModelRolesRequestSender() {
 		return this.modelRolesRequestSender;
 	}
 
-	public void setModelRolesRequestSender(ClientModelRolesContextServiceRequestSender modelRolesRequestSender) {
+	public void setModelRolesRequestSender(ClientModelRolesServiceRequestSender modelRolesRequestSender) {
 		this.modelRolesRequestSender = modelRolesRequestSender;
 	}
 

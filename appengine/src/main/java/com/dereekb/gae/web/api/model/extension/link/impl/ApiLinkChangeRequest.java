@@ -2,7 +2,7 @@ package com.dereekb.gae.web.api.model.extension.link.impl;
 
 import java.util.List;
 
-import com.dereekb.gae.web.api.auth.controller.model.LoginTokenModelContextController;
+import com.dereekb.gae.web.api.model.extension.link.LinkExtensionApiController;
 import com.dereekb.gae.web.api.shared.request.AtomicApiRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * API Request for link changes.
  *
  * @author dereekb
- * @see {@link LoginTokenModelContextController}
+ * @see {@link LinkExtensionApiController}
  */
 @JsonInclude(Include.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)

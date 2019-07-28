@@ -342,6 +342,7 @@ public class AppEngineTaskRequestConverterImpl extends AbstractDirectionalConver
 			return options;
 		}
 
+		@SuppressWarnings("unused")
 		private TaskOptions appendBody(TaskOptions options) {
 
 			// Payload changed.

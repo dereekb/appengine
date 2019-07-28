@@ -31,7 +31,7 @@ public interface RemoteServiceBeansConfiguration {
 
 	public String getClientScheduleTaskServiceBeanId();
 
-	public String getClientModelRolesContextServiceBeanId();
+	public String getClientModelRolesServiceBeanId();
 
 	public String getClientModelLinkServiceBeanId();
 

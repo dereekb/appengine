@@ -11,11 +11,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.dereekb.gae.client.api.auth.model.ClientModelRolesContextServiceRequestSender;
-import com.dereekb.gae.client.api.auth.model.ClientModelRolesLoginTokenContextRequest;
-import com.dereekb.gae.client.api.auth.model.ClientModelRolesLoginTokenContextResponse;
-import com.dereekb.gae.client.api.auth.model.impl.ClientModelRolesLoginTokenContextRequestImpl;
-import com.dereekb.gae.client.api.exception.ClientIllegalArgumentException;
+import com.dereekb.gae.client.api.auth.model.roles.ClientModelRolesServiceRequestSender;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientDeleteRequestSender;
@@ -29,7 +25,6 @@ import com.dereekb.gae.client.api.model.crud.response.ClientDeleteResponse;
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientCreateApiResponse;
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientReadApiResponse;
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientUpdateApiResponse;
-import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.client.api.model.exception.ClientKeyedInvalidAttributeException;
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequestSender;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.impl.ClientQueryRequestSenderImpl;
@@ -61,13 +56,9 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUti
 import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext;
 import com.dereekb.gae.test.server.auth.TestLoginTokenPair;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
-import com.dereekb.gae.utilities.misc.keyed.Keyed;
 import com.dereekb.gae.utilities.model.search.request.MutableSearchRequest;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
-import com.dereekb.gae.web.api.auth.controller.model.ApiLoginTokenModelContextType;
-import com.dereekb.gae.web.api.auth.controller.model.impl.ApiLoginTokenModelContextTypeImpl;
-import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttributeException;
 import com.googlecode.objectify.Key;
@@ -95,8 +86,8 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 	protected ClientLinkServiceRequestSender linkRequestSender;
 
 	@Autowired
-	@Qualifier("clientModelRolesContextServiceRequestSender")
-	protected ClientModelRolesContextServiceRequestSender modelRolesRequestSender;
+	@Qualifier("clientModelRolesServiceRequestSender")
+	protected ClientModelRolesServiceRequestSender modelRolesRequestSender;
 
 	protected interface BasicTestUserSetup
 	        extends TestingInstanceObject {
@@ -192,27 +183,6 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				        AbstractModelClientTests.this.loginUpdateRequestSender, null);
 			}
 
-		}
-
-		// MARK: Security
-		public ClientRequestSecurity createModelRolesContextRequest(ClientModelRolesLoginTokenContextRequest request) {
-			try {
-				return this.sendModelRolesContextRequest(request);
-			} catch (ClientRequestFailureException e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-		public ClientRequestSecurity sendModelRolesContextRequest(ClientModelRolesLoginTokenContextRequest request)
-		        throws ClientIllegalArgumentException,
-		            ClientAtomicOperationException,
-		            ClientRequestFailureException {
-			ClientRequestSecurity requestSecurity = AbstractTestingInstance.this.getSecurity();
-			ClientModelRolesLoginTokenContextResponse response = AbstractModelClientTests.this.modelRolesRequestSender
-			        .getContextForModels(request, requestSecurity);
-			LoginTokenPair pair = response.getLoginTokenPair();
-			ClientRequestSecurityImpl security = new ClientRequestSecurityImpl(pair);
-			return security;
 		}
 
 		// MARK: Instances
@@ -511,30 +481,6 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 					fail("Failed reading.");
 					throw new RuntimeException(e);
 				}
-			}
-
-			// MARK: Client Security
-			public ClientRequestSecurity sendModelSecurityContext(Key<T> key)
-			        throws ClientIllegalArgumentException,
-			            ClientAtomicOperationException,
-			            ClientRequestFailureException {
-				ModelKey modelKey = ObjectifyModelKeyUtil.readModelKey(key);
-				return this.sendModelSecurityContext(modelKey);
-			}
-
-			public ClientRequestSecurity sendModelSecurityContext(Keyed<ModelKey> keyed)
-			        throws ClientIllegalArgumentException,
-			            ClientAtomicOperationException,
-			            ClientRequestFailureException {
-
-				String modelType = this.readRequestSender.getModelType();
-				ClientModelRolesLoginTokenContextRequestImpl request = new ClientModelRolesLoginTokenContextRequestImpl();
-
-				ApiLoginTokenModelContextType modelContextType = ApiLoginTokenModelContextTypeImpl.fromKeyed(modelType,
-				        keyed);
-				request.setRequestedContexts(modelContextType);
-
-				return AbstractTestingInstance.this.sendModelRolesContextRequest(request);
 			}
 
 			// MARK: Utility

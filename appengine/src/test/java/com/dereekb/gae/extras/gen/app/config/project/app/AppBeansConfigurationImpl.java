@@ -33,6 +33,8 @@ public class AppBeansConfigurationImpl
 	public static final String CRUD_READ_MODEL_ROLE_REF_BEAN_ID = "crudReadModelRole";
 	public static final String CRUD_UPDATE_MODEL_ROLE_REF_BEAN_ID = "crudUpdateModelRole";
 	public static final String CRUD_DELETE_MODEL_ROLE_REF_BEAN_ID = "crudDeleteModelRole";
+	public static final String LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_BEAN_ID = "loginTokenModelContextService";
+	public static final String LOGIN_TOKEN_MODEL_CONTEXT_SET_DENCODER_BEAN_ID = "loginTokenModelContextSetDencoder";
 	public static final String ANONYMOUS_MODEL_ROLE_SET_CONTEXT_SERVICE_BEAN_ID = "anonymousModelRoleSetContextService";
 
 	public static final String APP_LOGIN_SECURITY_SERVICE_BEAN_ID = "appLoginSecurityService";
@@ -73,6 +75,8 @@ public class AppBeansConfigurationImpl
 	private String systemLoginTokenServiceBeanId = SYSTEM_LOGIN_TOKEN_SERVICE_BEAN_ID;
 	private String systemLoginTokenFactoryBeanId = SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID;
 	private String mailServiceBeanId = MAIL_SERVICE_BEAN_ID;
+	private String loginTokenModelContextServiceBeanId = LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_BEAN_ID;
+	private String loginTokenModelContextSetDencoderBeanId = LOGIN_TOKEN_MODEL_CONTEXT_SET_DENCODER_BEAN_ID;
 	private String anonymousModelRoleSetContextServiceBeanId = ANONYMOUS_MODEL_ROLE_SET_CONTEXT_SERVICE_BEAN_ID;
 
 	private String appLoginSecurityServiceBeanId = APP_LOGIN_SECURITY_SERVICE_BEAN_ID;
@@ -437,6 +441,32 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.systemLoginTokenFactoryBeanId = systemLoginTokenFactoryBeanId;
+	}
+
+	@Override
+	public String getLoginTokenModelContextServiceBeanId() {
+		return this.loginTokenModelContextServiceBeanId;
+	}
+
+	public void setLoginTokenModelContextServiceBeanId(String loginTokenModelContextServiceBeanId) {
+		if (loginTokenModelContextServiceBeanId == null) {
+			throw new IllegalArgumentException("loginTokenModelContextServiceBeanId cannot be null.");
+		}
+
+		this.loginTokenModelContextServiceBeanId = loginTokenModelContextServiceBeanId;
+	}
+
+	@Override
+	public String getLoginTokenModelContextSetDencoderBeanId() {
+		return this.loginTokenModelContextSetDencoderBeanId;
+	}
+
+	public void setLoginTokenModelContextSetDencoderBeanId(String loginTokenModelContextSetDencoderBeanId) {
+		if (loginTokenModelContextSetDencoderBeanId == null) {
+			throw new IllegalArgumentException("loginTokenModelContextSetDencoderBeanId cannot be null.");
+		}
+
+		this.loginTokenModelContextSetDencoderBeanId = loginTokenModelContextSetDencoderBeanId;
 	}
 
 	@Override

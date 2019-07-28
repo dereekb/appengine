@@ -1,6 +1,6 @@
 package com.dereekb.gae.extras.gen.app.config.project.test;
 
-import com.dereekb.gae.client.api.auth.model.impl.ClientModelRolesContextServiceRequestSenderImpl;
+import com.dereekb.gae.client.api.auth.model.roles.impl.ClientModelRolesServiceRequestSenderImpl;
 import com.dereekb.gae.client.api.auth.system.impl.ClientSystemLoginTokenServiceRequestSenderImpl;
 import com.dereekb.gae.client.api.auth.token.impl.ClientLoginTokenValidationServiceRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientCreateRequestSenderImpl;
@@ -62,8 +62,8 @@ public class TestApiModelsConfigurationGenerator extends AbstractModelConfigurat
 		builder.bean("clientLinkRequestSender").beanClass(ClientLinkRequestSenderImpl.class).c()
 		        .ref("modelKeyTypeConverter").ref("securedClientRequestSender");
 
-		builder.bean("clientModelRolesContextServiceRequestSender")
-		        .beanClass(ClientModelRolesContextServiceRequestSenderImpl.class).c().ref("modelKeyTypeConverter")
+		builder.bean("clientModelRolesServiceRequestSender")
+		        .beanClass(ClientModelRolesServiceRequestSenderImpl.class).c().ref("modelKeyTypeConverter")
 		        .ref("securedClientRequestSender");
 
 		if (this.getAppConfig().isLoginServer()) {

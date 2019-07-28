@@ -7,7 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.dereekb.gae.client.api.auth.model.security.ClientLoginTokenModelContextServiceEntryFactory;
+import com.dereekb.gae.client.api.auth.model.roles.security.ClientLoginTokenModelContextServiceEntryFactory;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
@@ -258,18 +258,24 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 		public void addCommonLoginTokenBeansToXMLConfigurationFile(SpringBeansXMLBuilder builder) {
 
+			AppConfiguration appConfig = this.getAppConfig();
+
 			builder.comment("Login Token Utilities");
 			builder.comment("Login Models Service");
 
+			String loginTokenModelContextServiceBeanId = appConfig.getAppBeans()
+			        .getLoginTokenModelContextServiceBeanId();
+			String loginTokenModelContextSetDencoderBeanId = appConfig.getAppBeans()
+			        .getLoginTokenModelContextSetDencoderBeanId();
 			String loginTokenModelContextServiceEntriesBeanId = "loginTokenModelContextServiceEntries";
 
-			builder.bean("loginTokenModelContextService").beanClass(LoginTokenModelContextServiceImpl.class).c()
+			builder.bean(loginTokenModelContextServiceBeanId).beanClass(LoginTokenModelContextServiceImpl.class).c()
 			        .ref(loginTokenModelContextServiceEntriesBeanId);
 
-			builder.alias("loginTokenModelContextService",
-			        this.getAppConfig().getAppBeans().getAnonymousModelRoleSetContextServiceBeanId());
+			builder.alias(loginTokenModelContextServiceBeanId,
+			        appConfig.getAppBeans().getAnonymousModelRoleSetContextServiceBeanId());
 
-			builder.bean("loginTokenModelContextSetDencoder")
+			builder.bean(loginTokenModelContextSetDencoderBeanId)
 			        .beanClass(LoginTokenModelContextSetEncoderDecoderImpl.class).c()
 			        .ref("loginTokenModelContextServiceDencoderEntries");
 
@@ -285,11 +291,12 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			 * SecurityExtensionConfigurationGenerator in
 			 * ContextModelsConfigurationGenerator.
 			 */
-			for (LocalModelConfigurationGroup group : this.getAppConfig().getLocalModelConfigurations()) {
+			for (LocalModelConfigurationGroup group : appConfig.getLocalModelConfigurations()) {
 				String groupName = group.getGroupName();
 				entitiesList.getRawXMLBuilder().c(groupName);
 
-				List<LocalModelConfiguration> modelConfigs = ListUtility.filter(group.getModelConfigurations(), NotInternalModelConfigurationFilter.make());
+				List<LocalModelConfiguration> modelConfigs = ListUtility.filter(group.getModelConfigurations(),
+				        NotInternalModelConfigurationFilter.make());
 				for (LocalModelConfiguration modelConfig : modelConfigs) {
 					entitiesList.ref(modelConfig.getModelSecurityContextServiceEntryBeanId());
 				}
@@ -297,7 +304,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			// Remote Types
 			entitiesList.getRawXMLBuilder().c("Remote");
-			for (RemoteServiceConfiguration remoteService : this.getAppConfig().getRemoteServices()) {
+			for (RemoteServiceConfiguration remoteService : appConfig.getRemoteServices()) {
 				entitiesList.getRawXMLBuilder()
 				        .c(remoteService.getAppServiceConfigurationInfo().getAppServiceName() + " Service");
 				for (RemoteModelConfigurationGroup group : remoteService.getServiceModelConfigurations()) {
@@ -463,7 +470,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				http.intercept(serviceApiPath + "/login/auth/register/token", HasRoleConfig.make("ROLE_USER"),
 				        HttpMethod.POST);
 
-				http.getRawXMLBuilder().c("Taken Patterns");
+				http.getRawXMLBuilder().c("Token Patterns");
 				http.intercept(serviceApiPath + "/login/auth/model/*", HasRoleConfig.make("ROLE_USER"), HttpMethod.PUT);
 				http.intercept(serviceApiPath + "/login/auth/token/refresh", HasRoleConfig.make("ROLE_USER"),
 				        HttpMethod.GET);
@@ -580,7 +587,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		}
 
 		private List<LocalModelConfiguration> loadSecureLocalModelConfigs() {
-			List<LocalModelConfiguration> allLocalModelConfigs = AppConfigurationUtility.readLocalModelConfigurations(this.getAppConfig());
+			List<LocalModelConfiguration> allLocalModelConfigs = AppConfigurationUtility
+			        .readLocalModelConfigurations(this.getAppConfig());
 			return ListUtility.filter(allLocalModelConfigs, NotInternalModelConfigurationFilter.make());
 		}
 

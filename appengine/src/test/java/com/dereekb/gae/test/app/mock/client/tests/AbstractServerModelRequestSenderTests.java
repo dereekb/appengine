@@ -14,7 +14,7 @@ import com.dereekb.gae.test.app.mock.client.crud.ModelClientReadRequestSenderTes
 import com.dereekb.gae.test.app.mock.client.crud.ModelClientUpdateRequestSenderTestUtility;
 import com.dereekb.gae.test.app.mock.client.extension.ModelClientLinkRequestSenderTestUtility;
 import com.dereekb.gae.test.app.mock.client.extension.ModelClientQueryRequestSenderTestUtility;
-import com.dereekb.gae.test.app.mock.client.extension.ModelClientRolesContextServiceRequestSenderTestUtility;
+import com.dereekb.gae.test.app.mock.client.extension.ModelClientRolesServiceRequestSenderTestUtility;
 
 /**
  * Abstract server tests.
@@ -45,7 +45,7 @@ public abstract class AbstractServerModelRequestSenderTests<T extends MutableUni
 	private ModelClientLinkRequestSenderTestUtility<T> linkRequestUtility;
 
 	// Model Roles
-	private ModelClientRolesContextServiceRequestSenderTestUtility<T> modelRolesRequestUtility;
+	private ModelClientRolesServiceRequestSenderTestUtility<T> modelRolesRequestUtility;
 
 	// Events
 	public AbstractServerModelRequestSenderTests() {
@@ -107,7 +107,7 @@ public abstract class AbstractServerModelRequestSenderTests<T extends MutableUni
 		}
 
 		if (this.modelRolesRequestSender != null) {
-			this.modelRolesRequestUtility = new ModelClientRolesContextServiceRequestSenderTestUtility<T>(
+			this.modelRolesRequestUtility = new ModelClientRolesServiceRequestSenderTestUtility<T>(
 			        this.modelRolesRequestSender, this.testModelGenerator);
 		}
 	}
