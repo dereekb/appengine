@@ -107,8 +107,8 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 	            ClientAuthenticationException,
 	            ClientRequestFailureException {
 
-		List<T> logins = this.testModelGenerator.generate(3);
-		List<ModelKey> modelKeys = ModelKey.readModelKeys(logins);
+		List<T> generatedModels = this.testModelGenerator.generate(3);
+		List<ModelKey> modelKeys = ModelKey.readModelKeys(generatedModels);
 
 		List<ModelKey> unavailableKeys = new ArrayList<ModelKey>();
 		unavailableKeys.add(this.testModelGenerator.generateKey());
@@ -124,7 +124,7 @@ public class ModelClientReadRequestSenderTestUtility<T extends UniqueModel> {
 
 		SimpleReadResponse<T> readResponse = response.getSerializedResponse();
 		Collection<T> models = readResponse.getModels();
-		assertTrue(logins.size() == models.size());
+		assertTrue(generatedModels.size() == models.size());
 
 		Collection<ModelKey> responseUnavailableKeys = readResponse.getFailed();
 		assertTrue(responseUnavailableKeys.size() == unavailableKeys.size());

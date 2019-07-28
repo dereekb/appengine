@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.datastore.objectify.model;
 
+import com.dereekb.gae.server.datastore.objectify.MutableObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
 import com.dereekb.gae.utilities.time.model.MutableDatedModel;
 
@@ -12,4 +13,4 @@ import com.dereekb.gae.utilities.time.model.MutableDatedModel;
  *            model type
  */
 public interface MutableDatedObjectifyModel<T>
-        extends ObjectifyModel<T>, MutableDatedModel {}
+        extends MutableObjectifyModel<T>, MutableDatedModel {}

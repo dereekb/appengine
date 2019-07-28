@@ -9,8 +9,9 @@ import com.dereekb.gae.test.server.auth.TestLoginTokenContext;
 import com.dereekb.gae.test.server.auth.TestLoginTokenPair;
 
 /**
- * {@link TestLoginTokenContext} for remote systems. It does a minimum amount of
- * work.
+ * {@link TestLoginTokenContext} for remote systems.
+ * <p>
+ * It stores a {@link LoginToken} instead of using {@link LoginPointer}.
  *
  * @author dereekb
  *
@@ -18,17 +19,53 @@ import com.dereekb.gae.test.server.auth.TestLoginTokenPair;
 public class TestRemoteLoginSystemLoginTokenContextImpl extends AbstractLoginPointerTestLoginTokenContextImpl
         implements TestLoginTokenContext {
 
+	private TestLoginTokenPair currentLoginToken = null;
+
 	public TestRemoteLoginSystemLoginTokenContextImpl(LoginTokenService<LoginToken> service) {
 		super(service);
 	}
 
+	@Override
+	public LoginPointer getPointer() {
+		LoginPointer pointer = null;
+
+		if (this.currentLoginToken != null) {
+			pointer = this.currentLoginToken.getLoginPointer();
+		}
+
+		return pointer;
+	}
+
+	@Override
+	public void setPointer(LoginPointer pointer) {
+		throw new UnsupportedOperationException("TODO?");
+	}
+
 	// MARK: TestLoginTokenContext
+	@Override
+	public LoginToken getLoginToken() {
+		LoginToken token = null;
+
+		if (this.currentLoginToken != null) {
+			token = this.currentLoginToken.buildLoginToken();
+		}
+
+		return token;
+	}
+
+	@Override
+	public void clearLogin() {
+		super.clearLogin();
+		this.currentLoginToken = null;
+	}
+
 	@Override
 	public TestLoginTokenPair generateLogin(String username,
 	                                        Long roles) {
 
 		LoginPointer pointer = new LoginPointer(username);
 		pointer.setLoginPointerType(LoginPointerType.PASSWORD);
+		this.setLogin(pointer);
 
 		Login login = this.generateTestLogin(username, roles, pointer);
 
@@ -36,7 +73,9 @@ public class TestRemoteLoginSystemLoginTokenContextImpl extends AbstractLoginPoi
 			pointer.setLogin(login.getObjectifyKey());
 		}
 
-		return new TestLoginTokenPairImpl(login, pointer);
+		TestLoginTokenPair testLoginTokenPair = new TestLoginTokenPairImpl(login, pointer);
+		this.currentLoginToken = testLoginTokenPair;
+		return testLoginTokenPair;
 	}
 
 	@Override

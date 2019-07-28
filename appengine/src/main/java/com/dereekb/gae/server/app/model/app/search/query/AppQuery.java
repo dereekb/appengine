@@ -24,7 +24,7 @@ public class AppQuery extends AbstractOwnedModelQuery
 
 	public static final String LOGIN_FIELD = "login";
 	public static final String LEVEL_FIELD = "level";
-	public static final String SYSTEM_KEY_FIELD = "system";
+	public static final String SYSTEM_KEY_FIELD = "systemKey";
 
 	private static final ModelKeyQueryFieldParameterBuilder LOGIN_FIELD_BUILDER = ModelKeyQueryFieldParameterBuilder.NUMBER_SINGLETON;
 

@@ -1,8 +1,10 @@
 package com.dereekb.gae.server.app.model.app;
 
 import com.dereekb.gae.server.app.model.app.info.AppConfigInfo;
+import com.dereekb.gae.server.app.model.app.info.AppInfo;
 import com.dereekb.gae.server.app.model.app.info.AppServiceVersionInfo;
 import com.dereekb.gae.server.app.model.app.info.AppVersion;
+import com.dereekb.gae.server.app.model.app.info.SystemAppInfo;
 import com.dereekb.gae.server.app.model.app.info.impl.AppServiceVersionInfoImpl;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwnedModel;
@@ -212,6 +214,23 @@ public class App extends DatedDatabaseModel
 	}
 
 	// MARK: AppInfo
+	public void copyFromSystemAppInfo(SystemAppInfo appInfo) {
+		this.copyFromAppInfo(appInfo);
+		this.setSystemKey(appInfo.getSystemKey());
+	}
+
+	/**
+	 * Copies all information from the {@link AppInfo}.
+	 *
+	 * @param appInfo
+	 *            {@link AppInfo}. Never {@code null}.
+	 */
+	public void copyFromAppInfo(AppInfo appInfo) {
+		this.setName(appInfo.getAppName());
+		this.setModelKey(appInfo.getModelKey());
+		this.setAppServiceVersionInfo(appInfo.getAppServiceVersionInfo());
+	}
+
 	@Override
 	public AppServiceVersionInfo getAppServiceVersionInfo() {
 		try {

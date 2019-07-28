@@ -59,7 +59,7 @@ public class LocalAppLoginTokenSecurityConfigurerImpl
 		builder.comment("LoginToken Service");
 		SpringBeansXMLBeanBuilder<?> loginTokenEncoderDecoderBuilder = builder
 		        .bean(this.loginTokenEncoderDecoderBeanId);
-		appSecurityBeansConfigurer.configureTokenEncoderDecoder(appConfig, loginTokenEncoderDecoderBuilder);
+		appSecurityBeansConfigurer.configureTokenEncoderDecoder(appConfig, loginTokenEncoderDecoderBuilder, false);
 
 		SpringBeansXMLBeanBuilder<?> loginTokenBuilderBuilder = builder.bean(this.loginTokenBuilderBeanId);
 		appSecurityBeansConfigurer.configureTokenBuilder(appConfig, loginTokenBuilderBuilder, false);

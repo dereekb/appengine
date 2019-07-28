@@ -62,7 +62,7 @@ public abstract class AbstractLoginPointerTestLoginTokenContextImpl extends Abst
 		if (this.pointer != null) {
 			token = this.service.buildLoginToken(this.pointer, this.isRefreshAllowed());
 		} else {
-			this.service.buildAnonymousLoginToken(ANONYMOUS_LOGIN_TOKEN_KEY);
+			token = this.service.buildAnonymousLoginToken(ANONYMOUS_LOGIN_TOKEN_KEY);
 		}
 
 		return token;
@@ -104,9 +104,15 @@ public abstract class AbstractLoginPointerTestLoginTokenContextImpl extends Abst
 		}
 
 		@Override
-		public String makeNewToken() {
-			return AbstractLoginPointerTestLoginTokenContextImpl.this.service.encodeLoginToken(this.getLoginPointer(), this.getLogin(),
-					AbstractLoginPointerTestLoginTokenContextImpl.this.isRefreshAllowed());
+		protected String makeNewToken() {
+			return AbstractLoginPointerTestLoginTokenContextImpl.this.service.encodeLoginToken(this.getLoginPointer(),
+			        this.getLogin(), AbstractLoginPointerTestLoginTokenContextImpl.this.isRefreshAllowed());
+		}
+
+		@Override
+		public LoginToken buildLoginToken() {
+			return AbstractLoginPointerTestLoginTokenContextImpl.this.service.buildLoginToken(this.getLoginPointer(),
+			        this.getLogin(), AbstractLoginPointerTestLoginTokenContextImpl.this.isRefreshAllowed());
 		}
 
 	}

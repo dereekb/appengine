@@ -30,6 +30,7 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
         implements AppSecurityBeansConfigurer {
 
 	public static final String TEST_LOGIN_TOKEN_BUILDER_LOGIN_GETTER_BEAN_ID = "testLoginTokenBuilderLoginGetter";
+	public static final String TEST_LOGIN_TOKEN_SIGNATURE_FACTORY_BEAN_ID = "testLoginTokenSignatureFactory";
 
 	private String loginTokenSignatureFactoryBeanId = "loginTokenSignatureFactory";
 	private String refreshTokenSignatureFactoryBeanId = "refreshTokenSignatureFactory";
@@ -214,25 +215,39 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 
 	@Override
 	public void configureTokenEncoderDecoder(AppConfiguration appConfig,
-	                                         SpringBeansXMLBeanBuilder<?> beanBuilder) {
+	                                         SpringBeansXMLBeanBuilder<?> beanBuilder,
+	                                         boolean forTests) {
+		String loginTokenSignatureFactoryBeanId = this.getLoginTokenSignatureFactoryBeanId(appConfig, forTests);
 		beanBuilder.beanClass(this.loginTokenEncoderDecoderClass).c().bean()
-		        .factoryBean(this.loginTokenSignatureFactoryBeanId).factoryMethod("make");
+		        .factoryBean(loginTokenSignatureFactoryBeanId).factoryMethod("make");
+	}
+
+	protected String getLoginTokenSignatureFactoryBeanId(AppConfiguration appConfig,
+	                                                     boolean forTests) {
+		String beanId;
+
+		if (this.shouldSetBeanForRemoteServerTests(forTests, appConfig)) {
+			beanId = TEST_LOGIN_TOKEN_SIGNATURE_FACTORY_BEAN_ID;
+		} else {
+			beanId = this.loginTokenSignatureFactoryBeanId;
+		}
+
+		return beanId;
 	}
 
 	@Override
 	public void configureTokenBuilder(AppConfiguration appConfig,
 	                                  SpringBeansXMLBeanBuilder<?> beanBuilder,
 	                                  boolean forTests) {
-		String loginGetterBeanId = "loginGetter"; // this.getTokenBuilderLoginGetterBeanId(appConfig, forTests);
+		String loginGetterBeanId = this.getTokenBuilderLoginGetterBeanId(appConfig, forTests);
 		beanBuilder.beanClass(this.loginTokenBuilderClass).c().ref(loginGetterBeanId);
 	}
 
-	@Deprecated
 	protected String getTokenBuilderLoginGetterBeanId(AppConfiguration appConfig,
 	                                                  boolean forTests) {
 		String loginGetterBeanId;
 
-		if (this.shouldMakeTestLoginTokenBuilderLoginGetter(forTests, appConfig)) {
+		if (this.shouldSetBeanForRemoteServerTests(forTests, appConfig)) {
 			loginGetterBeanId = TEST_LOGIN_TOKEN_BUILDER_LOGIN_GETTER_BEAN_ID;
 		} else {
 			loginGetterBeanId = "loginGetter";	// Login Server already has this
@@ -242,9 +257,16 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		return loginGetterBeanId;
 	}
 
-	@Deprecated
-	protected boolean shouldMakeTestLoginTokenBuilderLoginGetter(boolean forTests, AppConfiguration appConfig)
-	{
+	/**
+	 * Whether or not the bean being used/set will be a special case for the
+	 * test server.
+	 *
+	 * @param forTests
+	 * @param appConfig
+	 * @return
+	 */
+	protected boolean shouldSetBeanForRemoteServerTests(boolean forTests,
+	                                                    AppConfiguration appConfig) {
 		return forTests && !appConfig.isLoginServer();
 	}
 

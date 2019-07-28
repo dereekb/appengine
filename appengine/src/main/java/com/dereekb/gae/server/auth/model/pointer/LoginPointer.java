@@ -7,7 +7,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyGenerationType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyInfo;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
-import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.MutableObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
 import com.googlecode.objectify.Key;
@@ -33,7 +33,7 @@ import com.googlecode.objectify.condition.IfNull;
 @Entity
 @ModelKeyInfo(value = ModelKeyType.NAME, generation = ModelKeyGenerationType.UNIQUE_NAME)
 public class LoginPointer extends OwnedDatabaseModel
-        implements ObjectifyModel<LoginPointer>, LoginOwnedModel {
+	implements MutableObjectifyModel<LoginPointer>, LoginOwnedModel {
 
 	private static final long serialVersionUID = 1L;
 

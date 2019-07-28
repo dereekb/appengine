@@ -33,8 +33,16 @@ public interface AppSecurityBeansConfigurer
 	public Class<?> getLoginSecurityModelQueryTaskOverrideClass();
 
 	// Login
+	/**
+	 * Configues the token encoder decoder.
+	 *
+	 * @param appConfig
+	 * @param beanBuilder
+	 * @param forTests whether or not this is being used in a testing context only. Is true when by the {@link TestConfigurationGenerator} for remote apps.
+	 */
 	public void configureTokenEncoderDecoder(AppConfiguration appConfig,
-	                                         SpringBeansXMLBeanBuilder<?> beanBuilder);
+	                                         SpringBeansXMLBeanBuilder<?> beanBuilder,
+	   	                                  	 boolean forTests);
 
 	/**
 	 * Configues the token builder.

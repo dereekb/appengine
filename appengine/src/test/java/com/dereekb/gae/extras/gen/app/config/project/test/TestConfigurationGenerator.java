@@ -6,14 +6,19 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.local.LoginTokenAppSecurityBeansConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
+import com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenFactoryImpl;
+import com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenServiceImpl;
 import com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenServiceImpl;
+import com.dereekb.gae.server.datastore.impl.NoopGetterImpl;
+import com.dereekb.gae.server.initialize.impl.TestRemoteServerInitializeService;
 import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext.TaskQueueCallbackHandler;
 import com.dereekb.gae.test.app.mock.google.LocalDatastoreServiceTestConfigFactory;
 import com.dereekb.gae.test.app.mock.web.builder.ServletAwareWebServiceRequestBuilder;
@@ -157,6 +162,25 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 		builder.comment("Import");
 		this.importFilesWithBuilder(builder, folder, true, true);
 
+		// Server Initializer
+		// TODO: Allow configuring whether or not this is generated. Also only build if App is available locally.
+		if (this.getAppConfig().isRootServer() == false) {
+
+			/*
+			 * Non-root servers need to initialize their own App, otherwise
+			 * components attempting to load the app will fail.
+			 */
+
+			String testServerInitializerBeanId = "testServerInitializer";
+
+			builder
+			.bean(testServerInitializerBeanId)
+			.beanClass(TestRemoteServerInitializeService.class)
+			.c().ref(this.getAppConfig().getAppBeans().getAppInfoBeanId())
+			.ref("appRegistry")
+			.ref("appRegistry");
+		}
+
 		return this.makeFileWithXML(TESTING_CONTEXT_XML, builder);
 	}
 
@@ -204,7 +228,9 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 			// Remote Logins use configuration similar to that described in
 			// LocalAppLoginTokenSecurityConfigurerImpl
 
-			AppSecurityBeansConfigurer appSecurityBeansConfigurer = this.getAppConfig().getAppSecurityBeansConfigurer();
+			AppConfiguration appConfig = this.getAppConfig();
+
+			AppSecurityBeansConfigurer appSecurityBeansConfigurer = appConfig.getAppSecurityBeansConfigurer();
 
 			String testLoginTokenSignatureFactoryId = "testLoginTokenSignatureFactory";
 			builder.bean(testLoginTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class);
@@ -213,19 +239,37 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 			String testLoginTokenEncoderDecoderBeanId = "testLoginTokenEncoderDecoder";
 			SpringBeansXMLBeanBuilder<?> loginTokenEncoderDecoderBuilder = builder
 			        .bean(testLoginTokenEncoderDecoderBeanId);
-			appSecurityBeansConfigurer.configureTokenEncoderDecoder(this.getAppConfig(),
-			        loginTokenEncoderDecoderBuilder);
+			appSecurityBeansConfigurer.configureTokenEncoderDecoder(appConfig,
+			        loginTokenEncoderDecoderBuilder, true);
+
+			String testLoginGetterBeanId = LoginTokenAppSecurityBeansConfigurerImpl.TEST_LOGIN_TOKEN_BUILDER_LOGIN_GETTER_BEAN_ID;
+			builder.bean(testLoginGetterBeanId).beanClass(NoopGetterImpl.class);
 
 			String testLoginTokenBuilderBeanId = "testLoginTokenBuilder";
 			SpringBeansXMLBeanBuilder<?> loginTokenBuilderBuilder = builder.bean(testLoginTokenBuilderBeanId);
-			appSecurityBeansConfigurer.configureTokenBuilder(this.getAppConfig(), loginTokenBuilderBuilder, true);
+			appSecurityBeansConfigurer.configureTokenBuilder(appConfig, loginTokenBuilderBuilder, true);
 
 			String testLoginTokenServiceId = "testLoginTokenService";
 			builder.bean(testLoginTokenServiceId).beanClass(LoginTokenServiceImpl.class).c()
-			        .ref(testLoginTokenBuilderBeanId)
-			        .ref(testLoginTokenEncoderDecoderBeanId);
+			        .ref(testLoginTokenBuilderBeanId).ref(testLoginTokenEncoderDecoderBeanId);
 
-			appSecurityBeansConfigurer.configureTestRemoteLoginSystemLoginTokenContext(this.getAppConfig(), loginTokenContextBuilder);
+			appSecurityBeansConfigurer.configureTestRemoteLoginSystemLoginTokenContext(appConfig,
+			        loginTokenContextBuilder);
+
+			// Also Override System Login Token Factory
+			// TODO: Move elsewhere?
+			String systemLoginTokenServiceBeanId = appConfig.getAppBeans().getSystemLoginTokenServiceBeanId();
+
+			builder.bean(systemLoginTokenServiceBeanId).beanClass(SystemLoginTokenServiceImpl.class)
+			.c()
+			.value("1")	// Default System Encoded Roles
+			.ref(testLoginTokenServiceId);
+
+			builder.bean(appConfig.getAppBeans().getSystemLoginTokenFactoryBeanId())
+			        .beanClass(SystemLoginTokenFactoryImpl.class).c()
+			        .ref(systemLoginTokenServiceBeanId)
+			        .ref(appConfig.getAppBeans().getAppLoginSecuritySigningServiceBeanId());
+
 		}
 
 		loginTokenContextBuilder.getRawXMLBuilder().comment("Admin Login");

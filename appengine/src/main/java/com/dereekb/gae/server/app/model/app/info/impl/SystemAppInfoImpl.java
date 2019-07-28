@@ -21,6 +21,11 @@ public class SystemAppInfoImpl extends AppInfoImpl
 		this.setSystemKey(null);
 	}
 
+	public SystemAppInfoImpl(SystemAppInfo systemAppInfo) {
+		super(systemAppInfo);
+		this.setSystemKey(systemAppInfo.getSystemKey());
+	}
+
 	public SystemAppInfoImpl(Long modelKey,
 	        String appName,
 	        String systemKey,
