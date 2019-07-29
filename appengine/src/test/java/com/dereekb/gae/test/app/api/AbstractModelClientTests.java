@@ -64,7 +64,7 @@ import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttribu
 import com.googlecode.objectify.Key;
 
 /**
- *
+ * Base class for building custom model client tests.
  *
  * @author dereekb
  *
@@ -72,11 +72,11 @@ import com.googlecode.objectify.Key;
 public abstract class AbstractModelClientTests extends AbstractAppTestingContext {
 
 	// Login
-	@Autowired
+	@Autowired(required=false)
 	@Qualifier("loginClientReadRequestSender")
 	protected ClientReadRequestSenderImpl<Login, LoginData> loginReadRequestSender;
 
-	@Autowired
+	@Autowired(required=false)
 	@Qualifier("loginClientUpdateRequestSender")
 	protected ClientUpdateRequestSenderImpl<Login, LoginData> loginUpdateRequestSender;
 
