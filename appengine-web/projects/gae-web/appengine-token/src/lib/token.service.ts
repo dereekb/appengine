@@ -38,6 +38,7 @@ export abstract class UserLoginTokenService {
 
   abstract isAuthenticated(): Observable<boolean>;
   abstract getEncodedLoginToken(): Observable<EncodedToken>;
+  abstract getLoginToken(): Observable<LoginTokenPair>;
 
   abstract login(fullToken: LoginTokenPair, rememberMe: boolean): Observable<LoginTokenPair>;
   abstract logout(): Observable<boolean>;
@@ -73,7 +74,7 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
     );
   }
 
-  public getUserId(): Observable<string | undefined> {
+  public getLoginId(): Observable<string | undefined> {
     return this.getLoginToken().pipe(
       map((token) => token.decode().login),
       map((login) => (login) ? String(login) : undefined)
