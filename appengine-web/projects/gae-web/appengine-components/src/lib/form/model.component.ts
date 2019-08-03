@@ -37,6 +37,12 @@ export abstract class AbstractModelFormComponent<T extends MutableUniqueModel> e
         return !this.show();
     }
 
+    // MARK: Initialization
+    protected initialize() {
+        super.initialize();
+        this.reset();
+    }
+
     // MARK: Model
     public get isModelEdit() {
         return Boolean(this._inputModel && this._inputModel.key);
@@ -64,8 +70,12 @@ export abstract class AbstractModelFormComponent<T extends MutableUniqueModel> e
 
     protected setModel(model: T | undefined) {
         this._inputModel = model;
-        const data = (model) ? this.convertToFormData(model) : this.newModelData;
-        this.setModelData(data);
+
+        // Only set if initialized. Will reset when initialized.
+        if (this.initialized) {
+            const data = (model) ? this.convertToFormData(model) : this.newModelData;
+            this.setModelData(data);
+        }
     }
 
     protected get newModelData(): any {

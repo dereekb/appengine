@@ -110,7 +110,7 @@ export abstract class AbstractFormGroupComponent implements FormGroupComponent, 
 
     protected validationMessages: ValidationMessagesSet = {};
 
-    constructor(@Inject(FormBuilder) private _formBuilder: FormBuilder, @Inject(ChangeDetectorRef) protected readonly _cdRef: ChangeDetectorRef) {}
+    constructor(@Inject(FormBuilder) private _formBuilder: FormBuilder, @Inject(ChangeDetectorRef) protected readonly _cdRef: ChangeDetectorRef) { }
 
     ngOnInit() {
         this.resetFormGroup();
