@@ -41,6 +41,7 @@ export abstract class AbstractModelFormComponent<T extends MutableUniqueModel> e
     protected initialize() {
         super.initialize();
         this.reset();
+        this._cdRef.detectChanges();
     }
 
     // MARK: Model

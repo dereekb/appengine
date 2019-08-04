@@ -16,6 +16,8 @@ import { GaeAutoCompleteFormControlComponent } from './input/autocomplete.compon
 import { GaeTextareaFormControlComponent } from './input/textarea.component';
 import { GaeCheckboxFormControlComponent } from './input/checkbox.component';
 import { GaeConfirmDeleteModelFormComponent } from './confirm-delete-form.component';
+import { GaeChipListFormControlComponent } from './input/chiplist.component';
+import { MatChipsModule, MatIconModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -28,7 +30,9 @@ import { GaeConfirmDeleteModelFormComponent } from './confirm-delete-form.compon
     MatInputModule,
     MatDatepickerModule,
     MatAutocompleteModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatChipsModule,
+    MatIconModule
   ],
   declarations: [
     GaeFormGroupErrorsDirective,
@@ -39,7 +43,8 @@ import { GaeConfirmDeleteModelFormComponent } from './confirm-delete-form.compon
     GaeInputFormControlComponent,
     GaeAutoCompleteFormControlComponent,
     GaeTextareaFormControlComponent,
-    GaeCheckboxFormControlComponent
+    GaeCheckboxFormControlComponent,
+    GaeChipListFormControlComponent
   ],
   exports: [
     FormsModule,
@@ -52,7 +57,8 @@ import { GaeConfirmDeleteModelFormComponent } from './confirm-delete-form.compon
     GaeInputFormControlComponent,
     GaeAutoCompleteFormControlComponent,
     GaeTextareaFormControlComponent,
-    GaeCheckboxFormControlComponent
+    GaeCheckboxFormControlComponent,
+    GaeChipListFormControlComponent
   ]
 })
 export class GaeFormComponentsModule { }
