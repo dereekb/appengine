@@ -148,12 +148,6 @@ export class GaeChipListFormControlComponent extends AbstractExtendedFormControl
     }
   }
 
-  protected addValue(value: string) {
-    if (!this.isAtMaxChips) {
-      this.values = this.values.concat(value);
-    }
-  }
-
   // MARK: Input
   add(event: MatChipInputEvent): void {
     // Add value only when MatAutocomplete is not open to
@@ -163,6 +157,7 @@ export class GaeChipListFormControlComponent extends AbstractExtendedFormControl
       const value = (event.value || '').trim();
 
       if (value) {
+        this.addValue(value);
       }
 
       // Reset the input value
@@ -185,9 +180,16 @@ export class GaeChipListFormControlComponent extends AbstractExtendedFormControl
 
   // MARK: Autoselect
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.values = this.values.concat(event.option.viewValue);
+    this.addValue(event.option.viewValue);
     this.textInput.nativeElement.value = '';
     this.valueInputCtrl.setValue(null);
+  }
+
+  // MARK: Internal
+  protected addValue(value: string) {
+    if (!this.isAtMaxChips && value) {
+      this.values = this.values.concat(value);
+    }
   }
 
 }
