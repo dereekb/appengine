@@ -7,6 +7,7 @@
             <div class="gae-form-view-tab-page" fxLayout="column">
                 <gae-input-form-control [form]="form" field="name" placeholder="Name" required="true" fxFlex="100%"></gae-input-form-control>
                 <gae-input-form-control [form]="form" field="number" type="number" placeholder="Number" fxFlex="100%"></gae-input-form-control>
+                <gae-chiplist-form-control [form]="form" field="stringSet" required="true" [autoCompleteOptions]="stringSetOptions" placeholder="String Set Placeholder..." fxFlex="100%"></gae-chiplist-form-control>
             </div>
         </mat-tab>
         <mat-tab label="More Options">

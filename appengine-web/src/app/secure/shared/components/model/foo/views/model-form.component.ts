@@ -5,6 +5,7 @@ import { AbstractModelFormComponent, ProvideModelFormComponent } from '@gae-web/
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 import { DateTime } from 'luxon';
 import { ValueUtility, DateTimeUtility } from '@gae-web/appengine-utility';
+import { of } from 'rxjs';
 
 // MARK: Component
 /**
@@ -16,6 +17,8 @@ import { ValueUtility, DateTimeUtility } from '@gae-web/appengine-utility';
     providers: ProvideModelFormComponent(FooModelFormComponent)
 })
 export class FooModelFormComponent extends AbstractModelFormComponent<Foo> {
+
+    readonly stringSetOptions = of(['a', 'b', 'c']);
 
     validationMessages = {
         name: {

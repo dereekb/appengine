@@ -8,6 +8,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { MatChip, MatChipList } from '@angular/material';
+import { filter } from 'rxjs/operators';
 
 describe('GaeChipListFormControlComponent', () => {
 
@@ -98,12 +99,48 @@ describe('GaeChipListFormControlComponent', () => {
 
   describe('With Autocomplete', () => {
 
+    const values = ['a', 'b', 'c'];
+
     beforeEach(() => {
-      testComponent.autoCompleteOptions = of(['a', 'b', 'c']);
+      testComponent.autoCompleteOptions = of(values);
       fixture.detectChanges();
     });
 
     it('should have autocomplete values set.', () => {
+      expect(testComponent.autoCompleteOptions).not.toBeNull();
+      expect(component.autoCompleteOptions).not.toBeNull();
+      expect(component.filteredAutoCompleteOptions).not.toBeNull();
+    });
+
+    describe('with input set', () => {
+
+      beforeEach(() => {
+        component.valueInputCtrl.setValue('a');
+        fixture.detectChanges();
+      });
+
+      it('should filter based on the value', (done) => {
+        component.filteredAutoCompleteOptions.pipe(
+          filter(x => x.length === 1)
+        ).subscribe((x) => {
+          expect(x.length).toBe(1);
+          done();
+        });
+      });
+
+    });
+
+    describe('with max and value at max set', () => {
+
+      beforeEach(() => {
+        testComponent.maxChips = values.length;
+        component.values = values;
+        fixture.detectChanges();
+      });
+
+      it('should have disabled the value input', () => {
+        expect(component.valueInputCtrl.disabled).toBeTruthy();
+      });
 
     });
 
@@ -127,7 +164,7 @@ describe('GaeChipListFormControlComponent', () => {
 @Component({
   template: `
   <form [formGroup]="form" [gaeFormGroupErrors]="controlErrorsObs" novalidate>
-    <gae-chiplist-form-control [autoCompleteOptions]="autoCompleteOptions" [form]="form" field="testField" required="true"></gae-chiplist-form-control>
+    <gae-chiplist-form-control [autoCompleteOptions]="autoCompleteOptions" [maxChips]="maxChips" [form]="form" field="testField" required="true"></gae-chiplist-form-control>
   </form>
   `
 })
@@ -135,6 +172,9 @@ class TestChipListFormControlViewComponent extends AbstractFormGroupComponent {
 
   @Input()
   public autoCompleteOptions: Observable<any>;
+
+  @Input()
+  public maxChips: number;
 
   @ViewChild(GaeChipListFormControlComponent, { static: true })
   public component: GaeChipListFormControlComponent;
