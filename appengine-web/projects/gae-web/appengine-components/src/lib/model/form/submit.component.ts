@@ -58,6 +58,7 @@ export function ProvideGaeSubmitComponent<S extends GaeSubmitComponent>(listView
 
 export abstract class GaeAbstractSubmitComponent implements OnDestroy {
 
+    @Output()
     public readonly submitClicked = new EventEmitter<{}>();
 
     private _working = false;
@@ -102,6 +103,14 @@ export abstract class GaeAbstractSubmitComponent implements OnDestroy {
         this._working = working;
     }
 
+    /**
+     * Convenience input for isWorking
+     */
+    @Input()
+    set working(working: boolean) {
+        this.isWorking = working;
+    }
+
     get isLocked() {
         return this._locked;
     }
@@ -122,6 +131,14 @@ export abstract class GaeAbstractSubmitComponent implements OnDestroy {
     @Input()
     set isDisabled(disabled: boolean) {
         this._disabled = disabled;
+    }
+
+    /**
+     * Convenience input for disabled
+     */
+    @Input()
+    set disabled(disabled: boolean) {
+        this.isDisabled = disabled;
     }
 
     // MARK: Click
@@ -172,7 +189,8 @@ export class GaeSubmitButtonComponent extends GaeAbstractSubmitComponent {
             stroked: true,
             flat: false,
             mode: this.mode,
-            disabled: this.isDisabled
+            // Only disabled if we're not working, in order to show the animation.
+            disabled: !this.working && this.disabled
         };
     }
 
