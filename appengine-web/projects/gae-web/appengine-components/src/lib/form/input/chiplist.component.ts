@@ -3,13 +3,13 @@ import { AbstractExtendedFormControlComponent, GaeFormGroupErrorsDirective } fro
 import { Observable } from 'rxjs';
 import { MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete } from '@angular/material';
 import { FormControl } from '@angular/forms';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 @Component({
   template: `
   <mat-form-field class="gae-form-view-control" [formGroup]="form" [color]="color">
       <mat-chip-list #chipList>
-        <mat-chip *ngFor="let value of values" [selectable]="selectable"
-                [removable]="removable" (removed)="remove(value)">
+        <mat-chip *ngFor="let value of values" [removable]="removable" (removed)="remove(value)">
           {{ value }}
           <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
         </mat-chip>
@@ -34,6 +34,12 @@ export class GaeChipListFormControlComponent extends AbstractExtendedFormControl
 
   @Input()
   public removable = true;
+
+  @Input()
+  public addOnBlur = true;
+
+  @Input()
+  public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   // TODO: Add option to restrict values from autocomplete.
 
