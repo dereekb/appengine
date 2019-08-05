@@ -85,6 +85,7 @@ export * from './lib/shared/action.component';
 export * from './lib/shared/action.directive';
 export * from './lib/shared/action';
 export * from './lib/shared/subscription';
+export * from './lib/shared/utility';
 
 // Segue
 export * from './lib/state/segue.directive';

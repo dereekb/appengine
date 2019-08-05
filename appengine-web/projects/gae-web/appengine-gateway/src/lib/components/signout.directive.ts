@@ -2,6 +2,7 @@ import { Directive, Input, AfterContentInit, ChangeDetectorRef } from '@angular/
 import { UserLoginTokenService } from '@gae-web/appengine-token';
 import { map, first } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { GaeViewUtility } from '@gae-web/appengine-components';
 
 export type SignInGatewaySignOutState = 'init' | 'signedin' | 'working' | 'signedout';
 
@@ -53,7 +54,7 @@ export class SignInGatewaySignOutDirective implements AfterContentInit {
             first() // First
         ).subscribe(() => {
             this._state = 'signedout';
-            this._cdRef.detectChanges();
+            GaeViewUtility.safeDetectChanges(this._cdRef);
         });
     }
 

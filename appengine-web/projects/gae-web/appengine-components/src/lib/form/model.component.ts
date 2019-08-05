@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormComponentEvent, FormComponentState, AbstractFormGroupComponent, FormComponent, ProvideFormGroupComponent, ProvideFormComponent, FormGroupComponent } from './form.component';
 import { Observable } from 'rxjs';
 import { UniqueModel, MutableUniqueModel } from '@gae-web/appengine-utility';
+import { GaeViewUtility } from '../shared/utility';
 
 export interface ModelFormComponentDelegate<T> {
     submit(input: T): Observable<T>;
@@ -41,7 +42,7 @@ export abstract class AbstractModelFormComponent<T extends MutableUniqueModel> e
     protected initialize() {
         super.initialize();
         this.reset();
-        this._cdRef.detectChanges();
+        GaeViewUtility.safeDetectChanges(this._cdRef);
     }
 
     // MARK: Model
