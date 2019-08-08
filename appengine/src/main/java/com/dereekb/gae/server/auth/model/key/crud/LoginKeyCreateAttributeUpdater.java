@@ -54,7 +54,7 @@ public class LoginKeyCreateAttributeUpdater extends AbstractChainedUpdateTaskDel
 
 		// Set Login
 		Key<Login> login = loadLoginKeyWithTemplate(template);
-		template.setLogin(login);
+		target.setLogin(login);
 	}
 
 	// TODO: Need to update. Should load the specified login pointer first and validate the login matches, or override the login if an admin.

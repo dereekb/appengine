@@ -72,11 +72,11 @@ import com.googlecode.objectify.Key;
 public abstract class AbstractModelClientTests extends AbstractAppTestingContext {
 
 	// Login
-	@Autowired(required=false)
+	@Autowired(required = false)
 	@Qualifier("loginClientReadRequestSender")
 	protected ClientReadRequestSenderImpl<Login, LoginData> loginReadRequestSender;
 
-	@Autowired(required=false)
+	@Autowired(required = false)
 	@Qualifier("loginClientUpdateRequestSender")
 	protected ClientUpdateRequestSenderImpl<Login, LoginData> loginUpdateRequestSender;
 
@@ -309,7 +309,8 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				return this.sendUpdate(request);
 			}
 
-			public SerializedClientUpdateApiResponse<T> sendUpdate(UpdateRequest<T> updateRequest) throws AssertionError {
+			public SerializedClientUpdateApiResponse<T> sendUpdate(UpdateRequest<T> updateRequest)
+			        throws AssertionError {
 				try {
 					return this.updateRequestSender.sendRequest(updateRequest,
 					        AbstractTestingInstance.this.getSecurity());
@@ -370,14 +371,16 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				return this.query(queryRequest);
 			}
 
-			public ClientModelQueryResponse<T> query(ConfigurableEncodedQueryParameters query) throws MultiKeyedInvalidAttributeException {
+			public ClientModelQueryResponse<T> query(ConfigurableEncodedQueryParameters query)
+			        throws MultiKeyedInvalidAttributeException {
 				MutableSearchRequest queryRequest = new ModelQueryRequestImpl();
 				queryRequest.setSearchParameters(query.getParameters());
 				queryRequest.setKeysOnly(false);
 				return this.query(queryRequest);
 			}
 
-			public ClientModelQueryResponse<T> query(SearchRequest queryRequest) throws MultiKeyedInvalidAttributeException {
+			public ClientModelQueryResponse<T> query(SearchRequest queryRequest)
+			        throws MultiKeyedInvalidAttributeException {
 				try {
 					return this.sendQuery(queryRequest).getSerializedResponse();
 				} catch (ClientKeyedInvalidAttributeException e) {
@@ -391,7 +394,8 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 
 			public SerializedClientApiResponse<ClientModelQueryResponse<T>> sendQuery(SearchRequest queryRequest) {
 				try {
-					return this.queryRequestSender.sendRequest(queryRequest, AbstractTestingInstance.this.getSecurity());
+					return this.queryRequestSender.sendRequest(queryRequest,
+					        AbstractTestingInstance.this.getSecurity());
 				} catch (ClientRequestFailureException e) {
 					e.printStackTrace();
 					fail("Failed querying.");
@@ -472,6 +476,32 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 					fail("Failed serializing response.");
 					throw new RuntimeException(e);
 				}
+			}
+
+			public SerializedClientReadApiResponse<T> sendRead(T model) {
+				return this.sendRead(ListUtility.wrap(model));
+			}
+
+			public SerializedClientReadApiResponse<T> sendReadByKey(Key<T> key) {
+				return this.sendReadByRelatedKey(key);
+			}
+
+			public SerializedClientReadApiResponse<T> sendReadByRelatedKey(Key<?> key) {
+				ModelKey modelKey = ObjectifyModelKeyUtil.readModelKey(key);
+				return this.sendReadByKey(modelKey);
+			}
+
+			public SerializedClientReadApiResponse<T> sendReadByKey(ModelKey modelKey) {
+				return this.sendReadByKey(ListUtility.wrap(modelKey));
+			}
+
+			public SerializedClientReadApiResponse<T> sendRead(Iterable<T> types) {
+				return this.sendReadByKey(ModelKey.readModelKeys(types));
+			}
+
+			public SerializedClientReadApiResponse<T> sendReadByKey(Collection<ModelKey> keys) {
+				ClientReadRequestImpl clientReadRequest = this.makeAtomicReadRequest(keys);
+				return this.read(clientReadRequest);
 			}
 
 			public SerializedClientReadApiResponse<T> read(ClientReadRequest readRequest) {
@@ -613,12 +643,12 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 		                                                  String failureCode) {
 			KeyedInvalidAttribute attribute = attributes.get(0);
 
-			assertTrue(attribute.getAttribute().equals(attributeName), "Expected attribute name to be '" + attributeName + "' but was '"
-			        + attribute.getAttribute() + "' instead. -> " + attribute);
+			assertTrue(attribute.getAttribute().equals(attributeName), "Expected attribute name to be '" + attributeName
+			        + "' but was '" + attribute.getAttribute() + "' instead. -> " + attribute);
 
 			if (failureCode != null) {
-				assertTrue(attribute.getCode().equals(failureCode), "Expected failure code to be '" + failureCode + "' but was '" + attribute.getCode()
-		        + "' instead. -> " + attribute);
+				assertTrue(attribute.getCode().equals(failureCode), "Expected failure code to be '" + failureCode
+				        + "' but was '" + attribute.getCode() + "' instead. -> " + attribute);
 			}
 		}
 
