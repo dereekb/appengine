@@ -7,20 +7,20 @@ import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdater;
 import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdaterFactory;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
+import com.dereekb.gae.server.datastore.models.keys.accessor.task.impl.AbstractModelKeyListAccessorTask;
 import com.dereekb.gae.utilities.task.Task;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 
 /**
  * {@link Task} for updating model relations using a
  * {@link RelatedModelUpdaterFactory}.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
  *            model type
  */
-public class RelatedModelUpdateTask<T extends UniqueModel>
-        implements Task<ModelKeyListAccessor<T>> {
+public class RelatedModelUpdateTask<T extends UniqueModel> extends AbstractModelKeyListAccessorTask<T> {
 
 	private RelatedModelUpdateType type;
 	private RelatedModelUpdaterFactory<T> factory;

@@ -709,6 +709,11 @@ public class SpringBeansXMLBuilderImpl
 			this.builder.a(SpringBeansXMLProperty.VALUE_ATTRIBUTE, value);
 			return this;
 		}
+		@Override
+		public SpringBeansXMLBeanPropertyBuilder<T> value(Enum<?> value) {
+			this.builder.a(SpringBeansXMLProperty.VALUE_ATTRIBUTE, value.toString());
+			return this;
+		}
 
 		@Override
 		public SpringBeansXMLBeanPropertyBuilder<T> ref(String ref) {

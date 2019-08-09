@@ -74,18 +74,24 @@ public class ApiModelsConfigurationGenerator extends AbstractModelConfigurationG
 		        .ref(modelConfig.getModelLinkModelAccessorId());
 
 		builder.comment("Edit Controller");
-		builder.bean(modelConfig.getModelBeanPrefix() + "EditController")
-		        .beanClass(modelConfig.getModelEditControllerClass()).c()
-		        .ref(modelConfig.getModelBeanPrefix() + "EditControllerDelegate")
-		        .ref(modelConfig.getModelBeanPrefix() + "EditControllerConversionDelegate");
+		if (modelConfig.hasCreateService() || modelConfig.hasUpdateService() || modelConfig.hasDeleteService()) {
 
-		builder.bean(modelConfig.getModelBeanPrefix() + "EditControllerDelegate")
-		        .beanClass(EditModelControllerDelegateImpl.class).c()
-		        .ref(modelConfig.getModelBeanPrefix() + "CrudService");
+			builder.bean(modelConfig.getModelBeanPrefix() + "EditController")
+			        .beanClass(modelConfig.getModelEditControllerClass()).c()
+			        .ref(modelConfig.getModelBeanPrefix() + "EditControllerDelegate")
+			        .ref(modelConfig.getModelBeanPrefix() + "EditControllerConversionDelegate");
 
-		builder.bean(modelConfig.getModelBeanPrefix() + "EditControllerConversionDelegate")
-		        .beanClass(EditModelControllerConversionDelegateImpl.class).c().ref(modelConfig.getModelTypeBeanId())
-		        .ref(modelConfig.getStringModelKeyConverter()).ref(modelConfig.getModelDataConverterBeanId());
+			builder.bean(modelConfig.getModelBeanPrefix() + "EditControllerDelegate")
+			        .beanClass(EditModelControllerDelegateImpl.class).c()
+			        .ref(modelConfig.getModelBeanPrefix() + "CrudService");
+
+			builder.bean(modelConfig.getModelBeanPrefix() + "EditControllerConversionDelegate")
+			        .beanClass(EditModelControllerConversionDelegateImpl.class).c().ref(modelConfig.getModelTypeBeanId())
+			        .ref(modelConfig.getStringModelKeyConverter()).ref(modelConfig.getModelDataConverterBeanId());
+
+		} else {
+			builder.comment("This type has no edit controllers available.");
+		}
 
 		builder.comment("Search/Query Components");
 		builder.bean(modelConfig.getModelBeanPrefix() + "SearchDelegateEntry")

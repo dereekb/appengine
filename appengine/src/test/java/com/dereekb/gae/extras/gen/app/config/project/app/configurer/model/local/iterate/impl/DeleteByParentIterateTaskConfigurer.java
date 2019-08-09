@@ -18,8 +18,7 @@ import com.dereekb.gae.web.taskqueue.model.extension.iterate.utility.TaskQueueIt
  */
 public class DeleteByParentIterateTaskConfigurer extends AbstractIterateConfigurerInstanceTaskEntryImpl {
 
-	private static final String TASK_NAME_FORMAT = "DeleteBy%s";
-	private static final String TASK_KEY_FORMAT = "deleteBy%s";
+	private static final String TASK_NAME_AND_KEY_FORMAT = "DeleteBy%s";
 
 	private String parentType;
 	private Class<?> taskRequestBuilderClass;
@@ -27,15 +26,11 @@ public class DeleteByParentIterateTaskConfigurer extends AbstractIterateConfigur
 	private boolean hasFilter;
 
 	public DeleteByParentIterateTaskConfigurer(String parentType, Class<?> taskRequestBuilderClass) {
-		this(parentType, String.format(TASK_NAME_FORMAT, parentType), String.format(TASK_KEY_FORMAT, parentType),
-		        taskRequestBuilderClass);
+		this(parentType, String.format(TASK_NAME_AND_KEY_FORMAT, parentType), taskRequestBuilderClass);
 	}
 
-	public DeleteByParentIterateTaskConfigurer(String parentType,
-	        String taskName,
-	        String taskKey,
-	        Class<?> taskRequestBuilderClass) {
-		super(taskName, taskKey);
+	public DeleteByParentIterateTaskConfigurer(String parentType, String taskName, Class<?> taskRequestBuilderClass) {
+		super(taskName);
 		this.setParentType(parentType);
 		this.setTaskRequestBuilderClass(taskRequestBuilderClass);
 	}

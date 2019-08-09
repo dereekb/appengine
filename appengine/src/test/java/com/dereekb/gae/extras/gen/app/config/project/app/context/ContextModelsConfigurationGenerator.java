@@ -16,6 +16,7 @@ import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.
 import com.dereekb.gae.extras.gen.app.config.project.app.context.shared.AppModelBeansConfigurationWriterUtility;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
@@ -28,6 +29,7 @@ import com.dereekb.gae.model.extension.links.system.modification.utility.LinkMod
 import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.TypeModelKeyConverterImpl;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKeyEnforcement;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl;
 import com.dereekb.gae.server.datastore.objectify.query.impl.TaskedObjectifyQueryRequestLimitedBuilderInitializer;
 import com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl;
@@ -199,9 +201,18 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		        .beanClass(modelConfig.getModelQueryInitializerClass());
 
 		// Entry
-		builder.bean(modelConfig.getModelObjectifyEntryBeanId()).beanClass(ObjectifyDatabaseEntityDefinitionImpl.class)
-		        .c().ref(modelConfig.getModelTypeBeanId()).ref(modelConfig.getModelClassBeanId())
-		        .ref(modelConfig.getModelIdTypeBeanId()).ref(modelConfig.getModelQueryInitializerBeanId());
+		SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> entryBeanBuilder = builder
+		        .bean(modelConfig.getModelObjectifyEntryBeanId()).beanClass(ObjectifyDatabaseEntityDefinitionImpl.class)
+		        .c()
+		        .ref(modelConfig.getModelTypeBeanId()).ref(modelConfig.getModelClassBeanId())
+		        .ref(modelConfig.getModelIdTypeBeanId()).ref(modelConfig.getModelQueryInitializerBeanId()).up();
+
+		ObjectifyDatabaseEntityKeyEnforcement keyEnforcement = modelConfig.getKeyEnforcement();
+
+		if (keyEnforcement != ObjectifyDatabaseEntityKeyEnforcement.DEFAULT) {
+			// Set key enforcement if necessary
+			entryBeanBuilder.property("keyEnforcement").value(keyEnforcement.toString());
+		}
 
 		// Registry
 		builder.bean(modelConfig.getModelRegistryId())

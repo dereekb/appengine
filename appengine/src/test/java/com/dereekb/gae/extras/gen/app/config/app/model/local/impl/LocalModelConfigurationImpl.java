@@ -9,6 +9,8 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelCrudsConf
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.impl.AppModelConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.LocalModelContextConfigurerImpl;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKeyEnforcement;
+import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
 
@@ -19,6 +21,8 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
         implements LocalModelConfiguration, LocalModelCrudsConfiguration, LocalModelBeansConfiguration {
 
 	private static final Logger LOGGER = Logger.getLogger(LocalModelConfigurationImpl.class.getName());
+
+	private ObjectifyDatabaseEntityKeyEnforcement keyEnforcement;
 
 	private Class<Object> modelDataBuilderClass;
 	private Class<Object> modelDataReaderClass;
@@ -60,6 +64,15 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 
 		String modelSecurityContextServiceEntry = baseClassPath + ".security." + baseClassSimpleName
 		        + "SecurityContextServiceEntry";
+
+		// Set Key Enforcement if set
+		try {
+			this.keyEnforcement = ObjectifyUtility.readObjectifyDatabaseEntityKeyEnforcement(this.getModelClass(), true);
+		} catch (IllegalArgumentException e) {
+
+			// Key enforcement is the default.
+			this.keyEnforcement = ObjectifyDatabaseEntityKeyEnforcement.DEFAULT;
+		}
 
 		// Find Edit Controller Name
 		List<String> packagePathComponents = PathUtility.getComponents(baseClassPath, "\\.");
@@ -134,6 +147,19 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 	 */
 	public void setIsReadOnly() {
 		this.setCrudsConfiguration(LocalModelCrudsConfigurationImpl.makeReadOnlyConfiguration(this));
+	}
+
+	@Override
+	public ObjectifyDatabaseEntityKeyEnforcement getKeyEnforcement() {
+		return this.keyEnforcement;
+	}
+
+	public void setKeyEnforcement(ObjectifyDatabaseEntityKeyEnforcement keyEnforcement) {
+		if (keyEnforcement == null) {
+			throw new IllegalArgumentException("keyEnforcement cannot be null.");
+		}
+
+		this.keyEnforcement = keyEnforcement;
 	}
 
 	@Override

@@ -21,7 +21,7 @@ import com.googlecode.objectify.Work;
  * <p>
  * Relation objects that don't yet exist may be created through this mechanism,
  * and ones that should no longer exist may be deleted.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -73,7 +73,7 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 	 * does not exist.
 	 * <p>
 	 * With this setup, generally the instance has
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 * @param <O>
@@ -144,7 +144,7 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 
 	/**
 	 * Basic abstract instance.
-	 * 
+	 *
 	 * @author dereekb
 	 *
 	 * @param <O>
@@ -292,9 +292,26 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 
 	protected enum RelationChangesInputState {
 
-		NO_INPUT,
-		NO_RELATION,
+		/**
+		 * When neither the input model nor the relation model exists.
+		 */
 		NONE,
+
+		/**
+		 * When the relation model exists, but the input model does not.
+		 * <p>
+		 * This occurs when the input model was deleted.
+		 */
+		NO_INPUT,
+
+		/**
+		 * When the input model exists but the related model does not.
+		 */
+		NO_RELATION,
+
+		/**
+		 * When both the input model and the related model exists.
+		 */
 		BOTH
 
 	}

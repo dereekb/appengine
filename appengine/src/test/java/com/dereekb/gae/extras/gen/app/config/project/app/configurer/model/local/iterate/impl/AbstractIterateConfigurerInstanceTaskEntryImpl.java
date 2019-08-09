@@ -5,6 +5,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigura
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.iterate.IterateConfigurerInstanceTaskEntry;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
+import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
  * Abstract {@link IterateConfigurerInstanceTaskEntry} implementation.
@@ -20,10 +21,39 @@ public abstract class AbstractIterateConfigurerInstanceTaskEntryImpl
 	private String taskName;
 	private String taskKey;
 
+	/**
+	 * Sets the task key the same as the task name. The proper casings will be
+	 * applied.
+	 *
+	 * @param taskName
+	 */
+	public AbstractIterateConfigurerInstanceTaskEntryImpl(String taskName) {
+		this(taskName, taskName);
+	}
+
+	/**
+	 * Creates a new instance with the specified Task Name and Task Key.
+	 * <p>
+	 * The taskName is used to build the bean ids for the task and it's key.
+	 * <p>
+	 * The taskKey should be unique to the taskqueue, but is referenced via a
+	 * key-string bean that is generated.
+	 *
+	 * @param taskName
+	 * @param taskKey
+	 */
 	public AbstractIterateConfigurerInstanceTaskEntryImpl(String taskName, String taskKey) {
 		super();
 		this.setTaskKey(taskKey);
 		this.setTaskName(taskName);
+	}
+
+	public boolean getAddModelPrefix() {
+		return this.addModelPrefix;
+	}
+
+	public void setAddModelPrefix(boolean addModelPrefix) {
+		this.addModelPrefix = addModelPrefix;
 	}
 
 	public String getTaskName() {
@@ -35,7 +65,7 @@ public abstract class AbstractIterateConfigurerInstanceTaskEntryImpl
 			throw new IllegalArgumentException("taskName cannot be null.");
 		}
 
-		this.taskName = taskName;
+		this.taskName = StringUtility.firstLetterUpperCase(taskName);
 	}
 
 	public String getTaskKey() {
@@ -47,7 +77,7 @@ public abstract class AbstractIterateConfigurerInstanceTaskEntryImpl
 			throw new IllegalArgumentException("taskKey cannot be null.");
 		}
 
-		this.taskKey = taskKey;
+		this.taskKey = StringUtility.firstLetterLowerCase(taskKey);
 	}
 
 	// MARK: IterateConfigurerInstanceTaskEntry
@@ -85,7 +115,7 @@ public abstract class AbstractIterateConfigurerInstanceTaskEntryImpl
 
 	protected String getTaskBeanId(LocalModelConfiguration modelConfig) {
 		String prefix = (this.addModelPrefix) ? modelConfig.getModelBeanPrefix() : "";
-		return prefix + this.taskName + "Task";
+		return StringUtility.firstLetterLowerCase(prefix + this.taskName + "Task");
 	}
 
 }
