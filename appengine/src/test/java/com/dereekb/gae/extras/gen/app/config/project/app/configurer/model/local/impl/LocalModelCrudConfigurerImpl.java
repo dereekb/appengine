@@ -53,8 +53,14 @@ public class LocalModelCrudConfigurerImpl
 		// MARK: AbstractBuilderConfigurer
 		@Override
 		public void configure() {
-			this.configureCrudServiceBean();
-			this.configureCrudServicesBeans();
+
+			if (!this.modelConfig.isInternalModelOnly()) {
+				if (this.modelConfig.getCrudsConfiguration().hasCrudService()) {
+					this.configureCrudServiceBean();
+					this.configureCrudServicesBeans();
+				}
+			}
+
 			this.configureUtilityBeans();
 		}
 
@@ -89,7 +95,9 @@ public class LocalModelCrudConfigurerImpl
 
 		// MARK: CRUD Services
 		protected void configureCrudServicesBeans() {
-			if (this.getModelConfig().hasCreateService() || this.filterWithModelConfig == false) {
+			boolean hasCreateService = this.getModelConfig().hasCreateService();
+
+			if (hasCreateService || this.filterWithModelConfig == false) {
 				this.builder.comment("Create Service");
 				this.configureCreateService();
 			}
@@ -97,9 +105,15 @@ public class LocalModelCrudConfigurerImpl
 			this.builder.comment("Read Service");
 			this.configureReadService();
 
-			if (this.getModelConfig().hasUpdateService() || this.filterWithModelConfig == false) {
+			boolean hasUpdateService = this.getModelConfig().hasUpdateService();
+
+			if (hasUpdateService || this.filterWithModelConfig == false) {
 				this.builder.comment("Update Service");
 				this.configureUpdateService();
+			}
+
+			if (hasCreateService || hasUpdateService) {
+				this.makeAttributeUpdater();
 			}
 
 			if (this.getModelConfig().hasDeleteService() || this.filterWithModelConfig == false) {
@@ -116,7 +130,7 @@ public class LocalModelCrudConfigurerImpl
 			        .ref(createTask);
 
 			this.builder.comment("Create Task");
-			String attributeUpdater = modelBeanPrefix + "AttributeUpdater";
+			String attributeUpdater = this.getAttributeUpdaterBeanId();
 			String createAttributeUpdater = modelBeanPrefix + "CreateAttributeUpdater";
 
 			String createTaskDelegate = modelBeanPrefix + "CreateTaskDelegate";
@@ -182,22 +196,20 @@ public class LocalModelCrudConfigurerImpl
 			String modelBeanPrefix = this.getModelConfig().getModelBeanPrefix();
 
 			String updateTask = modelBeanPrefix + "UpdateTask";
-			String attributeUpdater = modelBeanPrefix + "AttributeUpdater";
+			String attributeUpdaterBeanId = this.getAttributeUpdaterBeanId();
 
-			this.builder.bean(this.getModelConfig().getModelUpdateServiceId()).beanClass(SafeUpdateServiceImpl.class).c()
-			        .ref(this.getModelConfig().getModelReadServiceId()).ref(updateTask)
+			this.builder.bean(this.getModelConfig().getModelUpdateServiceId()).beanClass(SafeUpdateServiceImpl.class)
+			        .c().ref(this.getModelConfig().getModelReadServiceId()).ref(updateTask)
 			        .ref(this.getModelConfig().getModelScheduleUpdateReviewBeanId());
 
 			this.builder.comment("Update Task");
 			String updaterTask = this.getModelConfig().getModelSetterTaskBeanId();
 
 			this.builder.bean(this.getModelConfig().getModelBeanPrefix() + "UpdateTask")
-			        .beanClass(FilteredUpdateTaskImpl.class).c().ref(attributeUpdater).ref(updaterTask).bean()
+			        .beanClass(FilteredUpdateTaskImpl.class).c().ref(attributeUpdaterBeanId).ref(updaterTask).bean()
 			        .factoryBean(this.getModelConfig().getModelSecurityContextServiceEntryBeanId())
 			        .factoryMethod("makeRoleFilter").c()
 			        .ref(this.getAppConfig().getAppBeans().getCrudUpdateModelRoleRefBeanId());
-
-			this.makeAttributeUpdater(attributeUpdater);
 		}
 
 		protected void configureDeleteService() {
@@ -219,6 +231,15 @@ public class LocalModelCrudConfigurerImpl
 			        .ref(this.getAppConfig().getAppBeans().getCrudDeleteModelRoleRefBeanId());
 		}
 
+		protected String getAttributeUpdaterBeanId() {
+			return this.getModelConfig().getModelBeanPrefix() + "AttributeUpdater";
+		}
+
+		protected void makeAttributeUpdater() {
+			String attributeUpdaterBeanId = this.getAttributeUpdaterBeanId();
+			this.makeAttributeUpdater(attributeUpdaterBeanId);
+		}
+
 		protected void makeAttributeUpdater(String attributeUpdaterBeanId) {
 			SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> builder = this.builder.bean(attributeUpdaterBeanId)
 			        .beanClass(this.getModelConfig().getModelAttributeUpdaterClass());
@@ -234,7 +255,8 @@ public class LocalModelCrudConfigurerImpl
 			if (constructors.length > 0) {
 				for (int i = 0; i < constructors.length; i += 1) {
 					if (constructors[i].getParameterTypes().length > 0) {
-						this.writeTodoCommentForBuilder(builder.getRawXMLBuilder(), "Add constructor args if applicable.");
+						this.writeTodoCommentForBuilder(builder.getRawXMLBuilder(),
+						        "Add constructor args if applicable.");
 						return;
 					}
 				}
@@ -258,7 +280,8 @@ public class LocalModelCrudConfigurerImpl
 			if (this.addTodoWarnings) {
 				builder.c("TODO: " + message);
 			} else if (this.assertTodoOverridden) {
-				throw new RuntimeException("Override CRUDs configurer for type: " + this.getModelConfig().getModelType());
+				throw new RuntimeException(
+				        "Override CRUDs configurer for type: " + this.getModelConfig().getModelType());
 			}
 		}
 

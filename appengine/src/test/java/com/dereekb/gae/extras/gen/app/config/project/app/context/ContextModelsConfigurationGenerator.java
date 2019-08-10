@@ -167,19 +167,8 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 	public GenFolderImpl makeModelClientConfiguration(LocalModelConfiguration modelConfig) {
 		GenFolderImpl folder = super.makeModelClientConfiguration(modelConfig);
 
-		if (modelConfig.isInternalModelOnly() == false) {
-			// TODO: If internal model usage changes from
-			// "isReadOnlyInternalModel" design then will need to add these
-			// configuration
-			// generators back.
-
-			if (modelConfig.getCrudsConfiguration().hasCrudService()) {
-
-				// Crud
-				folder.addFile(new CrudConfigurationGenerator(modelConfig).generateConfigurationFile());
-			}
-
-		}
+		// Crud
+		folder.addFile(new CrudConfigurationGenerator(modelConfig).generateConfigurationFile());
 
 		// Extensions
 		folder.addFolder(this.makeModelExtensionsConfigurationsFolder(modelConfig));
@@ -203,8 +192,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		// Entry
 		SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> entryBeanBuilder = builder
 		        .bean(modelConfig.getModelObjectifyEntryBeanId()).beanClass(ObjectifyDatabaseEntityDefinitionImpl.class)
-		        .c()
-		        .ref(modelConfig.getModelTypeBeanId()).ref(modelConfig.getModelClassBeanId())
+		        .c().ref(modelConfig.getModelTypeBeanId()).ref(modelConfig.getModelClassBeanId())
 		        .ref(modelConfig.getModelIdTypeBeanId()).ref(modelConfig.getModelQueryInitializerBeanId()).up();
 
 		ObjectifyDatabaseEntityKeyEnforcement keyEnforcement = modelConfig.getKeyEnforcement();
@@ -252,14 +240,16 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			builder.alias(modelConfig.getModelSetterTaskBeanId(), modelConfig.getModelBeanPrefix() + "DeleterTask");
 
 			builder.comment("Import");
-			builder.imp("/crud.xml");
 			builder.imp("/extensions/data.xml");
 			builder.imp("/extensions/link.xml");
 			builder.imp("/extensions/generation.xml");
 			builder.imp("/extensions/search.xml");
+		} else {
+			builder.comment("Import");
 		}
 
-		// Security always generated
+		// Crud and Security always generated
+		builder.imp("/crud.xml");
 		builder.imp("/extensions/security.xml");
 
 		return builder;

@@ -31,6 +31,8 @@ import com.dereekb.gae.test.app.mock.client.extension.ModelClientRolesServiceReq
 public abstract class AbstractServerModelRequestSenderTests<T extends MutableUniqueModel> extends AbstractModelRequestSenderTests<T> {
 
 	private boolean canCreateModel = true;
+	private boolean canUpdateModel = true;
+	private boolean canDeleteModel = true;
 
 	private ModelClientCreateRequestSenderTestUtility<T> createRequestUtility;
 	private ModelClientReadRequestSenderTestUtility<T> readRequestUtility;
@@ -63,6 +65,22 @@ public abstract class AbstractServerModelRequestSenderTests<T extends MutableUni
 
 	public void setCanCreateModel(boolean canCreateModel) {
 		this.canCreateModel = canCreateModel;
+	}
+
+	public boolean isCanUpdateModel() {
+		return this.canUpdateModel;
+	}
+
+	public void setCanUpdateModel(boolean canUpdateModel) {
+		this.canUpdateModel = canUpdateModel;
+	}
+
+	public boolean isCanDeleteModel() {
+		return this.canDeleteModel;
+	}
+
+	public void setCanDeleteModel(boolean canDeleteModel) {
+		this.canDeleteModel = canDeleteModel;
 	}
 
 	public String getTestLinkName() {
@@ -166,6 +184,7 @@ public abstract class AbstractServerModelRequestSenderTests<T extends MutableUni
 			this.createRequestUtility.testMockCreateTooManyRequestThrowsClientError(this.getRequestSecurity());
 		}
 	}
+
 	@Test
 	public void testSendMockCreateTooManyRequestThrowsApiResponse() throws Exception {
 		if (this.canCreateModel == true && this.createRequestUtility != null) {
@@ -227,43 +246,50 @@ public abstract class AbstractServerModelRequestSenderTests<T extends MutableUni
 
 	// MARK: Update Tests
 	@Test
+	public void testUpdateRequestIsDisallowed() throws Exception {
+		if (this.canUpdateModel == false && this.updateRequestUtility != null) {
+			this.updateRequestUtility.testMockUpdateRequestIsDisallowed(this.getRequestSecurity());
+		}
+	}
+
+	@Test
 	public void testAtomicModelClientUpdateSingleRequest() throws Exception {
-		if (this.updateRequestUtility != null) {
+		if (this.canUpdateModel && this.updateRequestUtility != null) {
 			this.updateRequestUtility.testMockUpdateSingleRequest(this.getRequestSecurity());
 		}
 	}
 
 	@Test
 	public void testAtomicModelClientUpdateMultipleRequest() throws Exception {
-		if (this.updateRequestUtility != null) {
+		if (this.canUpdateModel && this.updateRequestUtility != null) {
 			this.updateRequestUtility.testMockUpdateManyRequest(this.getRequestSecurity());
 		}
 	}
 
 	@Test
 	public void testAtomicModelClientUnavailableRequest() throws Exception {
-		if (this.updateRequestUtility != null) {
+		if (this.canUpdateModel && this.updateRequestUtility != null) {
 			this.updateRequestUtility.testMockAtomicUnavailableUpdateRequest(this.getRequestSecurity());
 		}
 	}
 
 	@Test
 	public void testNonAtomicModelClientUnavailableRequest() throws Exception {
-		if (this.updateRequestUtility != null) {
+		if (this.canUpdateModel && this.updateRequestUtility != null) {
 			this.updateRequestUtility.testMockNonAtomicUnavailableUpdateRequest(this.getRequestSecurity());
 		}
 	}
 
 	@Test
 	public void testUpdateWithNoIdentifierClientUpdateRequest() throws Exception {
-		if (this.updateRequestUtility != null) {
+		if (this.canUpdateModel && this.updateRequestUtility != null) {
 			this.updateRequestUtility.testMockUpdateWithoutIdentifier(this.getRequestSecurity());
 		}
 	}
 
 	@Test
 	public void testEmptyMockUpdateClientUpdateRequest() throws Exception {
-		if (this.updateRequestUtility != null) {
+		if (this.canUpdateModel && this.updateRequestUtility != null) {
 			this.updateRequestUtility.testEmptyMockUpdate(this.getRequestSecurity());
 		}
 	}
@@ -273,8 +299,15 @@ public abstract class AbstractServerModelRequestSenderTests<T extends MutableUni
 	// MARK: Delete Tests
 	@Test
 	public void testMockDeleteRequestReturnModels() throws Exception {
-		if (this.deleteRequestUtility != null) {
+		if (this.canDeleteModel && this.deleteRequestUtility != null) {
 			this.deleteRequestUtility.testMockDeleteRequestReturnModels(this.getRequestSecurity());
+		}
+	}
+
+	@Test
+	public void testMockDeleteRequestIsDisallowed() throws Exception {
+		if (this.canDeleteModel == false && this.deleteRequestUtility != null) {
+			this.deleteRequestUtility.testMockDeleteRequestIsDisallowed(this.getRequestSecurity());
 		}
 	}
 

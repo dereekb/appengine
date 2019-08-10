@@ -1,11 +1,14 @@
 package com.dereekb.gae.test.app.mock.client.crud;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.dereekb.gae.client.api.exception.ClientAuthenticationException;
 import com.dereekb.gae.client.api.exception.ClientConnectionException;
@@ -14,6 +17,7 @@ import com.dereekb.gae.client.api.model.crud.builder.ClientUpdateRequestSender;
 import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
 import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorType;
+import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.response.exception.ClientResponseSerializationException;
 import com.dereekb.gae.client.api.service.sender.extension.NotClientApiResponseException;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
@@ -44,6 +48,21 @@ public class ModelClientUpdateRequestSenderTestUtility<T extends MutableUniqueMo
 	        TestModelGenerator<T> testModelGenerator) {
 		this.updateRequestSender = updateRequestSender;
 		this.testModelGenerator = testModelGenerator;
+	}
+
+	public void testMockUpdateRequestIsDisallowed(ClientRequestSecurity security) throws ClientRequestFailureException {
+
+		T model = this.testModelGenerator.generate();
+		T template = this.testModelGenerator.generate();
+		template.setModelKey(model.getModelKey());
+
+		UpdateRequest<T> updateRequest = new UpdateRequestImpl<T>(template);
+		SerializedClientApiResponse<SimpleUpdateResponse<T>> response = this.updateRequestSender
+		        .sendRequest(updateRequest, security);
+
+		ClientResponseError error = response.getError();
+		assertNotNull(error);
+		assertTrue(error.getErrorType() == ClientApiResponseErrorType.METHOD_NOT_ALLOWED_ERROR);
 	}
 
 	public void testMockUpdateSingleRequest(ClientRequestSecurity security)
