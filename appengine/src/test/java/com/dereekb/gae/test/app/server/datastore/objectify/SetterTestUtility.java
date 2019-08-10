@@ -19,11 +19,13 @@ import com.dereekb.gae.server.datastore.objectify.MutableObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 
 /**
- * Tests the
+ * Tests the setters functionality. Does not function for Objectify models that
+ * have non-default Objectify key restrictions.
  *
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public class SetterTestUtility<T extends MutableUniqueModel> {
 
