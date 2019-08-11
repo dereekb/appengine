@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.dereekb.gae.model.extension.search.query.service.ModelQueryRequest;
 import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCursor;
-import com.dereekb.gae.utilities.model.search.request.SearchOptions;
+import com.dereekb.gae.utilities.model.search.request.ParameterSearchOptions;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 import com.dereekb.gae.utilities.model.search.request.impl.SearchRequestImpl;
 
@@ -26,7 +26,7 @@ public class ModelQueryRequestImpl extends SearchRequestImpl
 		super();
 	}
 
-	public ModelQueryRequestImpl(boolean keysOnly, Map<String, String> searchParameters, SearchOptions options) {
+	public ModelQueryRequestImpl(boolean keysOnly, Map<String, String> searchParameters, ParameterSearchOptions options) {
 		super(keysOnly, searchParameters, options);
 	}
 

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.dereekb.gae.utilities.misc.parameters.Parameters;
 import com.dereekb.gae.utilities.model.search.request.MutableSearchRequest;
-import com.dereekb.gae.utilities.model.search.request.SearchOptions;
+import com.dereekb.gae.utilities.model.search.request.ParameterSearchOptions;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 
 /**
@@ -45,7 +45,7 @@ public class SearchRequestImpl extends SearchOptionsImpl
 		this.setSearchParameters(searchParameters);
 	}
 
-	public SearchRequestImpl(boolean keysOnly, Map<String, String> searchParameters, SearchOptions options) {
+	public SearchRequestImpl(boolean keysOnly, Map<String, String> searchParameters, ParameterSearchOptions options) {
 		this.setKeysOnly(keysOnly);
 		this.setSearchParameters(searchParameters);
 

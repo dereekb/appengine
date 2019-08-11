@@ -5,18 +5,17 @@ import java.util.Map;
 
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.collections.iterator.cursor.impl.ResultsCursorImpl;
-import com.dereekb.gae.utilities.model.search.request.MutableSearchOptions;
-import com.dereekb.gae.utilities.model.search.request.SearchOptions;
+import com.dereekb.gae.utilities.model.search.request.MutableParameterSearchOptions;
+import com.dereekb.gae.utilities.model.search.request.ParameterSearchOptions;
 
 /**
- * Base model query that contains a field for an Objectify query cursor and
- * limit.
+ * {@link MutableParameterSearchOptions} implementation.
  *
  * @author dereekb
  *
  */
 public class SearchOptionsImpl
-        implements MutableSearchOptions {
+        implements MutableParameterSearchOptions {
 
 	public static final String CURSOR_PARAM = "cursor";
 	public static final String LIMIT_PARAM = "limit";
@@ -28,7 +27,7 @@ public class SearchOptionsImpl
 
 	public SearchOptionsImpl() {}
 
-	public SearchOptionsImpl(SearchOptions options) {
+	public SearchOptionsImpl(ParameterSearchOptions options) {
 		this.setOptions(options);
 	}
 
@@ -44,7 +43,7 @@ public class SearchOptionsImpl
 		this.setLimit(limit);
 	}
 
-	public void setOptions(SearchOptions options) {
+	public void setOptions(ParameterSearchOptions options) {
 		this.setCursor(options.getCursor());
 		this.setOffset(options.getOffset());
 		this.setLimit(options.getLimit());

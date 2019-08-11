@@ -11,7 +11,7 @@ import com.dereekb.gae.utilities.misc.parameters.Parameters;
  *
  */
 public interface MutableSearchRequest
-        extends SearchRequest, MutableSearchOptions {
+        extends SearchRequest, MutableParameterSearchOptions {
 
 	/**
 	 * Sets the type of request.

@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.datastore.models.query;
 
-import com.dereekb.gae.utilities.model.search.request.MutableSearchOptions;
+import com.dereekb.gae.utilities.model.search.request.MutableParameterSearchOptions;
 
 /**
  * Mutable {@link IndexedModelQueryRequestOptions} extension.
@@ -9,6 +9,6 @@ import com.dereekb.gae.utilities.model.search.request.MutableSearchOptions;
  *
  */
 public interface MutableIndexedModelQueryRequestOptions
-        extends IndexedModelQueryRequestOptions, MutableSearchOptions {
+        extends IndexedModelQueryRequestOptions, MutableParameterSearchOptions {
 
 }

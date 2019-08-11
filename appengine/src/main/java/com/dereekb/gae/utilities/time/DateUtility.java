@@ -28,10 +28,19 @@ public class DateUtility {
 		return DATE_KEY_VALUE_MAP.get(dateValue);
 	}
 
+	/**
+	 * Returns a {@link Date} based on the input key. The keys are specified as
+	 * static variables on the {@link DateUtility}.
+	 *
+	 * @param key
+	 *            {@link String}.
+	 * @return {@link Date}, or {@code null} if none found for that key or if
+	 *         the input was {@code null}.
+	 */
 	public static Date getDateForKey(String key) {
 		Date date = null;
 
-		if (key != null && key.length() < 6) {
+		if (key != null) {
 			switch (key) {
 				case EPOCH_KEY:
 					date = new Date(0L);
@@ -74,7 +83,7 @@ public class DateUtility {
 	/**
 	 * Returns true if the specified amount of time has passed since the input
 	 * date.
-	 * 
+	 *
 	 * @param origin
 	 *            {@link Date}. Never {@code null}.
 	 * @param time
@@ -178,7 +187,7 @@ public class DateUtility {
 
 	/**
 	 * Returns the time difference between now and the current date.
-	 * 
+	 *
 	 * @param date
 	 *            {@link Date}. Never {@code null}.
 	 * @return {@link Long} time difference. Never {@code null}.

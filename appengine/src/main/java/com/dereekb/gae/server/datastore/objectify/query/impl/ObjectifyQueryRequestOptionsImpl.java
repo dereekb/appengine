@@ -4,7 +4,7 @@ import com.dereekb.gae.server.datastore.models.query.impl.IndexedModelQueryReque
 import com.dereekb.gae.server.datastore.objectify.query.MutableObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestOptions;
 import com.dereekb.gae.server.datastore.objectify.query.cursor.impl.ObjectifyCursor;
-import com.dereekb.gae.utilities.model.search.request.SearchOptions;
+import com.dereekb.gae.utilities.model.search.request.ParameterSearchOptions;
 
 /**
  * {@link ObjectifyQueryRequestOptions} implementation.
@@ -23,7 +23,7 @@ public class ObjectifyQueryRequestOptionsImpl extends IndexedModelQueryRequestOp
 
 	public ObjectifyQueryRequestOptionsImpl() {}
 
-	public ObjectifyQueryRequestOptionsImpl(SearchOptions options) {
+	public ObjectifyQueryRequestOptionsImpl(ParameterSearchOptions options) {
 		super(options);
 	}
 
