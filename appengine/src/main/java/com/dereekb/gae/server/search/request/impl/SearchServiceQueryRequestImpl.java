@@ -1,9 +1,8 @@
 package com.dereekb.gae.server.search.request.impl;
 
 import com.dereekb.gae.server.search.query.SearchServiceQueryExpression;
+import com.dereekb.gae.server.search.request.SearchServiceQueryOptions;
 import com.dereekb.gae.server.search.request.SearchServiceQueryRequest;
-import com.dereekb.gae.utilities.model.search.request.SearchOptions;
-import com.dereekb.gae.utilities.model.search.request.impl.SearchOptionsImpl;
 
 /**
  * {@link SearchServiceQueryRequest} implementation.
@@ -14,33 +13,33 @@ import com.dereekb.gae.utilities.model.search.request.impl.SearchOptionsImpl;
 public class SearchServiceQueryRequestImpl extends AbstractSearchServiceRequest
         implements SearchServiceQueryRequest {
 
-	private SearchOptions searchOptions = new SearchOptionsImpl();
+	private SearchServiceQueryOptions searchOptions = new SearchServiceQueryOptionsImpl();
 	private SearchServiceQueryExpression expression;
 
 	public SearchServiceQueryRequestImpl(String indexName) throws IllegalArgumentException {
 		super(indexName);
 	}
 
-	public SearchServiceQueryRequestImpl(String indexName, SearchOptions searchOptions)
+	public SearchServiceQueryRequestImpl(String indexName, SearchServiceQueryOptions searchOptions)
 	        throws IllegalArgumentException {
 		this(indexName, searchOptions, null);
 	}
 
 	public SearchServiceQueryRequestImpl(String indexName,
-	        SearchOptions searchOptions,
+	        SearchServiceQueryOptions searchOptions,
 	        SearchServiceQueryExpression expression) throws IllegalArgumentException {
 		super(indexName);
 		this.setIndexName(indexName);
-		this.setSearchOptions(searchOptions);
+		this.setSearchServiceQueryOptions(searchOptions);
 		this.setExpression(expression);
 	}
 
 	@Override
-	public SearchOptions getSearchOptions() {
+	public SearchServiceQueryOptions getSearchOptions() {
 		return this.searchOptions;
 	}
 
-	public void setSearchOptions(SearchOptions searchOptions) {
+	public void setSearchServiceQueryOptions(SearchServiceQueryOptions searchOptions) {
 		if (searchOptions == null) {
 			throw new IllegalArgumentException("searchOptions cannot be null.");
 		}

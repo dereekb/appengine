@@ -1,5 +1,4 @@
-package com.dereekb.gae.server.search.system.exception;
-
+package com.dereekb.gae.server.search.exception;
 
 /**
  * Thrown when a {@link Document} does not exist.

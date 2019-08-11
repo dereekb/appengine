@@ -1,5 +1,6 @@
 package com.dereekb.gae.utilities.collections.list;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -345,4 +346,24 @@ public class ListUtility {
 		return results.getPassingObjects();
 	}
 
+	/**
+	 * Converts the collection to an array.
+	 *
+	 * @param type
+	 *            Class type. Never {@code null}.
+	 * @param collection
+	 *            Collection, or {@code null} is allowed.
+	 * @return Array, or {@code null} if the collection was null.
+	 */
+	public static <T> T[] toArray(Class<T> type,
+	                              Collection<T> collection) {
+		if (collection == null) {
+			return null;
+		}
+
+		int size = collection.size();
+		@SuppressWarnings("unchecked")
+		T[] array = (T[]) Array.newInstance(type, size);
+		return collection.toArray(array);
+	}
 }

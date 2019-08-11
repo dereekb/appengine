@@ -1,6 +1,4 @@
-package com.dereekb.gae.server.search.system.iterator;
-
-import com.dereekb.gae.server.deprecated.search.system.request.DocumentRangeReadRequest;
+package com.dereekb.gae.server.search.iterator;
 
 
 public interface DocumentIteratorRequest

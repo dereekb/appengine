@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.search;
+package com.dereekb.gae.server.search.service;
 
 /**
  * Document Search Service

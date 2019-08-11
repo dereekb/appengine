@@ -17,7 +17,7 @@ public interface SearchServiceQueryRequest
 	 *
 	 * @return {@link SearchOptions}. Never {@code null}.
 	 */
-	public SearchOptions getSearchOptions();
+	public SearchServiceQueryOptions getSearchOptions();
 
 	/**
 	 * Returns the query expression.

@@ -1,5 +1,7 @@
 package com.dereekb.gae.server.search.request;
 
+import com.dereekb.gae.server.search.components.SearchServiceIndex;
+
 /**
  * Base request for the Search Document API.
  * <p>
@@ -8,13 +10,6 @@ package com.dereekb.gae.server.search.request;
  * @author dereekb
  *
  */
-public interface SearchServiceRequest {
-
-	/**
-	 * Returns the name of the search index to target
-	 *
-	 * @return {@link String}. Never {@code null}.
-	 */
-	public String getIndexName();
+public interface SearchServiceRequest extends SearchServiceIndex {
 
 }

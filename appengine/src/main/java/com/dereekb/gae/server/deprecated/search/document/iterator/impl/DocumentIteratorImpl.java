@@ -11,13 +11,13 @@ import com.google.appengine.api.search.GetResponse;
 import com.google.appengine.api.search.Index;
 
 /**
- * {@link DocumentIterator} implementation.
+ * {@link SearchServiceBatchIterator} implementation.
  *
  * @author dereekb
  *
  */
 public class DocumentIteratorImpl
-        implements DocumentIterator {
+        implements SearchServiceBatchIterator {
 
 	private Index index;
 	private Integer batchSize;

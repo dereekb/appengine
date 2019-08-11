@@ -1,9 +1,8 @@
-package com.dereekb.gae.server.search.system.exception;
+package com.dereekb.gae.server.search.exception;
 
-import com.dereekb.gae.server.deprecated.search.system.iterator.DocumentIterator;
 
 /**
- * Thrown when a {@link DocumentIterator} reaches the end of all values.
+ * Thrown when a {@link SearchServiceBatchIterator} reaches the end of all values.
  *
  * @author dereekb
  *

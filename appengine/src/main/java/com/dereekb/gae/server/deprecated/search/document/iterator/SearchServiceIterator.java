@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.search.system.iterator;
+package com.dereekb.gae.server.search.iterator;
 
 /**
  * Used for retriving a {@link DocumentIndexIterator}.
@@ -6,7 +6,7 @@ package com.dereekb.gae.server.search.system.iterator;
  * @author dereekb
  *
  */
-public interface SearchDocumentIteratorService {
+public interface SearchServiceIterator {
 
 	/**
 	 * Creates a new {@link DocumentIndexIterator} for the input request.
@@ -15,6 +15,6 @@ public interface SearchDocumentIteratorService {
 	 *            {@link DocumentIteratorRequest}. Never {@code null}.
 	 * @return {@link DocumentIndexIterator}. Never {@code null}.
 	 */
-	public DocumentIterator makeIndexIterator(DocumentIteratorRequest request);
+	public SearchServiceBatchIterator makeIndexIterator(DocumentIteratorRequest request);
 
 }
