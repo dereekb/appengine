@@ -21,12 +21,12 @@ public interface MutableResultPair<S, R>
 	public void setResult(R result);
 
 	/**
-	 * Sets the pair state to {@link ResultsPairState#FAILURE}.
+	 * Sets the pair state to {@link ResultPairState#FAILURE}.
 	 */
 	public void flagFailure();
 
 	/**
-	 * Clears the result and sets the pair state to {@link ResultsPairState#CLEARED}.
+	 * Clears the result and sets the pair state to {@link ResultPairState#CLEARED}.
 	 */
 	public void clearResult();
 

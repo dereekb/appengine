@@ -20,7 +20,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.utility.builder.TaskRequestSender;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.collections.map.MapUtility;
-import com.dereekb.gae.utilities.collections.pairs.ResultsPairState;
+import com.dereekb.gae.utilities.collections.pairs.ResultPairState;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.dereekb.gae.web.api.exception.ApiResponseErrorConvertable;
 import com.dereekb.gae.web.api.util.attribute.impl.InvalidAttributeImpl;
@@ -132,7 +132,7 @@ public class LinkCreateTaskImpl<T extends UniqueModel>
 		this.createTask.doTask(input, configuration);
 
 		// Update Links
-		List<CreatePair<T>> pairs = CreatePair.pairsWithState(input, ResultsPairState.SUCCESS);
+		List<CreatePair<T>> pairs = CreatePair.pairsWithState(input, ResultPairState.SUCCESS);
 		List<T> created = CreatePair.getObjects(input);
 
 		List<LinkCreateTaskPair<T>> linkPairs = this.delegate.buildTaskPairs(pairs);

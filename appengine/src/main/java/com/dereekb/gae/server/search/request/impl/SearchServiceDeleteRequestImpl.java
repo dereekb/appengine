@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.search.request.impl;
 
 import com.dereekb.gae.server.search.request.SearchServiceDeleteRequest;
+import com.dereekb.gae.server.search.request.SearchServiceKeysRequest;
 
 /**
  * {@link SearchServiceDeleteRequest} implementation
@@ -10,6 +11,10 @@ import com.dereekb.gae.server.search.request.SearchServiceDeleteRequest;
  */
 public class SearchServiceDeleteRequestImpl extends SearchServiceKeysRequestImpl
         implements SearchServiceDeleteRequest {
+
+	public SearchServiceDeleteRequestImpl(SearchServiceKeysRequest keysRequest) throws IllegalArgumentException {
+		super(keysRequest);
+	}
 
 	public SearchServiceDeleteRequestImpl(String indexName, Iterable<String> documentKeys)
 	        throws IllegalArgumentException {

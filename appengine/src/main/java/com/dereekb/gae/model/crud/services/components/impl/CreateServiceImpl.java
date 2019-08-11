@@ -16,7 +16,7 @@ import com.dereekb.gae.model.crud.task.config.CreateTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.CreateTaskConfigImpl;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
-import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultPairImpl;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.task.IterableTask;
 import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttributeException;
@@ -75,7 +75,7 @@ public class CreateServiceImpl<T extends UniqueModel>
 				MultiKeyedInvalidAttributeException exception = new MultiKeyedInvalidAttributeException(failurePairs);
 				throw new AtomicOperationException(exception);
 			} else {
-				HashMapWithList<FilterResult, CreatePair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
+				HashMapWithList<FilterResult, CreatePair<T>> results = ResultPairImpl.filterSuccessfulPairs(pairs);
 
 				List<CreatePair<T>> successPairs = results.valuesForKey(FilterResult.PASS);
 				List<T> models = CreatePair.getObjects(successPairs);

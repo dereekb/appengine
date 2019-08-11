@@ -18,7 +18,7 @@ import com.dereekb.gae.model.crud.task.DeleteTask;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
-import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultPairImpl;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.task.IterableTask;
 
@@ -88,7 +88,7 @@ public class DeleteServiceImpl<T extends UniqueModel>
 			 * Some pairs still may be filtered out internally as part of the
 			 * function before being deleted.
 			 */
-			HashMapWithList<FilterResult, DeletePair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
+			HashMapWithList<FilterResult, DeletePair<T>> results = ResultPairImpl.filterSuccessfulPairs(pairs);
 			List<DeletePair<T>> deletedPairs = results.valuesForKey(FilterResult.PASS);
 			List<T> deletedModels = DeletePair.getKeys(deletedPairs);
 

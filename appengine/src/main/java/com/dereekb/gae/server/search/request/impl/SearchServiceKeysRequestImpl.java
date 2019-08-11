@@ -13,6 +13,11 @@ public class SearchServiceKeysRequestImpl extends AbstractSearchServiceRequest
 
 	private Iterable<String> documentKeys;
 
+	public SearchServiceKeysRequestImpl(SearchServiceKeysRequest keysRequest)
+	        throws IllegalArgumentException {
+		this(keysRequest.getIndexName(), keysRequest.getDocumentKeys());
+	}
+
 	public SearchServiceKeysRequestImpl(String indexName, Iterable<String> documentKeys)
 	        throws IllegalArgumentException {
 		super(indexName);

@@ -1,6 +1,6 @@
 package com.dereekb.gae.server.search.request;
 
-import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultPairImpl;
 import com.google.appengine.api.search.Document;
 
 /**
@@ -9,7 +9,7 @@ import com.google.appengine.api.search.Document;
  * @author dereekb
  *
  */
-public class SearchServiceIndexRequestPair extends ResultsPair<Document, String> {
+public class SearchServiceIndexRequestPair extends ResultPairImpl<Document, String> {
 
 	public SearchServiceIndexRequestPair(Document source) {
 		super(source);

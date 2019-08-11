@@ -11,7 +11,7 @@ import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.collections.map.HashMapWithSet;
 import com.dereekb.gae.utilities.collections.pairs.MutableResultPair;
 import com.dereekb.gae.utilities.collections.pairs.ResultPair;
-import com.dereekb.gae.utilities.collections.pairs.ResultsPairState;
+import com.dereekb.gae.utilities.collections.pairs.ResultPairState;
 import com.dereekb.gae.utilities.filters.FilterResult;
 
 /**
@@ -25,16 +25,16 @@ import com.dereekb.gae.utilities.filters.FilterResult;
  * @param <R>
  *            "Results" object. The object being edited generally.
  */
-public abstract class ResultsPair<S, R> extends HandlerPair<S, R> implements MutableResultPair<S, R> {
+public abstract class ResultPairImpl<S, R> extends HandlerPair<S, R> implements MutableResultPair<S, R> {
 
-	private ResultsPairState state = ResultsPairState.NEW;
+	private ResultPairState state = ResultPairState.NEW;
 
 	/**
 	 * Source object to use for generating the results.
 	 *
 	 * @param source
 	 */
-	public ResultsPair(S source) {
+	public ResultPairImpl(S source) {
 		super(source, null);
 	}
 
@@ -47,7 +47,7 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> implements Mut
 	}
 
 	@Override
-	public ResultsPairState getState() {
+	public ResultPairState getState() {
 		return this.state;
 	}
 
@@ -72,18 +72,18 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> implements Mut
 		this.state = this.recalculateState(this.object, previous);
 	}
 	
-	protected ResultsPairState recalculateState(R newValue, R oldValue) {
+	protected ResultPairState recalculateState(R newValue, R oldValue) {
 		if (oldValue == null) {
 			if (newValue != null) {
-				return ResultsPairState.SUCCESS;
+				return ResultPairState.SUCCESS;
 			} else {
-				return ResultsPairState.FAILURE;
+				return ResultPairState.FAILURE;
 			}
 		} else {
 			if (newValue != null) {
-				return ResultsPairState.REPLACED;
+				return ResultPairState.REPLACED;
 			} else {
-				return ResultsPairState.CLEARED;
+				return ResultPairState.CLEARED;
 			}
 		}
 	}
@@ -92,7 +92,7 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> implements Mut
 	public final void clearResult() {
 		if (this.object != null) {
 			this.object = null;
-			this.state = ResultsPairState.CLEARED;
+			this.state = ResultPairState.CLEARED;
 		}
 	}
 
@@ -111,22 +111,22 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> implements Mut
 	}
 
 	public static <S, R, P extends ResultPair<S, R>> List<P> pairsWithResults(Iterable<P> pairs) {
-		Set<ResultsPairState> states = new HashSet<ResultsPairState>();
-		states.add(ResultsPairState.SUCCESS);
-		states.add(ResultsPairState.REPLACED);
+		Set<ResultPairState> states = new HashSet<ResultPairState>();
+		states.add(ResultPairState.SUCCESS);
+		states.add(ResultPairState.REPLACED);
 		return pairsWithStates(pairs, states);
 	}
 
 	public static <S, R, P extends ResultPair<S, R>> List<P> pairsWithoutResults(Iterable<P> pairs) {
-		Set<ResultsPairState> states = new HashSet<ResultsPairState>();
-		states.add(ResultsPairState.NEW);
-		states.add(ResultsPairState.CLEARED);
-		states.add(ResultsPairState.FAILURE);
+		Set<ResultPairState> states = new HashSet<ResultPairState>();
+		states.add(ResultPairState.NEW);
+		states.add(ResultPairState.CLEARED);
+		states.add(ResultPairState.FAILURE);
 		return pairsWithStates(pairs, states);
 	}
 
 	public static <S, R, P extends ResultPair<S, R>> List<P> pairsWithState(Iterable<P> pairs,
-	                                                                         ResultsPairState state) {
+	                                                                         ResultPairState state) {
 		List<P> withState = new ArrayList<P>();
 
 		for (P pair : pairs) {
@@ -139,11 +139,11 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> implements Mut
 	}
 
 	public static <S, R, P extends ResultPair<S, R>> List<P> pairsWithStates(Iterable<P> pairs,
-	                                                                          Set<ResultsPairState> states) {
+	                                                                          Set<ResultPairState> states) {
 		List<P> withState = new ArrayList<P>();
 
 		for (P pair : pairs) {
-			ResultsPairState state = pair.getState();
+			ResultPairState state = pair.getState();
 
 			if (states.contains(state)) {
 				withState.add(pair);
@@ -154,26 +154,26 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> implements Mut
 	}
 
 	public static <S, R, P extends ResultPair<S, R>> HashMapWithList<FilterResult, P> filterSuccessfulPairs(Iterable<P> pairs) {
-		Set<ResultsPairState> states = new HashSet<ResultsPairState>();
-		states.add(ResultsPairState.SUCCESS);
-		states.add(ResultsPairState.REPLACED);
+		Set<ResultPairState> states = new HashSet<ResultPairState>();
+		states.add(ResultPairState.SUCCESS);
+		states.add(ResultPairState.REPLACED);
 		return filterPairsWithStates(pairs, states);
 	}
 
 	public static <S, R, P extends ResultPair<S, R>> HashMapWithList<FilterResult, P> filterFailedPairs(Iterable<P> pairs) {
-		Set<ResultsPairState> states = new HashSet<ResultsPairState>();
-		states.add(ResultsPairState.NEW);
-		states.add(ResultsPairState.CLEARED);
-		states.add(ResultsPairState.FAILURE);
+		Set<ResultPairState> states = new HashSet<ResultPairState>();
+		states.add(ResultPairState.NEW);
+		states.add(ResultPairState.CLEARED);
+		states.add(ResultPairState.FAILURE);
 		return filterPairsWithStates(pairs, states);
 	}
 
 	public static <S, R, P extends ResultPair<S, R>> HashMapWithList<FilterResult, P> filterPairsWithStates(Iterable<P> pairs,
-	                                                                                                         Set<ResultsPairState> states) {
+	                                                                                                         Set<ResultPairState> states) {
 		HashMapWithList<FilterResult, P> map = new HashMapWithList<FilterResult, P>();
 
 		for (P pair : pairs) {
-			ResultsPairState state = pair.getState();
+			ResultPairState state = pair.getState();
 
 			if (states.contains(state)) {
 				map.add(FilterResult.PASS, pair);
@@ -185,8 +185,8 @@ public abstract class ResultsPair<S, R> extends HandlerPair<S, R> implements Mut
 		return map;
 	}
 
-	public static <S, R, P extends ResultPair<S, R>> HashMapWithList<ResultsPairState, P> pairsByState(Iterable<P> pairs) {
-		HashMapWithList<ResultsPairState, P> map = new HashMapWithList<ResultsPairState, P>();
+	public static <S, R, P extends ResultPair<S, R>> HashMapWithList<ResultPairState, P> pairsByState(Iterable<P> pairs) {
+		HashMapWithList<ResultPairState, P> map = new HashMapWithList<ResultPairState, P>();
 
 		for (P pair : pairs) {
 			map.add(pair.getState(), pair);

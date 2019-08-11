@@ -12,7 +12,7 @@ import com.dereekb.gae.model.crud.task.config.AtomicTaskConfig;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultPairImpl;
 import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 
 /**
@@ -76,7 +76,7 @@ public class ReadTaskImpl<T extends UniqueModel>
 		this.doTask(input);
 
 		if (atomic) {
-			List<ReadPair<T>> errorPairs = ResultsPair.pairsWithoutResults(input);
+			List<ReadPair<T>> errorPairs = ResultPairImpl.pairsWithoutResults(input);
 			List<ModelKey> errorKeys = ReadPair.getKeys(errorPairs);
 
 			if (errorKeys.size() > 0) {

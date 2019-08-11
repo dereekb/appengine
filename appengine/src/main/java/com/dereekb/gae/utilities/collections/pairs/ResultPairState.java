@@ -5,7 +5,7 @@ package com.dereekb.gae.utilities.collections.pairs;
  *
  * @author dereekb
  */
-public enum ResultsPairState {
+public enum ResultPairState {
 
 	/**
 	 * Initial state.

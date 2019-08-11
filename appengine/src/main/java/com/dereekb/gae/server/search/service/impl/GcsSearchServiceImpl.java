@@ -52,7 +52,7 @@ public class GcsSearchServiceImpl
 	private Integer documentPutMax = API_DOCUMENT_PUT_MAXIMUM;
 
 	public GcsSearchServiceImpl() {
-		this.searchService = null;
+		this(null);
 	}
 
 	public GcsSearchServiceImpl(SearchService searchService) {

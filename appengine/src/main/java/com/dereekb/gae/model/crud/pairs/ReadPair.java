@@ -9,7 +9,7 @@ import java.util.Set;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
-import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultPairImpl;
 import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
 
 /**
@@ -18,7 +18,7 @@ import com.dereekb.gae.utilities.misc.keyed.exception.NullKeyException;
  * @author dereekb
  * @param <T>
  */
-public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T> {
+public class ReadPair<T extends UniqueModel> extends ResultPairImpl<ModelKey, T> {
 
 	public ReadPair(ModelKey key) {
 		super(key);
@@ -35,7 +35,7 @@ public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T> {
 	}
 
 	public static <T extends UniqueModel> List<ModelKey> keysFromPairs(Iterable<ReadPair<T>> pairs) {
-		return ResultsPair.getSources(pairs);
+		return ResultPairImpl.getSources(pairs);
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T> {
 	 */
 	@Deprecated
 	public static <T extends UniqueModel> Map<ModelKey, ReadPair<T>> keysMapFromPairs(Iterable<ReadPair<T>> pairs) {
-		return ResultsPair.pairsKeyMap(pairs);
+		return ResultPairImpl.pairsKeyMap(pairs);
 	}
 
 	public static <T extends UniqueModel> List<ReadPair<T>> createPairsForKeys(Iterable<ModelKey> keys)
@@ -70,7 +70,7 @@ public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T> {
 
 	/**
 	 * @deprecated Replaced by better defined static functions in
-	 *             {@link ResultsPair}. "Success" here is ambiguious, whereas
+	 *             {@link ResultPairImpl}. "Success" here is ambiguious, whereas
 	 *             using the two static functions makes their calls more clear.
 	 *
 	 * @param pairs
@@ -94,14 +94,14 @@ public class ReadPair<T extends UniqueModel> extends ResultsPair<ModelKey, T> {
 
 	/**
 	 * @deprecated Replaced by successfulKeysMap() function defined in
-	 *             {@link ResultsPair}.
+	 *             {@link ResultPairImpl}.
 	 *
 	 * @param pairs
 	 * @return
 	 */
 	@Deprecated
 	public static <T extends UniqueModel> HashMapWithList<Boolean, ModelKey> successMapPairs(Iterable<ReadPair<T>> pairs) {
-		return ResultsPair.successfulKeysMap(pairs);
+		return ResultPairImpl.successfulKeysMap(pairs);
 	}
 
 }
