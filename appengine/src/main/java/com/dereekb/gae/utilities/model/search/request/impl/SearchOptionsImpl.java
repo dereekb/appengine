@@ -7,6 +7,7 @@ import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.collections.iterator.cursor.impl.ResultsCursorImpl;
 import com.dereekb.gae.utilities.model.search.request.MutableParameterSearchOptions;
 import com.dereekb.gae.utilities.model.search.request.ParameterSearchOptions;
+import com.dereekb.gae.utilities.model.search.request.SearchOptions;
 
 /**
  * {@link MutableParameterSearchOptions} implementation.
@@ -27,6 +28,10 @@ public class SearchOptionsImpl
 
 	public SearchOptionsImpl() {}
 
+	public SearchOptionsImpl(SearchOptions options) {
+		this.setOptions(options);
+	}
+
 	public SearchOptionsImpl(ParameterSearchOptions options) {
 		this.setOptions(options);
 	}
@@ -43,7 +48,7 @@ public class SearchOptionsImpl
 		this.setLimit(limit);
 	}
 
-	public void setOptions(ParameterSearchOptions options) {
+	public void setOptions(SearchOptions options) {
 		this.setCursor(options.getCursor());
 		this.setOffset(options.getOffset());
 		this.setLimit(options.getLimit());

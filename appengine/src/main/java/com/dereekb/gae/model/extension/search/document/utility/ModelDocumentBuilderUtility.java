@@ -1,14 +1,18 @@
-package com.dereekb.gae.model.extension.search.document.index.component.builder.staged.step.model.util;
+package com.dereekb.gae.model.extension.search.document.utility;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import com.dereekb.gae.model.extension.deprecated.search.document.index.utility.SearchDocumentBuilderUtility;
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedModel;
 import com.dereekb.gae.model.general.geo.impl.PointImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.search.document.utility.SearchDocumentBuilderUtility;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Document.Builder;
+import com.google.appengine.api.search.Field;
+import com.google.appengine.api.search.ScoredDocument;
 
 public class ModelDocumentBuilderUtility {
 
@@ -19,14 +23,14 @@ public class ModelDocumentBuilderUtility {
 	public static final String DESCRIPTOR_ID_FIELD = "descriptorId";
 
 	// MARK: Id
-	public static void addId(String id,
-	                         Document.Builder builder) {
-		addId("%s", id, builder);
+	public static void addKey(String id,
+	                          Document.Builder builder) {
+		addKey("%s", id, builder);
 	}
 
-	public static void addId(String format,
-	                         ModelKey key,
-	                         Document.Builder builder) {
+	public static void addKey(String format,
+	                          ModelKey key,
+	                          Document.Builder builder) {
 		String value = null;
 
 		if (key != null) {
@@ -36,10 +40,27 @@ public class ModelDocumentBuilderUtility {
 		SearchDocumentBuilderUtility.addAtom(format, ID_FIELD, value, builder);
 	}
 
-	public static void addId(String format,
-	                         String id,
-	                         Document.Builder builder) {
+	public static void addKey(String format,
+	                          String id,
+	                          Document.Builder builder) {
 		SearchDocumentBuilderUtility.addAtom(format, ID_FIELD, id, builder);
+	}
+
+	public static List<String> readStringKeysFromDocuments(Iterable<ScoredDocument> documents) {
+		return readStringKeysFromDocuments(documents, ID_FIELD);
+	}
+
+	public static List<String> readStringKeysFromDocuments(Iterable<ScoredDocument> documents,
+	                                                       String idFieldName) {
+		List<String> keys = new ArrayList<String>();
+
+		for (ScoredDocument document : documents) {
+			Field idField = document.getOnlyField(idFieldName);
+			String stringKey = idField.getAtom();
+			keys.add(stringKey);
+		}
+
+		return keys;
 	}
 
 	// MARK: Date

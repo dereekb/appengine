@@ -7,7 +7,7 @@ import com.dereekb.gae.utilities.model.search.request.SearchResponse;
 
 /**
  * Contains model objects within the repsonse.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -21,13 +21,6 @@ public interface ModelSearchResponse<T>
 	 * generally decided by the original request.
 	 */
 	public boolean isKeysOnlyResponse();
-
-	/**
-	 * Whether or not the response has one or more results.
-	 * 
-	 * @return {@code true} if one or more values were returned.
-	 */
-	public boolean hasResults();
 
 	/**
 	 * Returns the model search results.

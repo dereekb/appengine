@@ -1,10 +1,10 @@
-package com.dereekb.gae.model.extension.search.document.index.utility;
+package com.dereekb.gae.server.search.document.utility;
 
 import java.util.Date;
 
-import com.dereekb.gae.model.general.geo.impl.PointImpl;
+import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.general.geo.utility.PointConverter;
-import com.dereekb.gae.server.deprecated.search.document.query.expression.builder.impl.field.BooleanField;
+import com.dereekb.gae.server.search.query.expression.builder.impl.field.BooleanField;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.GeoPoint;
@@ -17,6 +17,7 @@ import com.googlecode.objectify.Key;
  */
 public final class SearchDocumentBuilderUtility {
 
+	// MARK: Boolean
 	public static void addBoolean(String format,
 	                              String name,
 	                              boolean value,
@@ -47,6 +48,7 @@ public final class SearchDocumentBuilderUtility {
 		return builder;
 	}
 
+	// MARK: Text
 	public static void addText(String format,
 	                           String name,
 	                           String value,
@@ -66,6 +68,7 @@ public final class SearchDocumentBuilderUtility {
 		return Field.newBuilder().setName(name).setText(text);
 	}
 
+	// MARK: Atom
 	public static void addAtom(String name,
 	                           Key<?> key,
 	                           Document.Builder builder) {
@@ -129,6 +132,7 @@ public final class SearchDocumentBuilderUtility {
 		return Field.newBuilder().setName(name).setAtom(value);
 	}
 
+	// MARK: Date
 	public static void addDate(String format,
 	                           String name,
 	                           Date value,
@@ -155,22 +159,23 @@ public final class SearchDocumentBuilderUtility {
 		return Field.newBuilder().setName(name).setDate(date);
 	}
 
+	// MARK: Geopoint
 	public static void addGeoPoint(String format,
 	                               String name,
-	                               PointImpl point,
+	                               Point point,
 	                               Document.Builder builder) {
 		addGeoPoint(String.format(format, name), point, builder);
 	}
 
 	public static void addGeoPoint(String name,
-	                               PointImpl point,
+	                               Point point,
 	                               Document.Builder builder) {
 		Field.Builder field = geoPointField(name, point);
 		builder.addField(field);
 	}
 
 	public static Field.Builder geoPointField(String name,
-	                                          PointImpl point) {
+	                                          Point point) {
 		GeoPoint geoPoint = null;
 
 		if (point != null) {

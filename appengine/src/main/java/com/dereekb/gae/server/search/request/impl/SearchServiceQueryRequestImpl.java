@@ -17,12 +17,17 @@ public class SearchServiceQueryRequestImpl extends AbstractSearchServiceRequest
 	private SearchServiceQueryExpression expression;
 
 	public SearchServiceQueryRequestImpl(String indexName) throws IllegalArgumentException {
-		super(indexName);
+		this(indexName, (SearchServiceQueryExpression) null);
 	}
 
 	public SearchServiceQueryRequestImpl(String indexName, SearchServiceQueryOptions searchOptions)
 	        throws IllegalArgumentException {
 		this(indexName, searchOptions, null);
+	}
+
+	public SearchServiceQueryRequestImpl(String indexName, SearchServiceQueryExpression expression)
+	        throws IllegalArgumentException {
+		this(indexName, new SearchServiceQueryOptionsImpl(), expression);
 	}
 
 	public SearchServiceQueryRequestImpl(String indexName,

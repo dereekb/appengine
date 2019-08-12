@@ -15,6 +15,7 @@ import com.dereekb.gae.web.api.model.extension.search.ApiSearchReadRequest;
 public class ApiSearchReadRequestImpl extends SearchRequestImpl
         implements ApiSearchReadRequest {
 
+	private String index;
 	private String query;
 
 	public ApiSearchReadRequestImpl() {}
@@ -24,12 +25,31 @@ public class ApiSearchReadRequestImpl extends SearchRequestImpl
 	}
 
 	public ApiSearchReadRequestImpl(String query) throws IllegalArgumentException {
-		this(query, Collections.<String, String> emptyMap());
+		this(null, query);
+	}
+
+	public ApiSearchReadRequestImpl(String index, String query) throws IllegalArgumentException {
+		this(index, query, Collections.<String, String> emptyMap());
 	}
 
 	public ApiSearchReadRequestImpl(String query, Map<String, String> rawParameters) throws IllegalArgumentException {
+		this(null, query, rawParameters);
+	}
+
+	public ApiSearchReadRequestImpl(String index, String query, Map<String, String> rawParameters)
+	        throws IllegalArgumentException {
 		super(rawParameters);
+		this.setIndex(index);
 		this.setQuery(query);
+	}
+
+	@Override
+	public String getIndex() {
+		return this.index;
+	}
+
+	public void setIndex(String index) {
+		this.index = index;
 	}
 
 	@Override

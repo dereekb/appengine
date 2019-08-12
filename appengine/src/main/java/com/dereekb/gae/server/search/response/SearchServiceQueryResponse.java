@@ -2,8 +2,8 @@ package com.dereekb.gae.server.search.response;
 
 import java.util.Collection;
 
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
-import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.ScoredDocument;
 
 /**
@@ -38,11 +38,11 @@ public interface SearchServiceQueryResponse {
 	/**
 	 * Returns the cursor for the results for resuming the query later.
 	 *
-	 * @return {@link Cursor}.
+	 * @return {@link ResultsCursor}.
 	 *
 	 * @throws NoSearchCursorException
 	 *             if no cursor is available.
 	 */
-	public Cursor getResultsCursor() throws NoSearchCursorException;
+	public ResultsCursor getResultsCursor() throws NoSearchCursorException;
 
 }

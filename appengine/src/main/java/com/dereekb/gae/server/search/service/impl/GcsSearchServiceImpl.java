@@ -16,6 +16,8 @@ import com.dereekb.gae.server.search.response.SearchServiceQueryResponse;
 import com.dereekb.gae.server.search.response.SearchServiceReadResponse;
 import com.dereekb.gae.server.search.response.impl.SearchServiceReadResponseImpl;
 import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
+import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
+import com.dereekb.gae.utilities.collections.iterator.cursor.impl.ResultsCursorImpl;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
@@ -313,14 +315,14 @@ public class GcsSearchServiceImpl
 		}
 
 		@Override
-		public Cursor getResultsCursor() throws NoSearchCursorException {
+		public ResultsCursor getResultsCursor() throws NoSearchCursorException {
 			Cursor cursor = this.getResults().getCursor();
 
 			if (cursor == null) {
 				throw new NoSearchCursorException();
 			}
 
-			return cursor;
+			return ResultsCursorImpl.make(cursor.toWebSafeString());
 		}
 
 		// MARK: Internal
@@ -355,9 +357,24 @@ public class GcsSearchServiceImpl
 				cursor = Cursor.newBuilder().build(searchOptions.getCursor().getCursorString());
 			}
 
-			QueryOptions queryOptions = QueryOptions.newBuilder()
-			        .setFieldsToReturn(ListUtility.toArray(String.class, searchOptions.getFieldsToReturn()))
-			        .setLimit(searchOptions.getLimit()).setOffset(searchOptions.getOffset()).setCursor(cursor).build();
+			QueryOptions.Builder queryOptions = QueryOptions.newBuilder();
+			Collection<String> fieldsToReturn = searchOptions.getFieldsToReturn();
+
+			if (fieldsToReturn != null) {
+				queryOptions = queryOptions.setFieldsToReturn(ListUtility.toArray(String.class, fieldsToReturn));
+			}
+
+			if (searchOptions.getLimit() != null) {
+				queryOptions = queryOptions.setLimit(searchOptions.getLimit());
+			}
+
+			if (searchOptions.getOffset() != null) {
+				queryOptions = queryOptions.setOffset(searchOptions.getOffset());
+			}
+
+			if (cursor != null) {
+				queryOptions = queryOptions.setCursor(cursor);
+			}
 
 			String queryString = "";
 
