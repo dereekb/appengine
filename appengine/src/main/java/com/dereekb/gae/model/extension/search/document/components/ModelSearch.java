@@ -1,4 +1,4 @@
-package com.dereekb.gae.model.extension.search.document.builder;
+package com.dereekb.gae.model.extension.search.document.components;
 
 import com.dereekb.gae.server.search.query.SearchServiceQueryExpression;
 import com.dereekb.gae.utilities.query.builder.parameters.EncodedQueryParameter;

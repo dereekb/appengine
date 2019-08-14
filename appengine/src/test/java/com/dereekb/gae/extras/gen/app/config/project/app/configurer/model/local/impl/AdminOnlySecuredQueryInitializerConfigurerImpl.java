@@ -3,7 +3,7 @@ package com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.SecuredQueryInitializerConfigurer;
-import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
 /**
  * {@link SecuredQueryInitializerConfigurer} implementation that injects
@@ -18,9 +18,10 @@ public class AdminOnlySecuredQueryInitializerConfigurerImpl
 	// MARK: SecuredQueryInitializerConfigurer
 	@Override
 	public void configureSecuredQueryInitializer(AppConfiguration appConfig,
-	                                             LocalModelConfiguration modelConfig,
-	                                             SpringBeansXMLBeanConstructorBuilder<?> beanConstructor) {
-		beanConstructor.ref(appConfig.getAppBeans().getUtilityBeans().getAdminOnlySecurityModelQueryTaskBeanId());
+	                                      LocalModelConfiguration modelConfig,
+	                                      String securedQueryInitializerDelegateId,
+	                                      SpringBeansXMLBuilder builder) {
+		builder.alias(appConfig.getAppBeans().getUtilityBeans().getAdminOnlySecurityModelQueryTaskBeanId(), securedQueryInitializerDelegateId);
 	}
 
 	@Override

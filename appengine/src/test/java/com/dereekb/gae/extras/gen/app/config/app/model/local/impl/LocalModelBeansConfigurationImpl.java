@@ -4,6 +4,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelBeansConf
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.impl.AppModelBeansConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.AppBeansConfiguration;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
+import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
  * {@link LocalModelBeansConfiguration} implementation.
@@ -18,6 +19,8 @@ public class LocalModelBeansConfigurationImpl extends AppModelBeansConfiguration
 	private String modelRegistryId;
 	private String modelSetterTaskBeanId;
 	private String modelQueryInitializerBeanId;
+	private String securedModelQueryInitializerBeanId;
+	private String securedModelQueryInitializerDelegateBeanId;
 
 	private String newModelFactoryBeanId;
 	private String modelCrudServiceId;
@@ -49,6 +52,8 @@ public class LocalModelBeansConfigurationImpl extends AppModelBeansConfiguration
 		this.setModelRegistryId(modelBeanPrefix + "Registry");
 		this.setModelSetterTaskBeanId(modelBeanPrefix + "SetterTask");
 		this.setModelQueryInitializerBeanId(modelBeanPrefix + "QueryInitializer");
+		this.setSecuredModelQueryInitializerBeanId("secured" + StringUtility.firstLetterUpperCase(this.getModelQueryInitializerBeanId()));
+		this.setSecuredModelQueryInitializerDelegateBeanId(this.getSecuredModelQueryInitializerBeanId() + "Delegate");
 		this.setNewModelFactoryBeanId(modelBeanPrefix + "Factory");
 		this.setModelCrudServiceId(modelBeanPrefix + "CrudService");
 		this.setModelCreateServiceId(modelBeanPrefix + "CreateService");
@@ -120,6 +125,32 @@ public class LocalModelBeansConfigurationImpl extends AppModelBeansConfiguration
 		}
 
 		this.modelQueryInitializerBeanId = modelQueryInitializerBeanId;
+	}
+
+	@Override
+	public String getSecuredModelQueryInitializerBeanId() {
+		return this.securedModelQueryInitializerBeanId;
+	}
+
+	public void setSecuredModelQueryInitializerBeanId(String securedModelQueryInitializerBeanId) {
+		if (securedModelQueryInitializerBeanId == null) {
+			throw new IllegalArgumentException("securedModelQueryInitializerBeanId cannot be null.");
+		}
+
+		this.securedModelQueryInitializerBeanId = securedModelQueryInitializerBeanId;
+	}
+
+	@Override
+	public String getSecuredModelQueryInitializerDelegateBeanId() {
+		return this.securedModelQueryInitializerDelegateBeanId;
+	}
+
+	public void setSecuredModelQueryInitializerDelegateBeanId(String securedModelQueryInitializerDelegateBeanId) {
+		if (securedModelQueryInitializerDelegateBeanId == null) {
+			throw new IllegalArgumentException("securedModelQueryInitializerDelegateBeanId cannot be null.");
+		}
+
+		this.securedModelQueryInitializerDelegateBeanId = securedModelQueryInitializerDelegateBeanId;
 	}
 
 	@Override

@@ -22,8 +22,16 @@ public class GeoDistanceField extends AbstractGeoField {
 	private Integer radius;
 	private ExpressionOperator operator;
 
+	public GeoDistanceField(String name, Point point, Double radius) {
+		this(name, point, radius, ExpressionOperator.LESS_THAN);
+	}
+
 	public GeoDistanceField(String name, Point point, Integer radius) {
 		this(name, point, radius, ExpressionOperator.LESS_THAN);
+	}
+
+	public GeoDistanceField(String name, Point point, Double radius, ExpressionOperator operator) {
+		this(name, point, new Double(Math.ceil(radius)).intValue(), operator);
 	}
 
 	public GeoDistanceField(String name, Point point, Integer radius, ExpressionOperator operator) {

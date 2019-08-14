@@ -10,8 +10,9 @@ import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelCrudConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelIterateControllerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelRoleSetLoaderConfigurer;
-import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelSearchConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
+import com.dereekb.gae.utilities.task.impl.NoOpTask;
 
 /**
  * {@link LocalModelContextConfigurer} implementation.
@@ -23,6 +24,7 @@ public class LocalModelContextConfigurerImpl
         implements LocalModelContextConfigurer {
 
 	private LocalModelCrudConfigurer customLocalModelCrudConfigurer = new LocalModelCrudConfigurerImpl();
+	private LocalModelSearchConfigurer customLocalModelSearchConfigurer = new NoOpLocalModelSearchConfigurerImpl();
 	private LocalModelIterateControllerConfigurer customLocalModelIterateControllerConfigurer = new LocalModelIterateControllerConfigurerImpl();
 	private LocalModelRoleSetLoaderConfigurer customLocalModelRoleSetLoaderConfigurer = new LocalModelRoleSetLoaderConfigurerImpl();
 	private LocalModelChildrenRoleComponentConfigurer customLocalModelChildrenRoleComponentConfigurer = new LocalModelChildrenRoleComponentConfigurerImpl();
@@ -39,6 +41,18 @@ public class LocalModelContextConfigurerImpl
 		}
 
 		this.customLocalModelCrudConfigurer = customLocalModelCrudConfigurer;
+	}
+
+	public LocalModelSearchConfigurer getCustomLocalModelSearchConfigurer() {
+		return this.customLocalModelSearchConfigurer;
+	}
+
+	public void setCustomLocalModelSearchConfigurer(LocalModelSearchConfigurer customLocalModelSearchConfigurer) {
+		if (customLocalModelSearchConfigurer == null) {
+			throw new IllegalArgumentException("customLocalModelSearchConfigurer cannot be null.");
+		}
+
+		this.customLocalModelSearchConfigurer = customLocalModelSearchConfigurer;
 	}
 
 	public LocalModelIterateControllerConfigurer getCustomLocalModelIterateControllerConfigurer() {
@@ -89,13 +103,26 @@ public class LocalModelContextConfigurerImpl
 		this.customLocalModelChildrenRoleComponentConfigurer = customLocalModelChildrenRoleComponentConfigurer;
 	}
 
+	public LocalModelEventListenerConfigurer getCustomLocalModelEventListenerConfigurer() {
+		return this.customLocalModelEventListenerConfigurer;
+	}
+
+	public void setCustomLocalModelEventListenerConfigurer(LocalModelEventListenerConfigurer customLocalModelEventListenerConfigurer) {
+		if (customLocalModelEventListenerConfigurer == null) {
+			throw new IllegalArgumentException("customLocalModelEventListenerConfigurer cannot be null.");
+		}
+
+		this.customLocalModelEventListenerConfigurer = customLocalModelEventListenerConfigurer;
+	}
+
 	// MARK: CustomLocalModelContextConfigurer
 	@Override
 	public void configureSecuredQueryInitializer(AppConfiguration appConfig,
 	                                             LocalModelConfiguration modelConfig,
-	                                             SpringBeansXMLBeanConstructorBuilder<?> beanConstructor) {
+	                                             String securedQueryInitializerDelegateId,
+	                                             SpringBeansXMLBuilder builder) {
 		this.securedQueryInitializerConfigurer.configureSecuredQueryInitializer(appConfig, modelConfig,
-		        beanConstructor);
+		        securedQueryInitializerDelegateId, builder);
 	}
 
 	// MARK: Custom Classes
@@ -105,10 +132,24 @@ public class LocalModelContextConfigurerImpl
 		@Override
 		public void configureSecuredQueryInitializer(AppConfiguration appConfig,
 		                                             LocalModelConfiguration modelConfig,
-		                                             SpringBeansXMLBeanConstructorBuilder<?> beanConstructor) {
-			beanConstructor.nextArgBuilder().comment("TODO: Complete Configuration");
+		                                             String securedQueryInitializerDelegateId,
+		                                             SpringBeansXMLBuilder builder) {
+			builder.comment("TODO: Complete Configuration");
+			builder.bean(securedQueryInitializerDelegateId).beanClass(NoOpTask.class);
 		}
 
+	}
+
+	@Override
+	public boolean hasSearchComponents() {
+		return this.customLocalModelSearchConfigurer.hasSearchComponents();
+	}
+
+	@Override
+	public void configureSearchComponents(AppConfiguration appConfig,
+	                                      LocalModelConfiguration modelConfig,
+	                                      SpringBeansXMLBuilder builder) {
+		this.customLocalModelSearchConfigurer.configureSearchComponents(appConfig, modelConfig, builder);
 	}
 
 	@Override

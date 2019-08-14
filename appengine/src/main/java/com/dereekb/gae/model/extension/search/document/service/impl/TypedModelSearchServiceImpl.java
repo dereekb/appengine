@@ -3,7 +3,10 @@ package com.dereekb.gae.model.extension.search.document.service.impl;
 import java.util.Collection;
 import java.util.List;
 
-import com.dereekb.gae.model.extension.search.document.builder.ModelSearchBuilder;
+import com.dereekb.gae.model.extension.search.document.components.ModelSearch;
+import com.dereekb.gae.model.extension.search.document.components.ModelSearchFactory;
+import com.dereekb.gae.model.extension.search.document.components.ModelSearchInitializer;
+import com.dereekb.gae.model.extension.search.document.components.impl.ModelSearchInitializerImpl;
 import com.dereekb.gae.model.extension.search.document.service.ModelSearchService;
 import com.dereekb.gae.model.extension.search.document.service.ModelSearchServiceResponse;
 import com.dereekb.gae.model.extension.search.document.service.TypedModelSearchService;
@@ -13,11 +16,9 @@ import com.dereekb.gae.model.extension.search.document.service.exception.SearchI
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.search.query.SearchServiceQueryExpression;
 import com.dereekb.gae.server.search.request.SearchServiceQueryOptions;
 import com.dereekb.gae.server.search.request.SearchServiceQueryRequest;
 import com.dereekb.gae.server.search.request.impl.SearchServiceQueryOptionsImpl;
-import com.dereekb.gae.server.search.request.impl.SearchServiceQueryRequestImpl;
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.model.search.exception.KeysOnlySearchException;
 import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
@@ -37,27 +38,34 @@ public class TypedModelSearchServiceImpl<T extends UniqueModel>
 
 	private Getter<T> getter;
 	private ModelSearchService modelSearchService;
-	private ModelSearchBuilder modelSearchBuilder;
+	private ModelSearchInitializer<ModelSearch> modelSearchInitializer;
 
 	private String defaultIndex;
 
 	public TypedModelSearchServiceImpl(String modelType,
 	        Getter<T> getter,
 	        ModelSearchService modelSearchService,
-	        ModelSearchBuilder modelSearchBuilder) {
-		this(modelType, getter, modelSearchService, modelSearchBuilder, null);
+	        ModelSearchFactory<ModelSearch> modelSearchFactory) {
+		this(modelType, getter, modelSearchService, new ModelSearchInitializerImpl(modelSearchFactory), null);
 	}
 
 	public TypedModelSearchServiceImpl(String modelType,
 	        Getter<T> getter,
 	        ModelSearchService modelSearchService,
-	        ModelSearchBuilder modelSearchBuilder,
+	        ModelSearchInitializer<ModelSearch> modelSearchInitializer) {
+		this(modelType, getter, modelSearchService, modelSearchInitializer, null);
+	}
+
+	public TypedModelSearchServiceImpl(String modelType,
+	        Getter<T> getter,
+	        ModelSearchService modelSearchService,
+	        ModelSearchInitializer<ModelSearch> modelSearchInitializer,
 	        String defaultIndex) {
 		super();
 		this.setModelType(modelType);
 		this.setGetter(getter);
 		this.setModelSearchService(modelSearchService);
-		this.setModelSearchBuilder(modelSearchBuilder);
+		this.setModelSearchInitializer(modelSearchInitializer);
 		this.setDefaultIndex(defaultIndex);
 	}
 
@@ -97,16 +105,16 @@ public class TypedModelSearchServiceImpl<T extends UniqueModel>
 		this.modelSearchService = modelSearchService;
 	}
 
-	public ModelSearchBuilder getModelSearchBuilder() {
-		return this.modelSearchBuilder;
+	public ModelSearchInitializer<ModelSearch> getModelSearchInitializer() {
+		return this.modelSearchInitializer;
 	}
 
-	public void setModelSearchBuilder(ModelSearchBuilder modelSearchBuilder) {
-		if (modelSearchBuilder == null) {
-			throw new IllegalArgumentException("modelSearchBuilder cannot be null.");
+	public void setModelSearchInitializer(ModelSearchInitializer<ModelSearch> modelSearchInitializer) {
+		if (modelSearchInitializer == null) {
+			throw new IllegalArgumentException("modelSearchInitializer cannot be null.");
 		}
 
-		this.modelSearchBuilder = modelSearchBuilder;
+		this.modelSearchInitializer = modelSearchInitializer;
 	}
 
 	public String getDefaultIndex() {
@@ -141,9 +149,7 @@ public class TypedModelSearchServiceImpl<T extends UniqueModel>
 		}
 
 		SearchServiceQueryOptions searchOptions = new SearchServiceQueryOptionsImpl(request);
-		SearchServiceQueryExpression expression = this.modelSearchBuilder.makeQuery(request.getSearchParameters());
-		SearchServiceQueryRequest queryRequest = new SearchServiceQueryRequestImpl(index, searchOptions, expression);
-		return queryRequest;
+		return this.modelSearchInitializer.initalizeSearchRequest(index, searchOptions, request.getParameters());
 	}
 
 	/**

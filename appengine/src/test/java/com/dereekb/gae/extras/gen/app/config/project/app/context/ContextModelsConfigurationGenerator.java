@@ -17,7 +17,6 @@ import com.dereekb.gae.extras.gen.app.config.project.app.context.shared.AppModel
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
-import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
@@ -334,18 +333,24 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			builder.comment("Query Services");
 
 			String queryInitializerId = this.modelConfig.getModelQueryInitializerBeanId();
-			String securedQueryInitializerId = "secured" + StringUtility.firstLetterUpperCase(queryInitializerId);
+			String securedQueryInitializerId = this.modelConfig.getSecuredModelQueryInitializerBeanId();
+			String securedQueryInitializerDelegateId = this.modelConfig.getSecuredModelQueryInitializerDelegateBeanId();
 
 			builder.bean(this.modelConfig.getModelQueryServiceId()).beanClass(ModelQueryServiceImpl.class).c()
 			        .ref(this.modelConfig.getModelRegistryId()).ref(securedQueryInitializerId);
 
-			SpringBeansXMLBeanConstructorBuilder<?> securedLoginQueryInitializer = builder
-			        .bean(securedQueryInitializerId)
-			        .beanClass(TaskedObjectifyQueryRequestLimitedBuilderInitializer.class).c().ref(queryInitializerId);
+			builder.bean(securedQueryInitializerId)
+			        .beanClass(TaskedObjectifyQueryRequestLimitedBuilderInitializer.class).c().ref(queryInitializerId)
+			        .ref(securedQueryInitializerDelegateId);
 
 			LocalModelContextConfigurer configuration = this.modelConfig.getCustomModelContextConfigurer();
 			configuration.configureSecuredQueryInitializer(this.getAppConfig(), this.modelConfig,
-			        securedLoginQueryInitializer);
+			        securedQueryInitializerDelegateId, builder);
+
+			if (configuration.hasSearchComponents()) {
+				builder.comment("Search");
+				configuration.configureSearchComponents(this.getAppConfig(), this.modelConfig, builder);
+			}
 
 			builder.comment("Security");
 			if (this.modelConfig.getModelOwnedModelQuerySecurityDelegateClass() != null) {

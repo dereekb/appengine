@@ -67,7 +67,8 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 
 		// Set Key Enforcement if set
 		try {
-			this.keyEnforcement = ObjectifyUtility.readObjectifyDatabaseEntityKeyEnforcement(this.getModelClass(), true);
+			this.keyEnforcement = ObjectifyUtility.readObjectifyDatabaseEntityKeyEnforcement(this.getModelClass(),
+			        true);
 		} catch (IllegalArgumentException e) {
 
 			// Key enforcement is the default.
@@ -386,6 +387,16 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 	@Override
 	public String getModelQueryInitializerBeanId() {
 		return this.getBeansConfiguration().getModelQueryInitializerBeanId();
+	}
+
+	@Override
+	public String getSecuredModelQueryInitializerBeanId() {
+		return this.getBeansConfiguration().getSecuredModelQueryInitializerBeanId();
+	}
+
+	@Override
+	public String getSecuredModelQueryInitializerDelegateBeanId() {
+		return this.getBeansConfiguration().getSecuredModelQueryInitializerDelegateBeanId();
 	}
 
 	@Override
