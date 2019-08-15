@@ -11,6 +11,10 @@ import com.google.appengine.api.search.Document;
  */
 public class SearchServiceIndexRequestPair extends ResultPairImpl<Document, String> {
 
+	public SearchServiceIndexRequestPair(Document.Builder source) {
+		this(source.build());
+	}
+
 	public SearchServiceIndexRequestPair(Document source) {
 		super(source);
 	}

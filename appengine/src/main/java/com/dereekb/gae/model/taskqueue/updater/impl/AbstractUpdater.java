@@ -13,7 +13,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
  * Also implements {@link RelatedModelUpdaterFactory} by default, allowing it to
  * return itself through the factory method since it uses an instance internally
  * for each request.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -33,12 +33,19 @@ public abstract class AbstractUpdater<T extends UniqueModel>
 	public RelatedModelUpdaterResult updateRelations(RelatedModelUpdateType change,
 	                                                 Iterable<T> models) {
 		Instance<T> instance = this.makeInstance(change);
-		return instance.performChanges(models);
+		RelatedModelUpdaterResult result = instance.performChanges(models);
+		this.finishChanges(instance, result);
+		return result;
+	}
+
+	protected void finishChanges(Instance<T> instance,
+	                             RelatedModelUpdaterResult result) {
+		result.finishChanges();
 	}
 
 	/**
 	 * Creates a new {@link Instance}.
-	 * 
+	 *
 	 * @param change
 	 *            {@link RelatedModelUpdateType}. Never {@code null}.
 	 * @return {@link RelatedModelUpdaterResult}. Never {@code null}.

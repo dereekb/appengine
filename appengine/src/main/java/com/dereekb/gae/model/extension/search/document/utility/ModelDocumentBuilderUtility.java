@@ -6,9 +6,10 @@ import java.util.List;
 
 import com.dereekb.gae.model.extension.links.descriptor.Descriptor;
 import com.dereekb.gae.model.extension.links.descriptor.impl.DescribedModel;
-import com.dereekb.gae.model.general.geo.impl.PointImpl;
+import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.search.document.utility.SearchDocumentBuilderUtility;
+import com.dereekb.gae.utilities.misc.keyed.Keyed;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Document.Builder;
 import com.google.appengine.api.search.Field;
@@ -22,10 +23,38 @@ public class ModelDocumentBuilderUtility {
 	public static final String DESCRIPTOR_TYPE_FIELD = "descriptorType";
 	public static final String DESCRIPTOR_ID_FIELD = "descriptorId";
 
+	// MARK: Document
+
+	public static void setDocumentId(Keyed<ModelKey> model,
+	                                 Builder builder) {
+		setDocumentId(ModelKey.readStringKey(model), builder);
+	}
+
+	public static void setDocumentId(String documentId,
+	                                 Document.Builder builder) {
+		setDocumentId("%s", documentId, builder);
+	}
+
+	public static void setDocumentId(String format,
+	                                 String documentId,
+	                                 Document.Builder builder) {
+		builder.setId(String.format(format, documentId));
+	}
+
 	// MARK: Id
 	public static void addKey(String id,
 	                          Document.Builder builder) {
 		addKey("%s", id, builder);
+	}
+
+	public static void addKey(Keyed<ModelKey> model,
+	                          Document.Builder builder) {
+		addKey(model.keyValue(), builder);
+	}
+
+	public static void addKey(ModelKey modelKey,
+	                          Document.Builder builder) {
+		addKey("%s", modelKey, builder);
 	}
 
 	public static void addKey(String format,
@@ -110,14 +139,14 @@ public class ModelDocumentBuilderUtility {
 	}
 
 	// MARK: Point
-	public static void addPoint(PointImpl point,
-	                            Builder builder) {
+	public static void addPoint(Point point,
+	                            Document.Builder builder) {
 		addPoint("%s", point, builder);
 	}
 
 	public static void addPoint(String format,
-	                            PointImpl point,
-	                            Builder builder) {
+	                            Point point,
+	                            Document.Builder builder) {
 		SearchDocumentBuilderUtility.addGeoPoint(format, POINT_FIELD, point, builder);
 	}
 

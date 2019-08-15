@@ -5,6 +5,8 @@ import java.util.Date;
 import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.general.geo.utility.PointConverter;
 import com.dereekb.gae.server.search.query.expression.builder.impl.field.BooleanField;
+import com.dereekb.gae.utilities.data.StringUtility;
+import com.dereekb.gae.utilities.misc.keyed.IndexCoded;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.GeoPoint;
@@ -57,6 +59,13 @@ public final class SearchDocumentBuilderUtility {
 	}
 
 	public static void addText(String name,
+	                           Iterable<String> values,
+	                           Document.Builder builder) {
+		String value = StringUtility.joinValues(values, " ");
+		addText(name, value, builder);
+	}
+
+	public static void addText(String name,
 	                           String value,
 	                           Document.Builder builder) {
 		Field.Builder field = textField(name, value);
@@ -79,6 +88,12 @@ public final class SearchDocumentBuilderUtility {
 		}
 
 		addAtom(name, value, builder);
+	}
+
+	public static void addAtom(String name,
+	                           IndexCoded codedValue,
+	                           Document.Builder builder) {
+		addAtom(name, codedValue.getCode(), builder);
 	}
 
 	public static void addAtom(String format,

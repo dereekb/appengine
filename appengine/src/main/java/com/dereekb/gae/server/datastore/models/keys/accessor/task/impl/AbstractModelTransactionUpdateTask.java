@@ -9,9 +9,9 @@ import com.dereekb.gae.server.datastore.utility.StagedTransactionChange;
 import com.dereekb.gae.server.datastore.utility.impl.StagedTransactionChangeCollection;
 
 /**
- * Abstract {@link AbstractModelStagedTransactionChangeTask} that loads and
- * iterates over models individually.
- * 
+ * Abstract {@link AbstractModelStagedTransactionChangeTask} that loads models
+ * using a {@link Getter} and iterates over models individually.
+ *
  * @author dereekb
  *
  * @param <T>
@@ -19,6 +19,10 @@ import com.dereekb.gae.server.datastore.utility.impl.StagedTransactionChangeColl
 public abstract class AbstractModelTransactionUpdateTask<T extends UniqueModel> extends AbstractModelStagedTransactionChangeTask<T> {
 
 	private Getter<T> getter;
+
+	public AbstractModelTransactionUpdateTask(Getter<T> getter) {
+		this(null, getter);
+	}
 
 	public AbstractModelTransactionUpdateTask(Integer partitionSize, Getter<T> getter) {
 		super(partitionSize);
@@ -38,18 +42,29 @@ public abstract class AbstractModelTransactionUpdateTask<T extends UniqueModel> 
 	}
 
 	// MARK: Work
-	protected abstract class AbstractSingleUpdaterWork extends AbstractTransactionWork {
+	protected abstract class AbstractModelTransactionUpdaterWork extends AbstractTransactionWork {
 
-		public AbstractSingleUpdaterWork(Iterable<ModelKey> input) {
+		public AbstractModelTransactionUpdaterWork(Iterable<ModelKey> input) {
 			super(input);
 		}
 
 		// MARK: Work
 		@Override
-		public StagedTransactionChange run() {
+		public final StagedTransactionChangeCollection run() {
 			this.initForRun();
-			List<T> models = getter.getWithKeys(this.input);
+			List<T> models = AbstractModelTransactionUpdateTask.this.getter.getWithKeys(this.input);
+			StagedTransactionChangeCollection changes = this.updateModels(models);
 
+			if (changes == null) {
+				changes = StagedTransactionChangeCollection.make();	// Always return changes.
+			}
+
+			return changes;
+		}
+
+		protected void initForRun() {};
+
+		protected StagedTransactionChangeCollection updateModels(List<T> models) {
 			StagedTransactionChangeCollection changes = StagedTransactionChangeCollection.make();
 
 			for (T model : models) {
@@ -60,8 +75,6 @@ public abstract class AbstractModelTransactionUpdateTask<T extends UniqueModel> 
 			return changes;
 		}
 
-		protected void initForRun() {};
-		
 		protected abstract StagedTransactionChange updateModel(T model);
 
 	}
