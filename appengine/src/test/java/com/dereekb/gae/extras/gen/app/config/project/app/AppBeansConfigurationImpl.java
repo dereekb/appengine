@@ -50,6 +50,9 @@ public class AppBeansConfigurationImpl
 	public static final String LOGIN_ROLES_SERVICE_BEAN_ID = "loginRolesService";
 	public static final String LOGIN_TOKEN_USER_DETAILS_BUILDER_BEAN_ID = "loginTokenUserDetailsBuilder";
 
+	public static final String MODEL_SEARCH_SERVICE_BEAN_ID = "modelSearchService";
+	public static final String SEARCH_SERVICE_BEAN_ID = "searchService";
+
 	public static final String ADMIN_ONLY_SECURITY_MODEL_QUERY_TASK_BEAN_ID = "adminOnlySecurityModelQueryTask";
 	public static final String ALLOW_ALL_SECURITY_MODEL_QUERY_TASK_BEAN_ID = "allowAllSecurityModelQueryTask";
 
@@ -102,6 +105,8 @@ public class AppBeansConfigurationImpl
 		private String loginAdminRolesBeanId = LOGIN_ADMIN_ROLES_BEAN_ID;
 		private String loginRolesServiceBeanId = LOGIN_ROLES_SERVICE_BEAN_ID;
 		private String loginTokenUserDetailsBuilderBeanId = LOGIN_TOKEN_USER_DETAILS_BUILDER_BEAN_ID;
+		private String modelSearchServiceBeanId = MODEL_SEARCH_SERVICE_BEAN_ID;
+		private String searchServiceBeanId = SEARCH_SERVICE_BEAN_ID;
 
 		// MARK: AppUtilityBeansConfiguration
 		@Override
@@ -181,6 +186,32 @@ public class AppBeansConfigurationImpl
 			}
 
 			this.loginTokenUserDetailsBuilderBeanId = loginTokenUserDetailsBuilderBeanId;
+		}
+
+		@Override
+		public String getModelSearchServiceBeanId() {
+			return this.modelSearchServiceBeanId;
+		}
+
+		public void setModelSearchServiceBeanId(String modelSearchServiceBeanId) {
+			if (modelSearchServiceBeanId == null) {
+				throw new IllegalArgumentException("modelSearchServiceBeanId cannot be null.");
+			}
+
+			this.modelSearchServiceBeanId = modelSearchServiceBeanId;
+		}
+
+		@Override
+		public String getSearchServiceBeanId() {
+			return this.searchServiceBeanId;
+		}
+
+		public void setSearchServiceBeanId(String searchServiceBeanId) {
+			if (searchServiceBeanId == null) {
+				throw new IllegalArgumentException("searchServiceBeanId cannot be null.");
+			}
+
+			this.searchServiceBeanId = searchServiceBeanId;
 		}
 
 		@Override

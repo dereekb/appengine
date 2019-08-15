@@ -24,9 +24,10 @@ public class TaskedModelSearchInitializerImpl<Q extends ModelSearch>
 	private ModelSearchFactory<Q> modelSearchFactory;
 	private Task<Q> modifySearchTask;
 
-	public TaskedModelSearchInitializerImpl(ModelSearchFactory<Q> modelSearchFactory) {
+	public TaskedModelSearchInitializerImpl(ModelSearchFactory<Q> modelSearchFactory, Task<Q> modifySearchTask) {
 		super();
-		this.setModelSearchFactory(this.modelSearchFactory);
+		this.setModelSearchFactory(modelSearchFactory);
+		this.setModifySearchTask(modifySearchTask);
 	}
 
 	public ModelSearchFactory<Q> getModelSearchFactory() {

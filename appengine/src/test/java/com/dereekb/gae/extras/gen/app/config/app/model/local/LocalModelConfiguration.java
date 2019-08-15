@@ -19,6 +19,9 @@ public interface LocalModelConfiguration
 	@Override
 	public LocalModelBeansConfiguration getBeansConfiguration();
 
+	// Utility
+	public LocalModelUtilityBeansConfiguration getUtilityBeans();
+
 	/**
 	 * Returns the key enforcement for this model.
 	 */

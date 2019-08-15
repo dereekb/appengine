@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelCrudsConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelUtilityBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.impl.AppModelConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.LocalModelContextConfigurerImpl;
@@ -23,6 +24,8 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 	private static final Logger LOGGER = Logger.getLogger(LocalModelConfigurationImpl.class.getName());
 
 	private ObjectifyDatabaseEntityKeyEnforcement keyEnforcement;
+
+	private LocalModelUtilityBeansConfiguration utilityBeans;
 
 	private Class<Object> modelDataBuilderClass;
 	private Class<Object> modelDataReaderClass;
@@ -117,6 +120,74 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 		} catch (ClassNotFoundException e) {
 
 		}
+
+		// Utility Beans
+		this.utilityBeans = new LocalModelUtilityBeansConfigurationImpl();
+	}
+
+	/**
+	 * Internal {@link LocalModelUtilityBeansConfiguration} implementation.
+	 *
+	 * @author dereekb
+	 *
+	 */
+	private class LocalModelUtilityBeansConfigurationImpl
+	        implements LocalModelUtilityBeansConfiguration {
+
+		private String typedModelSearchServiceBeanId;
+		private String modelSearchFactoryBeanId;
+		private String modelSearchInitializerBeanId;
+
+		public LocalModelUtilityBeansConfigurationImpl() {
+			super();
+
+			String prefix = StringUtility
+			        .firstLetterLowerCase(LocalModelConfigurationImpl.this.getBaseClassSimpleName());
+
+			this.setTypedModelSearchServiceBeanId(prefix + "ModelSearchService");
+			this.setModelSearchFactoryBeanId(prefix + "ModelSearchFactory");
+			this.setModelSearchInitializerBeanId(prefix + "ModelSearchInitializer");
+		}
+
+		@Override
+		public String getTypedModelSearchServiceBeanId() {
+			return this.typedModelSearchServiceBeanId;
+		}
+
+		public void setTypedModelSearchServiceBeanId(String typedModelSearchServiceBeanId) {
+			if (typedModelSearchServiceBeanId == null) {
+				throw new IllegalArgumentException("typedModelSearchServiceBeanId cannot be null.");
+			}
+
+			this.typedModelSearchServiceBeanId = typedModelSearchServiceBeanId;
+		}
+
+		@Override
+		public String getModelSearchFactoryBeanId() {
+			return this.modelSearchFactoryBeanId;
+		}
+
+		public void setModelSearchFactoryBeanId(String modelSearchFactoryBeanId) {
+			if (modelSearchFactoryBeanId == null) {
+				throw new IllegalArgumentException("modelSearchFactoryBeanId cannot be null.");
+			}
+
+			this.modelSearchFactoryBeanId = modelSearchFactoryBeanId;
+		}
+
+		@Override
+		public String getModelSearchInitializerBeanId() {
+			return this.modelSearchInitializerBeanId;
+		}
+
+		public void setModelSearchInitializerBeanId(String modelSearchInitializerBeanId) {
+			if (modelSearchInitializerBeanId == null) {
+				throw new IllegalArgumentException("modelSearchInitializerBeanId cannot be null.");
+			}
+
+			this.modelSearchInitializerBeanId = modelSearchInitializerBeanId;
+		}
+
 	}
 
 	@Override
@@ -148,6 +219,19 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 	 */
 	public void setIsReadOnly() {
 		this.setCrudsConfiguration(LocalModelCrudsConfigurationImpl.makeReadOnlyConfiguration(this));
+	}
+
+	@Override
+	public LocalModelUtilityBeansConfiguration getUtilityBeans() {
+		return this.utilityBeans;
+	}
+
+	public void setUtilityBeans(LocalModelUtilityBeansConfiguration utilityBeans) {
+		if (utilityBeans == null) {
+			throw new IllegalArgumentException("utilityBeans cannot be null.");
+		}
+
+		this.utilityBeans = utilityBeans;
 	}
 
 	@Override
