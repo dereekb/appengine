@@ -33,6 +33,12 @@ public class ModelSearchServiceImpl
 	private SearchService searchService;
 	private TypeModelKeyConverter keyTypeConverter;
 
+	public ModelSearchServiceImpl(SearchService searchService, TypeModelKeyConverter keyTypeConverter) {
+		super();
+		this.setSearchService(searchService);
+		this.setKeyTypeConverter(keyTypeConverter);
+	}
+
 	public SearchService getSearchService() {
 		return this.searchService;
 	}

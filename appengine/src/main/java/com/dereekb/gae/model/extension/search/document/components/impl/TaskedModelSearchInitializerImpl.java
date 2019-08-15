@@ -35,7 +35,7 @@ public class TaskedModelSearchInitializerImpl<Q extends ModelSearch>
 	}
 
 	public void setModelSearchFactory(ModelSearchFactory<Q> modelSearchFactory) {
-		if (this.modelSearchFactory == null) {
+		if (modelSearchFactory == null) {
 			throw new IllegalArgumentException("modelSearchFactory cannot be null.");
 		}
 

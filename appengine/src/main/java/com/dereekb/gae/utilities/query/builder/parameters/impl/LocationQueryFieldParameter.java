@@ -55,6 +55,39 @@ public class LocationQueryFieldParameter extends AbstractQueryFieldParameter<Loc
 		super(field);
 	}
 
+	public static LocationQueryFieldParameter make(String locationField,
+	                                               LocationQueryData loc) {
+		LocationQueryFieldParameter fieldParameter = null;
+
+		if (loc != null) {
+			fieldParameter = new LocationQueryFieldParameter(locationField, loc);
+		}
+
+		return fieldParameter;
+	}
+
+	public static LocationQueryFieldParameter make(String locationField,
+	                                               LocationQueryFieldParameter loc) {
+		LocationQueryFieldParameter fieldParameter = null;
+
+		if (loc != null) {
+			fieldParameter = new LocationQueryFieldParameter(locationField, loc);
+		}
+
+		return fieldParameter;
+	}
+
+	public static LocationQueryFieldParameter make(String locationField,
+	                                               String loc) {
+		LocationQueryFieldParameter fieldParameter = null;
+
+		if (loc != null) {
+			fieldParameter = new LocationQueryFieldParameter(locationField, loc);
+		}
+
+		return fieldParameter;
+	}
+
 	@Override
 	public void setOperator(ExpressionOperator operator) throws IllegalArgumentException {
 		if (ALLOWED_OPERATORS.contains(operator) == false) {

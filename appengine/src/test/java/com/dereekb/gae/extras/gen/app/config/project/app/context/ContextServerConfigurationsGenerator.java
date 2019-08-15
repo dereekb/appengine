@@ -443,7 +443,9 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.bean(searchServiceBeanId).beanClass(GcsSearchServiceImpl.class);
 
 			builder.bean(appConfig.getAppBeans().getUtilityBeans().getModelSearchServiceBeanId())
-			        .beanClass(ModelSearchServiceImpl.class).c().ref(searchServiceBeanId)
+			        .beanClass(ModelSearchServiceImpl.class)
+			        .c()
+			        .ref(searchServiceBeanId)
 			        .ref(appConfig.getAppBeans().getModelKeyTypeConverterId());
 		}
 
