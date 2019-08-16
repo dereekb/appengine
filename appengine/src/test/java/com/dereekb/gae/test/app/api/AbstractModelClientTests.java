@@ -27,6 +27,9 @@ import com.dereekb.gae.client.api.model.crud.response.SerializedClientReadApiRes
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientUpdateApiResponse;
 import com.dereekb.gae.client.api.model.exception.ClientKeyedInvalidAttributeException;
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequestSender;
+import com.dereekb.gae.client.api.model.extension.search.document.builder.ClientTypedModelSearchRequestSender;
+import com.dereekb.gae.client.api.model.extension.search.document.response.ClientTypedModelSearchResponse;
+import com.dereekb.gae.client.api.model.extension.search.document.response.SerializedClientTypedModelSearchApiResponse;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.impl.ClientQueryRequestSenderImpl;
 import com.dereekb.gae.client.api.model.extension.search.query.response.ClientModelQueryResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
@@ -47,6 +50,8 @@ import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.SimpleReadResponse;
 import com.dereekb.gae.model.crud.services.response.SimpleUpdateResponse;
 import com.dereekb.gae.model.crud.task.impl.delegate.impl.IsUniqueCreateTaskValidatorImpl;
+import com.dereekb.gae.model.extension.search.document.service.TypedModelSearchServiceRequest;
+import com.dereekb.gae.model.extension.search.document.service.impl.TypedModelSearchServiceRequestImpl;
 import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryRequestImpl;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.dto.LoginData;
@@ -349,11 +354,19 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 		public abstract class AbstractQueryableModelTestingInstance<T extends UniqueModel> extends AbstractReadOnlyModelTestingInstance<T> {
 
 			protected final ClientQueryRequestSenderImpl<T, ?> queryRequestSender;
+			protected final ClientTypedModelSearchRequestSender<T> searchRequestSender;
 
 			public AbstractQueryableModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
 			        ClientQueryRequestSenderImpl<T, ?> queryRequestSender) {
+				this(readRequestSender, queryRequestSender, null);
+			}
+
+			public AbstractQueryableModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
+			        ClientQueryRequestSenderImpl<T, ?> queryRequestSender,
+			        ClientTypedModelSearchRequestSender<T> searchRequestSender) {
 				super(readRequestSender);
 				this.queryRequestSender = queryRequestSender;
+				this.searchRequestSender = searchRequestSender;
 			}
 
 			public ClientQueryRequestSenderImpl<T, ?> getQueryRequestSender() {
@@ -392,6 +405,27 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				}
 			}
 
+			public ClientTypedModelSearchResponse<T> search(ConfigurableEncodedQueryParameters parameters)
+			        throws MultiKeyedInvalidAttributeException {
+				TypedModelSearchServiceRequestImpl searchRequest = new TypedModelSearchServiceRequestImpl();
+				searchRequest.setSearchParameters(parameters);
+				searchRequest.setKeysOnly(false);
+				return this.search(searchRequest);
+			}
+
+			public ClientTypedModelSearchResponse<T> search(TypedModelSearchServiceRequest searchRequest)
+			        throws MultiKeyedInvalidAttributeException {
+				try {
+					return this.sendSearch(searchRequest).getSerializedResponse();
+				} catch (ClientKeyedInvalidAttributeException e) {
+					throw new MultiKeyedInvalidAttributeException(e.getInvalidAttributes());
+				} catch (ClientResponseSerializationException | ClientRequestFailureException e) {
+					e.printStackTrace();
+					fail("Failed search.");
+					throw new RuntimeException();
+				}
+			}
+
 			public SerializedClientApiResponse<ClientModelQueryResponse<T>> sendQuery(SearchRequest queryRequest) {
 				try {
 					return this.queryRequestSender.sendRequest(queryRequest,
@@ -399,6 +433,16 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				} catch (ClientRequestFailureException e) {
 					e.printStackTrace();
 					fail("Failed querying.");
+					throw new RuntimeException();
+				}
+			}
+
+			public SerializedClientTypedModelSearchApiResponse<T> sendSearch(TypedModelSearchServiceRequest searchRequest) {
+				try {
+					return this.searchRequestSender.sendRequest(searchRequest, AbstractTestingInstance.this.getSecurity());
+				} catch (ClientRequestFailureException e) {
+					e.printStackTrace();
+					fail("Failed search.");
 					throw new RuntimeException();
 				}
 			}
@@ -587,6 +631,15 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 		}
 
 		// MARK: Tests
+		public void testCreateFails(T template) {
+			try {
+				this.instance.sendCreate(template).getSerializedResponse();
+				fail("Create should have failed.");
+			} catch (ClientRequestFailureException e) {
+				assertTrue(e.getResponse().getStatus() < 500, "Response status was a server error.");
+			}
+		}
+
 		public void testCreateFailsDueToKeyedAttributeFailure(T template,
 		                                                      final String attributeName) {
 			this.testCreateFailsDueToKeyedAttributeFailure(template, attributeName, null);
@@ -618,6 +671,7 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				assertFalse(attributes.isEmpty());
 				delegate.checkAndAssert(attributes);
 			} catch (ClientRequestFailureException e) {
+				e.printStackTrace();
 				fail();
 			}
 		}

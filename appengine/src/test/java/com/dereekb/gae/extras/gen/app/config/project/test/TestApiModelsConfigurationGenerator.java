@@ -8,6 +8,7 @@ import com.dereekb.gae.client.api.model.crud.builder.impl.ClientDeleteRequestSen
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientReadRequestSenderImpl;
 import com.dereekb.gae.client.api.model.crud.builder.impl.ClientUpdateRequestSenderImpl;
 import com.dereekb.gae.client.api.model.extension.link.impl.ClientLinkRequestSenderImpl;
+import com.dereekb.gae.client.api.model.extension.search.document.builder.impl.ClientTypedModelSearchRequestSenderImpl;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.impl.ClientQueryRequestSenderImpl;
 import com.dereekb.gae.client.api.service.sender.impl.ClientApiRequestSenderImpl;
 import com.dereekb.gae.client.api.service.sender.security.impl.ClientRequestSecurityImpl;
@@ -106,6 +107,12 @@ public class TestApiModelsConfigurationGenerator extends AbstractModelConfigurat
 		builder.bean(modelPrefix + "ClientQueryRequestSender").beanClass(ClientQueryRequestSenderImpl.class).c()
 		        .ref(modelConfig.getModelDataConverterBeanId()).ref("modelKeyTypeConverter")
 		        .ref("securedClientRequestSender"); // .ref(modelConfig.getModelRegistryId());
+
+		if (modelConfig.getCustomModelContextConfigurer().hasSearchComponents()) {
+			builder.bean(modelPrefix + "ClientSearchRequestSender").beanClass(ClientTypedModelSearchRequestSenderImpl.class).c()
+			        .ref(modelConfig.getModelDataConverterBeanId()).ref("modelKeyTypeConverter")
+			        .ref("securedClientRequestSender");
+		}
 
 		return builder;
 	}
