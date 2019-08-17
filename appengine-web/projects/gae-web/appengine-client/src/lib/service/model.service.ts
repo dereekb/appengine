@@ -3,8 +3,8 @@ import { ModelReadService, AppEngineReadSourceFactory, ModelUpdateService, Model
 import { WrapperEventType, ModelWrapperEvent, ModelServiceAnonymousWrapperEventSystem, AnonymousWrapperEvent, WrapperEvent, WrapperEventFilter } from './wrapper';
 import { Subject, Observable } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
-import { ReadService, CreateService, UpdateService, DeleteService, QueryService, CreateRequest, CreateResponse } from '@gae-web/appengine-api';
-import { ModelQueryService, KeyedPredictiveOrderedQueryDelegate, ModelFilteredKeyedPredictiveOrderedQueryDelegate } from './search.service';
+import { ReadService, CreateService, UpdateService, DeleteService, QueryService, CreateRequest, CreateResponse, TypedModelSearchService } from '@gae-web/appengine-api';
+import { ModelQueryService, KeyedPredictiveOrderedQueryDelegate, ModelFilteredKeyedPredictiveOrderedQueryDelegate, ModelSearchService } from './search.service';
 import { BaseError } from 'make-error';
 
 /**
@@ -181,6 +181,10 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
 
   public wrapQueryService(readService: ModelReadService<T>, queryService: QueryService<T>): ModelQueryService<T> {
     return new ModelQueryService<T>(this, readService, queryService);
+  }
+
+  public wrapSearchService(readService: ModelReadService<T>, searchService: TypedModelSearchService<T>): ModelSearchService<T> {
+    return new ModelSearchService<T>(this, readService, searchService);
   }
 
   public makeKeyedPredictiveOrderedQueryDelegate(eventFilter?: WrapperEventFilter): KeyedPredictiveOrderedQueryDelegate<T> {
