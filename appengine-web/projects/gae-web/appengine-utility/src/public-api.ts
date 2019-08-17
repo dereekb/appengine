@@ -9,6 +9,7 @@ export * from './lib/date';
 export * from './lib/error';
 export * from './lib/map';
 export * from './lib/model';
+export * from './lib/point';
 export * from './lib/route';
 export * from './lib/safety';
 export * from './lib/source';

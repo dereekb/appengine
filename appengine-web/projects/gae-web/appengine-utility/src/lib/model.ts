@@ -188,7 +188,7 @@ export class ModelUtility {
   }
 
   static makeModelMap<T extends UniqueModel, M extends ModelMap<T>>(input: T[], read?: ReadModelKeyFunction<T>): M {
-    const map = {} as M;
+    const map = {} as M as any;
     input.forEach((x) => map[ModelUtility.readModelKey(x, read)] = x);
     return map;
   }
