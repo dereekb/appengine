@@ -19,6 +19,11 @@ public class TypedModelSearchServiceRequestImpl extends SearchRequestImpl
 		super();
 	}
 
+	public TypedModelSearchServiceRequestImpl(String index) throws IllegalArgumentException {
+		super();
+		this.setIndex(index);
+	}
+
 	public TypedModelSearchServiceRequestImpl(SearchRequest request) throws IllegalArgumentException {
 		super(request);
 	}

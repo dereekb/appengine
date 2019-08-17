@@ -58,10 +58,6 @@ public class ApiSearchReadRequestImpl extends SearchRequestImpl
 	}
 
 	public void setQuery(String query) {
-		if (query == null) {
-			throw new IllegalArgumentException("Query cannot be null.");
-		}
-
 		this.query = query;
 	}
 

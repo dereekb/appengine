@@ -208,7 +208,16 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 			        ClientCreateRequestSender<T> createRequestSender,
 			        ClientUpdateRequestSender<T> updateRequestSender,
 			        ClientDeleteRequestSender<T> deleteRequestSender) {
-				super(readRequestSender, queryRequestSender);
+				this(readRequestSender, queryRequestSender, createRequestSender, updateRequestSender, deleteRequestSender, null);
+			}
+
+			public AbstractModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
+			        ClientQueryRequestSenderImpl<T, ?> queryRequestSender,
+			        ClientCreateRequestSender<T> createRequestSender,
+			        ClientUpdateRequestSender<T> updateRequestSender,
+			        ClientDeleteRequestSender<T> deleteRequestSender,
+			        ClientTypedModelSearchRequestSender<T> searchRequestSender) {
+				super(readRequestSender, queryRequestSender, searchRequestSender);
 				this.createRequestSender = createRequestSender;
 				this.updateRequestSender = updateRequestSender;
 				this.deleteRequestSender = deleteRequestSender;

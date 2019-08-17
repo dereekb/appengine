@@ -146,6 +146,10 @@ public class LocationQueryFieldParameter extends AbstractQueryFieldParameter<Loc
 		private Point point;
 		private Double radius;
 
+		public LocationQueryData(Point point, Double radius) {
+			this(LocationQueryType.RADIUS, point, radius);
+		}
+
 		public LocationQueryData(LocationQueryType type, Point point, Double radius) {
 			super();
 			this.setType(type);
@@ -177,6 +181,9 @@ public class LocationQueryFieldParameter extends AbstractQueryFieldParameter<Loc
 			this.point = point;
 		}
 
+		/**
+		 * Returns the radius in meters.
+		 */
 		public Double getRadius() {
 			return this.radius;
 		}
