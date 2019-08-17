@@ -6,8 +6,9 @@
   </bean>
   <bean class="com.dereekb.gae.server.datastore.objectify.query.impl.TaskedObjectifyQueryRequestLimitedBuilderInitializer" id="securedLoginQueryInitializer">
     <constructor-arg index="0" ref="loginQueryInitializer"/>
-    <constructor-arg index="1" ref="adminOnlySecurityModelQueryTask"/>
+    <constructor-arg index="1" ref="securedLoginQueryInitializerDelegate"/>
   </bean>
+  <alias alias="securedLoginQueryInitializerDelegate" name="adminOnlySecurityModelQueryTask"/>
   <!--Security-->
   <!--Owned Model-->
   <bean class="com.dereekb.gae.server.auth.model.login.misc.owned.query.security.LoginOwnedModelQuerySecurityDelegate" id="loginOwnedModelQuerySecurityDelegate">

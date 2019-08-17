@@ -44,4 +44,5 @@
   <import resource="/security.xml"/>
   <import resource="/login.xml"/>
   <import resource="/util.xml"/>
+  <import resource="/search.xml"/>
 </beans>

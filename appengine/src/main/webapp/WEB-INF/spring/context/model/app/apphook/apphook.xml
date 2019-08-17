@@ -51,10 +51,10 @@
   <alias alias="appHookUpdaterTask" name="appHookSetterTask"/>
   <alias alias="appHookDeleterTask" name="appHookSetterTask"/>
   <!--Import-->
-  <import resource="/crud.xml"/>
   <import resource="/extensions/data.xml"/>
   <import resource="/extensions/link.xml"/>
   <import resource="/extensions/generation.xml"/>
   <import resource="/extensions/search.xml"/>
+  <import resource="/crud.xml"/>
   <import resource="/extensions/security.xml"/>
 </beans>

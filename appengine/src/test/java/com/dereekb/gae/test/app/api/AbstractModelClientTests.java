@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -93,6 +94,11 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 	@Autowired
 	@Qualifier("clientModelRolesServiceRequestSender")
 	protected ClientModelRolesServiceRequestSender modelRolesRequestSender;
+
+	@AfterEach
+	public void waitForTaskQueueAfterTest() {
+		this.waitForTaskQueueToComplete();
+	}
 
 	protected interface BasicTestUserSetup
 	        extends TestingInstanceObject {
