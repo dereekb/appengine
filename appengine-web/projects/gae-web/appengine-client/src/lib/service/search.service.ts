@@ -1,5 +1,9 @@
 import { UniqueModel, ModelUtility, ModelKey } from '@gae-web/appengine-utility';
-import { QueryService, QueryRequest, QueryResponse, SearchCursor } from '@gae-web/appengine-api';
+import {
+  QueryService, QueryRequest, QueryResponse, SearchCursor, ModelSearchResponse, SearchRequest,
+  SearchResponse, TypedModelSearchService,
+  TypedModelSearchRequest, TypedModelSearchResponse
+} from '@gae-web/appengine-api';
 import { ModelServiceWrapper } from './model.service';
 import { ModelReadService } from './crud.service';
 import { Observable, of, empty, from } from 'rxjs';
@@ -10,7 +14,7 @@ import { WrapperEventFilter, ModelWrapperEvent, WrapperEventType } from './wrapp
 /**
  * Helper wrapper that wraps models and an optional cursor and implements QueryResponse.
  */
-export class WrappedModelsQueryResponse<T extends UniqueModel> implements QueryResponse<T> {
+export class WrappedModelSearchResponse<T extends UniqueModel> implements ModelSearchResponse<T> {
 
   private _keyResults: ModelKey[];
 
@@ -38,42 +42,43 @@ export class WrappedModelsQueryResponse<T extends UniqueModel> implements QueryR
 
 }
 
-// MARK: Query
-/**
- * Wraps a QueryService and ModelReadService to always query by keys, and use the read service to perform reads and cache reads.
- */
-export class ModelQueryService<T extends UniqueModel> implements QueryService<T> {
+// MARK: Abstract
+abstract class AbstractModelSearchService<T extends UniqueModel, I extends SearchRequest, O extends SearchResponse> {
 
-  constructor(private _parent: ModelServiceWrapper<T>, private _readService: ModelReadService<T>, private _queryService: QueryService<T>) { }
+  constructor(protected readonly _parent: ModelServiceWrapper<T>, protected readonly _readService: ModelReadService<T>) { }
 
   // MARK: Query Service
-  public query(request: QueryRequest): Observable<QueryResponse<T>> {
+  protected doSearch(request: I): Observable<O> {
 
     if (request.isKeysOnly) {
-      return this._queryService.query(request);   // Pass through keys only requests normally.
+      return this.doSearchWithService(request);   // Pass through keys only requests normally.
     } else {
       const keysOnlyRequest = { ...request, isKeysOnly: true };
 
-      return this._queryService.query(keysOnlyRequest).pipe(
-        flatMap((response: QueryResponse<T>) => {
+      return this.doSearchWithService(keysOnlyRequest).pipe(
+        flatMap((response: O) => {
           const keys = response.keyResults;
 
           if (keys.length > 0) {
             return this.performRead(response);
           } else {
-            return of(new WrappedModelsQueryResponse([], response.cursor) as QueryResponse<T>);
+            return this.mapSearchResponse(of(new WrappedModelSearchResponse([], response.cursor)));
           }
         })
       );
     }
   }
 
-  protected performRead(response: QueryResponse<T>): Observable<QueryResponse<T>> {
+  protected abstract doSearchWithService(request: I): Observable<O>;
+
+  protected performRead(response: O): Observable<O> {
     const keys = response.keyResults;
     const cacheLoad = this._parent.cache.load(keys);
 
     const hits = cacheLoad.hits;
     const misses = cacheLoad.misses;
+
+    let result: Observable<WrappedModelSearchResponse<T>>;
 
     if (misses.length > 0) {
       const readObs = this._readService.read({
@@ -81,19 +86,76 @@ export class ModelQueryService<T extends UniqueModel> implements QueryService<T>
         atomic: false
       });
 
-      return readObs.pipe(
-        map((result) => {
-          const models = hits.concat(result.models);
+      result = readObs.pipe(
+        map((x) => {
+          const models = hits.concat(x.models);
           const ordered = ModelUtility.orderModels(keys, models);
-          return new WrappedModelsQueryResponse(ordered, response.cursor);
+          return new WrappedModelSearchResponse(ordered, response.cursor);
         })
       );
     } else {
-      return of(new WrappedModelsQueryResponse(hits, response.cursor));
+      result = of(new WrappedModelSearchResponse(hits, response.cursor));
     }
+
+    return this.mapSearchResponse(result);
+  }
+
+  protected abstract mapSearchResponse(responseObs: Observable<WrappedModelSearchResponse<T>>): Observable<O>;
+
+}
+
+// MARK: Search
+/**
+ * Wraps a QueryService and ModelReadService to always query by keys, and use the read service to perform reads and cache reads.
+ */
+export class ModelSearchService<T extends UniqueModel> extends AbstractModelSearchService<T, TypedModelSearchRequest, TypedModelSearchResponse<T>> implements QueryService<T> {
+
+  constructor(parent: ModelServiceWrapper<T>, readService: ModelReadService<T>, private _searchService: TypedModelSearchService<T>) {
+    super(parent, readService);
+  }
+
+  // MARK: Query Service
+  public query(request: TypedModelSearchRequest): Observable<TypedModelSearchResponse<T>> {
+    return this.doSearch(request);
+  }
+
+  protected doSearchWithService(request: TypedModelSearchRequest): Observable<TypedModelSearchResponse<T>> {
+    return this._searchService.search(request);
+  }
+
+  protected mapSearchResponse(responseObs: Observable<WrappedModelSearchResponse<T>>): Observable<TypedModelSearchResponse<T>> {
+    return responseObs;
   }
 
 }
+
+
+// MARK: Query
+/**
+ * Wraps a QueryService and ModelReadService to always query by keys, and use the read service to perform reads and cache reads.
+ */
+export class ModelQueryService<T extends UniqueModel> extends AbstractModelSearchService<T, QueryRequest, QueryResponse<T>> implements QueryService<T> {
+
+  constructor(parent: ModelServiceWrapper<T>, readService: ModelReadService<T>, private _queryService: QueryService<T>) {
+    super(parent, readService);
+  }
+
+  // MARK: Query Service
+  public query(request: QueryRequest): Observable<QueryResponse<T>> {
+    return this.doSearch(request);
+  }
+
+  protected doSearchWithService(request: QueryRequest): Observable<QueryResponse<T>> {
+    return this._queryService.query(request);
+  }
+
+  protected mapSearchResponse(responseObs: Observable<WrappedModelSearchResponse<T>>): Observable<QueryResponse<T>> {
+    return responseObs;
+  }
+
+}
+
+// MARK: Searching
 
 export class KeyedPredictiveOrderedQueryDelegate<T extends UniqueModel> implements KeyedPredictiveOrderedQueryStream {
 

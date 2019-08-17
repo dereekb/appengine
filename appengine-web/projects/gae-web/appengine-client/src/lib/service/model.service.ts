@@ -4,7 +4,7 @@ import { WrapperEventType, ModelWrapperEvent, ModelServiceAnonymousWrapperEventS
 import { Subject, Observable } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { ReadService, CreateService, UpdateService, DeleteService, QueryService, CreateRequest, CreateResponse } from '@gae-web/appengine-api';
-import { ModelQueryService, KeyedPredictiveOrderedQueryDelegate, ModelFilteredKeyedPredictiveOrderedQueryDelegate } from './query.service';
+import { ModelQueryService, KeyedPredictiveOrderedQueryDelegate, ModelFilteredKeyedPredictiveOrderedQueryDelegate } from './search.service';
 import { BaseError } from 'make-error';
 
 /**

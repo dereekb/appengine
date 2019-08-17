@@ -5,7 +5,7 @@ export * from './lib/client.module';
 export * from './lib/service/crud.service';
 export * from './lib/service/link.service';
 export * from './lib/service/model.service';
-export * from './lib/service/query.service';
+export * from './lib/service/search.service';
 export * from './lib/service/source';
 export * from './lib/service/wrapper';
 

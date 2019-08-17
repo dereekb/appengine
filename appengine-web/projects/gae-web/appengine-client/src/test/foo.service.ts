@@ -1,6 +1,6 @@
 import { TestFoo, TestFooData, ClientQueryService, ClientCreateService, ClientReadService, ClientUpdateService, ClientDeleteService } from '@gae-web/appengine-api';
 import { ModelServiceWrapper, ModelCreateService } from '../lib/service/model.service';
-import { ModelQueryService, KeyedPredictiveOrderedQueryDelegate } from '../lib/service/query.service';
+import { ModelQueryService, KeyedPredictiveOrderedQueryDelegate } from '../lib/service/search.service';
 import { ModelReadService, ModelUpdateService, ModelDeleteService } from '../lib/service/crud.service';
 import { QuerySourceConfiguration, CachedKeySourceCache, KeyQuerySource, ReadServiceReadSourceFactory } from '../lib/service/source';
 
