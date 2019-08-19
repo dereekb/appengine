@@ -113,7 +113,7 @@ export const DEFAULT_CONFIG = {
 // TODO: Update to support TypedClientModelSearchService better.
 export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSourceConfiguration> extends AbstractSource<ModelKey> {
 
-  private _config: C;
+  protected _config: C;
 
   private _result: KeyResultPair<T>;
 
@@ -124,33 +124,35 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
 
   constructor(config?: C) {
     super();
-    this.resetQuerySource();
 
-    if (config) {
-      this.config = config;
-    }
+    this.config = config;
+    this.resetSearchSource();
   }
 
   // MARK: Accessors
-  public get config() {
+  public get config(): C {
     return this._config;
   }
 
-  public set config(config) {
-    if (this._config !== config) {
-      this.setConfig(config);
+  public set config(config: C) {
+    if (!this._config || this._config !== config) {
+      this._setConfig(config);
     }
   }
 
-  protected setConfig(config): void {
-    config = config || {};
-
+  protected _setConfig(config: C) {
     this._config = {} as C;
+    this.updateConfigValues(this._config, config);
+    this._resetForNewConfig();
+  }
 
-    this._config.limit = config.limit || DEFAULT_CONFIG.limit;
-    this._config.cursor = config.cursor || DEFAULT_CONFIG.cursor;
-    this._config.filters = { ...DEFAULT_CONFIG.filters, ...config.filters };
+  protected updateConfigValues(config: C, template = {} as C): void {
+    config.limit = template.limit || DEFAULT_CONFIG.limit;
+    config.cursor = template.cursor || DEFAULT_CONFIG.cursor;
+    config.filters = { ...DEFAULT_CONFIG.filters, ...template.filters };
+  }
 
+  protected _resetForNewConfig() {
     this.reset();
   }
 
@@ -281,13 +283,13 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
   // MARK: Reset
   public reset() {
     if (!this.isStopped()) {
-      this.resetQuerySource();
+      this.resetSearchSource();
       super.reset();
       // this.next(); //Don't call next, as the source could be reconfiguring.
     }
   }
 
-  protected resetQuerySource() {
+  protected resetSearchSource() {
     this.done = false;
     this.clearNext();
     this._result = this.makeInitialResult();
@@ -378,6 +380,11 @@ export class KeyTypedModelSearchSource<T extends UniqueModel> extends KeySearchS
 
   constructor(private _service: TypedModelSearchService<T>, config?: TypedModelSearchSourceConfiguration) {
     super(config);
+  }
+
+  protected updateConfigValues(config: TypedModelSearchSourceConfiguration, template: TypedModelSearchSourceConfiguration): void {
+    super.updateConfigValues(config, template);
+    config.index = template.index;
   }
 
   protected doSearch(request: SearchRequest) {
