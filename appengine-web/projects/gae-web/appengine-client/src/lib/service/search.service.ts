@@ -106,16 +106,16 @@ abstract class AbstractModelSearchService<T extends UniqueModel, I extends Searc
 
 // MARK: Search
 /**
- * Wraps a QueryService and ModelReadService to always query by keys, and use the read service to perform reads and cache reads.
+ * Wraps a TypedModelSearchService and ModelReadService to always query by keys, and use the read service to perform reads and cache reads.
  */
-export class ModelSearchService<T extends UniqueModel> extends AbstractModelSearchService<T, TypedModelSearchRequest, TypedModelSearchResponse<T>> implements QueryService<T> {
+export class ModelSearchService<T extends UniqueModel> extends AbstractModelSearchService<T, TypedModelSearchRequest, TypedModelSearchResponse<T>> implements TypedModelSearchService<T> {
 
   constructor(parent: ModelServiceWrapper<T>, readService: ModelReadService<T>, private _searchService: TypedModelSearchService<T>) {
     super(parent, readService);
   }
 
   // MARK: Query Service
-  public query(request: TypedModelSearchRequest): Observable<TypedModelSearchResponse<T>> {
+  public search(request: TypedModelSearchRequest): Observable<TypedModelSearchResponse<T>> {
     return this.doSearch(request);
   }
 
