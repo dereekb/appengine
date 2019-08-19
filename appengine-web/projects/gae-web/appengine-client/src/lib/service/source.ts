@@ -140,13 +140,13 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
     }
   }
 
-  protected _setConfig(config: C) {
+  protected _setConfig(template: C = {} as any) {
     this._config = {} as C;
-    this.updateConfigValues(this._config, config);
+    this.updateConfigValues(this._config, template);
     this._resetForNewConfig();
   }
 
-  protected updateConfigValues(config: C, template = {} as C): void {
+  protected updateConfigValues(config: C, template: C): void {
     config.limit = template.limit || DEFAULT_CONFIG.limit;
     config.cursor = template.cursor || DEFAULT_CONFIG.cursor;
     config.filters = { ...DEFAULT_CONFIG.filters, ...template.filters };

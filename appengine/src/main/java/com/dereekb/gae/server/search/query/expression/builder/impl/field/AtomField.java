@@ -15,7 +15,7 @@ public class AtomField extends AbstractTextField {
 
 	public static String NONE_VALUE = "NONE";
 
-	public AtomField(String name, Number value) {
+	public AtomField(String name, Object value) {
 		super(name, ((value != null) ? value.toString() : null), true);
 	}
 
