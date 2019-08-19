@@ -431,19 +431,19 @@ export class DefaultKeyResultPair<T> extends KeyResultPair<T> {
  * Special ControllableSource implementation that wraps both a ReadSource and a KeyQuerySource,
  * and forwards all ControllableSource requests to the KeyQuerySource.
  *
- * Will automatically bind the querySource's keys to the readSource's input.
+ * Will automatically bind the iterateSource's keys to the readSource's input.
  */
-export class MergedReadQuerySource<T extends UniqueModel> implements ControllableSource<T> {
+export class MergedReadIterateSource<T extends UniqueModel> implements ControllableSource<T> {
 
   private _stream: Observable<SourceEvent<T>>;
 
-  constructor(private _readSource: ReadSource<T>, private _querySource: IterableSource<ModelKey>, autoBindQuerySourceAsReadInput: boolean = true) {
+  constructor(private _readSource: ReadSource<T>, private _iterateSource: IterableSource<ModelKey>, autoBindQuerySourceAsReadInput: boolean = true) {
     if (autoBindQuerySourceAsReadInput) {
-      _readSource.input = _querySource.elements;
+      _readSource.input = _iterateSource.elements;
     }
 
     let readUpdated = false;
-    this._stream = combineLatest(this._readSource.stream, this._querySource.stream).pipe(
+    this._stream = combineLatest(this._readSource.stream, this._iterateSource.stream).pipe(
       map(([read, query]) => {
 
         // Whenever the query state becomes Loading, and read isn't Loading yet, the read still has to catch up.
@@ -479,7 +479,7 @@ export class MergedReadQuerySource<T extends UniqueModel> implements Controllabl
   }
 
   get state(): SourceState {
-    return this._querySource.state;
+    return this._iterateSource.state;
   }
 
   get stream(): Observable<SourceEvent<T>> {
@@ -491,24 +491,24 @@ export class MergedReadQuerySource<T extends UniqueModel> implements Controllabl
   }
 
   hasNext() {
-    return this._querySource.hasNext();
+    return this._iterateSource.hasNext();
   }
 
   next() {
-    return this._querySource.next();
+    return this._iterateSource.next();
   }
 
   refresh() {
-    this._querySource.refresh();
+    this._iterateSource.refresh();
   }
 
   destroy() {
-    this._querySource.destroy();
+    this._iterateSource.destroy();
     this._readSource.destroy();
   }
 
   reset() {
-    this._querySource.reset();
+    this._iterateSource.reset();
     // this._readSource.reset();
     // TODO: Uncomment?
   }

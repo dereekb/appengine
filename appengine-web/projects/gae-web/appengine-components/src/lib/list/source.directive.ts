@@ -1,6 +1,6 @@
 import { Input, Directive, Inject, AfterViewInit, Host, Optional } from '@angular/core';
 import { ControllableSource, UniqueModel, SourceEvent, SourceState, ModelKey, IterableSource } from '@gae-web/appengine-utility';
-import { ReadSource, KeyQuerySource, MergedReadQuerySource, QueryIterableSource } from '@gae-web/appengine-client';
+import { ReadSource, KeyQuerySource, MergedReadIterateSource, QueryIterableSource } from '@gae-web/appengine-client';
 import { ListViewSourceEvent, ListViewSource, ListViewSourceState, AbstractListViewSource } from './source';
 import { ListViewComponent } from './list-view.component';
 import { Observable, combineLatest } from 'rxjs';
@@ -54,21 +54,21 @@ export class GaeListViewReadSourceDirective<T extends UniqueModel> extends Abstr
 }
 
 /**
- * ListViewSource implementation that uses a MergedReadQuerySource
+ * ListViewSource implementation that uses a MergedReadIterateSource
  * to automatically bind the query and read source together, and act as the ListViewSource.
  */
 @Directive({
-  selector: '[gaeListViewKeyQuerySource]',
-  exportAs: 'gaeListViewKeyQuerySource'
+  selector: '[gaeListViewKeySearchSource]',
+  exportAs: 'gaeListViewKeySearchSource'
 })
-export class GaeListViewKeyQuerySourceDirective<T extends UniqueModel> extends AbstractListViewSourceDirective<T> implements ListViewSource<T>, AfterViewInit {
+export class GaeListViewKeySearchSourceDirective<T extends UniqueModel> extends AbstractListViewSourceDirective<T> implements ListViewSource<T>, AfterViewInit {
 
   private _initialized = false;
 
   private _source: ControllableSource<T>;
 
   private _readSource?: ReadSource<T>;
-  private _querySource?: IterableSource<ModelKey>;
+  private _iterateSource?: IterableSource<ModelKey>;
 
   @Input()
   public autoStartQuery = true;
@@ -81,8 +81,8 @@ export class GaeListViewKeyQuerySourceDirective<T extends UniqueModel> extends A
   }
 
   @Input()
-  public set queryComponent(component: IterableSourceComponent<ModelKey> | undefined) {
-    this.querySource = component;
+  public set iterateComponent(component: IterableSourceComponent<ModelKey> | undefined) {
+    this.iterateSource = component;
   }
 
   @Input()
@@ -92,8 +92,8 @@ export class GaeListViewKeyQuerySourceDirective<T extends UniqueModel> extends A
   }
 
   @Input()
-  public set querySource(source: IterableSource<ModelKey> | undefined) {
-    this._querySource = source;
+  public set iterateSource(source: IterableSource<ModelKey> | undefined) {
+    this._iterateSource = source;
     this._update();
   }
 
@@ -105,15 +105,15 @@ export class GaeListViewKeyQuerySourceDirective<T extends UniqueModel> extends A
 
   // MARK: Update
   private _update() {
-    if (this._readSource && this._querySource) {
-      this._source = new MergedReadQuerySource<T>(this._readSource, this._querySource);
+    if (this._readSource && this._iterateSource) {
+      this._source = new MergedReadIterateSource<T>(this._readSource, this._iterateSource);
       super.setSource(this._source);
       this._resetForUpdate();
     }
   }
 
   private _resetForUpdate() {
-    if (this._initialized && this.autoStartQuery && this._source && this._querySource.state === SourceState.Reset) {
+    if (this._initialized && this.autoStartQuery && this._source && this._iterateSource.state === SourceState.Reset) {
       // Automatically reset to pull first results.
       this.more();
     }
