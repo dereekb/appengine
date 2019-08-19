@@ -282,14 +282,14 @@ describe('Source', () => {
 
   describe('MergedReadIterateSource', () => {
 
-    let MergedReadIterateSource: MergedReadIterateSource<TestFoo>;
+    let mergedReadIterateSource: MergedReadIterateSource<TestFoo>;
     let testReadSource: ReadSource<TestFoo>;
     let testQuerySource: TestFooTestKeyQuerySource;
 
     beforeEach(() => {
       testReadSource = TestFooTestReadSourceFactory.makeReadSource();
       testQuerySource = new TestFooTestKeyQuerySource();
-      MergedReadIterateSource = new MergedReadIterateSource<TestFoo>(testReadSource, testQuerySource);
+      mergedReadIterateSource = new MergedReadIterateSource<TestFoo>(testReadSource, testQuerySource);
     });
 
     describe('with no query results', () => {
@@ -305,7 +305,7 @@ describe('Source', () => {
         testQuerySource.next();
 
         // Wait for the stream to complete.
-        MergedReadIterateSource.stream.pipe(
+        mergedReadIterateSource.stream.pipe(
           filter((x) => {
             return x.state === SourceState.Done;
           }),
@@ -335,7 +335,7 @@ describe('Source', () => {
         testQuerySource.next();
 
         // Wait for the stream to complete.
-        MergedReadIterateSource.stream.pipe(
+        mergedReadIterateSource.stream.pipe(
           filter((x) => {
             return x.state === SourceState.Done;
           }),
@@ -347,7 +347,7 @@ describe('Source', () => {
           // Reset and load again.
           let hitLoading = false;
           let hitDone = false;
-          MergedReadIterateSource.stream.pipe()
+          mergedReadIterateSource.stream.pipe()
             .subscribe((sourceEvent) => {
 
               switch (sourceEvent.state) {
@@ -365,8 +365,8 @@ describe('Source', () => {
             });
 
           // TODO: Reset should potentially also directly call next here?
-          MergedReadIterateSource.reset();
-          MergedReadIterateSource.next();
+          mergedReadIterateSource.reset();
+          mergedReadIterateSource.next();
         });
       });
 
