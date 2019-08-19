@@ -74,7 +74,7 @@ export * from './lib/model/loading/loading.component';
 export * from './lib/model/loading/model-loader.component';
 export * from './lib/model/loading/multi-model-loader.directive';
 
-export * from './lib/model/resource/query.component';
+export * from './lib/model/resource/search.component';
 export * from './lib/model/resource/read.component';
 export * from './lib/model/resource/source.component';
 

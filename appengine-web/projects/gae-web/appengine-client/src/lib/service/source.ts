@@ -4,10 +4,11 @@ import {
 } from '@gae-web/appengine-utility';
 import {
   ReadService, ReadRequest, ReadResponse, SearchCursor,
-  SearchParameters, QueryService, SearchRequest, ModelSearchResponse
+  SearchParameters, QueryService, SearchRequest, ModelSearchResponse, TypedModelSearchService
 } from '@gae-web/appengine-api';
 import { Subscription, Observable, combineLatest, Subject } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { ModelSearchService } from './search.service';
 
 // MARK: Read Source
 export interface ReadSourceConfiguration {
@@ -96,8 +97,8 @@ export class ReadServiceReadSourceFactory<T extends UniqueModel> extends ReadSou
 
 }
 
-// MARK: Query
-export interface QuerySourceConfiguration {
+// MARK: Searching
+export interface SearchSourceConfiguration {
   limit?: number;
   cursor?: SearchCursor;
   filters?: SearchParameters;
@@ -109,24 +110,10 @@ export const DEFAULT_CONFIG = {
   filters: undefined
 };
 
-export interface QueryIterableSource<T> extends IterableSource<T> {
+// TODO: Update to support TypedClientModelSearchService better.
+export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSourceConfiguration> extends AbstractSource<ModelKey> {
 
-  /**
-   * Allows query configuration modifications.
-   */
-  config: QuerySourceConfiguration;
-
-}
-
-/**
- * QueryIterableSource implementation that uses a QueryService.
- *
- * When reset, does not automatically pull new items.
- */
-// TODO: Can probably remove the typing info here, since we're only querying on keys.
-export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelKey> implements QueryIterableSource<ModelKey> {
-
-  private _config: QuerySourceConfiguration = DEFAULT_CONFIG;
+  private _config: C;
 
   private _result: KeyResultPair<T>;
 
@@ -135,7 +122,7 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
 
   private done = false;
 
-  constructor(private _service: QueryService<T>, config?: QuerySourceConfiguration) {
+  constructor(config?: C) {
     super();
     this.resetQuerySource();
 
@@ -158,7 +145,8 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
   protected setConfig(config): void {
     config = config || {};
 
-    this._config = {};
+    this._config = {} as C;
+
     this._config.limit = config.limit || DEFAULT_CONFIG.limit;
     this._config.cursor = config.cursor || DEFAULT_CONFIG.cursor;
     this._config.filters = { ...DEFAULT_CONFIG.filters, ...config.filters };
@@ -258,7 +246,7 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
 
     super.setState(SourceState.Loading);
 
-    const obs = this._service.query(request).pipe(
+    const obs = this.doSearch(request).pipe(
       map((response: ModelSearchResponse<T>) => {
         return new KeyResultPair<T>(request, response);
       }),
@@ -267,6 +255,8 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
 
     return obs;
   }
+
+  protected abstract doSearch(request: SearchRequest): Observable<ModelSearchResponse<T>>;
 
   private updateWithResult(result: KeyResultPair<T>): void {
     this._result = result;
@@ -330,6 +320,71 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
   protected stop() {
     this.clearNext();
     super.stop();
+  }
+
+}
+
+// MARK: Query
+export type QuerySourceConfiguration = SearchSourceConfiguration;
+
+export interface QueryIterableSource<T> extends IterableSource<T> {
+
+  /**
+   * Allows query configuration modifications.
+   */
+  config: QuerySourceConfiguration;
+
+}
+
+/**
+ * QueryIterableSource implementation that uses a QueryService.
+ *
+ * When reset, does not automatically pull new items.
+ */
+// TODO: Can probably remove the typing info here, since we're only querying on keys.
+export class KeyQuerySource<T extends UniqueModel> extends KeySearchSource<T, QuerySourceConfiguration> implements QueryIterableSource<ModelKey> {
+
+  constructor(private _service: QueryService<T>, config?: QuerySourceConfiguration) {
+    super(config);
+  }
+
+  protected doSearch(request: SearchRequest) {
+    return this._service.query(request);
+  }
+
+}
+
+// MARK: Search
+export interface TypedModelSearchSourceConfiguration extends SearchSourceConfiguration {
+  index?: string;
+}
+
+export interface TypedModelSearchIterableSource<T> extends IterableSource<T> {
+
+  /**
+   * Allows search configuration modifications.
+   */
+  config: TypedModelSearchSourceConfiguration;
+
+}
+
+/**
+ * TypedModelSearchIterableSource implementation that uses a TypedModelSearchService.
+ *
+ * When reset, does not automatically pull new items.
+ */
+// TODO: Can probably remove the typing info here, since we're only querying on keys.
+export class KeyTypedModelSearchSource<T extends UniqueModel> extends KeySearchSource<T, TypedModelSearchSourceConfiguration> implements TypedModelSearchIterableSource<ModelKey> {
+
+  constructor(private _service: TypedModelSearchService<T>, config?: TypedModelSearchSourceConfiguration) {
+    super(config);
+  }
+
+  protected doSearch(request: SearchRequest) {
+    return this._service.search({
+      ...request,
+      index: this.config.index
+    });
   }
 
 }

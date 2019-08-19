@@ -3,6 +3,7 @@ import { ValueUtility, ModelKey, NumberModelKey, UniqueModel, ModelUtility } fro
 import { ReadService, ReadResponse, ReadRequest } from '../lib/model/crud/read.service';
 import { QueryService, ModelSearchResponse, SearchRequest } from '../public-api';
 import { delay } from 'rxjs/operators';
+import { TypedModelSearchService } from '../lib/model/extension/search/document/search.service';
 
 export interface TestReadServiceDelegate<T> {
   handleRead(service: TestReadService<T>, modelKeys: ModelKey[], atomic?: boolean): Observable<ReadResponse<T>>;
@@ -128,6 +129,14 @@ export class TestQueryService<T extends UniqueModel> implements QueryService<T> 
     };
 
     return of(response);
+  }
+
+}
+
+export class TestTypedModelSearchService<T extends UniqueModel> extends TestQueryService<T> implements TypedModelSearchService<T> {
+
+  search(x) {
+    return this.query(x);
   }
 
 }
