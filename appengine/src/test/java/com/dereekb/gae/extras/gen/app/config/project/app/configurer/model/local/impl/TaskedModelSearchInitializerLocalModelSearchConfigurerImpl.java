@@ -16,6 +16,15 @@ import com.dereekb.gae.model.extension.search.document.components.impl.TaskedMod
 public class TaskedModelSearchInitializerLocalModelSearchConfigurerImpl extends AbstractLocalModelSearchConfigurerImpl
         implements LocalModelSearchConfigurer {
 
+	public TaskedModelSearchInitializerLocalModelSearchConfigurerImpl() {
+		super();
+	}
+
+	public TaskedModelSearchInitializerLocalModelSearchConfigurerImpl(String defaultIndex) {
+		super(defaultIndex);
+	}
+
+	// MARK: AbstractLocalModelSearchConfigurerImpl
 	@Override
 	protected void configureModelSearchInitializer(AppConfiguration appConfig,
 	                                               LocalModelConfiguration modelConfig,

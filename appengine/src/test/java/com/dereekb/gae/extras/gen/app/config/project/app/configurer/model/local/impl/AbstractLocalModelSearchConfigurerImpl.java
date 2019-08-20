@@ -21,15 +21,18 @@ public abstract class AbstractLocalModelSearchConfigurerImpl
 
 	private String defaultIndex;
 
+	public AbstractLocalModelSearchConfigurerImpl() {}
+
+	public AbstractLocalModelSearchConfigurerImpl(String defaultIndex) {
+		super();
+		this.setDefaultIndex(defaultIndex);
+	}
+
 	public String getDefaultIndex() {
 		return this.defaultIndex;
 	}
 
 	public void setDefaultIndex(String defaultIndex) {
-		if (defaultIndex == null) {
-			throw new IllegalArgumentException("defaultIndex cannot be null.");
-		}
-
 		this.defaultIndex = defaultIndex;
 	}
 
