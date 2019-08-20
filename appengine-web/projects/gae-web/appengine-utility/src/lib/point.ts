@@ -52,7 +52,10 @@ export class Point implements JsonConvertable {
 
   // MARK: JSON
   public toJSON(): any {
-    return Object.assign({}, this);
+    return {
+      latitude: this.latitude,
+      longitude: this.longitude
+    };
   }
 
 }
