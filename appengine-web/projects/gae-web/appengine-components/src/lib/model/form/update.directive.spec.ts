@@ -12,6 +12,8 @@ import { GaeTestFooModelFormComponent } from '../../form/model.component.spec';
 import { GaeFormComponentsModule } from '../../form/form.module';
 import { TestFoo } from '@gae-web/appengine-api';
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
+import { ActionState } from '../../shared/action';
+import { filter } from 'rxjs/operators';
 
 describe('GaeUpdateModelFormControllerDirective', () => {
 
@@ -55,6 +57,41 @@ describe('GaeUpdateModelFormControllerDirective', () => {
 
   it('should have a model', () => {
     expect(directive.form.model).toBeDefined();
+  });
+
+  describe('controllerStream', () => {
+
+    it('should be in a reset state initially', () => {
+      expect(directive.lastControllerEvent.state).toBe(ActionState.Reset);
+    });
+
+    it('should enter a working state when submitted.', (done) => {
+      directive.controllerStream.pipe(
+        filter(x => x.state === ActionState.Working)
+      ).subscribe({
+        next: (x) => {
+          expect(directive.lastControllerEvent.state).toBe(ActionState.Working);
+          done();
+        }
+      });
+
+      directive.submit.submit();
+    });
+
+
+    it('should enter a complete when completed.', (done) => {
+      directive.controllerStream.pipe(
+        filter(x => x.state === ActionState.Complete)
+      ).subscribe({
+        next: (x) => {
+          expect(directive.lastControllerEvent.state).toBe(ActionState.Complete);
+          done();
+        }
+      });
+
+      directive.submit.submit();
+    });
+
   });
 
 });

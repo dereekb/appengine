@@ -5,6 +5,16 @@ import { UniqueModel } from '@gae-web/appengine-utility';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TemplateActionDirective } from '../action/template.directive';
 import { ModelFormComponent } from '../../form/model.component';
+import { ActionState } from '../../shared/action';
+import { map } from 'rxjs/operators';
+
+
+
+export class TemplateModelFormEvent<R extends TemplateResponse<T>, T extends UniqueModel> {
+    state: ActionState;
+    response?: R;
+    error?: Error;
+}
 
 /**
  * Abstract ModelFormController directive for a TemplateResponse.
@@ -15,19 +25,19 @@ export abstract class AbstractTemplateModelFormControllerDirective<R extends Tem
     @Output()
     public readonly resultSet = new EventEmitter<R>();
 
-    private _response = new BehaviorSubject<R | undefined>(undefined);
+    private _events = new BehaviorSubject<TemplateModelFormEvent<R, T>>({ state: ActionState.Reset });
 
     constructor(@Optional() @Host() @Inject(ModelFormComponent) form: ModelFormComponent<T>) {
         super(form);
     }
 
     ngOnDestroy() {
-        this._response.complete();
+        this._events.complete();
     }
 
     // MARK: Accessors
     public get result(): R | undefined {
-        return this._response.value;
+        return this._events.value.response;
     }
 
     public get hasResult(): boolean {
@@ -43,7 +53,17 @@ export abstract class AbstractTemplateModelFormControllerDirective<R extends Tem
     }
 
     public get responseStream(): Observable<R | undefined> {
-        return this._response.asObservable();
+        return this.controllerStream.pipe(
+            map(x => x.response)
+        );
+    }
+
+    public get lastControllerEvent() {
+        return this._events.value;
+    }
+
+    public get controllerStream(): Observable<TemplateModelFormEvent<R, T>> {
+        return this._events.asObservable();
     }
 
     // MARK: Internal
@@ -52,7 +72,7 @@ export abstract class AbstractTemplateModelFormControllerDirective<R extends Tem
     }
 
     protected resetAction() {
-        this._response.next(undefined);
+        this._events.next({ state: ActionState.Reset });
         this.submit.isLocked = false; // Unlock.
         super.resetAction();
     }
@@ -61,6 +81,10 @@ export abstract class AbstractTemplateModelFormControllerDirective<R extends Tem
         const template: T | undefined = this.form.model;
 
         if (template) {
+            this._events.next({
+                state: ActionState.Working
+            });
+
             const obs = this.templateAction.doTemplateAction({
                 templates: template
             });
@@ -77,13 +101,19 @@ export abstract class AbstractTemplateModelFormControllerDirective<R extends Tem
 
     protected setResult(result: R | undefined) {
         this.submit.isLocked = true;
-        this._response.next(result);
+        this._events.next({
+            state: ActionState.Complete,
+            response: result
+        });
         this.resultSet.next(result);
     }
 
     protected setError(error: any) {
         this.submit.isLocked = false;
-        this._response.error(error);
+        this._events.next({
+            state: ActionState.Error,
+            error
+        });
     }
 
 }
