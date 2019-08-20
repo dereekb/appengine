@@ -148,6 +148,38 @@ public class DateUtility {
 		return new Date(time * 1000);
 	}
 
+	public static Double dateToSecondsDouble(Date date) {
+		Long time = date.getTime();
+		time = time / 1000;				// Round Value To Seconds
+		return time.doubleValue();
+	}
+
+	public static Date secondsDoubleToDate(Double seconds) {
+		Long time = seconds.longValue();
+		time = time * 1000;				// Convert back to timestamp
+		return new Date(time);
+	}
+
+	public static Double dateToMinutesDouble(Date date) {
+		return dateToRoundedTimeDouble(date, DateUtility.TIME_IN_MINUTE);
+	}
+
+	public static Date minutesDoubleToDate(Double minutes) {
+		return roundedTimeDoubleToDate(minutes, DateUtility.TIME_IN_MINUTE);
+	}
+
+	public static Double dateToRoundedTimeDouble(Date date, Long roundedTime) {
+		Long time = date.getTime();
+		time = time / roundedTime;				// Round Value To Minutes
+		return time.doubleValue();
+	}
+
+	public static Date roundedTimeDoubleToDate(Double seconds, Long roundedTime) {
+		Long time = seconds.longValue();
+		time = time * roundedTime;				// Convert back to timestamp
+		return new Date(time);
+	}
+
 	public static Long timeInDays(Integer days) {
 		return timeInDays(days.longValue());
 	}

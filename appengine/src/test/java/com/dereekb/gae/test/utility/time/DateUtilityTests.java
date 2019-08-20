@@ -52,4 +52,47 @@ public class DateUtilityTests {
 		assertFalse(DateUtility.timeHasPassed(new Date(time - 5), origin, time));
 	}
 
+	@Test
+	public void testTodaySecondsDoubleConversions() {
+		Date date = new Date();
+
+		Double seconds = DateUtility.dateToSecondsDouble(date);
+		Date roundedDate = DateUtility.secondsDoubleToDate(seconds);
+
+		assertTrue(DateUtility.getDifference(date, roundedDate) < 1000);
+	}
+
+	@Test
+	public void test500YearSecondsDoubleConversions() {
+		Date date = DateUtility.getDateInDays(365 * 500L);
+
+		Double seconds = DateUtility.dateToSecondsDouble(date);
+		Date roundedDate = DateUtility.secondsDoubleToDate(seconds);
+
+		assertTrue(DateUtility.getDifference(date, roundedDate) < 1000);
+	}
+
+	@Test
+	public void testTodayMinutesDoubleConversions() {
+		Date date = new Date();
+
+		Double minutes = DateUtility.dateToMinutesDouble(date);
+		Date roundedDate = DateUtility.minutesDoubleToDate(minutes);
+
+		assertTrue(DateUtility.getDifference(date, roundedDate) < DateUtility.TIME_IN_MINUTE);
+	}
+
+	/**
+	 * Unique test for testing the Search API's number field can contain a date
+	 * number rounded to minutes.
+	 */
+	@Test
+	public void test500YearMinutesDoubleConversionsLessThanIntMax() {
+		Date date = DateUtility.getDateInDays(365 * 500L);
+
+		Double minutes = DateUtility.dateToMinutesDouble(date);
+
+		assertTrue(Math.floor(minutes) < Integer.MAX_VALUE);
+	}
+
 }

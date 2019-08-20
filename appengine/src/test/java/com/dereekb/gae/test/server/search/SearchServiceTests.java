@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +13,10 @@ import org.junit.jupiter.api.Test;
 import com.dereekb.gae.model.general.geo.impl.PointImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
+import com.dereekb.gae.server.search.document.utility.SearchDocumentBuilderUtility;
 import com.dereekb.gae.server.search.query.SearchServiceQueryExpression;
 import com.dereekb.gae.server.search.query.expression.builder.impl.field.GeoDistanceField;
+import com.dereekb.gae.server.search.query.expression.builder.impl.field.TimeNumberField;
 import com.dereekb.gae.server.search.request.KeyedSearchDocumentPutRequestPair;
 import com.dereekb.gae.server.search.request.SearchServiceDeleteRequest;
 import com.dereekb.gae.server.search.request.SearchServiceIndexRequest;
@@ -31,6 +34,8 @@ import com.dereekb.gae.server.search.service.impl.GcsSearchServiceImpl;
 import com.dereekb.gae.test.app.mock.context.AbstractGaeTestingContext;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.collections.pairs.impl.ResultPairImpl;
+import com.dereekb.gae.utilities.query.ExpressionOperator;
+import com.dereekb.gae.utilities.time.DateUtility;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Document.Builder;
 import com.google.appengine.api.search.Field;
@@ -166,6 +171,38 @@ public class SearchServiceTests extends AbstractGaeTestingContext {
 		results = response.getReturnedResults();
 
 		assertTrue(results == 0, "Should have not returned a result.");
+	}
+
+	@Test
+	public void testTimeNumberQuery() {
+
+		Date date = DateUtility.getDateInDays(365 * 500L);
+
+		SearchServiceIndexRequest indexRequest = makeIndexRequest(new TestDocumentBuilder() {
+
+			@Override
+			public Builder buildDocumentForKey(ModelKey key) {
+				Document.Builder documentBuilder = Document.newBuilder();
+
+				SearchDocumentBuilderUtility.addTimeNumber(TEST_FIELD, date, documentBuilder);
+
+				return documentBuilder;
+			}
+
+		});
+
+		this.searchService.updateIndex(indexRequest);
+
+		// Search For Result
+		Date searchDate = DateUtility.getDateIn(date, -(DateUtility.TIME_IN_MINUTE));
+
+		SearchServiceQueryExpression expression = new TimeNumberField(TEST_FIELD, searchDate, ExpressionOperator.GREATER_OR_EQUAL_TO);
+		SearchServiceQueryRequest queryRequest = new SearchServiceQueryRequestImpl(TEST_INDEX, expression);
+
+		SearchServiceQueryResponse response = this.searchService.queryIndex(queryRequest);
+		Integer results = response.getReturnedResults();
+
+		assertTrue(results > 0, "Should have returned a result.");
 	}
 
 	// MARK: Internal

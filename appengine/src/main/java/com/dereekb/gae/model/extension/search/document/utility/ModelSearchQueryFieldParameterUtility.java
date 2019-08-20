@@ -2,10 +2,10 @@ package com.dereekb.gae.model.extension.search.document.utility;
 
 import java.util.Date;
 
-import com.dereekb.gae.server.search.query.expression.builder.SearchExpressionBuilder;
 import com.dereekb.gae.server.search.query.expression.builder.impl.field.AtomField;
 import com.dereekb.gae.server.search.query.expression.builder.impl.field.DateField;
 import com.dereekb.gae.server.search.query.expression.builder.impl.field.GeoDistanceField;
+import com.dereekb.gae.server.search.query.expression.builder.impl.field.TimeNumberField;
 import com.dereekb.gae.utilities.query.ExpressionOperator;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.AbstractQueryFieldParameter;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.DateQueryFieldParameter;
@@ -20,7 +20,7 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.LocationQueryFiel
  */
 public class ModelSearchQueryFieldParameterUtility {
 
-	public static SearchExpressionBuilder toAtomExpression(AbstractQueryFieldParameter<?> parameter) {
+	public static AtomField toAtomExpression(AbstractQueryFieldParameter<?> parameter) {
 
 		if (parameter == null) {
 			return null;
@@ -29,11 +29,11 @@ public class ModelSearchQueryFieldParameterUtility {
 		String field = parameter.getField();
 		Object value = parameter.getValue();
 
-		SearchExpressionBuilder expression = new AtomField(field, value);
+		AtomField expression = new AtomField(field, value);
 		return expression;
 	}
 
-	public static SearchExpressionBuilder toExpression(DateQueryFieldParameter parameter) {
+	public static DateField toExpression(DateQueryFieldParameter parameter) {
 
 		if (parameter == null) {
 			return null;
@@ -47,7 +47,21 @@ public class ModelSearchQueryFieldParameterUtility {
 		return expression;
 	}
 
-	public static SearchExpressionBuilder toExpression(LocationQueryFieldParameter location) {
+	public static TimeNumberField toTimeNumberExpression(DateQueryFieldParameter parameter) {
+
+		if (parameter == null) {
+			return null;
+		}
+
+		String field = parameter.getField();
+		Date value = parameter.getValue();
+		ExpressionOperator operator = parameter.getOperator();
+
+		TimeNumberField expression = new TimeNumberField(field, value, operator);
+		return expression;
+	}
+
+	public static GeoDistanceField toExpression(LocationQueryFieldParameter location) {
 
 		if (location == null) {
 			return null;
@@ -56,7 +70,7 @@ public class ModelSearchQueryFieldParameterUtility {
 		String field = location.getField();
 		LocationQueryData data = location.getValue();
 
-		SearchExpressionBuilder expression = null;
+		GeoDistanceField expression = null;
 
 		switch (data.getType()) {
 			case RADIUS:

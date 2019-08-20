@@ -5,9 +5,12 @@ import java.util.Date;
 import com.dereekb.gae.model.general.geo.Point;
 import com.dereekb.gae.model.general.geo.utility.PointConverter;
 import com.dereekb.gae.server.search.query.expression.builder.impl.field.BooleanField;
+import com.dereekb.gae.server.search.query.expression.builder.impl.field.TimeNumberField;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.keyed.IndexCoded;
+import com.dereekb.gae.utilities.time.DateUtility;
 import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.Document.Builder;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.GeoPoint;
 import com.googlecode.objectify.Key;
@@ -172,6 +175,43 @@ public final class SearchDocumentBuilderUtility {
 		}
 
 		return Field.newBuilder().setName(name).setDate(date);
+	}
+
+	// MARK: Time
+	public static void addTimeNumber(String name,
+	                                 Date date,
+	                                 Builder builder) {
+		Double time = null;
+
+		if (date != null) {
+			time = DateUtility.dateToRoundedTimeDouble(date, TimeNumberField.TIME_FIELD_ROUNDING);
+		}
+
+		addNumber(name, time, builder);
+	}
+
+	// MARK: Number
+	public static void addNumber(String name,
+	                             Number number,
+	                             Builder builder) {
+		Field.Builder field = numberField(name, number);
+		builder.addField(field);
+	}
+
+	public static Field.Builder numberField(String name,
+	                                        Number number) {
+
+		Double value = null;
+
+		if (number != null) {
+			value = number.doubleValue();
+
+			if (value.intValue() > Integer.MAX_VALUE || value.intValue() < Integer.MIN_VALUE) {
+				throw new IllegalArgumentException("Number must be between the min and max Integer values.");
+			}
+		}
+
+		return Field.newBuilder().setName(name).setNumber(value);
 	}
 
 	// MARK: Geopoint
