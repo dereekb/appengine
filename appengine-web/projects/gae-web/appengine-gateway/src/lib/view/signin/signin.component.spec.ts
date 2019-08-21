@@ -32,14 +32,22 @@ describe('GaeSignInComponent', () => {
         NoopAnimationsModule,
         UIRouterModule.forRoot(),
         TestAnalyticsModule.forRoot(),
-        GaeGoogleModule.forRoot(new GoogleOAuthServiceConfig(''), false),
-        GaeFacebookModule.forRoot(new FacebookApiServiceConfig(''), false),
+        GaeGoogleModule.forRoot(false),
+        GaeFacebookModule.forRoot(false),
         GaeGatewayComponentsModule,
         GaeGatewayViewsModule.forRoot({})
       ],
       providers: [{
         provide: OAuthLoginApiService,
         useValue: testOAuthLoginApiService
+      },
+      {
+        provide: GoogleOAuthServiceConfig,
+        useValue: new GoogleOAuthServiceConfig('')
+      },
+      {
+        provide: FacebookApiServiceConfig,
+        useValue: new FacebookApiServiceConfig('')
       },
       {
         provide: UserLoginTokenService,
