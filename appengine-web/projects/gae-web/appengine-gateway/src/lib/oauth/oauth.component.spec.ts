@@ -24,13 +24,21 @@ describe('OAuthSignInGatewayComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        GaeGoogleModule.forRoot(new GoogleOAuthServiceConfig(''), false),
-        GaeFacebookModule.forRoot(new FacebookApiServiceConfig(''), false),
+        GaeGoogleModule.forRoot(false),
+        GaeFacebookModule.forRoot(false),
         GaeGatewayOAuthModule
       ],
       providers: [{
         provide: OAuthLoginApiService,
         useValue: testOAuthLoginApiService
+      },
+      {
+        provide: GoogleOAuthServiceConfig,
+        useValue: new GoogleOAuthServiceConfig('')
+      },
+      {
+        provide: FacebookApiServiceConfig,
+        useValue: new FacebookApiServiceConfig('')
       },
       {
         provide: UserLoginTokenService,

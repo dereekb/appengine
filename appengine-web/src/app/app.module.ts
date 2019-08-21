@@ -39,16 +39,21 @@ export function analyticsServiceConfigurationFactory(facebookApi: FacebookApiSer
   return config;
 }
 
-export const GOOGLE_CONFIG = new GoogleOAuthServiceConfig('');
-export const FACEBOOK_CONFIG = new FacebookApiServiceConfig('431391914300748');
+export function makeGoogleConfig(): GoogleOAuthServiceConfig {
+  return new GoogleOAuthServiceConfig('');
+}
 
-FACEBOOK_CONFIG.logging = true;
+export function makeFacebookConfig(): FacebookApiServiceConfig {
+  const config = new FacebookApiServiceConfig('431391914300748');
+  config.logging = true;
+  return config;
+}
 
 @NgModule({
   imports: [
     // GAE Imports
-    GaeGoogleModule.forRoot(GOOGLE_CONFIG),
-    GaeFacebookModule.forRoot(FACEBOOK_CONFIG),
+    GaeGoogleModule.forRoot(),
+    GaeFacebookModule.forRoot(),
     GaeAnalyticsModule.forRoot({
       analyticsConfigurationProvider: {
         provide: AnalyticsServiceConfiguration,
@@ -71,6 +76,14 @@ FACEBOOK_CONFIG.logging = true;
     {
       provide: NgModuleFactoryLoader,
       useClass: SystemJsNgModuleLoader
+    },
+    {
+      provide: GoogleOAuthServiceConfig,
+      useFactory: makeGoogleConfig
+    },
+    {
+      provide: FacebookApiServiceConfig,
+      useFactory: makeFacebookConfig
     }
   ],
   bootstrap: [UIView]

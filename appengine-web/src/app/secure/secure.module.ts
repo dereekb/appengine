@@ -3,7 +3,8 @@ import { UIRouterModule, StatesModule, UIRouter, Category, StateService } from '
 import {
   GaeApiModule, GaeApiConfiguration, GaeLoginApiModule, GaeLoginApiModuleService,
   GaeEventApiModuleService, GaeLoginApiModuleConfiguration, GaeEventApiModule,
-  GaeEventApiModuleConfiguration
+  GaeEventApiModuleConfiguration,
+  GaeLoginApiConfiguredJwtModule
 } from '@gae-web/appengine-api';
 import { GaeClientModule } from '@gae-web/appengine-client';
 import { SECURE_STATES } from './secure.states';
@@ -14,7 +15,7 @@ import { GaeGatewayModule, secureGatewayHook, GaeGatewayViewsModule, GatewaySegu
 import { HttpClientModule } from '@angular/common/http';
 import { SecureComponentsModule } from './shared/components/components.module';
 import { SecureApiModule } from './shared/api/api.module';
-import { GaeComponentsModule } from '@gae-web/appengine-components';
+import { GaeComponentsModule, GaeMaterialComponentsModule, GaeComponentsPreConfiguredAppModule } from '@gae-web/appengine-components';
 import { TestApiModuleService, TestApiModule, TestApiModuleConfiguration } from './shared/api/model/test.api';
 
 export function routerConfigFn(router: UIRouter) {
@@ -37,33 +38,39 @@ export const ROUTER_CONFIG: StatesModule = {
  */
 export const TEST_SERVER_MODULE_NAME = 'test';
 
+export function loginApiModuleConfigurationFactory() {
+  return GaeLoginApiModuleConfiguration.make({
+    name: TEST_SERVER_MODULE_NAME
+  });
+}
+
+export function eventApiModuleConfigurationFactory() {
+  return GaeEventApiModuleConfiguration.make({
+    name: TEST_SERVER_MODULE_NAME
+  });
+}
+
+export function testApiModuleConfigurationFactory() {
+  return TestApiModuleConfiguration.make({
+    name: TEST_SERVER_MODULE_NAME
+  });
+}
+
 @NgModule({
   imports: [
     GaeGatewayModule,
     SecureAppModule,
     // GAE Configurations
     HttpClientModule,
-    GaeLoginApiModule.makeJwtModuleForRoot(),
-    ...GaeComponentsModule.allComponentsApp(),
+    GaeComponentsPreConfiguredAppModule,
     GaeGatewayViewsModule.forRoot({
       logoUrl: 'https://via.placeholder.com/350x150'
     }),
     GaeTokenModule.forRoot(),
-    GaeLoginApiModule.forApp(
-      GaeLoginApiModuleConfiguration.make({
-        name: TEST_SERVER_MODULE_NAME
-      })
-    ),
-    GaeEventApiModule.forApp(
-      GaeEventApiModuleConfiguration.make({
-        name: TEST_SERVER_MODULE_NAME
-      })
-    ),
-    TestApiModule.forApp(
-      TestApiModuleConfiguration.make({
-        name: TEST_SERVER_MODULE_NAME
-      })
-    ),
+    GaeLoginApiConfiguredJwtModule,
+    GaeLoginApiModule.forApp(),
+    GaeEventApiModule.forApp(),
+    TestApiModule.forApp(),
     GaeApiModule.forApp({
       gaeApiConfigurationProvider: {
         provide: GaeApiConfiguration,
@@ -83,6 +90,18 @@ export const TEST_SERVER_MODULE_NAME = 'test';
     {
       provide: GatewaySegueService,
       useExisting: AppSegueService
+    },
+    {
+      provide: GaeLoginApiModuleConfiguration,
+      useFactory: loginApiModuleConfigurationFactory
+    },
+    {
+      provide: GaeEventApiModuleConfiguration,
+      useFactory: eventApiModuleConfigurationFactory
+    },
+    {
+      provide: TestApiModuleConfiguration,
+      useFactory: testApiModuleConfigurationFactory
     }
   ]
 })

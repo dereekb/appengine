@@ -34,15 +34,11 @@ export function eventApiModuleServiceFactory(moduleConfig: GaeEventApiModuleConf
 @NgModule()
 export class GaeEventApiModule {
 
-  static forApp(config: GaeEventApiModuleConfiguration = GaeEventApiModuleConfiguration.make({})): ModuleWithProviders {
+  static forApp(): ModuleWithProviders {
     return {
       ngModule: GaeEventApiModule,
       providers: [
         // Configurations
-        {
-          provide: GaeEventApiModuleConfiguration,
-          useValue: config
-        },
         {
           provide: EVENT_API_ROUTE_CONFIGURATION_TOKEN,
           useExisting: GaeEventApiModuleConfiguration

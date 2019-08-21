@@ -33,15 +33,11 @@ export function testApiModuleServiceFactory(moduleConfig: TestApiModuleConfigura
 @NgModule()
 export class TestApiModule {
 
-  static forApp(config: TestApiModuleConfiguration = TestApiModuleConfiguration.make({})): ModuleWithProviders {
+  static forApp(): ModuleWithProviders {
     return {
       ngModule: TestApiModule,
       providers: [
         // Configurations
-        {
-          provide: TestApiModuleConfiguration,
-          useValue: config
-        },
         {
           provide: TEST_API_ROUTE_CONFIGURATION_TOKEN,
           useExisting: TestApiModuleConfiguration

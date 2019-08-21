@@ -95,25 +95,11 @@ export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, 
 })
 export class GaeLoginApiModule {
 
-  static makeJwtModuleForRoot(): ModuleWithProviders {
-    return JwtModule.forRoot({
-      jwtOptionsProvider: {
-        provide: JWT_OPTIONS,
-        useFactory: jwtOptionsFactory,
-        deps: [UserLoginTokenService, GaeLoginApiModuleConfiguration]
-      }
-    });
-  }
-
-  static forApp(config: GaeLoginApiModuleConfiguration = GaeLoginApiModuleConfiguration.make({})): ModuleWithProviders {
+  static forApp(): ModuleWithProviders {
     return {
       ngModule: GaeLoginApiModule,
       providers: [
         // Configurations
-        {
-          provide: GaeLoginApiModuleConfiguration,
-          useValue: config
-        },
         {
           provide: LOGIN_API_ROUTE_CONFIGURATION_TOKEN,
           useExisting: GaeLoginApiModuleConfiguration
@@ -155,3 +141,20 @@ export class GaeLoginApiModule {
   }
 
 }
+
+/**
+ * Convenience module with default configuration for JwtModule for GaeLoginApi.
+ */
+@NgModule({
+  imports: [
+    GaeTokenModule,
+    JwtModule.forRoot({
+      jwtOptionsProvider: {
+        provide: JWT_OPTIONS,
+        useFactory: jwtOptionsFactory,
+        deps: [UserLoginTokenService, GaeLoginApiModuleConfiguration]
+      }
+    }),
+  ]
+})
+export class GaeLoginApiConfiguredJwtModule {}
