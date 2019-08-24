@@ -16,6 +16,7 @@ import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.collections.iterator.cursor.impl.ResultsCursorImpl;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.InvalidIteratorIndexException;
 import com.dereekb.gae.utilities.collections.iterator.index.exception.UnavailableIteratorIndexException;
+import com.dereekb.gae.utilities.misc.parameters.Parameters;
 
 /**
  * {@link IndexedModelQueryIterableFactory} implementation using a
@@ -83,8 +84,21 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 	}
 
 	@Override
+	public IndexedModelQueryIterable<T> makeIterable(Parameters parameters) {
+		Map<String, String> parametersMap = (parameters != null) ? parameters.getParameters() : null;
+		return this.makeIterable(parametersMap);
+	}
+
+	@Override
 	public IndexedModelQueryIterable<T> makeIterable(Map<String, String> parameters) {
 		return this.makeIterable(parameters, null);
+	}
+
+	@Override
+	public IndexedModelQueryIterable<T> makeIterable(Parameters parameters,
+	                                                 ResultsCursor cursor) {
+		Map<String, String> parametersMap = (parameters != null) ? parameters.getParameters() : null;
+		return this.makeIterable(parametersMap, cursor);
 	}
 
 	@Override
@@ -174,7 +188,9 @@ public class IndexedModelQueryIterableFactoryImpl<T extends UniqueModel>
 			return this.builder.buildExecutableQuery().queryModelResultsIterator();
 		}
 
-		protected void updateBuilderOptionsForNextQuery(B builder, ResultsCursor cursor, Integer limit) {
+		protected void updateBuilderOptionsForNextQuery(B builder,
+		                                                ResultsCursor cursor,
+		                                                Integer limit) {
 			IndexedModelQueryRequestOptionsImpl options = new IndexedModelQueryRequestOptionsImpl();
 			options.setCursor(cursor);
 			options.setLimit(limit);
