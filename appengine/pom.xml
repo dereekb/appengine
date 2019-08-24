@@ -16,8 +16,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<appengine.target.version>1.9.75</appengine.target.version>
-		<appengine-cloud.target.version>1.78.0</appengine-cloud.target.version>
+		<appengine.target.version>1.9.76</appengine.target.version>
+		<appengine-cloud.target.version>1.87.0</appengine-cloud.target.version>
 		<google-cloud.target.version>2.0.0</google-cloud.target.version>
 		<spring.target.version>5.1.8.RELEASE</spring.target.version>
 		<spring-security.target.version>5.1.5.RELEASE</spring-security.target.version>

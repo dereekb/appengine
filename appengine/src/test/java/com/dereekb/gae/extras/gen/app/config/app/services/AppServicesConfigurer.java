@@ -26,4 +26,10 @@ public interface AppServicesConfigurer {
 
 	public AppMailServiceConfigurer getAppMailServiceConfigurer();
 
+	/**
+	 * @return {@link AppDebugApiConfigurer}, or {@code null} if no
+	 *         debug components.
+	 */
+	public AppDebugApiConfigurer getAppDebugApiConfigurer();
+
 }

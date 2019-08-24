@@ -113,8 +113,8 @@
     <ref bean="loginKeySecurityContextServiceEntry"/>
     <ref bean="loginPointerSecurityContextServiceEntry"/>
     <!--app-->
-    <ref bean="appSecurityContextServiceEntry"/>
     <ref bean="appHookSecurityContextServiceEntry"/>
+    <ref bean="appSecurityContextServiceEntry"/>
     <!--foo-->
     <ref bean="fooSecurityContextServiceEntry"/>
     <!--Remote-->

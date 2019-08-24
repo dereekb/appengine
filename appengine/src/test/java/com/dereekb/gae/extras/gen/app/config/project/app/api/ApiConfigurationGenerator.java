@@ -6,6 +6,7 @@ import org.springframework.validation.beanvalidation.MethodValidationPostProcess
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
+import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiDebugConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiLinkConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiLoginConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiModelContextConfigurationGenerator;
@@ -104,6 +105,10 @@ public class ApiConfigurationGenerator extends AbstractConfigurationFileGenerato
 
 		// Server
 		extensions.merge(new ApiServerConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
+		        .generateConfigurations());
+
+		// Debug
+		extensions.merge(new ApiDebugConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
 		        .generateConfigurations());
 
 		// Extensions Import File

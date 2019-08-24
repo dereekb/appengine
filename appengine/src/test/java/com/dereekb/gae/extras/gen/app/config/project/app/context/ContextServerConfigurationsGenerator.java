@@ -482,6 +482,10 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.comment("Allow anyone to initialize the server via GET.");
 			builder.httpSecurity().pattern(serviceApiPath + "/server/initialize").security("none");
 
+			// TODO: Add debug only building for a non-production environment.
+			builder.comment("Allow anyone to debug the server");
+			builder.httpSecurity().pattern(serviceApiPath + "/debug/**").security("none");
+
 			// TODO: Add custom pattern matching components.
 
 			if (this.getAppConfig().isLoginServer()) {

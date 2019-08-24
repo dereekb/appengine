@@ -3,6 +3,8 @@
   <security:http pattern="/_ah/**" security="none"/>
   <!--Allow anyone to initialize the server via GET.-->
   <security:http pattern="/api/test/v1/server/initialize" security="none"/>
+  <!--Allow anyone to debug the server-->
+  <security:http pattern="/api/test/v1/debug/**" security="none"/>
   <security:http create-session="stateless" entry-point-ref="securityEntryPoint" request-matcher-ref="authControllersPatternMatcher">
     <!--Only allow this service to access the taskqueue.-->
     <!--Authentication Matched-->
@@ -229,12 +231,12 @@
   </bean>
   <!--Secure Model Types-->
   <util:list id="secureModelTypes">
-    <ref bean="appType"/>
-    <ref bean="appHookType"/>
     <ref bean="loginType"/>
     <ref bean="fooType"/>
     <ref bean="loginKeyType"/>
     <ref bean="loginPointerType"/>
+    <ref bean="appHookType"/>
+    <ref bean="appType"/>
   </util:list>
   <!--Exception Handler-->
   <bean class="com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExceptionHandler" id="loginTokenExceptionHandler"/>
