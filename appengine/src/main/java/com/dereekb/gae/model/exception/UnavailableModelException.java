@@ -62,13 +62,15 @@ public class UnavailableModelException extends ApiSafeRuntimeException {
 		this.modelKeys = Collections.emptySet();
 	}
 
-	public static <T extends UniqueModel> void assertNotNull(T model, String message) {
+	public static <T extends UniqueModel> void assertNotNull(T model,
+	                                                         String message) {
 		if (model == null) {
 			throw new UnavailableModelException(message);
 		}
 	}
 
-	public static <T extends UniqueModel> void assertNotNull(T model, ModelKey key) {
+	public static <T extends UniqueModel> void assertNotNull(T model,
+	                                                         ModelKey key) {
 		if (model == null) {
 			throw new UnavailableModelException(key);
 		}

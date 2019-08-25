@@ -209,6 +209,13 @@
 			<artifactId>libphonenumber</artifactId>
 			<version>8.8.6</version>
 		</dependency>
+		
+		<!-- Geospacial -->
+		<dependency>
+		    <groupId>org.apache.lucene</groupId>
+		    <artifactId>lucene-spatial</artifactId>
+		    <version>8.2.0</version>
+		</dependency>
 
 		<!-- Test Dependencies -->
 		<dependency>

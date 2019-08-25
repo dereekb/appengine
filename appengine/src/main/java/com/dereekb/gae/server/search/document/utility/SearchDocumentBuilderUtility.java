@@ -3,7 +3,7 @@ package com.dereekb.gae.server.search.document.utility;
 import java.util.Date;
 
 import com.dereekb.gae.model.general.geo.Point;
-import com.dereekb.gae.model.general.geo.utility.PointConverter;
+import com.dereekb.gae.model.general.geo.utility.PointUtility;
 import com.dereekb.gae.server.search.query.expression.builder.impl.field.BooleanField;
 import com.dereekb.gae.server.search.query.expression.builder.impl.field.TimeNumberField;
 import com.dereekb.gae.utilities.data.StringUtility;
@@ -234,7 +234,7 @@ public final class SearchDocumentBuilderUtility {
 		GeoPoint geoPoint = null;
 
 		if (point != null) {
-			geoPoint = PointConverter.convertToGeopoint(point);
+			geoPoint = PointUtility.convertToGeopoint(point);
 		} else {
 			geoPoint = new GeoPoint(0, 0);
 		}
