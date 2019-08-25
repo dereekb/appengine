@@ -3,6 +3,9 @@ package com.dereekb.gae.server.search.service.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.dereekb.gae.server.search.components.SearchServiceIndex;
 import com.dereekb.gae.server.search.exception.SearchIndexUpdateException;
@@ -19,6 +22,7 @@ import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
 import com.dereekb.gae.utilities.collections.iterator.cursor.impl.ResultsCursorImpl;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
+import com.dereekb.gae.utilities.collections.list.SetUtility;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
 import com.google.appengine.api.search.Cursor;
@@ -31,8 +35,10 @@ import com.google.appengine.api.search.Query;
 import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
+import com.google.appengine.api.search.SearchException;
 import com.google.appengine.api.search.SearchService;
 import com.google.appengine.api.search.SearchServiceFactory;
+import com.google.appengine.api.search.StatusCode;
 
 /**
  * {@link SearchDocumentSystem} implementation.
@@ -43,15 +49,22 @@ import com.google.appengine.api.search.SearchServiceFactory;
 public class GcsSearchServiceImpl
         implements com.dereekb.gae.server.search.service.SearchService {
 
+	private static final Logger LOGGER = Logger.getLogger(GcsSearchServiceImpl.class.getName());
+
 	private static final Integer API_DOCUMENT_PUT_MAXIMUM = 200;
 	private static final Integer API_DOCUMENT_DELETE_MAXIMUM = 200;
 	private static final Integer API_RETRIEVE_LIMIT_MAXIMUM = 1000;
+
+	private static final Set<StatusCode> RETRY_ENABLED_CODES = SetUtility.makeSet(StatusCode.TRANSIENT_ERROR,
+	        StatusCode.CONCURRENT_TRANSACTION_ERROR);
 
 	private SearchService searchService;
 
 	private Integer documentIndexBatchSize = API_RETRIEVE_LIMIT_MAXIMUM;
 	private Integer documentDeleteMax = API_DOCUMENT_DELETE_MAXIMUM;
 	private Integer documentPutMax = API_DOCUMENT_PUT_MAXIMUM;
+
+	private Integer maxUpdateRetries = 3;
 
 	public GcsSearchServiceImpl() {
 		this(null);
@@ -169,25 +182,27 @@ public class GcsSearchServiceImpl
 		Iterable<SearchServiceIndexRequestPair> pairs = request.getRequestPairs();
 
 		try {
-			this.batchAndPut(index, pairs);
+			this.batchAndPut(index, pairs, request.getAllowAsync());
 		} catch (PutException e) {
 			throw new SearchIndexUpdateException(e);
 		}
 	}
 
 	private void batchAndPut(Index index,
-	                         Iterable<SearchServiceIndexRequestPair> pairs)
+	                         Iterable<SearchServiceIndexRequestPair> pairs,
+	                         boolean allowAsync)
 	        throws PutException {
 		PartitionerImpl partition = new PartitionerImpl(this.documentPutMax);
 		List<List<SearchServiceIndexRequestPair>> batches = partition.makePartitions(pairs);
 
 		for (List<SearchServiceIndexRequestPair> batch : batches) {
-			this.putBatch(index, batch);
+			this.putBatch(index, batch, allowAsync);
 		}
 	}
 
 	private void putBatch(Index index,
-	                      List<SearchServiceIndexRequestPair> pairs)
+	                      List<SearchServiceIndexRequestPair> pairs,
+	                      boolean allowAsync)
 	        throws PutException {
 		List<Document> documents = new ArrayList<Document>();
 
@@ -196,13 +211,49 @@ public class GcsSearchServiceImpl
 			documents.add(document);
 		}
 
-		PutResponse response = index.put(documents);
-		List<String> resultIds = response.getIds();
+		// Perform retries in loop
+		int attempts = 0;
+		int delay = 2;
 
-		for (int i = 0; i < pairs.size(); i += 1) {
-			SearchServiceIndexRequestPair model = pairs.get(i);
-			String resultId = resultIds.get(i);
-			model.setResult(resultId);
+		while (true) {
+			try {
+				if (allowAsync) {
+					index.putAsync(documents);
+				} else {
+					PutResponse response = index.put(documents);
+					List<String> resultIds = response.getIds();
+
+					for (int i = 0; i < pairs.size(); i += 1) {
+						SearchServiceIndexRequestPair model = pairs.get(i);
+						String resultId = resultIds.get(i);
+						model.setResult(resultId);
+					}
+				}
+
+				break;	// Success
+			} catch (SearchException e) {
+				// Retry on Select Errors
+				if (RETRY_ENABLED_CODES.contains(e.getOperationResult().getCode())) {
+					attempts = attempts + 1;
+
+					// Retry
+					if (attempts < this.maxUpdateRetries) {
+						try {
+							Thread.sleep(delay * 1000);
+						} catch (InterruptedException ie) {
+							// Ignored
+						}
+
+						delay *= 2;
+						continue;
+					} else {
+						LOGGER.log(Level.WARNING, "Search exception caused search put to fail after max retries.", e);
+						throw e;
+					}
+				} else {
+					throw e;
+				}
+			}
 		}
 	}
 

@@ -16,4 +16,11 @@ public interface SearchServiceIndexRequest
 	 */
 	public Iterable<SearchServiceIndexRequestPair> getRequestPairs();
 
+	/**
+	 * Whether or not to allow async updates.
+	 *
+	 * @return {@code true} if async allowed.
+	 */
+	public boolean getAllowAsync();
+
 }

@@ -10,6 +10,5 @@ import com.dereekb.gae.server.search.components.SearchServiceIndex;
  * @author dereekb
  *
  */
-public interface SearchServiceRequest extends SearchServiceIndex {
-
-}
+public interface SearchServiceRequest
+        extends SearchServiceIndex {}

@@ -14,10 +14,28 @@ public class SearchServiceIndexRequestImpl extends AbstractSearchServiceRequest
 
 	private Iterable<SearchServiceIndexRequestPair> requestPairs;
 
+	private boolean allowAsync = false;
+
 	public SearchServiceIndexRequestImpl(String indexName, Iterable<SearchServiceIndexRequestPair> requestPairs)
 	        throws IllegalArgumentException {
+		this(indexName, requestPairs, false);
+	}
+
+	public SearchServiceIndexRequestImpl(String indexName,
+	        Iterable<SearchServiceIndexRequestPair> requestPairs,
+	        boolean allowAsync) throws IllegalArgumentException {
 		super(indexName);
+		this.setAllowAsync(allowAsync);
 		this.setRequestPairs(requestPairs);
+	}
+
+	@Override
+	public boolean getAllowAsync() {
+		return this.allowAsync;
+	}
+
+	public void setAllowAsync(boolean allowAsync) {
+		this.allowAsync = allowAsync;
 	}
 
 	@Override
