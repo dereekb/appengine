@@ -210,6 +210,8 @@ export abstract class AbstractCustomSource<T, E extends SourceEvent<T>> implemen
     protected readonly _firstObs: Observable<T | undefined>;
     protected readonly _elementsObs: Observable<T[]>;
 
+    private _isReusable = false;
+
     constructor() {
         this._stream = this.makeStream();
 
@@ -239,6 +241,18 @@ export abstract class AbstractCustomSource<T, E extends SourceEvent<T>> implemen
     }
 
     // MARK: Accessors
+    get ignoreDestroy() {
+        return this.isReusable;
+    }
+
+    get isReusable() {
+        return this._isReusable;
+    }
+
+    set isReusable(isReusable) {
+        this._isReusable = isReusable;
+    }
+
     get state(): SourceState {
         return this._stream.value.state;
     }
@@ -308,8 +322,10 @@ export abstract class AbstractCustomSource<T, E extends SourceEvent<T>> implemen
 
     // MARK: Stop
     public destroy() {
-        this.stop();
-        this._stream.complete();
+        if (!this.ignoreDestroy) {
+            this.stop();
+            this._stream.complete();
+        }
     }
 
     protected stop() {
