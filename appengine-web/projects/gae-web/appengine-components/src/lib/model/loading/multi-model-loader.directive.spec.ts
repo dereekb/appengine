@@ -5,6 +5,11 @@ import { ErrorInput, SingleElementConversionSource, ModelKey } from '@gae-web/ap
 import { GaeModelComponentsModule } from '../model.module';
 import { GaeMultiModelLoaderDirective } from './multi-model-loader.directive';
 import { TestFooReadSourceComponent } from '../resource/read.component.spec';
+import { ModelLoaderState, GaeModelLoaderComponent, ModelLoaderFailedLoadingError } from './model-loader.component';
+import { TestFoo } from '@gae-web/appengine-api/public-api';
+import { filter } from 'rxjs/operators';
+
+const TEST_MODEL_KEY = 1;
 
 describe('GaeMultiModelLoaderDirective', () => {
 
@@ -30,7 +35,36 @@ describe('GaeMultiModelLoaderDirective', () => {
     expect(directive).toBeDefined();
   });
 
-  // TODO: Test loading states.
+  it('should be in a complete state when both values are loaded', (done) => {
+    directive.stream.pipe(
+      filter(x => x.state === ModelLoaderState.Data)
+    ).subscribe(() => {
+      expect(directive.state).toBe(ModelLoaderState.Data);
+      expect(testComponent.aLoader.state).toBe(ModelLoaderState.Data);
+      expect(testComponent.bLoader.state).toBe(ModelLoaderState.Data);
+      done();
+    });
+  });
+
+  describe('where one non-optional loader fails', () => {
+
+    it('should be in a failed state', (done) => {
+      expect(testComponent.aLoader.optional).toBe(false);
+
+      testComponent.aSource.testFooReadService.filteredKeysSet.add(TEST_MODEL_KEY);
+      testComponent.aSource.refresh();
+
+      directive.stream.pipe(
+        filter(x => x.state === ModelLoaderState.Failed)
+      ).subscribe((x) => {
+        expect(directive.state).toBe(ModelLoaderState.Failed);
+        expect(testComponent.aLoader.state).toBe(ModelLoaderState.Failed);
+        expect(testComponent.bLoader.state).toBe(ModelLoaderState.Data);
+        done();
+      });
+    });
+
+  });
 
 });
 
@@ -39,17 +73,29 @@ describe('GaeMultiModelLoaderDirective', () => {
   <div [gaeMultiModelLoader]="[a, b]">
     <gae-test-model-read-source #aSource [gaeReadSourceKey]="keyA"></gae-test-model-read-source>
     <gae-test-model-read-source #bSource [gaeReadSourceKey]="keyB"></gae-test-model-read-source>
-    <gae-model-loader #a [source]="aSource"></gae-model-loader>
+    <gae-model-loader #a [optional]="false" [source]="aSource"></gae-model-loader>
     <gae-model-loader #b [source]="bSource"></gae-model-loader>
   </div>
   `
 })
 class TestMultiModelLoaderComponent {
 
-  keyA: ModelKey = 1;
-  keyB: ModelKey = 1;
+  keyA: ModelKey = TEST_MODEL_KEY;
+  keyB: ModelKey = TEST_MODEL_KEY;
 
-  @ViewChild(GaeMultiModelLoaderDirective, {static: true})
+  @ViewChild('aSource', { static: true })
+  public aSource: TestFooReadSourceComponent;
+
+  @ViewChild('bSource', { static: true })
+  public bSource: TestFooReadSourceComponent;
+
+  @ViewChild('a', { static: true })
+  public aLoader: GaeModelLoaderComponent<TestFoo>;
+
+  @ViewChild('b', { static: true })
+  public bLoader: GaeModelLoaderComponent<TestFoo>;
+
+  @ViewChild(GaeMultiModelLoaderDirective, { static: true })
   public directive: GaeMultiModelLoaderDirective;
 
 }

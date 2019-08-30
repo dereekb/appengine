@@ -1,7 +1,15 @@
-import { ModelLoaderState, ModelLoader, AbstractModelLoaderStateComponent } from './model-loader.component';
+import { ModelLoaderState, ModelLoader, AbstractModelLoaderStateComponent, ModelLoaderEvent } from './model-loader.component';
 import { Directive, OnDestroy, Input } from '@angular/core';
 import { BehaviorSubject, merge } from 'rxjs';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
+import { map } from 'rxjs/operators';
+
+export function aggregateEvents(a: ModelLoaderEvent<any>, b: ModelLoaderEvent<any>): ModelLoaderEvent<any> {
+    return {
+        state: mostImportantState(a.state, b.state),
+        error: a.error || b.error
+    };
+}
 
 export function mostImportantState(a: ModelLoaderState, b: ModelLoaderState): ModelLoaderState {
     switch (a) {
@@ -23,26 +31,45 @@ export function mostImportantState(a: ModelLoaderState, b: ModelLoaderState): Mo
     selector: '[gaeMultiModelLoader]',
     exportAs: 'gaeMultiModelLoader'
 })
-export class GaeMultiModelLoaderDirective extends AbstractModelLoaderStateComponent implements OnDestroy {
+export class GaeMultiModelLoaderDirective extends AbstractModelLoaderStateComponent implements ModelLoader<any>, OnDestroy {
+
+    // Does nothing.
+    public optional;
 
     private _loaders: ModelLoader<{}>[] = [];
     private _sub = new SubscriptionObject();
-    private _state = new BehaviorSubject<ModelLoaderState>(ModelLoaderState.Init);
+    private _stream = new BehaviorSubject<ModelLoaderEvent<any>>({
+        state: ModelLoaderState.Init
+    });
 
     ngOnDestroy() {
         this._sub.destroy();
-        this._state.complete();
+        this._stream.complete();
 
         delete this._loaders;
-        delete this._state;
+        delete this._stream;
     }
 
     public get state() {
-        return this._state.value;
+        return this._stream.value.state;
+    }
+
+    public get model() {
+        return this.models;
+    }
+
+    public get error() {
+        return this._stream.value.error;
+    }
+
+    public get stream() {
+        return this._stream.asObservable();
     }
 
     public get stateObs() {
-        return this._state.asObservable();
+        return this._stream.pipe(
+            map(x => x.state)
+        );
     }
 
     get models(): any[] {
@@ -67,10 +94,9 @@ export class GaeMultiModelLoaderDirective extends AbstractModelLoaderStateCompon
     }
 
     private _update() {
-        const state = this._loaders
-            .map((x) => x.state)
-            .reduce((x, y) => mostImportantState(x, y), ModelLoaderState.Data);
-        this._state.next(state);
+        const event = this._loaders
+            .reduce((x, y) => aggregateEvents(x, y), { state: ModelLoaderState.Data });
+        this._stream.next(event);
     }
 
 }
