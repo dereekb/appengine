@@ -1,5 +1,8 @@
 package com.dereekb.gae.server.datastore.objectify.keys.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.keys.ObjectifyKeyConverter;
@@ -140,6 +143,20 @@ public class ObjectifyModelKeyUtil<T> {
 		}
 
 		return modelKey;
+	}
+
+	public static <T> List<ModelKey> readModelKeys(Iterable<Key<T>> keys) {
+		List<ModelKey> keyList = new ArrayList<ModelKey>();
+
+		for (Key<T> key : keys) {
+			ModelKey modelKey = readModelKey(key);
+
+			if (modelKey != null) {
+				keyList.add(modelKey);
+			}
+		}
+
+		return keyList;
 	}
 
 	public static <T> String readKeyString(ModelKeyType keyType,

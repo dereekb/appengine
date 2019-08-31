@@ -313,14 +313,14 @@ public abstract class AbstractServerModelRequestSenderTests<T extends MutableUni
 
 	@Test
 	public void testMockDeleteTooManyRequestThrowsClientError() throws Exception {
-		if (this.deleteRequestUtility != null) {
+		if (this.canDeleteModel && this.deleteRequestUtility != null) {
 			this.deleteRequestUtility.testMockDeleteTooManyRequestThrowsClientError(this.getRequestSecurity());
 		}
 	}
 
 	@Test
 	public void testSendMockDeleteTooManyRequestThrowsApiResponse() throws Exception {
-		if (this.deleteRequestUtility != null) {
+		if (this.canDeleteModel && this.deleteRequestUtility != null) {
 			this.deleteRequestUtility.testSendMockDeleteTooManyRequestThrowsApiResponse(this.getRequestSecurity());
 		}
 	}
