@@ -145,10 +145,10 @@ public class ObjectifyModelKeyUtil<T> {
 		return modelKey;
 	}
 
-	public static <T> List<ModelKey> readModelKeys(Iterable<Key<T>> keys) {
+	public static List<ModelKey> readModelKeys(Iterable<? extends Key<?>> keys) {
 		List<ModelKey> keyList = new ArrayList<ModelKey>();
 
-		for (Key<T> key : keys) {
+		for (Key<?> key : keys) {
 			ModelKey modelKey = readModelKey(key);
 
 			if (modelKey != null) {
