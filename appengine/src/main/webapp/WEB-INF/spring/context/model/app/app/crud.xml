@@ -53,18 +53,16 @@
   <!--Delete Service-->
   <bean class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl" id="appDeleteService">
     <constructor-arg index="0" ref="appReadService"/>
-    <constructor-arg index="1" ref="appDeleteTask"/>
-  </bean>
-  <!--Delete Task-->
-  <alias alias="appDeleteTask" name="appScheduleDeleteTask"/>
-  <bean class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask" id="appScheduleDeleteTask">
-    <constructor-arg index="0" ref="appType"/>
-    <constructor-arg index="1" ref="taskScheduler"/>
-    <property name="deleteFilter">
-      <bean factory-bean="appSecurityContextServiceEntry" factory-method="makeRoleFilter">
-        <constructor-arg index="0" ref="crudDeleteModelRole"/>
+    <constructor-arg index="1">
+      <bean class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredScheduleDeleteTask">
+        <constructor-arg index="0" ref="appScheduleDelete"/>
+        <constructor-arg index="1">
+          <bean factory-bean="appSecurityContextServiceEntry" factory-method="makeRoleFilter">
+            <constructor-arg index="0" ref="crudDeleteModelRole"/>
+          </bean>
+        </constructor-arg>
       </bean>
-    </property>
+    </constructor-arg>
   </bean>
   <bean class="com.dereekb.gae.server.app.model.app.shared.crud.AppRelatedModelAttributeUtility" id="appRelatedModelAttributeUtility">
     <constructor-arg index="0" ref="appSecurityContextServiceEntry"/>

@@ -53,6 +53,8 @@ public interface LocalModelBeansConfiguration
 
 	public String getModelScheduleUpdateReviewBeanId();
 
+	public String getModelScheduleDeleteBeanId();
+
 	public String getModelInclusionReaderId();
 
 	public String getModelLinkModelAccessorId();

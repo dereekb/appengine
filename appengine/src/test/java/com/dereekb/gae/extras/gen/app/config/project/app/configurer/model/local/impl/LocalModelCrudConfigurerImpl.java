@@ -17,8 +17,8 @@ import com.dereekb.gae.model.crud.services.impl.CrudServiceImpl;
 import com.dereekb.gae.model.crud.task.impl.CreateTaskImpl;
 import com.dereekb.gae.model.crud.task.impl.ValidatedCreateTaskImpl;
 import com.dereekb.gae.model.crud.task.impl.delegate.impl.CreateTaskDelegateImpl;
-import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
 import com.dereekb.gae.model.crud.task.impl.filtered.FilteredReadTaskImpl;
+import com.dereekb.gae.model.crud.task.impl.filtered.FilteredScheduleDeleteTask;
 import com.dereekb.gae.model.crud.task.impl.filtered.FilteredUpdateTaskImpl;
 import com.jamesmurty.utils.XMLBuilder2;
 
@@ -213,20 +213,12 @@ public class LocalModelCrudConfigurerImpl
 		}
 
 		protected void configureDeleteService() {
-			String deleteTask = this.getModelConfig().getModelBeanPrefix() + "DeleteTask";
+			String deleteTask = this.getModelConfig().getModelScheduleDeleteBeanId();
 
 			this.builder.bean(this.getModelConfig().getModelDeleteServiceId()).beanClass(DeleteServiceImpl.class).c()
-			        .ref(this.getModelConfig().getModelReadServiceId()).ref(deleteTask);
-
-			this.builder.comment("Delete Task");
-			String scheduleDeleteTask = this.getModelConfig().getModelBeanPrefix() + "ScheduleDeleteTask";
-
-			this.builder.alias(scheduleDeleteTask, this.getModelConfig().getModelBeanPrefix() + "DeleteTask");
-
-			this.builder.bean(scheduleDeleteTask).beanClass(ScheduleDeleteTask.class).c()
-			        .ref(this.getModelConfig().getModelTypeBeanId())
-			        .ref(this.getAppConfig().getAppBeans().getTaskSchedulerId()).up().property("deleteFilter").bean()
-			        .factoryBean(this.getModelConfig().getModelSecurityContextServiceEntryBeanId())
+			        .ref(this.getModelConfig().getModelReadServiceId()).bean()
+			        .beanClass(FilteredScheduleDeleteTask.class).c().ref(deleteTask).bean()
+			        .factoryBean(this.modelConfig.getModelSecurityContextServiceEntryBeanId())
 			        .factoryMethod("makeRoleFilter").c()
 			        .ref(this.getAppConfig().getAppBeans().getCrudDeleteModelRoleRefBeanId());
 		}

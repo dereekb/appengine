@@ -40,18 +40,16 @@
   <!--Delete Service-->
   <bean class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl" id="loginDeleteService">
     <constructor-arg index="0" ref="loginReadService"/>
-    <constructor-arg index="1" ref="loginDeleteTask"/>
-  </bean>
-  <!--Delete Task-->
-  <alias alias="loginDeleteTask" name="loginScheduleDeleteTask"/>
-  <bean class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask" id="loginScheduleDeleteTask">
-    <constructor-arg index="0" ref="loginType"/>
-    <constructor-arg index="1" ref="taskScheduler"/>
-    <property name="deleteFilter">
-      <bean factory-bean="loginSecurityContextServiceEntry" factory-method="makeRoleFilter">
-        <constructor-arg index="0" ref="crudDeleteModelRole"/>
+    <constructor-arg index="1">
+      <bean class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredScheduleDeleteTask">
+        <constructor-arg index="0" ref="loginScheduleDelete"/>
+        <constructor-arg index="1">
+          <bean factory-bean="loginSecurityContextServiceEntry" factory-method="makeRoleFilter">
+            <constructor-arg index="0" ref="crudDeleteModelRole"/>
+          </bean>
+        </constructor-arg>
       </bean>
-    </property>
+    </constructor-arg>
   </bean>
   <bean class="com.dereekb.gae.server.auth.model.login.crud.LoginRelatedModelAttributeUtility" id="loginRelatedModelAttributeUtility">
     <constructor-arg index="0" ref="loginSecurityContextServiceEntry"/>

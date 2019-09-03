@@ -464,6 +464,11 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 	}
 
 	@Override
+	public String getModelScheduleDeleteBeanId() {
+		return this.getBeansConfiguration().getModelScheduleDeleteBeanId();
+	}
+
+	@Override
 	public String getModelRoleSetLoaderBeanId() {
 		return this.getBeansConfiguration().getModelRoleSetLoaderBeanId();
 	}

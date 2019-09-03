@@ -21,6 +21,7 @@ import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
+import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
 import com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask;
 import com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceImpl;
@@ -229,6 +230,14 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			        .ref(modelConfig.getModelScheduleUpdateReviewBeanId()).ref(modelConfig.getModelUpdaterBeanId());
 			builder.bean(modelConfig.getModelScheduleUpdateReviewBeanId()).beanClass(ScheduleUpdateReviewTask.class).c()
 			        .ref(modelConfig.getModelTypeBeanId()).ref(getAppConfig().getAppBeans().getTaskSchedulerId());
+
+			builder.comment("Delete Task");
+
+			// TODO: Add configuration to not add the schedule delete task.
+
+			builder.bean(modelConfig.getModelScheduleDeleteBeanId()).beanClass(ScheduleDeleteTask.class).c()
+			        .ref(modelConfig.getModelTypeBeanId())
+			        .ref(this.getAppConfig().getAppBeans().getTaskSchedulerId());
 
 			builder.comment("Setter Task");
 			builder.bean(modelConfig.getModelSetterTaskBeanId()).beanClass(IterableSetterTaskImpl.class).c()

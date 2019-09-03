@@ -231,12 +231,12 @@
   </bean>
   <!--Secure Model Types-->
   <util:list id="secureModelTypes">
-    <ref bean="loginType"/>
-    <ref bean="fooType"/>
-    <ref bean="loginKeyType"/>
     <ref bean="loginPointerType"/>
     <ref bean="appHookType"/>
+    <ref bean="loginKeyType"/>
+    <ref bean="fooType"/>
     <ref bean="appType"/>
+    <ref bean="loginType"/>
   </util:list>
   <!--Exception Handler-->
   <bean class="com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExceptionHandler" id="loginTokenExceptionHandler"/>

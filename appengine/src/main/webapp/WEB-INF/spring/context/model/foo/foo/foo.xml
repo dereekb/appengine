@@ -43,6 +43,11 @@
     <constructor-arg index="0" ref="fooType"/>
     <constructor-arg index="1" ref="taskScheduler"/>
   </bean>
+  <!--Delete Task-->
+  <bean class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask" id="fooScheduleDelete">
+    <constructor-arg index="0" ref="fooType"/>
+    <constructor-arg index="1" ref="taskScheduler"/>
+  </bean>
   <!--Setter Task-->
   <bean class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl" id="fooSetterTask">
     <constructor-arg index="0" ref="fooRegistry"/>

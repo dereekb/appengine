@@ -5,7 +5,7 @@ import com.dereekb.gae.server.datastore.utility.StagedTransactionChange;
 
 /**
  * Abstract {@link StagedTransactionChange} implementation.
- * 
+ *
  * @author dereekb
  */
 public abstract class AbstractStagedTransactionChange
@@ -29,7 +29,7 @@ public abstract class AbstractStagedTransactionChange
 		this.complete = true;
 	}
 
-	protected void assertIsNotComplete() {
+	protected void assertIsNotComplete() throws StagedTransactionAlreadyFinishedException {
 		if (this.complete) {
 			throw new StagedTransactionAlreadyFinishedException();
 		}

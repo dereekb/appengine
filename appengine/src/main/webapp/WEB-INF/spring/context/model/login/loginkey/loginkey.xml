@@ -43,6 +43,11 @@
     <constructor-arg index="0" ref="loginKeyType"/>
     <constructor-arg index="1" ref="taskScheduler"/>
   </bean>
+  <!--Delete Task-->
+  <bean class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask" id="loginKeyScheduleDelete">
+    <constructor-arg index="0" ref="loginKeyType"/>
+    <constructor-arg index="1" ref="taskScheduler"/>
+  </bean>
   <!--Setter Task-->
   <bean class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl" id="loginKeySetterTask">
     <constructor-arg index="0" ref="loginKeyRegistry"/>

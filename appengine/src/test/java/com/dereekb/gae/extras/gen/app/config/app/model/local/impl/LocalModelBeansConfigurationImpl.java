@@ -38,6 +38,7 @@ public class LocalModelBeansConfigurationImpl extends AppModelBeansConfiguration
 	private String modelDeleterBeanId;
 	private String modelScheduleCreateReviewBeanId;
 	private String modelScheduleUpdateReviewBeanId;
+	private String modelScheduleDeleteBeanId;
 	private String modelRoleSetLoaderBeanId;
 
 	private String stringModelKeyConverter;
@@ -52,7 +53,8 @@ public class LocalModelBeansConfigurationImpl extends AppModelBeansConfiguration
 		this.setModelRegistryId(modelBeanPrefix + "Registry");
 		this.setModelSetterTaskBeanId(modelBeanPrefix + "SetterTask");
 		this.setModelQueryInitializerBeanId(modelBeanPrefix + "QueryInitializer");
-		this.setSecuredModelQueryInitializerBeanId("secured" + StringUtility.firstLetterUpperCase(this.getModelQueryInitializerBeanId()));
+		this.setSecuredModelQueryInitializerBeanId(
+		        "secured" + StringUtility.firstLetterUpperCase(this.getModelQueryInitializerBeanId()));
 		this.setSecuredModelQueryInitializerDelegateBeanId(this.getSecuredModelQueryInitializerBeanId() + "Delegate");
 		this.setNewModelFactoryBeanId(modelBeanPrefix + "Factory");
 		this.setModelCrudServiceId(modelBeanPrefix + "CrudService");
@@ -69,6 +71,7 @@ public class LocalModelBeansConfigurationImpl extends AppModelBeansConfiguration
 		this.setModelDeleterBeanId(modelBeanPrefix + "Deleter");
 		this.setModelScheduleCreateReviewBeanId(modelBeanPrefix + "ScheduleCreateReview");
 		this.setModelScheduleUpdateReviewBeanId(modelBeanPrefix + "ScheduleUpdateReview");
+		this.setModelScheduleDeleteBeanId(modelBeanPrefix + "ScheduleDelete");
 		this.setModelRoleSetLoaderBeanId(modelBeanPrefix + "ModelRoleSetLoader");
 		this.setStringModelKeyConverter(AppBeansConfiguration.getModelKeyConverterBeanId(modelKeyType));
 		this.setModelQueryServiceId(modelBeanPrefix + "QueryService");
@@ -346,6 +349,19 @@ public class LocalModelBeansConfigurationImpl extends AppModelBeansConfiguration
 		}
 
 		this.modelScheduleUpdateReviewBeanId = modelScheduleUpdateReviewBeanId;
+	}
+
+	@Override
+	public String getModelScheduleDeleteBeanId() {
+		return this.modelScheduleDeleteBeanId;
+	}
+
+	public void setModelScheduleDeleteBeanId(String modelScheduleDeleteBeanId) {
+		if (modelScheduleDeleteBeanId == null) {
+			throw new IllegalArgumentException("modelScheduleDeleteBeanId cannot be null.");
+		}
+
+		this.modelScheduleDeleteBeanId = modelScheduleDeleteBeanId;
 	}
 
 	@Override
