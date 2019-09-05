@@ -114,8 +114,12 @@ public abstract class AbstractIterateConfigurerInstanceTaskEntryImpl
 	}
 
 	protected String getTaskBeanId(LocalModelConfiguration modelConfig) {
+		return this.getTaskBeanId(modelConfig, "");
+	}
+
+	protected String getTaskBeanId(LocalModelConfiguration modelConfig, String suffix) {
 		String prefix = (this.addModelPrefix) ? modelConfig.getModelBeanPrefix() : "";
-		return StringUtility.firstLetterLowerCase(prefix + this.taskName + "Task");
+		return StringUtility.firstLetterLowerCase(prefix + this.taskName + suffix + "Task");
 	}
 
 }

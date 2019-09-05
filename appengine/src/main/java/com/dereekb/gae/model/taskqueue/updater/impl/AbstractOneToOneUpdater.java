@@ -1,10 +1,7 @@
 package com.dereekb.gae.model.taskqueue.updater.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdater;
 import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdaterResult;
@@ -14,6 +11,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.utility.StagedTransactionAlreadyFinishedException;
 import com.dereekb.gae.server.datastore.utility.StagedTransactionChange;
 import com.dereekb.gae.server.datastore.utility.impl.StagedTransactionChangeCollection;
+import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 
@@ -127,6 +125,18 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 		}
 
 		protected StagedTransactionChange deleteRelation(RelationChangesInput<T, R> input) {
+			R relationModel = input.getRelationModel();
+
+			if (relationModel != null) {
+				// Call other input by default.
+				return this.deleteRelation(input.getInputModel(), relationModel);
+			} else {
+				return null;
+			}
+		}
+
+		protected StagedTransactionChange deleteRelation(T inputModel,
+		                                                 R relationModel) {
 			// Do nothing by default
 			return null;
 		}
@@ -193,12 +203,12 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 		// MARK: Instance
 		@Override
 		public final O performChanges(Iterable<T> models) {
-			Map<ModelKey, T> map = this.buildRelationMap(models);
+			 List<HandlerPair<ModelKey, T>> pairs = this.buildRelationPairs(models);
 			List<C> changes = new ArrayList<C>();
 
 			// Perform changes for each relation independently.
-			for (Entry<ModelKey, T> entry : map.entrySet()) {
-				C change = this.performSafeChangesForRelation(entry.getKey(), entry.getValue());
+			for (HandlerPair<ModelKey, T> pair : pairs) {
+				C change = this.performSafeChangesForRelation(pair.getKey(), pair.getObject());
 
 				if (change != null) {
 					changes.add(change);
@@ -209,32 +219,41 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 		}
 
 		// MARK: Internal - Relation Map
-		private Map<ModelKey, T> buildRelationMap(Iterable<T> models) {
-			Map<ModelKey, T> map = new HashMap<ModelKey, T>();
+		private final List<HandlerPair<ModelKey, T>> buildRelationPairs(Iterable<T> models) {
+			List<HandlerPair<ModelKey, T>> pairs = new ArrayList<HandlerPair<ModelKey, T>>();
 
 			for (T model : models) {
 				ModelKey relationModelKey = this.getRelationModelKey(model);
-				map.put(relationModelKey, model);
+				pairs.add(new HandlerPair<ModelKey, T>(relationModelKey, model));
 			}
 
-			return map;
+			return pairs;
 		}
 
 		protected abstract ModelKey getRelationModelKey(T model);
 
 		// MARK: Internal - Relation Changes
-		private C performSafeChangesForRelation(final ModelKey relationModelKey,
-		                                        final T value) {
+		private final C performSafeChangesForRelation(final ModelKey inputRelationModelKey,
+		                                              final T value) {
 			final ModelKey inputModelKey = value.getModelKey();
 
 			return ObjectifyService.ofy().transactNew(new Work<C>() {
 
 				@Override
 				public C run() {
+					ModelKey relationModelKey = inputRelationModelKey;
+
+					// Read the model again for transaction safety.
+					T inputModel = AbstractOneToOneUpdater.this.inputModelGetter.get(value);
+
+					// Re-read the relation key from the transaction-safe model.
+					// The model may have been deleted, in which case we use the original value from above.
+					if (inputModel != null) {
+						relationModelKey = getRelationModelKey(inputModel);
+					}
 
 					// Attempts to load the models.
-					R relationModel = AbstractOneToOneUpdater.this.relationModelGetter.get(relationModelKey);
-					T inputModel = AbstractOneToOneUpdater.this.inputModelGetter.get(value);
+					R relationModel = (relationModelKey != null) ? AbstractOneToOneUpdater.this.relationModelGetter.get(relationModelKey) : null;
 
 					RelationChangesInputImpl input = new RelationChangesInputImpl(inputModelKey, relationModelKey,
 					        inputModel, relationModel);

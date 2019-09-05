@@ -642,6 +642,12 @@ public class SpringBeansXMLBuilderImpl
 		}
 
 		@Override
+		public SpringBeansXMLBeanConstructorBuilder<T> value(Enum<?> value) {
+			this.nextArgBuilder().a(SpringBeansXMLBeanConstructor.ARG_VALUE_ATTRIBUTE, value.toString());
+			return this;
+		}
+
+		@Override
 		public SpringBeansXMLBeanConstructorBuilder<T> nullArg() {
 			this.nextArgBuilder().e(SpringBeansXMLBeanConstructor.NULL_ELEMENT);
 			return this;

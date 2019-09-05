@@ -43,7 +43,7 @@ public class TaskRequestSenderStagedTransactionChange<T> extends AbstractStagedT
 
 	public void setModels(List<T> models) throws StagedTransactionAlreadyFinishedException {
 		this.assertIsNotComplete();
-		this.models = ListUtility.copy(models);
+		this.models = ListUtility.newList(models);
 	}
 
 	public TaskRequestSender<T> getTaskSender() {

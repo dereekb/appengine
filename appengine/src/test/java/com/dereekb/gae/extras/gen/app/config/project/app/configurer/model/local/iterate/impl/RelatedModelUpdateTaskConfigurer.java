@@ -61,8 +61,16 @@ public class RelatedModelUpdateTaskConfigurer extends AbstractIterateConfigurerI
 	protected void configureTaskBeans(AppConfiguration appConfig,
 	                                  LocalModelConfiguration modelConfig,
 	                                  SpringBeansXMLBuilder builder) {
-		builder.bean(this.getTaskBeanId(modelConfig)).beanClass(RelatedModelUpdateTask.class).c()
-		        .value(this.type.toString()).ref(this.updaterFactoryBeanId);
+		this.configureBeanForTask(appConfig, modelConfig, builder, this.type, "");
+	}
+
+	protected void configureBeanForTask(AppConfiguration appConfig,
+	                                    LocalModelConfiguration modelConfig,
+	                                    SpringBeansXMLBuilder builder,
+	                                    RelatedModelUpdateType type,
+	                                    String taskSuffix) {
+		builder.bean(this.getTaskBeanId(modelConfig, taskSuffix)).beanClass(RelatedModelUpdateTask.class).c().value(type)
+		        .ref(this.updaterFactoryBeanId);
 	}
 
 }

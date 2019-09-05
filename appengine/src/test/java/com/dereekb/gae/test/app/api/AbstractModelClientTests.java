@@ -493,6 +493,22 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				}
 			}
 
+			public T tryRead(Key<T> key) {
+				try {
+					return this.readByKey(key);
+				} catch (AssertionError e) {
+					return null;
+				}
+			}
+
+			public T tryRead(ModelKey key) {
+				try {
+					return this.readByKey(key);
+				} catch (AssertionError e) {
+					return null;
+				}
+			}
+
 			public T read(T model) throws AssertionError {
 				return this.read(ListUtility.wrap(model)).get(0);
 			}
