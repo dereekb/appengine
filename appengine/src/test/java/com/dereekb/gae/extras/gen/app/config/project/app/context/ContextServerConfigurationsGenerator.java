@@ -482,10 +482,6 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.comment("Allow anyone to initialize the server via GET.");
 			builder.httpSecurity().pattern(serviceApiPath + "/server/initialize").security("none");
 
-			// TODO: Add debug only building for a non-production environment.
-			builder.comment("Allow anyone to debug the server");
-			builder.httpSecurity().pattern(serviceApiPath + "/debug/**").security("none");
-
 			// TODO: Add custom pattern matching components.
 
 			if (this.getAppConfig().isLoginServer()) {
@@ -510,6 +506,10 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				http.intercept().matcherRef("loginKeyObjectApiPathRequestMatcher")
 				        .access(HasAnyRoleConfig.not("ROLE_LOGINTYPE_API", "ROLE_ANON"));
 			}
+
+			// TODO: Add debug only building for a non-production environment.
+			http.getRawXMLBuilder().c("Allow any logged in user to debug the server");
+			http.intercept(serviceApiPath + "/debug/**", RoleConfigImpl.make("permitAll"));
 
 			if (hasSecureLocalModelConfigs) {
 				http.getRawXMLBuilder().c("Secured Owned Model Patterns");
