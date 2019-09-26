@@ -15,6 +15,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.search.document.utility.SearchDocumentBuilderUtility;
 import com.dereekb.gae.server.search.query.SearchServiceQueryExpression;
+import com.dereekb.gae.server.search.query.expression.builder.impl.field.AtomField;
 import com.dereekb.gae.server.search.query.expression.builder.impl.field.GeoDistanceField;
 import com.dereekb.gae.server.search.query.expression.builder.impl.field.TimeNumberField;
 import com.dereekb.gae.server.search.request.KeyedSearchDocumentPutRequestPair;
@@ -133,6 +134,34 @@ public class SearchServiceTests extends AbstractGaeTestingContext {
 	}
 
 	// MARK: Query Tests
+	@Test
+	public void testSearchNullAtomQuery() {
+
+		SearchServiceIndexRequest indexRequest = makeIndexRequest(new TestDocumentBuilder() {
+
+			@Override
+			public Builder buildDocumentForKey(ModelKey key) {
+				Document.Builder documentBuilder = Document.newBuilder();
+
+				documentBuilder.addField(Field.newBuilder().setName(TEST_FIELD).setAtom(null));
+
+				return documentBuilder;
+			}
+
+		});
+
+		this.searchService.updateIndex(indexRequest);
+
+		// Search For Result
+		SearchServiceQueryExpression expression = new AtomField(TEST_FIELD, null);
+		SearchServiceQueryRequest queryRequest = new SearchServiceQueryRequestImpl(TEST_INDEX, expression);
+
+		SearchServiceQueryResponse response = this.searchService.queryIndex(queryRequest);
+		Integer results = response.getReturnedResults();
+
+		assertTrue(results > 0, "Should have returned a result.");
+	}
+
 	@Test
 	public void testGeospacialQuery() {
 

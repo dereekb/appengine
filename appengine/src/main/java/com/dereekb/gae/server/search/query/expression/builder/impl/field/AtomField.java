@@ -2,6 +2,7 @@ package com.dereekb.gae.server.search.query.expression.builder.impl.field;
 
 import com.dereekb.gae.server.search.query.expression.builder.SearchExpressionBuilder;
 import com.dereekb.gae.server.search.query.expression.builder.impl.AbstractTextField;
+import com.dereekb.gae.utilities.data.ValueUtility;
 
 /**
  * Atom text field.
@@ -13,7 +14,7 @@ import com.dereekb.gae.server.search.query.expression.builder.impl.AbstractTextF
  */
 public class AtomField extends AbstractTextField {
 
-	public static String NONE_VALUE = "NONE";
+	public static String EMPTY_VALUE = "";
 
 	public AtomField(String name, Object value) {
 		super(name, ((value != null) ? value.toString() : null), true);
@@ -21,6 +22,11 @@ public class AtomField extends AbstractTextField {
 
 	public AtomField(String name, String value) {
 		super(name, value, true);
+	}
+
+	@Override
+	public void setValue(String value) {
+		super.setValue(ValueUtility.defaultTo(value, EMPTY_VALUE));
 	}
 
 	@Override
