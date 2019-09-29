@@ -2,10 +2,14 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { UserLoginTokenService, LegacyAppTokenUserService } from './token.service';
 import { AppTokenStorageService, StoredTokenStorageAccessor } from './storage.service';
 
-export function appTokenStorageServiceFactory() {
-  const accessor = StoredTokenStorageAccessor.getLocalStorageOrBackupAccessor();
+export function appTokenStorageServiceFactory(accessor: StoredTokenStorageAccessor) {
   return new AppTokenStorageService(accessor);
 }
+
+export function memoryStoredTokenStorageAccessorFactory() {
+  return new StoredTokenStorageAccessor();
+}
+
 
 /**
  * Module that provides services for managing JWTs for HttpClient.
@@ -27,10 +31,23 @@ export class GaeTokenModule {
         },
         {
           provide: AppTokenStorageService,
-          useFactory: appTokenStorageServiceFactory
+          useFactory: appTokenStorageServiceFactory,
+          deps: [StoredTokenStorageAccessor]
         }
       ]
     };
   }
 
 }
+
+/**
+ * Pre-configured storage accessor that only uses memory.
+ */
+@NgModule({
+  imports: [GaeTokenModule.forRoot()],
+  providers: [{
+    provide: StoredTokenStorageAccessor,
+    useFactory: memoryStoredTokenStorageAccessorFactory
+  }]
+})
+export class MemoryGaeTokenModule {}

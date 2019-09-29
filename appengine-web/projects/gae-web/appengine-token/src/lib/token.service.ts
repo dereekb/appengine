@@ -1,15 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 
 import { TokenType, EncodedRefreshToken, DecodedLoginIncludedToken, LoginId, LoginPointerId, EncodedToken, LoginTokenPair } from './token';
 import { ExpiredTokenAuthorizationError, TokenAuthorizationError, UnavailableLoginTokenError, TokenExpiredError, TokenLoginError, TokenLoginCommunicationError } from './error';
 
-import { FullStorageObject } from '@gae-web/appengine-utility';
+import { FullStorageObject, MemoryStorageObject, StorageObject } from '@gae-web/appengine-utility';
 import { AppTokenStorageService, StoredTokenUnavailableError } from './storage.service';
 
-import { Observable, BehaviorSubject, of, throwError, empty, forkJoin, from } from 'rxjs';
+import { Observable, BehaviorSubject, of, throwError, empty, forkJoin, from, EMPTY } from 'rxjs';
 import { map, catchError, filter, flatMap, first, toArray, concat, throwIfEmpty, share, tap, finalize, shareReplay } from 'rxjs/operators';
 import { InvalidLoginTokenError } from './error';
-import { StorageUtility } from '@gae-web/appengine-utility';
 import { BaseError } from 'make-error';
 
 // Service
@@ -49,16 +48,19 @@ export abstract class UserLoginTokenService {
 
 /**
  * Way the service was declared in the past.
- * @deprecated
  */
 @Injectable()
 export class LegacyAppTokenUserService implements UserLoginTokenService {
 
   private refreshTokenLoginObsMap = new Map<string, Observable<LoginTokenPair>>();
   private _pair = new BehaviorSubject<AppTokenUserServicePair | undefined>(undefined);
-  private _accessor = new AppTokenLoginAccessor();
+  private _accessor: AppTokenLoginAccessor;
 
-  constructor(private _storage: AppTokenStorageService, private _tokenService: UserLoginTokenAuthenticator) { }
+  constructor(private _storage: AppTokenStorageService,
+    private _tokenService: UserLoginTokenAuthenticator,
+    @Inject(FullStorageObject) accessorStorageObject: FullStorageObject = new MemoryStorageObject()) {
+    this._accessor = new AppTokenLoginAccessor(accessorStorageObject);
+  }
 
   // MARK: Accessors
   public isAuthenticated(): Observable<boolean> {
@@ -295,7 +297,7 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
     return this._storage.getTokens().pipe(
       catchError((e) => {
         if (e instanceof StoredTokenUnavailableError) {
-          return empty();
+          return EMPTY;
         } else {
           return throwError(e); // Throw other exceptions.
         }
@@ -442,7 +444,7 @@ export class AppTokenLoginAccessor {
 
   private static LOGIN_KEY = 'PRIMARY_LOGIN_ID';
 
-  constructor(private _storage: FullStorageObject = StorageUtility.getAvailableLocalStorage()) { }
+  constructor(private _storage: StorageObject) { }
 
   public hasLogin(): Observable<boolean> {
     return this.getLogin().pipe(

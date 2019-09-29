@@ -1,6 +1,6 @@
 import 'jasmine-expect';
 
-describe('StorageUtility', () => {
+describe('Storage', () => {
 
   // TODO
 
