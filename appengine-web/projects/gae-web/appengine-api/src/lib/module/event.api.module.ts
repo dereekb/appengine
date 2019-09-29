@@ -13,8 +13,8 @@ export class GaeEventApiModuleService extends ApiModuleService { }
  */
 export class GaeEventApiModuleConfiguration extends GaeApiModuleConfiguration {
 
-  public static make({ version = 'v1', name = 'event', types = []}: ApiModuleConstructorConfiguration): GaeEventApiModuleConfiguration {
-    const info = new GaeApiModuleInfo(version, name);
+  public static make({ version = 'v1', name = 'event', types = [], server = '' }: ApiModuleConstructorConfiguration): GaeEventApiModuleConfiguration {
+    const info = new GaeApiModuleInfo(version, name, server);
     const typesConfig = new GaeApiModuleTypesConfiguration(types);
     return new GaeEventApiModuleConfiguration(info, typesConfig);
   }

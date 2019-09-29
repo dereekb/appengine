@@ -20,8 +20,8 @@ export class GaeLoginApiModuleService extends ApiModuleService { }
  */
 export class GaeLoginApiModuleConfiguration extends GaeApiModuleConfiguration {
 
-  public static make({ version = 'v1', name = 'login', types = ['app', 'login', 'loginpointer', 'loginkey'] }: ApiModuleConstructorConfiguration): GaeLoginApiModuleConfiguration {
-    const info = new GaeApiModuleInfo(version, name);
+  public static make({ version = 'v1', name = 'login', types = ['app', 'login', 'loginpointer', 'loginkey'], server = '' }: ApiModuleConstructorConfiguration): GaeLoginApiModuleConfiguration {
+    const info = new GaeApiModuleInfo(version, name, server);
     const typesConfig = new GaeApiModuleTypesConfiguration(types);
     return new GaeLoginApiModuleConfiguration(info, typesConfig);
   }

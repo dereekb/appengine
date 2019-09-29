@@ -12,8 +12,8 @@ export class TestApiModuleService extends ApiModuleService { }
  */
 export class TestApiModuleConfiguration extends GaeApiModuleConfiguration {
 
-  public static make({ version = 'v1', name = 'test', types = [] }: ApiModuleConstructorConfiguration): TestApiModuleConfiguration {
-    const info = new GaeApiModuleInfo(version, name);
+  public static make({ version = 'v1', name = 'test', types = [], server = '' }: ApiModuleConstructorConfiguration): TestApiModuleConfiguration {
+    const info = new GaeApiModuleInfo(version, name, server);
     const typesConfig = new GaeApiModuleTypesConfiguration(types);
     return new TestApiModuleConfiguration(info, typesConfig);
   }
