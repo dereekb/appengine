@@ -4,7 +4,8 @@ import {
   GaeApiModule, GaeApiConfiguration, GaeLoginApiModule, GaeLoginApiModuleService,
   GaeEventApiModuleService, GaeLoginApiModuleConfiguration, GaeEventApiModule,
   GaeEventApiModuleConfiguration,
-  GaeLoginApiConfiguredJwtModule
+  GaeLoginApiConfiguredJwtModule,
+  GaeJwtConfiguration
 } from '@gae-web/appengine-api';
 import { GaeClientModule } from '@gae-web/appengine-client';
 import { SECURE_STATES } from './secure.states';
@@ -17,8 +18,7 @@ import { SecureComponentsModule } from './shared/components/components.module';
 import { SecureApiModule } from './shared/api/api.module';
 import { GaeComponentsModule, GaeMaterialComponentsModule, GaeComponentsPreConfiguredAppModule } from '@gae-web/appengine-components';
 import { TestApiModuleService, TestApiModule, TestApiModuleConfiguration } from './shared/api/model/test.api';
-import { FullStorageObject, FullLocalStorageObject } from 'projects/gae-web/appengine-utility/src/public-api';
-import { MemoryStorageObject } from '@gae-web/appengine-utility/public-api';
+import { FullStorageObject, FullLocalStorageObject, MemoryStorageObject } from '@gae-web/appengine-utility';
 
 export function routerConfigFn(router: UIRouter) {
   const transitionService = router.transitionService;
@@ -118,7 +118,8 @@ export function testApiModuleConfigurationFactory() {
     {
       provide: StoredTokenStorageAccessor,
       useFactory: storedTokenStorageAccessorFactory
-    }
+    },
+    GaeJwtConfiguration
   ]
 })
 export class SecureModule { }

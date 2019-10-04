@@ -4,7 +4,7 @@ import { AppTokenStorageService, StoredTokenStorageAccessor } from './storage.se
 
 export function appTokenStorageServiceFactory(accessor: StoredTokenStorageAccessor) {
   return new AppTokenStorageService(accessor);
-}
+} 
 
 export function memoryStoredTokenStorageAccessorFactory() {
   return new StoredTokenStorageAccessor();
