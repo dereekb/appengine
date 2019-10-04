@@ -12,7 +12,6 @@ import { InvalidLoginTokenError } from './error';
 import { BaseError } from 'make-error';
 
 // Service
-
 /**
  * Class Interface used by the UserLoginTokenService to authenticate and rerieve refresh tokens.
  */

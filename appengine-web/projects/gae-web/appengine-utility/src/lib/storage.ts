@@ -38,17 +38,24 @@ export abstract class InstantStorageAccessor<T> {
 }
 
 /**
- * Synchronous Class/Interface for storing string values. Has the same interface as localStorage for the web.
+ * Limited Class/Interface for storing string values synchronously.
  */
-export abstract class StorageObject {
-
-  readonly length: number;
+export abstract class SimpleStorageObject {
 
   abstract getItem(key: string): string | undefined;
 
   abstract setItem(key: string, item: string);
 
   abstract removeItem(key: string);
+
+}
+
+/**
+ * Synchronous Class/Interface for storing string values. Has the same interface as localStorage for the web.
+ */
+export abstract class StorageObject extends SimpleStorageObject {
+
+  readonly length: number;
 
   abstract key(index: number): string | undefined;
 

@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule, InjectionToken } from '@angular/core';
 import { UserLoginTokenService, LegacyAppTokenUserService } from './token.service';
 import { AppTokenStorageService, StoredTokenStorageAccessor } from './storage.service';
 
