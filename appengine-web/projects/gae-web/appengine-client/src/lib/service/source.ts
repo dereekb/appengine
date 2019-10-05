@@ -102,6 +102,7 @@ export interface SearchSourceConfiguration {
   limit?: number;
   cursor?: SearchCursor;
   filters?: SearchParameters;
+  autoNextOnReset?: boolean;
 }
 
 export const DEFAULT_CONFIG = {
@@ -157,6 +158,17 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
   }
 
   // MARK: Iterable
+  /**
+   * Calls next if the source has been reset, otherwise returns the current results.
+   */
+  public initial(): Promise<ModelKey[]> {
+    if (this.state === SourceState.Reset) {
+      return this.next();
+    } else {
+      return Promise.resolve(this._result.keys);
+    }
+  }
+
   public hasNext(): boolean {
     return !this.done;
   }
@@ -285,7 +297,11 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
     if (!this.isStopped()) {
       this.resetSearchSource();
       super.reset();
-      // this.next(); //Don't call next, as the source could be reconfiguring.
+
+      if (this._config && this._config.autoNextOnReset) {
+        // Only call next if explicitly requested, as the source could be reconfiguring.
+        this.next();
+      }
     }
   }
 
