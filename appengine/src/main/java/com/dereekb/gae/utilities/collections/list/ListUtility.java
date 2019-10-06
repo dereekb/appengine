@@ -321,6 +321,28 @@ public class ListUtility {
 		list.set(y, ex);
 	}
 
+	public static <T> T getLastElement(Collection<T> collection) {
+		if (collection.isEmpty()) {
+			return null;
+		} else {
+			List<T> list = ListUtility.newList(collection);
+			return getLastElement(list);
+		}
+	}
+
+	public static <T> T getLastElement(List<T> list) {
+		return getElementAtIndex(list, list.size() - 1);
+	}
+
+	public static <T> T getElementAtIndex(List<T> list,
+	                                      int index) {
+		try {
+			return list.get(index);
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
+	}
+
 	public static boolean isLastElementIndex(int index,
 	                                         String[] array) {
 		return index == array.length - 1;

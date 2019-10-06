@@ -367,7 +367,18 @@ public class GcsSearchServiceImpl
 
 		@Override
 		public ResultsCursor getResultsCursor() throws NoSearchCursorException {
-			Cursor cursor = this.getResults().getCursor();
+			Results<ScoredDocument> results = this.getResults();
+
+			Cursor cursor = results.getCursor();
+
+			// Check to see if cursor is available on each item.
+			if (cursor == null) {
+				ScoredDocument lastElement = ListUtility.getLastElement(results.getResults());
+
+				if (lastElement != null) {
+					cursor = lastElement.getCursor();
+				}
+			}
 
 			if (cursor == null) {
 				throw new NoSearchCursorException();
@@ -388,7 +399,6 @@ public class GcsSearchServiceImpl
 		private Results<ScoredDocument> performSearch() {
 			Index index = this.getIndex();
 			Query query = this.buildQuery();
-
 			Results<ScoredDocument> results = index.search(query);
 			return results;
 		}
@@ -403,9 +413,20 @@ public class GcsSearchServiceImpl
 			// TODO: Add sort options
 
 			Cursor cursor = null;
+			ResultsCursor resultsCursor = searchOptions.getCursor();
 
-			if (searchOptions.getCursor() != null) {
-				cursor = Cursor.newBuilder().build(searchOptions.getCursor().getCursorString());
+			if (resultsCursor != null) {
+				// Info Here:
+				// https://cloud.google.com/appengine/docs/standard/java/search/results
+
+				// Per-Query
+				// cursor =
+				// Cursor.newBuilder().build(searchOptions.getCursor().getCursorString());
+
+				// Per-Result
+				cursor = Cursor.newBuilder().setPerResult(true).build(resultsCursor.getCursorString());
+			} else {
+				cursor = Cursor.newBuilder().setPerResult(true).build();
 			}
 
 			QueryOptions.Builder queryOptions = QueryOptions.newBuilder();
