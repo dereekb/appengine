@@ -57,6 +57,10 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		String appName = "GAE Core Test App";
 		String developmentProxy = "http://gae-nginx:8080";	// Unused
 		String developmentHost = "localhost:8080";
+
+		// TODO: Add to configuration.
+		String developmentFirebaseDatabaseUrl = "https://gae-web-app-237603.firebaseio.com";
+
 		Long appId = 1L;
 
 		MailUser systemMailUser =  new MailUserImpl("test@gae.dereekb.com", "Test Server");
