@@ -43,7 +43,6 @@ describe('ClientReadService', () => {
 
     }
 
-
     function setClientResultResultsModelsForKeys(keys: ModelKey[], failedKeys?: ModelKey[], atomic = false) {
       let data;
 

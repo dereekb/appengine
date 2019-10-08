@@ -1,6 +1,6 @@
 import { ClientApiResponse, ClientApiResponseError, MissingExpectedResponseData, ClientModelSerializer, RawClientResponseAccessor } from './client';
 import { ApiResponseError, ApiResponseData, ApiResponseJson } from '../api';
-import { HttpResponse, HttpClient } from '@angular/common/http';
+import { HttpResponse, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ModelKey } from '@gae-web/appengine-utility';
@@ -34,6 +34,7 @@ export abstract class AbstractClientService {
     protected handleResponse(obs: Observable<HttpResponse<ApiResponseJson>>): Observable<ClientApiResponse> {
         return obs.pipe(
             catchError((e) => this.catchHttpResponseError(e)),
+            catchError((e) => this.catchHttpErrorResponseError(e)),
             catchError((e) => this.catchClientApiResponseError(e)),
             map((x) => this.convertToClientApiResponse(x))
         );
@@ -42,6 +43,16 @@ export abstract class AbstractClientService {
     protected catchHttpResponseError(error: HttpResponse<ApiResponseJson> | any): Observable<any> {
         if (error instanceof HttpResponse) {
             const response = this.convertToClientApiResponse(error);
+            const clientError = new ClientApiResponseError(response);
+            return throwError(clientError);
+        } else {
+            return throwError(error);
+        }
+    }
+
+    protected catchHttpErrorResponseError(error: HttpErrorResponse | any): Observable<any> {
+        if (error instanceof HttpErrorResponse) {
+            const response = this.convertErrorToClientApiResponse(error);
             const clientError = new ClientApiResponseError(response);
             return throwError(clientError);
         } else {
@@ -66,6 +77,11 @@ export abstract class AbstractClientService {
     protected convertToClientApiResponse(response: HttpResponse<ApiResponseJson>): ClientApiResponse {
         return ClientApiResponse.fromResponse(response);
     }
+
+    protected convertErrorToClientApiResponse(response: HttpErrorResponse): ClientApiResponse {
+        return ClientApiResponse.fromErrorResponse(response);
+    }
+
 }
 
 // MARK: Client Model Service
