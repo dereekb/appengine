@@ -545,7 +545,7 @@ export class ValueUtility {
    * @param array Array to filter on.
    * @param keyFn Property key function.
    */
-  static getUniqueValues<T>(array: T[], keyFn: MakePropertyKeyFunction<T> = ((x: any) => x as any)): object {
+  static getUniqueValues<T>(array: T[], keyFn: MakePropertyKeyFunction<T> = ((x: any) => x as any)): T[] {
     const map = {};
 
     array.forEach((element) => {

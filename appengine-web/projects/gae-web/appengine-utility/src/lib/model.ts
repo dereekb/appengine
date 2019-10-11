@@ -359,6 +359,11 @@ export class ModelUtility {
     }
   }
 
+  static isEqual(a: ModelKey, b: ModelKey) {
+    // tslint:disable-next-line: triple-equals
+    return a == b;
+  }
+
 }
 
 // MARK: Assertions
