@@ -6,7 +6,7 @@ import {
 } from '@gae-web/appengine-api';
 import { ModelServiceWrapper } from './model.service';
 import { ModelReadService } from './crud.service';
-import { Observable, of, empty, from } from 'rxjs';
+import { Observable, of, empty, from, EMPTY } from 'rxjs';
 import { flatMap, filter, map } from 'rxjs/operators';
 import { KeyedPredictiveOrderedQueryStreamEvent, KeyedPredictiveOrderedQueryStream } from './source';
 import { WrapperEventFilter, ModelWrapperEvent, WrapperEventType } from './wrapper';
@@ -247,7 +247,7 @@ export class ModelFilteredKeyedPredictiveOrderedQueryDelegate<T extends UniqueMo
       }
     }
 
-    return empty() as Observable<ModelWrapperEvent>;
+    return EMPTY;
   }
 
   private _addRemoveFilterMap(event: ModelWrapperEvent): Observable<ModelWrapperEvent> {
@@ -272,7 +272,7 @@ export class ModelFilteredKeyedPredictiveOrderedQueryDelegate<T extends UniqueMo
     }
 
     // Will get filtered out and ultimately ignored.
-    return empty() as Observable<ModelWrapperEvent>;
+    return EMPTY;
   }
 
   private _tryMakeFakeWrapperEventWithModels(models: T[], event: ModelWrapperEvent, added: boolean): ModelWrapperEvent | undefined {

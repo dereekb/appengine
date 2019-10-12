@@ -459,7 +459,7 @@ export class MergedReadIterateSource<T extends UniqueModel> implements Controlla
     }
 
     let readUpdated = false;
-    this._stream = combineLatest(this._readSource.stream, this._iterateSource.stream).pipe(
+    this._stream = combineLatest([this._readSource.stream, this._iterateSource.stream]).pipe(
       map(([read, query]) => {
 
         // Whenever the query state becomes Loading, and read isn't Loading yet, the read still has to catch up.

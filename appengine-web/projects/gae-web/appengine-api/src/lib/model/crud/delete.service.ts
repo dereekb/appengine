@@ -6,14 +6,14 @@ import { ModelServiceResponse } from './response';
 import { ClientApiResponse } from '../client';
 
 import { Observable, throwError } from 'rxjs';
-import { ModelKey, UniqueModel, ModelUtility } from '@gae-web/appengine-utility';
+import { ModelKey, UniqueModel, ModelUtility, OneOrMore } from '@gae-web/appengine-utility';
 import { ApiResponseJson } from '../../api';
 import { HttpResponse } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
 // MARK: Generic Interfaces
 export interface DeleteRequest {
-    readonly modelKeys: ModelKey | ModelKey[];
+    readonly modelKeys: OneOrMore<ModelKey>;
     readonly shouldReturnModels?: boolean;
     readonly options?: DeleteRequestOptions;
 }

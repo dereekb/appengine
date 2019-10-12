@@ -8,7 +8,7 @@ import { ModelServiceResponse } from './response';
 import { ClientApiResponse, RawClientResponseAccessor } from '../client';
 
 import { Observable, of, from, forkJoin, throwError } from 'rxjs';
-import { ModelUtility, ValueUtility } from '@gae-web/appengine-utility';
+import { ModelUtility, ValueUtility, OneOrMore } from '@gae-web/appengine-utility';
 import { ApiResponseJson } from '../../api';
 import { HttpResponse } from '@angular/common/http';
 import { map, flatMap, concatMapTo, toArray } from 'rxjs/operators';
@@ -17,7 +17,7 @@ import { ModelKey } from '@gae-web/appengine-utility';
 // MARK: Generic Interfaces
 export interface ReadRequest {
     readonly atomic?: boolean;
-    readonly modelKeys: ModelKey | ModelKey[];
+    readonly modelKeys: OneOrMore<ModelKey>;
 }
 
 export type ReadResponse<T> = ModelServiceResponse<T>;

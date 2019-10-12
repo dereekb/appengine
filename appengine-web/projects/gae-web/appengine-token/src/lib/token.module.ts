@@ -4,12 +4,11 @@ import { AppTokenStorageService, StoredTokenStorageAccessor } from './storage.se
 
 export function appTokenStorageServiceFactory(accessor: StoredTokenStorageAccessor) {
   return new AppTokenStorageService(accessor);
-} 
+}
 
 export function memoryStoredTokenStorageAccessorFactory() {
   return new StoredTokenStorageAccessor();
 }
-
 
 /**
  * Module that provides services for managing JWTs for HttpClient.
@@ -50,4 +49,4 @@ export class GaeTokenModule {
     useFactory: memoryStoredTokenStorageAccessorFactory
   }]
 })
-export class MemoryGaeTokenModule {}
+export class MemoryGaeTokenModule { }
