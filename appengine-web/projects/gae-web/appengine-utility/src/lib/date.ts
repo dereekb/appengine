@@ -171,6 +171,10 @@ const TIME_RELATION_STATES = [TimeRelationState.Before, TimeRelationState.Now, T
 
 export class DateTimeUtility {
 
+  public static sortDateModels<T extends DatedModel>(direction: SortDirection = SortDirection.Descending, getTime: (x: T) => FullDateInput = (x) => x.date) {
+    return this.sortDateTimeFn(getTime, direction);
+  }
+
   public static sortDateTimeFn<T>(getTime: (x: T) => FullDateInput, direction: SortDirection = SortDirection.Descending) {
     const sort: (x: DateTime, y: DateTime) => number = (direction === SortDirection.Descending)
       ? ((x, y) => y.diff(x).milliseconds)

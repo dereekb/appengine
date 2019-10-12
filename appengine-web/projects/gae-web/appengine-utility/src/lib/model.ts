@@ -1,6 +1,7 @@
 import { ValueUtility, OneOrMore, ObjectAttribute } from './value';
 import { Keyed } from './collection';
 import { PropertyDescriptorUtility, DescriptorAssertionOptions } from './assert';
+import { ModelSearchService } from '@gae-web/appengine-client/public-api';
 
 // MARK: ModelKey
 export type ModelType = string;
@@ -191,6 +192,10 @@ export class ModelUtility {
     const map = {} as M as any;
     input.forEach((x) => map[ModelUtility.readModelKey(x, read)] = x);
     return map;
+  }
+
+  static filterUniqueModels<T extends UniqueModel>(models: T[]): T[] {
+    return models.filter(ValueUtility.filterUniqueValuesFn((x) => x.modelKey));
   }
 
   static readModelKeysFromAttributes<T>(models: T[], attributes: OneOrMore<ObjectAttribute>): ModelKey[] {
