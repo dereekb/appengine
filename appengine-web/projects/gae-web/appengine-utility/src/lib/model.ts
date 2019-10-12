@@ -354,7 +354,7 @@ export class ModelUtility {
     return key;
   }
 
-  static isModelKey<T extends UniqueModel>(input: ModelOrKey<T>) {
+  static isModelKey<T extends UniqueModel>(input: ModelOrKey<T>): boolean {
     switch (typeof input) {
       case 'number':
       case 'string':
@@ -364,9 +364,10 @@ export class ModelUtility {
     }
   }
 
-  static isEqual(a: ModelKey, b: ModelKey) {
+  static isEqual(a: ModelKey, b: ModelKey): boolean {
     // tslint:disable-next-line: triple-equals
-    return a == b;
+    const result = a == b;
+    return result;
   }
 
 }

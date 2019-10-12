@@ -1,11 +1,10 @@
-import { UniqueModel, ModelKey, SourceState, KeyedCacheLoad, ModelUtility, ValueUtility, ConversionSourceInputResult, Keyed } from '@gae-web/appengine-utility';
+import { UniqueModel, ModelKey, ModelOrKey, SourceState, KeyedCacheLoad, ModelUtility, ValueUtility, ConversionSourceInputResult, Keyed } from '@gae-web/appengine-utility';
 import { ReadSourceFactory, ReadSourceConfiguration, ReadSource, ReadServiceReadSourceFactory } from './source';
 import { ModelServiceWrapper } from './model.service';
 import { ReadService, ReadRequest, ModelServiceResponse, ReadResponse, UpdateService, UpdateResponse, UpdateRequest, DeleteService, DeleteRequest, DeleteResponse } from '@gae-web/appengine-api';
 import { throwError, of, Observable } from 'rxjs';
 import { flatMap, map, catchError, first, share, tap, skip, shareReplay } from 'rxjs/operators';
 import { WrapperEventType } from './wrapper';
-import { ModelOrKey } from 'projects/gae-web/appengine-utility/src/lib/model';
 
 // MARK: Read
 export class AppEngineReadSourceFactory<T extends UniqueModel> extends ReadServiceReadSourceFactory<T> {
