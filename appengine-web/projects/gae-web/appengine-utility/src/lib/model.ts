@@ -1,7 +1,6 @@
 import { ValueUtility, OneOrMore, ObjectAttribute } from './value';
 import { Keyed } from './collection';
 import { PropertyDescriptorUtility, DescriptorAssertionOptions } from './assert';
-import { ModelSearchService } from '@gae-web/appengine-client/public-api';
 
 // MARK: ModelKey
 export type ModelType = string;

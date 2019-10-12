@@ -2,6 +2,7 @@ package com.dereekb.gae.extras.gen.app.config.app.services.impl;
 
 import com.dereekb.gae.extras.gen.app.config.app.services.AppDebugApiConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppEventServiceListenersConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppFirebaseServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppMailServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListenerConfigurer;
@@ -27,6 +28,7 @@ public class AppServicesConfigurerImpl
 	private AppMailServiceConfigurer appMailServiceConfigurer;
 	private AppTaskSchedulerEnqueuerConfigurer appTaskSchedulerEnqueuerConfigurer = new AppTaskSchedulerEnqueuerConfigurerImpl();
 	private AppDebugApiConfigurer appDebugConfigurer = null;
+	private AppFirebaseServiceConfigurer appFirebaseServiceConfigurer = null;
 
 	public AppServicesConfigurerImpl(AppServerInitializationConfigurer appServerInitializationConfigurer,
 	        AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer,
@@ -142,12 +144,22 @@ public class AppServicesConfigurerImpl
 		this.appMailServiceConfigurer = appMailServiceConfigurer;
 	}
 
+	@Override
 	public AppDebugApiConfigurer getAppDebugApiConfigurer() {
 		return this.appDebugConfigurer;
 	}
 
 	public void setAppDebugConfigurer(AppDebugApiConfigurer appDebugConfigurer) {
 		this.appDebugConfigurer = appDebugConfigurer;
+	}
+
+	@Override
+	public AppFirebaseServiceConfigurer getAppFirebaseServiceConfigurer() {
+		return this.appFirebaseServiceConfigurer;
+	}
+
+	public void setAppFirebaseServiceConfigurer(AppFirebaseServiceConfigurer appFirebaseServiceConfigurer) {
+		this.appFirebaseServiceConfigurer = appFirebaseServiceConfigurer;
 	}
 
 }

@@ -26,7 +26,7 @@ public interface AppServicesConfigurer {
 
 	public AppMailServiceConfigurer getAppMailServiceConfigurer();
 
-	public AppFirebaseServiceConfigurer getFirebaseServiceConfigurer();
+	public AppFirebaseServiceConfigurer getAppFirebaseServiceConfigurer();
 
 	/**
 	 * @return {@link AppDebugApiConfigurer}, or {@code null} if no
