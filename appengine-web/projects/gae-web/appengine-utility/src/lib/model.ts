@@ -194,7 +194,8 @@ export class ModelUtility {
   }
 
   static filterUniqueModels<T extends UniqueModel>(models: T[]): T[] {
-    return models.filter(ValueUtility.filterUniqueValuesFn((x) => x.modelKey));
+    const result = models.filter(ValueUtility.filterUniqueValuesFn((x) => x.modelKey));
+    return result;
   }
 
   static readModelKeysFromAttributes<T>(models: T[], attributes: OneOrMore<ObjectAttribute>): ModelKey[] {

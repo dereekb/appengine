@@ -1,8 +1,7 @@
 import { DateTime } from 'luxon';
 import { SortDirection } from './collection';
 import { TimedCache } from './cache';
-import { ValueUtility } from './value';
-import { OneOrMore } from '@gae-web/appengine-utility/lib/value';
+import { OneOrMore, ValueUtility } from './value';
 
 export type ISO8601DateString = string;
 export type DateInput = DateTime | Date | undefined;
