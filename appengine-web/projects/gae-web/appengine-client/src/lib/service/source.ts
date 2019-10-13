@@ -121,6 +121,8 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
   private _nextSub = new SubscriptionObject();
   private _next?: Promise<ModelKey[]>;    // Next Promise.
 
+  protected _initialized = false;
+
   private done = false;
 
   constructor(config?: C) {
@@ -128,6 +130,7 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
 
     this.config = config;
     this.resetSearchSource();
+    this._initialized = true;
   }
 
   // MARK: Accessors
@@ -298,8 +301,8 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
       this.resetSearchSource();
       super.reset();
 
-      if (this._config && this._config.autoNextOnReset) {
-        // Only call next if explicitly requested, as the source could be reconfiguring.
+      if (this._config && this._config.autoNextOnReset && this._initialized) {
+        // Only call next if explicitly requested and we've been initialized, as the source could be reconfiguring.
         this.next();
       }
     }
