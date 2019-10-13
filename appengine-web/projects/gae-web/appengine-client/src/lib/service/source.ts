@@ -400,6 +400,7 @@ export class KeyTypedModelSearchSource<T extends UniqueModel> extends KeySearchS
 
   protected updateConfigValues(config: TypedModelSearchSourceConfiguration, template: TypedModelSearchSourceConfiguration): void {
     super.updateConfigValues(config, template);
+    config.autoNextOnReset = template.autoNextOnReset;
     config.index = template.index;
   }
 

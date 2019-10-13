@@ -93,6 +93,14 @@ export class ValueUtility {
     return object;
   }
 
+  static lastValueInArray<T>(array: T[] | undefined): T | undefined {
+    if (array) {
+      return array[array.length - 1];
+    } else {
+      return undefined;
+    }
+  }
+
   static batch<T>(array: T[], batchSize: number): T[][] {
     array = [].concat(array);
     const batch = [];
