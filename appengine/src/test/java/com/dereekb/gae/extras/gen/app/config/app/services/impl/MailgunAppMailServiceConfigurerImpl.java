@@ -8,7 +8,7 @@ import com.dereekb.gae.server.mail.service.impl.MailUserImpl;
 import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceConfigurationImpl;
 import com.dereekb.gae.server.mail.service.impl.provider.mailgun.impl.MailgunMailServiceImpl;
 import com.dereekb.gae.utilities.data.StringUtility;
-import com.dereekb.gae.utilities.misc.env.EnvStringFactory;
+import com.dereekb.gae.utilities.misc.env.EnvStringUtility;
 
 /**
  * {@link AppMailServiceConfigurer} implementation for Mailgun.
@@ -71,10 +71,8 @@ public class MailgunAppMailServiceConfigurerImpl
 		builder.bean(serverMailUserBeanId).beanClass(MailUserImpl.class).c().value(this.mailUser.getEmailAddress())
 		        .value(this.mailUser.getName());
 
-		EnvStringFactory apiKeyFactory = new EnvStringFactory(MailgunAppMailServiceConfigurerImpl.API_KEY_ENV_VAR,
+		String apiKey = EnvStringUtility.readProdEnv(MailgunAppMailServiceConfigurerImpl.API_KEY_ENV_VAR,
 		        MailgunAppMailServiceConfigurerImpl.MISSING_API_KEY_STRING);
-
-		String apiKey = apiKeyFactory.make();
 
 		String domain = this.getDomain();
 

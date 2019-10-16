@@ -2,6 +2,7 @@ package com.dereekb.gae.server.auth.security.login.oauth.impl;
 
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.utilities.data.StringUtility;
+import com.dereekb.gae.utilities.misc.env.EnvStringUtility;
 
 /**
  * {@link OAuthClientConfigImpl} extension that checks the env variable before
@@ -85,11 +86,14 @@ public class SystemEnvOAuthClientConfigImpl
 	@Override
 	public String getClientId() {
 
-		String clientId = System.getenv(this.clientIdEnvVariable);
 
-		if (StringUtility.isEmptyString(clientId) && this.defaultClientConfig != null) {
-			clientId = this.defaultClientConfig.getClientId();
+		String defaultClientId = null;
+
+		if (this.defaultClientConfig != null) {
+			defaultClientId = this.defaultClientConfig.getClientId();
 		}
+
+		String clientId = EnvStringUtility.readProdEnv(this.clientIdEnvVariable, defaultClientId);
 
 		if (StringUtility.isEmptyString(clientId)) {
 			throw new UnsupportedOperationException("The client ID was not properly configured.");
@@ -101,11 +105,13 @@ public class SystemEnvOAuthClientConfigImpl
 	@Override
 	public String getClientSecret() {
 
-		String clientSecret = System.getenv(this.clientSecretEnvVariable);
+		String defaultClientSecret = null;
 
-		if (StringUtility.isEmptyString(clientSecret) && this.defaultClientConfig != null) {
-			clientSecret = this.defaultClientConfig.getClientSecret();
+		if (this.defaultClientConfig != null) {
+			defaultClientSecret = this.defaultClientConfig.getClientSecret();
 		}
+
+		String clientSecret = EnvStringUtility.readProdEnv(this.clientSecretEnvVariable, defaultClientSecret);
 
 		if (StringUtility.isEmptyString(clientSecret)) {
 			throw new UnsupportedOperationException("The client secret was not properly configured.");

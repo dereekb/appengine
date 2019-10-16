@@ -8,7 +8,6 @@ import {
 } from '@gae-web/appengine-api';
 import { Subscription, Observable, combineLatest, Subject } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { ModelSearchService } from './search.service';
 
 // MARK: Read Source
 export interface ReadSourceConfiguration {
