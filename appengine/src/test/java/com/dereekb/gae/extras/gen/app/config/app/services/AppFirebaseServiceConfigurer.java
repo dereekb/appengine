@@ -19,7 +19,7 @@ public interface AppFirebaseServiceConfigurer {
 	 *            {@link AppConfiguration}. Never {@code null}.
 	 * @param builder
 	 */
-	public void configureMailService(AppConfiguration appConfiguration,
-	                                 SpringBeansXMLBuilder builder);
+	public void configureFirebaseService(AppConfiguration appConfiguration,
+	                                     SpringBeansXMLBuilder builder);
 
 }

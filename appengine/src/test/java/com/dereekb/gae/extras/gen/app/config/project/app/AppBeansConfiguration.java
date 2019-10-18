@@ -66,6 +66,8 @@ public interface AppBeansConfiguration {
 
 	public String getMailServiceBeanId();
 
+	public String getFirebaseServiceBeanId();
+
 	// Utility
 	public AppUtilityBeansConfiguration getUtilityBeans();
 

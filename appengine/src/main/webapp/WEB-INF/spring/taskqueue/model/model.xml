@@ -12,11 +12,11 @@
     <constructor-arg index="1" ref="modelKeyTypeConverter"/>
     <constructor-arg index="2">
       <map key-type="java.lang.String">
-        <entry key-ref="loginPointerType" value-ref="loginPointerTaskQueueIterateControllerEntry"/>
         <entry key-ref="appHookType" value-ref="appHookTaskQueueIterateControllerEntry"/>
+        <entry key-ref="loginPointerType" value-ref="loginPointerTaskQueueIterateControllerEntry"/>
         <entry key-ref="loginKeyType" value-ref="loginKeyTaskQueueIterateControllerEntry"/>
-        <entry key-ref="fooType" value-ref="fooTaskQueueIterateControllerEntry"/>
         <entry key-ref="appType" value-ref="appTaskQueueIterateControllerEntry"/>
+        <entry key-ref="fooType" value-ref="fooTaskQueueIterateControllerEntry"/>
         <entry key-ref="loginType" value-ref="loginTaskQueueIterateControllerEntry"/>
       </map>
     </constructor-arg>

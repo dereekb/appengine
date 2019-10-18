@@ -44,6 +44,11 @@ public class FirebaseServiceImpl
 		this.setDatabaseUrl(databaseUrl);
 	}
 
+	public FirebaseServiceImpl(String databaseUrl, String serviceAccountKeyFilePath) {
+		this(databaseUrl);
+		this.setServiceAccountKeyFilePath(serviceAccountKeyFilePath);
+	}
+
 	public String getServiceAccountKeyFilePath() {
 		return this.serviceAccountKeyFilePath;
 	}

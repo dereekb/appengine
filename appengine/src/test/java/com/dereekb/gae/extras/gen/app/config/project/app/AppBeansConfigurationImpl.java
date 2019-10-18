@@ -29,6 +29,7 @@ public class AppBeansConfigurationImpl
 	public static final String SYSTEM_LOGIN_TOKEN_SERVICE_BEAN_ID = "systemLoginTokenService";
 	public static final String SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID = "systemLoginTokenFactory";
 	public static final String MAIL_SERVICE_BEAN_ID = "mailService";
+	public static final String FIREBASE_SERVICE_BEAN_ID = "firebaseService";
 
 	public static final String CRUD_READ_MODEL_ROLE_REF_BEAN_ID = "crudReadModelRole";
 	public static final String CRUD_UPDATE_MODEL_ROLE_REF_BEAN_ID = "crudUpdateModelRole";
@@ -78,6 +79,7 @@ public class AppBeansConfigurationImpl
 	private String systemLoginTokenServiceBeanId = SYSTEM_LOGIN_TOKEN_SERVICE_BEAN_ID;
 	private String systemLoginTokenFactoryBeanId = SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID;
 	private String mailServiceBeanId = MAIL_SERVICE_BEAN_ID;
+	private String firebaseServiceBeanId = FIREBASE_SERVICE_BEAN_ID;
 	private String loginTokenModelContextServiceBeanId = LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_BEAN_ID;
 	private String loginTokenModelContextSetDencoderBeanId = LOGIN_TOKEN_MODEL_CONTEXT_SET_DENCODER_BEAN_ID;
 	private String anonymousModelRoleSetContextServiceBeanId = ANONYMOUS_MODEL_ROLE_SET_CONTEXT_SERVICE_BEAN_ID;
@@ -459,6 +461,19 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.mailServiceBeanId = mailServiceBeanId;
+	}
+
+	@Override
+	public String getFirebaseServiceBeanId() {
+		return this.firebaseServiceBeanId;
+	}
+
+	public void setFirebaseServiceBeanId(String firebaseServiceBeanId) {
+		if (firebaseServiceBeanId == null) {
+			throw new IllegalArgumentException("firebaseServiceBeanId cannot be null.");
+		}
+
+		this.firebaseServiceBeanId = firebaseServiceBeanId;
 	}
 
 	@Override

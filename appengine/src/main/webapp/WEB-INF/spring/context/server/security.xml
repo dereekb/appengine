@@ -3,8 +3,6 @@
   <security:http pattern="/_ah/**" security="none"/>
   <!--Allow anyone to initialize the server via GET.-->
   <security:http pattern="/api/test/v1/server/initialize" security="none"/>
-  <!--Allow anyone to debug the server-->
-  <security:http pattern="/api/test/v1/debug/**" security="none"/>
   <security:http create-session="stateless" entry-point-ref="securityEntryPoint" request-matcher-ref="authControllersPatternMatcher">
     <!--Only allow this service to access the taskqueue.-->
     <!--Authentication Matched-->
@@ -69,6 +67,8 @@
     <security:intercept-url access="!hasAnyRole('ROLE_SYSTEM','ROLE_LOGINTYPE_API','ROLE_ANON')" pattern="/api/test/v1/login/auth/key/*"/>
     <!--LoginKey Requests rejected for some roles.-->
     <security:intercept-url access="!hasAnyRole('ROLE_LOGINTYPE_API','ROLE_ANON')" request-matcher-ref="loginKeyObjectApiPathRequestMatcher"/>
+    <!--Allow any logged in user to debug the server-->
+    <security:intercept-url access="permitAll" pattern="/api/test/v1/debug/**"/>
     <!--Secured Owned Model Patterns-->
     <security:intercept-url access="hasRole('ROLE_USER')" method="PUT" pattern="/api/test/v1/model/roles"/>
     <security:intercept-url access="hasRole('ROLE_USER')" request-matcher-ref="securedModelPatternMatcher"/>
@@ -231,11 +231,11 @@
   </bean>
   <!--Secure Model Types-->
   <util:list id="secureModelTypes">
-    <ref bean="loginPointerType"/>
     <ref bean="appHookType"/>
+    <ref bean="loginPointerType"/>
     <ref bean="loginKeyType"/>
-    <ref bean="fooType"/>
     <ref bean="appType"/>
+    <ref bean="fooType"/>
     <ref bean="loginType"/>
   </util:list>
   <!--Exception Handler-->
