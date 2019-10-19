@@ -94,8 +94,8 @@ export class FooClientModule {
     }
   }
 
-  static forApp(): ModuleWithProviders {
-    const moduleWithProviders = {
+  static forApp(): ModuleWithProviders<any> {
+    return {
       ngModule: FooClientModule,
       providers: [
 
@@ -177,7 +177,6 @@ export class FooClientModule {
         }
       ]
     };
-    return moduleWithProviders;
   }
 
 }

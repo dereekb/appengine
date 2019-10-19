@@ -50,6 +50,16 @@ public final class PointImpl
 		this(location.getLatitude(), location.getLongitude());
 	}
 
+	public static PointImpl makeValidPoint(double latitude, double longitude) throws IllegalArgumentException {
+		if (latitude > 90 || longitude < -90) {
+			throw new IllegalArgumentException("Invalid latitude specified: " + latitude);
+		} else if (longitude > 180 || longitude < -180) {
+			throw new IllegalArgumentException("Invalid longitude specified: " + longitude);
+		}
+
+		return new PointImpl(latitude, longitude);
+	}
+
 	public static PointImpl fromLatLng(LatLng pt) {
 		if (pt != null) {
 			return new PointImpl(pt.getLatitude(), pt.getLongitude());

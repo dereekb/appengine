@@ -10,8 +10,9 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
 import com.googlecode.objectify.Work;
 
 /**
- * Abstract {@link AbstractModelKeyListAccessorTask} that performs changes to the  
- * 
+ * Abstract {@link AbstractModelKeyListAccessorTask} that performs changes to
+ * the input models within an objectify transaction.
+ *
  * @author dereekb
  *
  * @param <T>
@@ -20,6 +21,10 @@ import com.googlecode.objectify.Work;
 public abstract class AbstractModelStagedTransactionChangeTask<T extends UniqueModel> extends AbstractModelKeyListAccessorTask<T> {
 
 	private final Integer partitionSize;
+
+	public AbstractModelStagedTransactionChangeTask() {
+		this(null);
+	}
 
 	public AbstractModelStagedTransactionChangeTask(Integer partitionSize) {
 		super();
@@ -49,7 +54,7 @@ public abstract class AbstractModelStagedTransactionChangeTask<T extends UniqueM
 				        return output;
 			        }
 
-		        }, partitionSize);
+		        }, this.partitionSize);
 	}
 
 	protected abstract AbstractTransactionWork makeWork(Iterable<ModelKey> input);

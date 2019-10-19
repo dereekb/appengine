@@ -163,9 +163,9 @@ public class ObjectifyKeySetFieldParameterBuilder<T extends ObjectifyModel<T>> e
 	/**
 	 * Configures the request with the input parameter converted to a
 	 * {@link Key}.
-	 * 
+	 *
 	 * If the parameter is null, nothing happens.
-	 * 
+	 *
 	 * @param request
 	 *            {@link ObjectifyQueryRequestLimitedBuilder}. Never
 	 *            {@code null}.
@@ -176,8 +176,15 @@ public class ObjectifyKeySetFieldParameterBuilder<T extends ObjectifyModel<T>> e
 	                      ModelKeySetQueryFieldParameter parameter) {
 		if (parameter != null) {
 			Set<ModelKey> modelKeys = parameter.getValue();
-			List<Key<T>> key = this.util.convertFrom(modelKeys);
-			ObjectifyAbstractQueryFieldParameter.configure(request, parameter, key);
+			List<Key<T>> keys = this.util.convertFrom(modelKeys);
+
+			// TODO: Equivalence occurs through specifying multiple values? API does not allow list values to be specified.
+
+			if (keys.size() == 1) {
+				ObjectifyAbstractQueryFieldParameter.configure(request, parameter, keys.get(0));
+			} else {
+				// TODO!
+			}
 		}
 	}
 

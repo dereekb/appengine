@@ -8,6 +8,8 @@ import com.dereekb.gae.extras.gen.app.config.app.model.shared.filter.NotInternal
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractModelConfigurationGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFolder;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
@@ -74,23 +76,38 @@ public class ApiModelsConfigurationGenerator extends AbstractModelConfigurationG
 		        .ref(modelConfig.getModelLinkModelAccessorId());
 
 		builder.comment("Edit Controller");
-		builder.bean(modelConfig.getModelBeanPrefix() + "EditController")
-		        .beanClass(modelConfig.getModelEditControllerClass()).c()
-		        .ref(modelConfig.getModelBeanPrefix() + "EditControllerDelegate")
-		        .ref(modelConfig.getModelBeanPrefix() + "EditControllerConversionDelegate");
+		if (modelConfig.hasCreateService() || modelConfig.hasUpdateService() || modelConfig.hasDeleteService()) {
 
-		builder.bean(modelConfig.getModelBeanPrefix() + "EditControllerDelegate")
-		        .beanClass(EditModelControllerDelegateImpl.class).c()
-		        .ref(modelConfig.getModelBeanPrefix() + "CrudService");
+			builder.bean(modelConfig.getModelBeanPrefix() + "EditController")
+			        .beanClass(modelConfig.getModelEditControllerClass()).c()
+			        .ref(modelConfig.getModelBeanPrefix() + "EditControllerDelegate")
+			        .ref(modelConfig.getModelBeanPrefix() + "EditControllerConversionDelegate");
 
-		builder.bean(modelConfig.getModelBeanPrefix() + "EditControllerConversionDelegate")
-		        .beanClass(EditModelControllerConversionDelegateImpl.class).c().ref(modelConfig.getModelTypeBeanId())
-		        .ref(modelConfig.getStringModelKeyConverter()).ref(modelConfig.getModelDataConverterBeanId());
+			builder.bean(modelConfig.getModelBeanPrefix() + "EditControllerDelegate")
+			        .beanClass(EditModelControllerDelegateImpl.class).c()
+			        .ref(modelConfig.getModelBeanPrefix() + "CrudService");
+
+			builder.bean(modelConfig.getModelBeanPrefix() + "EditControllerConversionDelegate")
+			        .beanClass(EditModelControllerConversionDelegateImpl.class).c()
+			        .ref(modelConfig.getModelTypeBeanId()).ref(modelConfig.getStringModelKeyConverter())
+			        .ref(modelConfig.getModelDataConverterBeanId());
+
+		} else {
+			builder.comment("This type has no edit controllers available.");
+		}
 
 		builder.comment("Search/Query Components");
-		builder.bean(modelConfig.getModelBeanPrefix() + "SearchDelegateEntry")
+		SpringBeansXMLBeanConstructorBuilder<SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder>> searchDelegateConstructor = builder
+		        .bean(modelConfig.getModelBeanPrefix() + "SearchDelegateEntry")
 		        .beanClass(ApiSearchDelegateEntryImpl.class).c().ref(modelConfig.getModelTypeBeanId())
-		        .ref(modelConfig.getModelQueryServiceId()).ref(modelConfig.getModelDataConverterBeanId());
+		        .ref(modelConfig.getModelQueryServiceId());
+
+		// Add the TypedModelSearchService if available
+		if (modelConfig.getCustomModelContextConfigurer().hasSearchComponents() == true) {
+			searchDelegateConstructor.ref(modelConfig.getUtilityBeans().getTypedModelSearchServiceBeanId());
+		}
+
+		searchDelegateConstructor.ref(modelConfig.getModelDataConverterBeanId());
 
 		return builder;
 	}

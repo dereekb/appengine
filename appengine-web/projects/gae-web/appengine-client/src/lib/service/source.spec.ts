@@ -1,6 +1,6 @@
 import 'jasmine-expect';
 import { TestFoo, TestFooReadService } from '@gae-web/appengine-api';
-import { MergedReadQuerySource, ReadSource } from './source';
+import { MergedReadIterateSource, ReadSource } from './source';
 import { SourceState } from '@gae-web/appengine-utility';
 import { filter, first } from 'rxjs/operators';
 import { TestFooTestReadSourceFactory, TestFooTestKeyQuerySource } from '../../test/foo.testing';
@@ -280,16 +280,16 @@ describe('Source', () => {
 
   });
 
-  describe('MergedReadQuerySource', () => {
+  describe('MergedReadIterateSource', () => {
 
-    let mergedReadQuerySource: MergedReadQuerySource<TestFoo>;
+    let mergedReadIterateSource: MergedReadIterateSource<TestFoo>;
     let testReadSource: ReadSource<TestFoo>;
     let testQuerySource: TestFooTestKeyQuerySource;
 
     beforeEach(() => {
       testReadSource = TestFooTestReadSourceFactory.makeReadSource();
       testQuerySource = new TestFooTestKeyQuerySource();
-      mergedReadQuerySource = new MergedReadQuerySource<TestFoo>(testReadSource, testQuerySource);
+      mergedReadIterateSource = new MergedReadIterateSource<TestFoo>(testReadSource, testQuerySource);
     });
 
     describe('with no query results', () => {
@@ -305,7 +305,7 @@ describe('Source', () => {
         testQuerySource.next();
 
         // Wait for the stream to complete.
-        mergedReadQuerySource.stream.pipe(
+        mergedReadIterateSource.stream.pipe(
           filter((x) => {
             return x.state === SourceState.Done;
           }),
@@ -335,7 +335,7 @@ describe('Source', () => {
         testQuerySource.next();
 
         // Wait for the stream to complete.
-        mergedReadQuerySource.stream.pipe(
+        mergedReadIterateSource.stream.pipe(
           filter((x) => {
             return x.state === SourceState.Done;
           }),
@@ -347,7 +347,7 @@ describe('Source', () => {
           // Reset and load again.
           let hitLoading = false;
           let hitDone = false;
-          mergedReadQuerySource.stream.pipe()
+          mergedReadIterateSource.stream.pipe()
             .subscribe((sourceEvent) => {
 
               switch (sourceEvent.state) {
@@ -365,8 +365,8 @@ describe('Source', () => {
             });
 
           // TODO: Reset should potentially also directly call next here?
-          mergedReadQuerySource.reset();
-          mergedReadQuerySource.next();
+          mergedReadIterateSource.reset();
+          mergedReadIterateSource.next();
         });
       });
 

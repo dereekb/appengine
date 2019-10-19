@@ -54,7 +54,11 @@ export abstract class AbstractSearchService<T extends UniqueModel, O> extends Ab
         const params = {} as any;
 
         if (request.parameters) {
-            ValueUtility.copyObjectProperties(request.parameters.parameters, params);
+            const parameters = request.parameters.parameters;
+
+            if (parameters) {
+                ValueUtility.copyObjectProperties(parameters, params);
+            }
         }
 
         if (request.isKeysOnly !== undefined) {

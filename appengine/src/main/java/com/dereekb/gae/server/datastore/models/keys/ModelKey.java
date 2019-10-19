@@ -456,6 +456,20 @@ public final class ModelKey
 	}
 
 	/**
+	 * Converts a string to a {@link ModelKey}. If the
+	 * string is {@code null}, will return {@code null}.
+	 * <p>
+	 * Same as calling {@link #safe(String)}
+	 *
+	 * @param numberString
+	 *            String number to convert.
+	 * @return {@link ModelKey} with a Number identifier
+	 */
+	public static ModelKey convertNameString(String nameString) {
+		return ModelKey.safe(nameString);
+	}
+
+	/**
 	 * Returns the {@link StringModelKeyConverter} for the input key type.
 	 *
 	 * @param keyType

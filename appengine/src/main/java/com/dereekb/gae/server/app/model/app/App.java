@@ -1,8 +1,10 @@
 package com.dereekb.gae.server.app.model.app;
 
 import com.dereekb.gae.server.app.model.app.info.AppConfigInfo;
+import com.dereekb.gae.server.app.model.app.info.AppInfo;
 import com.dereekb.gae.server.app.model.app.info.AppServiceVersionInfo;
 import com.dereekb.gae.server.app.model.app.info.AppVersion;
+import com.dereekb.gae.server.app.model.app.info.SystemAppInfo;
 import com.dereekb.gae.server.app.model.app.info.impl.AppServiceVersionInfoImpl;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwnedModel;
@@ -13,6 +15,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyGenerationType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyInfo;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
 import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
@@ -211,6 +214,23 @@ public class App extends DatedDatabaseModel
 	}
 
 	// MARK: AppInfo
+	public void copyFromSystemAppInfo(SystemAppInfo appInfo) {
+		this.copyFromAppInfo(appInfo);
+		this.setSystemKey(appInfo.getSystemKey());
+	}
+
+	/**
+	 * Copies all information from the {@link AppInfo}.
+	 *
+	 * @param appInfo
+	 *            {@link AppInfo}. Never {@code null}.
+	 */
+	public void copyFromAppInfo(AppInfo appInfo) {
+		this.setName(appInfo.getAppName());
+		this.setModelKey(appInfo.getModelKey());
+		this.setAppServiceVersionInfo(appInfo.getAppServiceVersionInfo());
+	}
+
 	@Override
 	public AppServiceVersionInfo getAppServiceVersionInfo() {
 		try {
@@ -282,7 +302,7 @@ public class App extends DatedDatabaseModel
 	// Objectify Model
 	@Override
 	public Key<App> getObjectifyKey() {
-		return Key.create(App.class, this.identifier);
+		return ObjectifyKeyUtility.createKey(App.class, this.identifier);
 	}
 
 	@Override

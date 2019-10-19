@@ -23,11 +23,6 @@ import { GaeSegueComponentsModule } from './state/segue.module';
 })
 export class GaeComponentsModule {
 
-  static allComponentsApp(): ModuleWithProviders[] {
-    const result = [this.forApp(), GaeMaterialComponentsModule.forApp()];
-    return result;
-  }
-
   static forApp(): ModuleWithProviders {
     return {
       ngModule: GaeComponentsModule,
@@ -36,3 +31,14 @@ export class GaeComponentsModule {
   }
 
 }
+
+/**
+ * Pre-configured GaeComponentsModule that imports GaeComponentsModule and GaeMaterialComponentsModule.
+ */
+@NgModule({
+  imports: [
+    GaeComponentsModule.forApp(),
+    GaeMaterialComponentsModule.forApp()
+  ]
+})
+export class GaeComponentsPreConfiguredAppModule { }

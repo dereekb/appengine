@@ -126,6 +126,10 @@ export abstract class DecodedLoginToken {
     return this._type;
   }
 
+  get raw() {
+    return this._raw;
+  }
+
   get decodedPayload() {
     return this._raw;
   }

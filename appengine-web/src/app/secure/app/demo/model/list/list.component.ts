@@ -1,7 +1,7 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FooCreateDialogComponent } from 'src/app/secure/shared/components/model/foo/views/create-modal.component';
-import { GaeListViewKeyQuerySourceDirective } from '@gae-web/appengine-components';
+import { GaeListViewKeySearchSourceDirective } from '@gae-web/appengine-components';
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 import { CreateResponse } from '@gae-web/appengine-api';
 import { FooCreateActionDirective } from 'src/app/secure/shared/components/model/foo/client/create.directive';
@@ -13,8 +13,8 @@ import { MatProgressButtonOptions } from 'mat-progress-buttons';
 })
 export class ModelListComponent {
 
-  @ViewChild(GaeListViewKeyQuerySourceDirective, { static: true })
-  private readonly _querySource: GaeListViewKeyQuerySourceDirective<Foo>;
+  @ViewChild(GaeListViewKeySearchSourceDirective, { static: true })
+  private readonly _searchSource: GaeListViewKeySearchSourceDirective<Foo>;
 
   @ViewChild(FooCreateActionDirective, { static: true })
   private readonly _createAction: FooCreateActionDirective;
@@ -29,7 +29,7 @@ export class ModelListComponent {
 
       this._ref.afterClosed().subscribe((result: CreateResponse<Foo> | undefined) => {
         if (result) {
-          this._querySource.refresh();
+          this._searchSource.refresh();
         }
       }).add(() => {
         this._ref = undefined;
@@ -39,7 +39,7 @@ export class ModelListComponent {
 
   createJunk() {
     this._createAction.testCreate(20).subscribe(() => {
-      this._querySource.refresh();
+      this._searchSource.refresh();
     });
   }
 

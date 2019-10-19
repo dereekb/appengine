@@ -5,6 +5,7 @@ import com.dereekb.gae.server.auth.security.app.AppLoginSecurityDetails;
 import com.dereekb.gae.server.datastore.models.DatabaseModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.dereekb.gae.utilities.misc.keyed.utility.KeyedUtility;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
@@ -136,7 +137,7 @@ public class AppLogin extends DatabaseModel
 	// Objectify Model
 	@Override
 	public Key<AppLogin> getObjectifyKey() {
-		return Key.create(AppLogin.class, this.identifier);
+		return ObjectifyKeyUtility.createKey(AppLogin.class, this.identifier);
 	}
 
 	@Override

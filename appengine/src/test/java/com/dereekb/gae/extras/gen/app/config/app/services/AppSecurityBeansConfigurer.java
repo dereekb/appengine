@@ -2,6 +2,7 @@ package com.dereekb.gae.extras.gen.app.config.app.services;
 
 import com.dereekb.gae.client.api.auth.token.ClientLoginTokenValidationService;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.project.test.TestConfigurationGenerator;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 
@@ -32,14 +33,27 @@ public interface AppSecurityBeansConfigurer
 	public Class<?> getLoginSecurityModelQueryTaskOverrideClass();
 
 	// Login
+	/**
+	 * Configues the token encoder decoder.
+	 *
+	 * @param appConfig
+	 * @param beanBuilder
+	 * @param forTests whether or not this is being used in a testing context only. Is true when by the {@link TestConfigurationGenerator} for remote apps.
+	 */
 	public void configureTokenEncoderDecoder(AppConfiguration appConfig,
-	                                         SpringBeansXMLBeanBuilder<?> beanBuilder);
+	                                         SpringBeansXMLBeanBuilder<?> beanBuilder,
+	   	                                  	 boolean forTests);
 
 	/**
-	 * NOTE: Is only used by the login server.
+	 * Configues the token builder.
+	 *
+	 * @param appConfig
+	 * @param beanBuilder
+	 * @param forTests whether or not this is being used in a testing context only. Is true when by the {@link TestConfigurationGenerator} for remote apps.
 	 */
 	public void configureTokenBuilder(AppConfiguration appConfig,
-	                                  SpringBeansXMLBeanBuilder<?> beanBuilder);
+	                                  SpringBeansXMLBeanBuilder<?> beanBuilder,
+	                                  boolean forTests);
 
 	// Security
 	public void configureTokenAuthenticationProvider(AppConfiguration appConfig,
@@ -55,5 +69,8 @@ public interface AppSecurityBeansConfigurer
 	public void configureNewLoginGenerator(AppConfiguration appConfig,
 	                                       SpringBeansXMLBuilder builder,
 	                                       String newLoginGeneratorId);
+
+	public void configureTestRemoteLoginSystemLoginTokenContext(AppConfiguration appConfig,
+	                                                            SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> loginTokenContextBuilder);
 
 }

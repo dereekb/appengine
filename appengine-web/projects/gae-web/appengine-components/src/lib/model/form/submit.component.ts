@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation, Inject, Directive, Optional, OnDestroy, Type } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewEncapsulation, Inject, Directive, Optional, OnDestroy, Type, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 
 import { MatProgressButtonOptions } from 'mat-progress-buttons';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { GaeViewUtility } from '../../shared/utility';
 
 /**
  * Is linked to by a child GaeSubmitViewComponent.
@@ -14,9 +15,12 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
     selector: '[gaeSubmitViewAction]',
     exportAs: 'gaeSubmitViewAction'
 })
-export class GaeSubmitViewActionDirective {
+export class GaeSubmitViewActionDirective implements AfterViewInit {
 
+    private _initialized = false;
     private _submitView?: GaeSubmitComponent;
+
+    constructor(@Inject(ChangeDetectorRef) protected readonly _cdRef: ChangeDetectorRef) { }
 
     public get disabled(): boolean {
         return (this._submitView) ? this._submitView.isDisabled : true;
@@ -30,6 +34,14 @@ export class GaeSubmitViewActionDirective {
         return (this._submitView) ? this._submitView.isWorking : false;
     }
 
+    ngAfterViewInit() {
+        this._initialized = true;
+
+        if (this._submitView) {
+            GaeViewUtility.safeDetectChanges(this._cdRef);
+        }
+    }
+
     public doSubmit() {
         if (this._submitView) {
             this._submitView.submit();
@@ -37,7 +49,13 @@ export class GaeSubmitViewActionDirective {
     }
 
     public set submitView(submitView: GaeSubmitComponent) {
-        this._submitView = submitView;
+        if (submitView !== this._submitView) {
+            this._submitView = submitView;
+
+            if (this._initialized) {
+                GaeViewUtility.safeDetectChanges(this._cdRef);
+            }
+        }
     }
 
 }
@@ -58,6 +76,7 @@ export function ProvideGaeSubmitComponent<S extends GaeSubmitComponent>(listView
 
 export abstract class GaeAbstractSubmitComponent implements OnDestroy {
 
+    @Output()
     public readonly submitClicked = new EventEmitter<{}>();
 
     private _working = false;
@@ -102,6 +121,14 @@ export abstract class GaeAbstractSubmitComponent implements OnDestroy {
         this._working = working;
     }
 
+    /**
+     * Convenience input for isWorking
+     */
+    @Input()
+    set working(working: boolean) {
+        this.isWorking = working;
+    }
+
     get isLocked() {
         return this._locked;
     }
@@ -122,6 +149,14 @@ export abstract class GaeAbstractSubmitComponent implements OnDestroy {
     @Input()
     set isDisabled(disabled: boolean) {
         this._disabled = disabled;
+    }
+
+    /**
+     * Convenience input for disabled
+     */
+    @Input()
+    set disabled(disabled: boolean) {
+        this.isDisabled = disabled;
     }
 
     // MARK: Click
@@ -160,6 +195,9 @@ export class GaeSubmitButtonComponent extends GaeAbstractSubmitComponent {
     public spinner = false;
 
     @Input()
+    public spinnerSize = 17;
+
+    @Input()
     public mode: ProgressSpinnerMode = 'indeterminate';
 
     public get btnOptions(): MatProgressButtonOptions {
@@ -172,7 +210,9 @@ export class GaeSubmitButtonComponent extends GaeAbstractSubmitComponent {
             stroked: true,
             flat: false,
             mode: this.mode,
-            disabled: this.isDisabled
+            spinnerSize: this.spinnerSize,
+            // Only disabled if we're not working, in order to show the animation.
+            disabled: !this.working && this.disabled
         };
     }
 

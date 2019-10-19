@@ -1,6 +1,6 @@
 import { ApiResponse, ApiErrorCode, ApiResponseError, ApiResponseErrorSet, ApiResponseJson } from '../api';
 
-import { HttpResponse } from '@angular/common/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 import { BaseError } from 'make-error';
 
@@ -93,11 +93,17 @@ export class ClientApiResponse extends ClientResponse {
     public static fromResponse(httpResponse: HttpResponse<ApiResponseJson>): ClientApiResponse {
         const data = httpResponse.body;
         const apiResponse: ApiResponse = ApiResponse.fromJson(data);
-        return new ClientApiResponse(apiResponse, httpResponse);
+        return new ClientApiResponse(apiResponse, httpResponse.status, data);
     }
 
-    private constructor(private _apiResponse: ApiResponse, _httpResponse: HttpResponse<any>) {
-        super(_apiResponse.success, _httpResponse.status, _httpResponse.body);
+    public static fromErrorResponse(httpErrorResponse: HttpErrorResponse): ClientApiResponse {
+        const data = httpErrorResponse.error;
+        const apiResponse: ApiResponse = ApiResponse.fromJson(data);
+        return new ClientApiResponse(apiResponse, httpErrorResponse.status, data);
+    }
+
+    private constructor(private _apiResponse: ApiResponse, status: number, body: any) {
+        super(_apiResponse.success, status, body);
     }
 
     get response() {

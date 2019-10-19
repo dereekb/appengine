@@ -6,14 +6,16 @@ import java.util.List;
 import java.util.Set;
 
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKeyEnforcement;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
+import com.dereekb.gae.server.datastore.objectify.model.ObjectifyDatabaseEntityInfo;
 import com.googlecode.objectify.Key;
 
 /**
  * General utility for Objectify and {@link Key} values.
  *
  * @author dereekb
- * 
+ *
  * @see ObjectifyKeyUtility
  */
 public class ObjectifyUtility {
@@ -129,5 +131,36 @@ public class ObjectifyUtility {
 
 		return keys;
 	}
-	
+
+	// MARK: Info
+	public static ObjectifyDatabaseEntityKeyEnforcement readObjectifyDatabaseEntityKeyEnforcement(Class<?> type) throws IllegalArgumentException {
+		return readObjectifyDatabaseEntityKeyEnforcement(type, false);
+	}
+
+	public static ObjectifyDatabaseEntityKeyEnforcement readObjectifyDatabaseEntityKeyEnforcement(Class<?> type, boolean readSuperClasses) throws IllegalArgumentException {
+		return readObjectifyDatabaseEntityInfo(type, readSuperClasses).keyEnforcement();
+	}
+
+	public static ObjectifyDatabaseEntityInfo readObjectifyDatabaseEntityInfo(Class<?> type) throws IllegalArgumentException {
+		return readObjectifyDatabaseEntityInfo(type, false);
+	}
+
+	public static ObjectifyDatabaseEntityInfo readObjectifyDatabaseEntityInfo(Class<?> type, boolean readSuperClasses) throws IllegalArgumentException {
+		ObjectifyDatabaseEntityInfo annotation = type.getAnnotation(ObjectifyDatabaseEntityInfo.class);
+
+		if (annotation == null && readSuperClasses) {
+			try {
+				annotation = readObjectifyDatabaseEntityInfo(type.getSuperclass());
+			} catch (IllegalArgumentException e) {
+				// Do nothing.
+			}
+		}
+
+		if (annotation == null) {
+			throw new IllegalArgumentException("Class '" + type.getName() + "' has no objectify database entity information attached.");
+		}
+
+		return annotation;
+	}
+
 }

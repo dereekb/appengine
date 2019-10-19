@@ -1,7 +1,7 @@
 package com.dereekb.gae.utilities.collections.pairs;
 
 /**
- * {@link Pair} extension that has a {@link ResultsPairState}.
+ * {@link Pair} extension that has a {@link ResultPairState}.
  * 
  * @author dereekb
  *
@@ -16,9 +16,9 @@ public interface ResultPair<S, R>
 	/**
 	 * Returns the pair state.
 	 * 
-	 * @return {@link ResultsPairState}. Never {@code null}.
+	 * @return {@link ResultPairState}. Never {@code null}.
 	 */
-	public ResultsPairState getState();
+	public ResultPairState getState();
 
 	/**
 	 * Whether or not this has a result value.

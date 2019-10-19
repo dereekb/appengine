@@ -9,7 +9,6 @@ export function modelLinkServiceFactory(wrapperSet: ModelServiceWrapperSet, clie
 }
 
 @NgModule({
-  declarations: [],
   imports: [GaeApiModule],
   exports: []
 })

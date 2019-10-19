@@ -11,11 +11,13 @@ import com.dereekb.gae.extras.gen.app.config.app.impl.AppServiceConfigurationInf
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationGroupImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppEventServiceListenersConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppFirebaseServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppMailServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListenerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppFirebaseServiceConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppServicesConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.LoginServerAppServerInitializationConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.MailgunAppMailServiceConfigurerImpl;
@@ -30,8 +32,6 @@ import com.dereekb.gae.extras.gen.app.gae.local.LoginGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.remote.RemoteEventServiceConfigurationGen;
 import com.dereekb.gae.extras.gen.test.app.gae.local.TestModelGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
-import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
-import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthClientConfigImpl;
 import com.dereekb.gae.server.mail.service.MailUser;
 import com.dereekb.gae.server.mail.service.impl.MailUserImpl;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
@@ -44,9 +44,6 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
  */
 public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigurationGen {
 
-	public static final OAuthClientConfig TEST_FACEBOOK_OAUTH_CONFIG = new OAuthClientConfigImpl("431391914300748",
-	        "102a10dd9bfa5e2783e57a2f09b0c2ac");
-
 	@Override
 	public AppConfiguration makeAppSpringConfiguration() {
 
@@ -57,6 +54,11 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		String appName = "GAE Core Test App";
 		String developmentProxy = "http://gae-nginx:8080";	// Unused
 		String developmentHost = "localhost:8080";
+
+		// TODO: Add to configuration.
+		String firebaseDatabaseUrl = TestStaticServerConfiguration.FIREBASE_DATABASE_URL;
+		String developmentFirebaseDatabaseUrl = TestStaticServerConfiguration.FIREBASE_DATABASE_URL;
+
 		Long appId = 1L;
 
 		MailUser systemMailUser =  new MailUserImpl("test@gae.dereekb.com", "Test Server");
@@ -108,6 +110,9 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		        appServerInitializationConfigurer, appLoginTokenSecurityConfigurer, appEventServiceListenersConfigurer,
 		        appWebHookEventServiceConfigurer, appModelKeyEventListenerConfigurer, appMailServiceConfigurer);
 
+		AppFirebaseServiceConfigurer firebaseServiceConfigurer = new AppFirebaseServiceConfigurerImpl(firebaseDatabaseUrl, developmentFirebaseDatabaseUrl);
+		appServicesConfigurer.setAppFirebaseServiceConfigurer(firebaseServiceConfigurer);
+
 		AppConfigurationImpl configuration = new AppConfigurationImpl(appServiceConfigurationInfo,
 		        appServicesConfigurer, modelConfigurations);
 
@@ -118,12 +123,13 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		configuration.setAppDevelopmentProxyUrl(developmentProxy);
 		configuration.setAppDevelopmentServerHostUrl(developmentHost);
 
+		configuration.setIsRootServer(true);
 		configuration.setIsLoginServer(true);
 		configuration.setRemoteServices(remoteEventService);
 
 		LoginTokenAppSecurityBeansConfigurerImpl appSecurityBeansConfigurer = new LoginTokenAppSecurityBeansConfigurerImpl();
 
-		appSecurityBeansConfigurer.setFacebookOAuthConfig(TEST_FACEBOOK_OAUTH_CONFIG);
+		appSecurityBeansConfigurer.setFacebookOAuthConfig(TestStaticServerConfiguration.TEST_FACEBOOK_OAUTH_CONFIG);
 
 		// TODO: Add Google configuration.
 

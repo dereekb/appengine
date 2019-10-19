@@ -38,17 +38,24 @@ export abstract class InstantStorageAccessor<T> {
 }
 
 /**
- * Class/Interface for storing string values. Has the same interface as LocalStorage.
+ * Limited Class/Interface for storing string values synchronously.
  */
-export abstract class StorageObject {
-
-  readonly length: number;
+export abstract class SimpleStorageObject {
 
   abstract getItem(key: string): string | undefined;
 
   abstract setItem(key: string, item: string);
 
   abstract removeItem(key: string);
+
+}
+
+/**
+ * Synchronous Class/Interface for storing string values. Has the same interface as localStorage for the web.
+ */
+export abstract class StorageObject extends SimpleStorageObject {
+
+  readonly length: number;
 
   abstract key(index: number): string | undefined;
 
@@ -88,20 +95,6 @@ export interface StoredData {
 export interface ReadStoredData<T> extends StoredData {
   expired: boolean;
   convertedData: T;
-}
-
-export class StorageUtility {
-
-  static getAvailableLocalStorage(): FullStorageObject {
-    let storageObject: FullStorageObject = new FullLocalStorageObject();
-
-    if (!storageObject.isAvailable) {
-      storageObject = new MemoryStorageObject();
-    }
-
-    return storageObject;
-  }
-
 }
 
 export abstract class AbstractStorageAccessor<T> implements StorageAccessor<T>, InstantStorageAccessor<T> {
@@ -259,12 +252,10 @@ export abstract class AbstractStorageAccessor<T> implements StorageAccessor<T>, 
 
 /**
  * StorageObject using LocalStorage.
- *
- * Not necessary.
  */
 export class FullLocalStorageObject implements FullStorageObject {
 
-  constructor(private _localStorage: StorageObject = localStorage) { }
+  constructor(private _localStorage: StorageObject) { }
 
   get isPersistant() {
     return true;

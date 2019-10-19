@@ -10,14 +10,10 @@ import { FacebookSignInButtonDirective } from './button.component';
 })
 export class GaeFacebookModule {
 
-  static forRoot(config: FacebookApiServiceConfig, preloadService?: boolean): ModuleWithProviders {
+  static forRoot(preloadService?: boolean): ModuleWithProviders {
     return {
       ngModule: GaeFacebookModule,
       providers: [
-        {
-          provide: FacebookApiServiceConfig,
-          useValue: config
-        },
         {
           provide: PRELOAD_FACEBOOK_TOKEN,
           useValue: preloadService

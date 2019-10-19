@@ -1,11 +1,9 @@
 package com.dereekb.gae.model.crud.task.impl.delete;
 
 import java.util.Collection;
-import java.util.List;
 
 import com.dereekb.gae.model.crud.pairs.DeletePair;
 import com.dereekb.gae.model.crud.services.exception.AtomicOperationException;
-import com.dereekb.gae.model.crud.services.exception.AtomicOperationExceptionReason;
 import com.dereekb.gae.model.crud.task.DeleteTask;
 import com.dereekb.gae.model.crud.task.config.DeleteTaskConfig;
 import com.dereekb.gae.model.crud.task.config.impl.DeleteTaskConfigImpl;
@@ -14,8 +12,6 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskRequest;
 import com.dereekb.gae.server.taskqueue.scheduler.TaskScheduler;
 import com.dereekb.gae.utilities.collections.pairs.impl.SuccessResultsPair;
-import com.dereekb.gae.utilities.filters.Filter;
-import com.dereekb.gae.utilities.filters.FilterResults;
 import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateController;
 
 /**
@@ -35,7 +31,6 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends ScheduleReviewTas
 	private static final String DELETE_TASK = "delete";
 
 	private DeleteTaskConfig defaultConfig;
-	private Filter<T> deleteFilter;
 
 	public ScheduleDeleteTask(String modelType, TaskScheduler scheduler) throws IllegalArgumentException {
 		this(modelType, scheduler, null);
@@ -59,14 +54,6 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends ScheduleReviewTas
 		this.defaultConfig = defaultConfig;
 	}
 
-	public Filter<T> getDeleteFilter() {
-		return this.deleteFilter;
-	}
-
-	public void setDeleteFilter(Filter<T> deleteFilter) {
-		this.deleteFilter = deleteFilter;
-	}
-
 	// MARK: DeleteTask
 	@Override
 	public void doTask(Iterable<DeletePair<T>> input) {
@@ -76,22 +63,7 @@ public class ScheduleDeleteTask<T extends UniqueModel> extends ScheduleReviewTas
 	@Override
 	public void doTask(Iterable<DeletePair<T>> input,
 	                   DeleteTaskConfig configuration) {
-		Collection<T> objects = DeletePair.getSources(input);
-
-		Collection<T> deletableObjects = null;
-
-		if (this.deleteFilter != null) {
-			FilterResults<T> results = this.deleteFilter.filterObjects(objects);
-			List<T> failedObjects = results.getFailingObjects();
-
-			if (failedObjects.isEmpty() == false && configuration.isAtomic()) {
-				throw new AtomicOperationException(failedObjects, AtomicOperationExceptionReason.FILTERED);
-			} else {
-				deletableObjects = results.getPassingObjects();
-			}
-		} else {
-			deletableObjects = objects;
-		}
+		Collection<T> deletableObjects = DeletePair.getSources(input);
 
 		try {
 			this.sendTasks(deletableObjects);

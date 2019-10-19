@@ -3,24 +3,37 @@ import { UIRouterModule, StatesModule, UIRouter, Category, StateService } from '
 import {
   GaeApiModule, GaeApiConfiguration, GaeLoginApiModule, GaeLoginApiModuleService,
   GaeEventApiModuleService, GaeLoginApiModuleConfiguration, GaeEventApiModule,
-  GaeEventApiModuleConfiguration
+  GaeEventApiModuleConfiguration,
+  GaeLoginApiConfiguredJwtModule,
+  GaeJwtConfiguration
 } from '@gae-web/appengine-api';
 import { GaeClientModule } from '@gae-web/appengine-client';
 import { SECURE_STATES } from './secure.states';
 import { SecureAppModule } from './app/app.module';
-import { GaeTokenModule } from '@gae-web/appengine-token';
+import { GaeTokenModule, StoredTokenStorageAccessor } from '@gae-web/appengine-token';
 import { AppSegueService } from './segue.service';
 import { GaeGatewayModule, secureGatewayHook, GaeGatewayViewsModule, GatewaySegueService } from 'projects/gae-web/appengine-gateway/src/public-api';
 import { HttpClientModule } from '@angular/common/http';
 import { SecureComponentsModule } from './shared/components/components.module';
 import { SecureApiModule } from './shared/api/api.module';
-import { GaeComponentsModule } from '@gae-web/appengine-components';
+import { GaeComponentsModule, GaeMaterialComponentsModule, GaeComponentsPreConfiguredAppModule } from '@gae-web/appengine-components';
 import { TestApiModuleService, TestApiModule, TestApiModuleConfiguration } from './shared/api/model/test.api';
+import { FullStorageObject, FullLocalStorageObject, MemoryStorageObject } from '@gae-web/appengine-utility';
 
 export function routerConfigFn(router: UIRouter) {
   const transitionService = router.transitionService;
   secureGatewayHook(transitionService);
   router.trace.enable(Category.TRANSITION);
+}
+
+export function storedTokenStorageAccessorFactory() {
+  let storageObject: FullStorageObject = new FullLocalStorageObject(localStorage);
+
+  if (!storageObject.isAvailable) {
+    storageObject = new MemoryStorageObject();
+  }
+
+  return new StoredTokenStorageAccessor(storageObject);
 }
 
 export function gaeApiConfigurationFactory(loginService: GaeLoginApiModuleService, eventService: GaeEventApiModuleService, fooService: TestApiModuleService) {
@@ -37,33 +50,39 @@ export const ROUTER_CONFIG: StatesModule = {
  */
 export const TEST_SERVER_MODULE_NAME = 'test';
 
+export function loginApiModuleConfigurationFactory() {
+  return GaeLoginApiModuleConfiguration.make({
+    name: TEST_SERVER_MODULE_NAME
+  });
+}
+
+export function eventApiModuleConfigurationFactory() {
+  return GaeEventApiModuleConfiguration.make({
+    name: TEST_SERVER_MODULE_NAME
+  });
+}
+
+export function testApiModuleConfigurationFactory() {
+  return TestApiModuleConfiguration.make({
+    name: TEST_SERVER_MODULE_NAME
+  });
+}
+
 @NgModule({
   imports: [
     GaeGatewayModule,
     SecureAppModule,
     // GAE Configurations
     HttpClientModule,
-    GaeLoginApiModule.makeJwtModuleForRoot(),
-    ...GaeComponentsModule.allComponentsApp(),
+    GaeComponentsPreConfiguredAppModule,
     GaeGatewayViewsModule.forRoot({
       logoUrl: 'https://via.placeholder.com/350x150'
     }),
     GaeTokenModule.forRoot(),
-    GaeLoginApiModule.forApp(
-      GaeLoginApiModuleConfiguration.make({
-        name: TEST_SERVER_MODULE_NAME
-      })
-    ),
-    GaeEventApiModule.forApp(
-      GaeEventApiModuleConfiguration.make({
-        name: TEST_SERVER_MODULE_NAME
-      })
-    ),
-    TestApiModule.forApp(
-      TestApiModuleConfiguration.make({
-        name: TEST_SERVER_MODULE_NAME
-      })
-    ),
+    GaeLoginApiConfiguredJwtModule,
+    GaeLoginApiModule.forApp(),
+    GaeEventApiModule.forApp(),
+    TestApiModule.forApp(),
     GaeApiModule.forApp({
       gaeApiConfigurationProvider: {
         provide: GaeApiConfiguration,
@@ -83,7 +102,24 @@ export const TEST_SERVER_MODULE_NAME = 'test';
     {
       provide: GatewaySegueService,
       useExisting: AppSegueService
-    }
+    },
+    {
+      provide: GaeLoginApiModuleConfiguration,
+      useFactory: loginApiModuleConfigurationFactory
+    },
+    {
+      provide: GaeEventApiModuleConfiguration,
+      useFactory: eventApiModuleConfigurationFactory
+    },
+    {
+      provide: TestApiModuleConfiguration,
+      useFactory: testApiModuleConfigurationFactory
+    },
+    {
+      provide: StoredTokenStorageAccessor,
+      useFactory: storedTokenStorageAccessorFactory
+    },
+    GaeJwtConfiguration
   ]
 })
 export class SecureModule { }

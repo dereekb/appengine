@@ -2,6 +2,7 @@ import { LoginTokenUtility, EncodedRefreshToken, LoginTokenPair } from './token'
 import { StoredTokenStorageAccessor, AppTokenStorageService } from './storage.service';
 import { UserLoginTokenAuthenticator, LegacyAppTokenUserService } from './token.service';
 import { Observable, of } from 'rxjs';
+import { MemoryStorageObject } from '@gae-web/appengine-utility';
 
 describe('LegacyAppTokenUserService', () => {
 
@@ -14,7 +15,7 @@ describe('LegacyAppTokenUserService', () => {
     }
   };
 
-  const storedTokenStorageAccessor = StoredTokenStorageAccessor.getLocalStorageOrBackupAccessor();
+  const storedTokenStorageAccessor = new StoredTokenStorageAccessor();
   const appTokenStorageService = new AppTokenStorageService(storedTokenStorageAccessor);
   const legacyAppTokenUserService = new LegacyAppTokenUserService(appTokenStorageService, userLoginTokenAuthenticator);
 

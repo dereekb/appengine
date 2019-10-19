@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { GaeListViewReadSourceDirective, GaeListViewKeyQuerySourceDirective } from './source.directive';
+import { GaeListViewReadSourceDirective, GaeListViewKeySearchSourceDirective } from './source.directive';
 import { GaeListViewWrapperComponent } from './list-view-wrapper.component';
 import { CommonModule } from '@angular/common';
 import { GaeLoadingComponentsModule } from '../loading/loading.module';
@@ -19,13 +19,13 @@ import { GaeListLoadMoreComponent } from './load-more.component';
   declarations: [
     GaeListViewWrapperComponent,
     GaeListViewReadSourceDirective,
-    GaeListViewKeyQuerySourceDirective,
+    GaeListViewKeySearchSourceDirective,
     GaeListLoadMoreComponent
   ],
   exports: [
     GaeListViewWrapperComponent,
     GaeListViewReadSourceDirective,
-    GaeListViewKeyQuerySourceDirective,
+    GaeListViewKeySearchSourceDirective,
     GaeListLoadMoreComponent
   ]
 })

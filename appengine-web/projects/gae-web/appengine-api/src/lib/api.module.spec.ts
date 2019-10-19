@@ -1,6 +1,6 @@
 import { async, TestBed } from '@angular/core/testing';
-import { GaeLoginApiModule, GaeLoginApiModuleService } from './module/login.api.module';
-import { GaeEventApiModule, GaeEventApiModuleService } from './module/event.api.module';
+import { GaeLoginApiModule, GaeLoginApiModuleService, GaeLoginApiModuleConfiguration } from './module/login.api.module';
+import { GaeEventApiModule, GaeEventApiModuleService, GaeEventApiModuleConfiguration } from './module/event.api.module';
 import { GaeApiModule, GaeApiConfiguration } from './api.module';
 import { HttpClient, HttpBackend } from '@angular/common/http';
 import { ApiModuleUnavailableException } from './error';
@@ -27,6 +27,12 @@ describe('GaeApiModule', () => {
         })
       ],
       providers: [{
+        provide: GaeLoginApiModuleConfiguration,
+        useValue: GaeLoginApiModuleConfiguration.make({})
+      }, {
+        provide: GaeEventApiModuleConfiguration,
+        useValue: GaeEventApiModuleConfiguration.make({})
+      }, {
         provide: HttpClient,
         useValue: {} as any
       },

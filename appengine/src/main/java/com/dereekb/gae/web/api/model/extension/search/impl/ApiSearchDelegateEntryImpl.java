@@ -4,10 +4,13 @@ import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.model.extension.data.conversion.DirectionalConverter;
-import com.dereekb.gae.model.extension.data.conversion.SingleDirectionalConverter;
+import com.dereekb.gae.model.extension.search.document.service.TypedModelSearchService;
+import com.dereekb.gae.model.extension.search.document.service.TypedModelSearchServiceResponse;
+import com.dereekb.gae.model.extension.search.document.service.impl.TypedModelSearchServiceRequestImpl;
 import com.dereekb.gae.model.extension.search.query.service.ModelQueryResponse;
 import com.dereekb.gae.model.extension.search.query.service.ModelQueryService;
 import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryRequestImpl;
+import com.dereekb.gae.server.datastore.models.TypedModel;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
@@ -23,13 +26,13 @@ import com.dereekb.gae.web.api.model.extension.search.ApiSearchUpdateRequest;
  *
  */
 public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
-        implements ApiSearchDelegateEntry {
+        implements ApiSearchDelegateEntry, TypedModel {
 
 	private String type;
 
 	private ModelQueryService<T> queryService;
+	private TypedModelSearchService<T> searchService;
 
-	private SingleDirectionalConverter<ApiSearchReadRequest, R> requestBuilder;
 	private DirectionalConverter<T, ? extends Object> resultConverter;
 
 	public ApiSearchDelegateEntryImpl(String type,
@@ -40,19 +43,20 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 
 	public ApiSearchDelegateEntryImpl(String type,
 	        ModelQueryService<T> queryService,
-	        SingleDirectionalConverter<ApiSearchReadRequest, R> requestBuilder,
+	        TypedModelSearchService<T> searchService,
 	        DirectionalConverter<T, ? extends Object> resultConverter) {
-		this.setType(type);
+		this.setModelType(type);
 		this.setQueryService(queryService);
-		this.setRequestBuilder(requestBuilder);
+		this.setSearchService(searchService);
 		this.setResultConverter(resultConverter);
 	}
 
-	public String getType() {
+	@Override
+	public String getModelType() {
 		return this.type;
 	}
 
-	public void setType(String type) {
+	public void setModelType(String type) {
 		this.type = type;
 	}
 
@@ -64,14 +68,6 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 		this.queryService = queryService;
 	}
 
-	public SingleDirectionalConverter<ApiSearchReadRequest, R> getRequestBuilder() {
-		return this.requestBuilder;
-	}
-
-	public void setRequestBuilder(SingleDirectionalConverter<ApiSearchReadRequest, R> requestBuilder) {
-		this.requestBuilder = requestBuilder;
-	}
-
 	public DirectionalConverter<T, ? extends Object> getResultConverter() {
 		return this.resultConverter;
 	}
@@ -80,10 +76,26 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 		this.resultConverter = resultConverter;
 	}
 
+	public TypedModelSearchService<T> getSearchService() {
+		return this.searchService;
+	}
+
+	public void setSearchService(TypedModelSearchService<T> searchService) {
+		this.searchService = searchService;
+	}
+
 	// MARK: ApiSearchDelegateEntry
 	@Override
 	public ApiSearchResponseData search(ApiSearchReadRequest request) {
-		throw new UnsupportedOperationException("Searching is unsupported for this type.");
+		if (this.searchService == null) {
+			throw new UnsupportedOperationException("Searching is unsupported for this type.");
+		}
+
+		TypedModelSearchServiceRequestImpl searchRequest = new TypedModelSearchServiceRequestImpl(request);
+		searchRequest.setIndex(request.getIndex());
+
+		TypedModelSearchServiceResponse<T> response = this.searchService.searchModels(searchRequest);
+		return this.buildResponseForResult(response);
 	}
 
 	@Override
@@ -103,6 +115,10 @@ public class ApiSearchDelegateEntryImpl<T extends UniqueModel, R>
 	}
 
 	// MARK: Internal
+	private ApiSearchResponseData buildResponseForResult(TypedModelSearchServiceResponse<T> response) {
+		return this.buildModelDataResponse(response);
+	}
+
 	private ApiSearchResponseData buildResponseForResult(ModelQueryResponse<T> response) {
 		return this.buildModelDataResponse(response);
 	}

@@ -56,17 +56,15 @@
   <!--Delete Service-->
   <bean class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl" id="loginKeyDeleteService">
     <constructor-arg index="0" ref="loginKeyReadService"/>
-    <constructor-arg index="1" ref="loginKeyDeleteTask"/>
-  </bean>
-  <!--Delete Task-->
-  <alias alias="loginKeyDeleteTask" name="loginKeyScheduleDeleteTask"/>
-  <bean class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask" id="loginKeyScheduleDeleteTask">
-    <constructor-arg index="0" ref="loginKeyType"/>
-    <constructor-arg index="1" ref="taskScheduler"/>
-    <property name="deleteFilter">
-      <bean factory-bean="loginKeySecurityContextServiceEntry" factory-method="makeRoleFilter">
-        <constructor-arg index="0" ref="crudDeleteModelRole"/>
+    <constructor-arg index="1">
+      <bean class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredScheduleDeleteTask">
+        <constructor-arg index="0" ref="loginKeyScheduleDelete"/>
+        <constructor-arg index="1">
+          <bean factory-bean="loginKeySecurityContextServiceEntry" factory-method="makeRoleFilter">
+            <constructor-arg index="0" ref="crudDeleteModelRole"/>
+          </bean>
+        </constructor-arg>
       </bean>
-    </property>
+    </constructor-arg>
   </bean>
 </beans>

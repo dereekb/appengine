@@ -49,18 +49,6 @@ public class EnvStringFactory
 		this.defaultValue = defaultValue;
 	}
 
-	// MARK: Utility
-	public static String readEnv(String env) throws RuntimeException, UnavailableSourceObjectException {
-		return readEnv(env, null);
-	}
-
-	public static String readEnv(String env,
-	                             String defaultValue)
-	        throws RuntimeException,
-	            UnavailableSourceObjectException {
-		return new EnvStringFactory(env, defaultValue).loadObject();
-	}
-
 	// MARK: Factory
 	@Override
 	public String make() throws FactoryMakeFailureException {

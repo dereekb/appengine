@@ -4,7 +4,11 @@ import com.dereekb.gae.server.auth.security.model.roles.loader.AnonymousModelRol
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 
 /**
- * {@link LoginToken} context that also represents a specific model.
+ * {@link AnonymousModelRoleSetContext} extension used by the auth system for
+ * efficiently packaging models.
+ * <p>
+ * Does not rely on {@link LoginToken} components, but is designed to fit inside
+ * one compactly.
  *
  * @author dereekb
  *

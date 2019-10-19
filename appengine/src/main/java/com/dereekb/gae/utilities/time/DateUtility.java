@@ -28,10 +28,19 @@ public class DateUtility {
 		return DATE_KEY_VALUE_MAP.get(dateValue);
 	}
 
+	/**
+	 * Returns a {@link Date} based on the input key. The keys are specified as
+	 * static variables on the {@link DateUtility}.
+	 *
+	 * @param key
+	 *            {@link String}.
+	 * @return {@link Date}, or {@code null} if none found for that key or if
+	 *         the input was {@code null}.
+	 */
 	public static Date getDateForKey(String key) {
 		Date date = null;
 
-		if (key != null && key.length() < 6) {
+		if (key != null) {
 			switch (key) {
 				case EPOCH_KEY:
 					date = new Date(0L);
@@ -74,7 +83,7 @@ public class DateUtility {
 	/**
 	 * Returns true if the specified amount of time has passed since the input
 	 * date.
-	 * 
+	 *
 	 * @param origin
 	 *            {@link Date}. Never {@code null}.
 	 * @param time
@@ -139,6 +148,38 @@ public class DateUtility {
 		return new Date(time * 1000);
 	}
 
+	public static Double dateToSecondsDouble(Date date) {
+		Long time = date.getTime();
+		time = time / 1000;				// Round Value To Seconds
+		return time.doubleValue();
+	}
+
+	public static Date secondsDoubleToDate(Double seconds) {
+		Long time = seconds.longValue();
+		time = time * 1000;				// Convert back to timestamp
+		return new Date(time);
+	}
+
+	public static Double dateToMinutesDouble(Date date) {
+		return dateToRoundedTimeDouble(date, DateUtility.TIME_IN_MINUTE);
+	}
+
+	public static Date minutesDoubleToDate(Double minutes) {
+		return roundedTimeDoubleToDate(minutes, DateUtility.TIME_IN_MINUTE);
+	}
+
+	public static Double dateToRoundedTimeDouble(Date date, Long roundedTime) {
+		Long time = date.getTime();
+		time = time / roundedTime;				// Round Value To Minutes
+		return time.doubleValue();
+	}
+
+	public static Date roundedTimeDoubleToDate(Double seconds, Long roundedTime) {
+		Long time = seconds.longValue();
+		time = time * roundedTime;				// Convert back to timestamp
+		return new Date(time);
+	}
+
 	public static Long timeInDays(Integer days) {
 		return timeInDays(days.longValue());
 	}
@@ -178,7 +219,7 @@ public class DateUtility {
 
 	/**
 	 * Returns the time difference between now and the current date.
-	 * 
+	 *
 	 * @param date
 	 *            {@link Date}. Never {@code null}.
 	 * @return {@link Long} time difference. Never {@code null}.

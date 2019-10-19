@@ -1,6 +1,8 @@
 package com.dereekb.gae.test.app.mock.client.crud;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Collection;
@@ -17,6 +19,8 @@ import com.dereekb.gae.client.api.model.exception.LargeAtomicRequestException;
 import com.dereekb.gae.client.api.service.request.ClientRequest;
 import com.dereekb.gae.client.api.service.response.ClientApiResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
+import com.dereekb.gae.client.api.service.response.error.ClientApiResponseErrorType;
+import com.dereekb.gae.client.api.service.response.error.ClientResponseError;
 import com.dereekb.gae.client.api.service.sender.security.ClientRequestSecurity;
 import com.dereekb.gae.client.api.service.sender.security.SecuredClientApiRequestSender;
 import com.dereekb.gae.model.crud.services.request.DeleteRequest;
@@ -69,6 +73,22 @@ public class ModelClientDeleteRequestSenderTestUtility<T extends MutableUniqueMo
 
 		ClientDeleteResponse<T> simpleDeleteResponse = this.deleteRequestSender.delete(clientDeleteRequest, security);
 		assertFalse(simpleDeleteResponse.getModels().isEmpty());
+	}
+
+	public void testMockDeleteRequestIsDisallowed(ClientRequestSecurity security) throws ClientRequestFailureException {
+
+		T template = this.testModelGenerator.generate();
+
+		boolean returnModels = true;
+
+		DeleteRequest deleteRequest = new DeleteRequestImpl(template);
+		ClientDeleteRequest clientDeleteRequest = new ClientDeleteRequestImpl(deleteRequest, returnModels);
+		SerializedClientApiResponse<ClientDeleteResponse<T>> response = this.deleteRequestSender
+		        .sendRequest(clientDeleteRequest, security);
+
+		ClientResponseError error = response.getError();
+		assertNotNull(error);
+		assertTrue(error.getErrorType() == ClientApiResponseErrorType.METHOD_NOT_ALLOWED_ERROR);
 	}
 
 	public void testMockDeleteTooManyRequestThrowsClientError(ClientRequestSecurity security) throws ClientRequestFailureException {

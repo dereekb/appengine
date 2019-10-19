@@ -1,7 +1,7 @@
 package com.dereekb.gae.server.datastore.models.query;
 
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
-import com.dereekb.gae.utilities.model.search.request.SearchOptions;
+import com.dereekb.gae.utilities.model.search.request.ParameterSearchOptions;
 
 /**
  * Generic model query options.
@@ -11,6 +11,6 @@ import com.dereekb.gae.utilities.model.search.request.SearchOptions;
  * @see ObjectifyQueryRequestBuilder
  */
 public interface IndexedModelQueryRequestOptions
-        extends SearchOptions {
+        extends ParameterSearchOptions {
 
 }

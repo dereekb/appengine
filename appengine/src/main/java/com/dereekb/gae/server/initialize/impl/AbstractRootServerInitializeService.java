@@ -105,7 +105,7 @@ public abstract class AbstractRootServerInitializeService extends AbstractServer
 	protected App makeRootAppForProduction() {
 		App app = this.makeRootApp();
 
-		// Clear Model Key
+		// Clear Model Key in production
 		app.setModelKey(null);
 
 		return app;
@@ -124,7 +124,7 @@ public abstract class AbstractRootServerInitializeService extends AbstractServer
 
 		// Create App
 		App app = new App();
-		app.setModelKey(this.getAppInfo().getModelKey());
+		app.copyFromSystemAppInfo(this.getAppInfo());
 
 		// Set Security Level
 		app.setLevel(AppLoginSecurityLevel.ROOT);

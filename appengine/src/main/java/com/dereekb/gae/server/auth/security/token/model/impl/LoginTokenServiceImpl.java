@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
+import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.token.exception.TokenExpiredException;
 import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedException;
@@ -83,9 +84,24 @@ public class LoginTokenServiceImpl<T extends LoginToken>
 	}
 
 	@Override
+	public String encodeLoginToken(LoginPointer pointer,
+	                               Login login,
+	                               boolean refreshAllowed) {
+		T token = this.buildLoginToken(pointer, login, refreshAllowed);
+		return this.encodeLoginToken(token);
+	}
+
+	@Override
 	public T buildLoginToken(LoginPointer pointer,
 	                         boolean refreshAllowed) {
 		return this.builder.buildLoginToken(pointer, refreshAllowed);
+	}
+
+	@Override
+	public T buildLoginToken(LoginPointer pointer,
+	                         Login login,
+	                         boolean refreshAllowed) {
+		return this.builder.buildLoginToken(pointer, login, refreshAllowed);
 	}
 
 	@Override

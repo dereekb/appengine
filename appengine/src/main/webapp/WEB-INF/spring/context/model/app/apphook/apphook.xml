@@ -43,6 +43,11 @@
     <constructor-arg index="0" ref="appHookType"/>
     <constructor-arg index="1" ref="taskScheduler"/>
   </bean>
+  <!--Delete Task-->
+  <bean class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask" id="appHookScheduleDelete">
+    <constructor-arg index="0" ref="appHookType"/>
+    <constructor-arg index="1" ref="taskScheduler"/>
+  </bean>
   <!--Setter Task-->
   <bean class="com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl" id="appHookSetterTask">
     <constructor-arg index="0" ref="appHookRegistry"/>
@@ -51,10 +56,10 @@
   <alias alias="appHookUpdaterTask" name="appHookSetterTask"/>
   <alias alias="appHookDeleterTask" name="appHookSetterTask"/>
   <!--Import-->
-  <import resource="/crud.xml"/>
   <import resource="/extensions/data.xml"/>
   <import resource="/extensions/link.xml"/>
   <import resource="/extensions/generation.xml"/>
   <import resource="/extensions/search.xml"/>
+  <import resource="/crud.xml"/>
   <import resource="/extensions/security.xml"/>
 </beans>

@@ -50,6 +50,7 @@ export abstract class ModelLoader<T> {
     optional: boolean;
     readonly state: ModelLoaderState;
     readonly model: T | undefined;
+    readonly error: any;
     readonly stream: Observable<ModelLoaderEvent<T>>;
 }
 
@@ -106,6 +107,14 @@ export class GaeModelLoaderComponent<T> extends AbstractModelLoaderStateComponen
         return this._modelSourceWrapper.stream;
     }
 
+    get error() {
+        return this._modelSourceWrapper.error;
+    }
+
+    public get optional(): boolean {
+        return this._modelSourceWrapper.optional;
+    }
+
     @Input()
     public set optional(optional: boolean) {
         this._modelSourceWrapper.optional = optional;
@@ -149,6 +158,10 @@ export class ModelLoaderSourceWrapper<T> implements ModelLoader<T> {
 
     get state(): ModelLoaderState {
         return this._stream.value.state;
+    }
+
+    get error() {
+        return this._stream.value.error;
     }
 
     get model(): T | undefined {

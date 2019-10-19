@@ -188,9 +188,14 @@ export class ModelUtility {
   }
 
   static makeModelMap<T extends UniqueModel, M extends ModelMap<T>>(input: T[], read?: ReadModelKeyFunction<T>): M {
-    const map = {} as M;
+    const map = {} as M as any;
     input.forEach((x) => map[ModelUtility.readModelKey(x, read)] = x);
     return map;
+  }
+
+  static filterUniqueModels<T extends UniqueModel>(models: T[]): T[] {
+    const result = models.filter(ValueUtility.filterUniqueValuesFn((x) => x.modelKey));
+    return result;
   }
 
   static readModelKeysFromAttributes<T>(models: T[], attributes: OneOrMore<ObjectAttribute>): ModelKey[] {
@@ -349,7 +354,7 @@ export class ModelUtility {
     return key;
   }
 
-  static isModelKey<T extends UniqueModel>(input: ModelOrKey<T>) {
+  static isModelKey<T extends UniqueModel>(input: ModelOrKey<T>): boolean {
     switch (typeof input) {
       case 'number':
       case 'string':
@@ -357,6 +362,12 @@ export class ModelUtility {
       default:
         return false;
     }
+  }
+
+  static isEqual(a: ModelKey, b: ModelKey): boolean {
+    // tslint:disable-next-line: triple-equals
+    const result = a == b;
+    return result;
   }
 
 }

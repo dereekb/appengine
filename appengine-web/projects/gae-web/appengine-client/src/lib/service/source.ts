@@ -4,7 +4,7 @@ import {
 } from '@gae-web/appengine-utility';
 import {
   ReadService, ReadRequest, ReadResponse, SearchCursor,
-  SearchParameters, QueryService, SearchRequest, ModelSearchResponse
+  SearchParameters, QueryService, SearchRequest, ModelSearchResponse, TypedModelSearchService
 } from '@gae-web/appengine-api';
 import { Subscription, Observable, combineLatest, Subject } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
@@ -96,11 +96,12 @@ export class ReadServiceReadSourceFactory<T extends UniqueModel> extends ReadSou
 
 }
 
-// MARK: Query
-export interface QuerySourceConfiguration {
+// MARK: Searching
+export interface SearchSourceConfiguration {
   limit?: number;
   cursor?: SearchCursor;
   filters?: SearchParameters;
+  autoNextOnReset?: boolean;
 }
 
 export const DEFAULT_CONFIG = {
@@ -109,64 +110,67 @@ export const DEFAULT_CONFIG = {
   filters: undefined
 };
 
-export interface QueryIterableSource<T> extends IterableSource<T> {
+// TODO: Update to support TypedClientModelSearchService better.
+export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSourceConfiguration> extends AbstractSource<ModelKey> {
 
-  /**
-   * Allows query configuration modifications.
-   */
-  config: QuerySourceConfiguration;
-
-}
-
-/**
- * QueryIterableSource implementation that uses a QueryService.
- *
- * When reset, does not automatically pull new items.
- */
-// TODO: Can probably remove the typing info here, since we're only querying on keys.
-export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelKey> implements QueryIterableSource<ModelKey> {
-
-  private _config: QuerySourceConfiguration = DEFAULT_CONFIG;
+  protected _config: C;
 
   private _result: KeyResultPair<T>;
 
   private _nextSub = new SubscriptionObject();
   private _next?: Promise<ModelKey[]>;    // Next Promise.
 
+  protected _initialized = false;
+
   private done = false;
 
-  constructor(private _service: QueryService<T>, config?: QuerySourceConfiguration) {
+  constructor(config?: C) {
     super();
-    this.resetQuerySource();
 
-    if (config) {
-      this.config = config;
-    }
+    this.config = config;
+    this.resetSearchSource();
+    this._initialized = true;
   }
 
   // MARK: Accessors
-  public get config() {
+  public get config(): C {
     return this._config;
   }
 
-  public set config(config) {
-    if (this._config !== config) {
-      this.setConfig(config);
+  public set config(config: C) {
+    if (!this._config || this._config !== config) {
+      this._setConfig(config);
     }
   }
 
-  protected setConfig(config): void {
-    config = config || {};
+  protected _setConfig(template: C = {} as any) {
+    this._config = {} as C;
+    this.updateConfigValues(this._config, template);
+    this._resetForNewConfig();
+  }
 
-    this._config = {};
-    this._config.limit = config.limit || DEFAULT_CONFIG.limit;
-    this._config.cursor = config.cursor || DEFAULT_CONFIG.cursor;
-    this._config.filters = { ...DEFAULT_CONFIG.filters, ...config.filters };
+  protected updateConfigValues(config: C, template: C): void {
+    config.limit = template.limit || DEFAULT_CONFIG.limit;
+    config.cursor = template.cursor || DEFAULT_CONFIG.cursor;
+    config.filters = { ...DEFAULT_CONFIG.filters, ...template.filters };
+  }
 
+  protected _resetForNewConfig() {
     this.reset();
   }
 
   // MARK: Iterable
+  /**
+   * Calls next if the source has been reset, otherwise returns the current results.
+   */
+  public initial(): Promise<ModelKey[]> {
+    if (this.state === SourceState.Reset) {
+      return this.next();
+    } else {
+      return Promise.resolve(this._result.keys);
+    }
+  }
+
   public hasNext(): boolean {
     return !this.done;
   }
@@ -258,7 +262,7 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
 
     super.setState(SourceState.Loading);
 
-    const obs = this._service.query(request).pipe(
+    const obs = this.doSearch(request).pipe(
       map((response: ModelSearchResponse<T>) => {
         return new KeyResultPair<T>(request, response);
       }),
@@ -267,6 +271,8 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
 
     return obs;
   }
+
+  protected abstract doSearch(request: SearchRequest): Observable<ModelSearchResponse<T>>;
 
   private updateWithResult(result: KeyResultPair<T>): void {
     this._result = result;
@@ -291,13 +297,17 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
   // MARK: Reset
   public reset() {
     if (!this.isStopped()) {
-      this.resetQuerySource();
+      this.resetSearchSource();
       super.reset();
-      // this.next(); //Don't call next, as the source could be reconfiguring.
+
+      if (this._config && this._config.autoNextOnReset && this._initialized) {
+        // Only call next if explicitly requested and we've been initialized, as the source could be reconfiguring.
+        this.next();
+      }
     }
   }
 
-  protected resetQuerySource() {
+  protected resetSearchSource() {
     this.done = false;
     this.clearNext();
     this._result = this.makeInitialResult();
@@ -330,6 +340,77 @@ export class KeyQuerySource<T extends UniqueModel> extends AbstractSource<ModelK
   protected stop() {
     this.clearNext();
     super.stop();
+  }
+
+}
+
+// MARK: Query
+export type QuerySourceConfiguration = SearchSourceConfiguration;
+
+export interface QueryIterableSource<T> extends IterableSource<T> {
+
+  /**
+   * Allows query configuration modifications.
+   */
+  config: QuerySourceConfiguration;
+
+}
+
+/**
+ * QueryIterableSource implementation that uses a QueryService.
+ *
+ * When reset, does not automatically pull new items.
+ */
+// TODO: Can probably remove the typing info here, since we're only querying on keys.
+export class KeyQuerySource<T extends UniqueModel> extends KeySearchSource<T, QuerySourceConfiguration> implements QueryIterableSource<ModelKey> {
+
+  constructor(private _service: QueryService<T>, config?: QuerySourceConfiguration) {
+    super(config);
+  }
+
+  protected doSearch(request: SearchRequest) {
+    return this._service.query(request);
+  }
+
+}
+
+// MARK: Search
+export interface TypedModelSearchSourceConfiguration extends SearchSourceConfiguration {
+  index?: string;
+}
+
+export interface TypedModelSearchIterableSource<T> extends IterableSource<T> {
+
+  /**
+   * Allows search configuration modifications.
+   */
+  config: TypedModelSearchSourceConfiguration;
+
+}
+
+/**
+ * TypedModelSearchIterableSource implementation that uses a TypedModelSearchService.
+ *
+ * When reset, does not automatically pull new items.
+ */
+// TODO: Can probably remove the typing info here, since we're only querying on keys.
+export class KeyTypedModelSearchSource<T extends UniqueModel> extends KeySearchSource<T, TypedModelSearchSourceConfiguration> implements TypedModelSearchIterableSource<ModelKey> {
+
+  constructor(private _service: TypedModelSearchService<T>, config?: TypedModelSearchSourceConfiguration) {
+    super(config);
+  }
+
+  protected updateConfigValues(config: TypedModelSearchSourceConfiguration, template: TypedModelSearchSourceConfiguration): void {
+    super.updateConfigValues(config, template);
+    config.autoNextOnReset = template.autoNextOnReset;
+    config.index = template.index;
+  }
+
+  protected doSearch(request: SearchRequest) {
+    return this._service.search({
+      ...request,
+      index: this.config.index
+    });
   }
 
 }
@@ -369,19 +450,19 @@ export class DefaultKeyResultPair<T> extends KeyResultPair<T> {
  * Special ControllableSource implementation that wraps both a ReadSource and a KeyQuerySource,
  * and forwards all ControllableSource requests to the KeyQuerySource.
  *
- * Will automatically bind the querySource's keys to the readSource's input.
+ * Will automatically bind the iterateSource's keys to the readSource's input.
  */
-export class MergedReadQuerySource<T extends UniqueModel> implements ControllableSource<T> {
+export class MergedReadIterateSource<T extends UniqueModel> implements ControllableSource<T> {
 
   private _stream: Observable<SourceEvent<T>>;
 
-  constructor(private _readSource: ReadSource<T>, private _querySource: IterableSource<ModelKey>, autoBindQuerySourceAsReadInput: boolean = true) {
+  constructor(private _readSource: ReadSource<T>, private _iterateSource: IterableSource<ModelKey>, autoBindQuerySourceAsReadInput: boolean = true) {
     if (autoBindQuerySourceAsReadInput) {
-      _readSource.input = _querySource.elements;
+      _readSource.input = _iterateSource.elements;
     }
 
     let readUpdated = false;
-    this._stream = combineLatest(this._readSource.stream, this._querySource.stream).pipe(
+    this._stream = combineLatest([this._readSource.stream, this._iterateSource.stream]).pipe(
       map(([read, query]) => {
 
         // Whenever the query state becomes Loading, and read isn't Loading yet, the read still has to catch up.
@@ -417,7 +498,7 @@ export class MergedReadQuerySource<T extends UniqueModel> implements Controllabl
   }
 
   get state(): SourceState {
-    return this._querySource.state;
+    return this._iterateSource.state;
   }
 
   get stream(): Observable<SourceEvent<T>> {
@@ -429,24 +510,24 @@ export class MergedReadQuerySource<T extends UniqueModel> implements Controllabl
   }
 
   hasNext() {
-    return this._querySource.hasNext();
+    return this._iterateSource.hasNext();
   }
 
   next() {
-    return this._querySource.next();
+    return this._iterateSource.next();
   }
 
   refresh() {
-    this._querySource.refresh();
+    this._iterateSource.refresh();
   }
 
   destroy() {
-    this._querySource.destroy();
+    this._iterateSource.destroy();
     this._readSource.destroy();
   }
 
   reset() {
-    this._querySource.reset();
+    this._iterateSource.reset();
     // this._readSource.reset();
     // TODO: Uncomment?
   }

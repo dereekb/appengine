@@ -66,7 +66,7 @@ public class SearchExtensionApiController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/search", method = RequestMethod.GET, produces = "application/json")
-	public final ApiResponse searchMultiple(@RequestParam @NotEmpty String query,
+	public final ApiResponse searchMultiple(@RequestParam(required = false) String query,
 	                                        @RequestParam @NotEmpty Set<String> types,
 	                                        @RequestParam Map<String, String> parameters,
 	                                        @RequestParam(required = false) Integer limit,
@@ -111,14 +111,18 @@ public class SearchExtensionApiController {
 	@RequestMapping(value = "/{type}/search", method = RequestMethod.GET, produces = "application/json")
 	public final ApiResponse searchSingle(@PathVariable("type") String type,
 	                                      @RequestParam Map<String, String> parameters,
+	                                      @RequestParam(required = false) String query,
+	                                      @RequestParam(required = false) String index,
 	                                      @RequestParam(required = false) Integer limit,
 	                                      @RequestParam(required = false, defaultValue = "true") Boolean keysOnly) {
 		ApiResponse response = null;
 
 		try {
 			ApiSearchReadRequestImpl request = new ApiSearchReadRequestImpl();
-
 			request.setParameters(parameters);
+			request.setQuery(query);
+			request.setIndex(index);
+
 			request.setLimit(limit);
 			request.setKeysOnly(keysOnly);
 

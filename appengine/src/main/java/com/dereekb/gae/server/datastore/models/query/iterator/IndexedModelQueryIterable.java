@@ -7,7 +7,7 @@ import com.dereekb.gae.utilities.collections.iterator.index.IndexedIterable;
 
 /**
  * {@link ModelQueryIterable} and {@link IndexedIterable} interface extension.
- *
+ * <p>
  * Is used as a second layer iterator over query results, allowing the user to
  * iterate over the entire database.
  *

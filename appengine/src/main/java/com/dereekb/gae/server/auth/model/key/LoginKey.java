@@ -12,6 +12,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKeyInfo;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.owner.OwnedDatabaseModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUtil;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
@@ -97,6 +98,7 @@ public class LoginKey extends OwnedDatabaseModel
 		this.identifier = identifier;
 	}
 
+	@Override
 	public Key<Login> getLogin() {
 		return this.login;
 	}
@@ -189,7 +191,7 @@ public class LoginKey extends OwnedDatabaseModel
 	// Objectify Model
 	@Override
 	public Key<LoginKey> getObjectifyKey() {
-		return Key.create(LoginKey.class, this.identifier);
+		return ObjectifyKeyUtility.createKey(LoginKey.class, this.identifier);
 	}
 
 	// Login Owned

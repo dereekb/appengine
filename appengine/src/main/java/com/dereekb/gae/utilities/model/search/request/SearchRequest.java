@@ -9,7 +9,7 @@ import java.util.Map;
  *
  */
 public interface SearchRequest
-        extends SearchOptions {
+        extends ParameterSearchOptions {
 
 	/**
 	 * Whether or not the request should only return matching keys.

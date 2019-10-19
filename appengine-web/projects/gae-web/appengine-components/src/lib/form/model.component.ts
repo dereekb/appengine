@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormComponentEvent, FormComponentState, AbstractFormGroupComponent, FormComponent, ProvideFormGroupComponent, ProvideFormComponent, FormGroupComponent } from './form.component';
 import { Observable } from 'rxjs';
 import { UniqueModel, MutableUniqueModel } from '@gae-web/appengine-utility';
+import { GaeViewUtility } from '../shared/utility';
 
 export interface ModelFormComponentDelegate<T> {
     submit(input: T): Observable<T>;
@@ -37,6 +38,13 @@ export abstract class AbstractModelFormComponent<T extends MutableUniqueModel> e
         return !this.show();
     }
 
+    // MARK: Initialization
+    protected initialize() {
+        super.initialize();
+        this.reset();
+        GaeViewUtility.safeDetectChanges(this._cdRef);
+    }
+
     // MARK: Model
     public get isModelEdit() {
         return Boolean(this._inputModel && this._inputModel.key);
@@ -64,8 +72,12 @@ export abstract class AbstractModelFormComponent<T extends MutableUniqueModel> e
 
     protected setModel(model: T | undefined) {
         this._inputModel = model;
-        const data = (model) ? this.convertToFormData(model) : this.newModelData;
-        this.setModelData(data);
+
+        // Only set if initialized. Will reset when initialized.
+        if (this.initialized) {
+            const data = (model) ? this.convertToFormData(model) : this.newModelData;
+            this.setModelData(data);
+        }
     }
 
     protected get newModelData(): any {

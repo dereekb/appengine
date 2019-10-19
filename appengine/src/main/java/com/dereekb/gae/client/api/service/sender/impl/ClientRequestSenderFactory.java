@@ -154,14 +154,19 @@ public class ClientRequestSenderFactory extends GoogleAppEngineContextualFactory
 		        throws ClientConnectionException,
 		            ClientRequestFailureException {
 
+			String dataString = null;
+
+			if (request.getData() != null) {
+				dataString = request.getData().getDataString();
+			}
+
 			LOGGER.log(Level.INFO,
 			        "Sending client request: \n" + "TO: " + request.getUrl().getRelativeUrlPath().getPath() + "\n"
-			                + "METHOD: " + request.getMethod().toString() + "\n" + "HEADERS: "
-			                + request.getHeaders().toString() + "\n" + "PARAMETERS: "
-			                + request.getParameters().toString() + "\n" + "DATA: " + request.getData().getDataString()
-			                + "\n" + "");
+			                + "METHOD: " + request.getMethod() + "\n" + "HEADERS: "
+			                + request.getHeaders() + "\n" + "PARAMETERS: " + request.getParameters() + "\n"
+			                + "DATA: " + dataString + "\n" + "");
 
-			return new ClientResponseImpl(200, null);
+			return new ClientResponseImpl(200, "{}");
 		}
 
 	}

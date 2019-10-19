@@ -19,6 +19,10 @@ public interface LocalModelBeansConfiguration
 
 	public String getModelQueryInitializerBeanId();
 
+	public String getSecuredModelQueryInitializerBeanId();
+
+	public String getSecuredModelQueryInitializerDelegateBeanId();
+
 	public String getModelLinkSystemBuilderEntryBeanId();
 
 	public String getNewModelFactoryBeanId();
@@ -48,6 +52,8 @@ public interface LocalModelBeansConfiguration
 	public String getModelScheduleCreateReviewBeanId();
 
 	public String getModelScheduleUpdateReviewBeanId();
+
+	public String getModelScheduleDeleteBeanId();
 
 	public String getModelInclusionReaderId();
 

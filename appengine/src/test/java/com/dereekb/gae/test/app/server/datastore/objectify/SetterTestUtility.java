@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.dereekb.gae.model.extension.generation.ModelGenerator;
 import com.dereekb.gae.server.datastore.Deleter;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.GetterSetter;
@@ -14,7 +15,18 @@ import com.dereekb.gae.server.datastore.exception.StoreKeyedEntityException;
 import com.dereekb.gae.server.datastore.exception.UpdateUnkeyedEntityException;
 import com.dereekb.gae.server.datastore.models.MutableUniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.server.datastore.objectify.MutableObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 
+/**
+ * Tests the setters functionality. Does not function for Objectify models that
+ * have non-default Objectify key restrictions.
+ *
+ * @author dereekb
+ *
+ * @param <T>
+ *            model type
+ */
 public class SetterTestUtility<T extends MutableUniqueModel> {
 
 	private Getter<T> getter;
@@ -29,6 +41,11 @@ public class SetterTestUtility<T extends MutableUniqueModel> {
 		this.setGetter(getter);
 		this.setSetter(setter);
 		this.setDelegate(delegate);
+	}
+
+	public static <T extends MutableObjectifyModel<T>> SetterTestUtility<T> makeTestUtility(ObjectifyRegistry<T> registry,
+	                                                                                        ModelGenerator<T> generator) {
+		return new SetterTestUtility<T>(registry, new TestModelGeneratorSetterTestUtilityDelegateImpl<T>(generator));
 	}
 
 	public Getter<T> getGetter() {
@@ -79,12 +96,16 @@ public class SetterTestUtility<T extends MutableUniqueModel> {
 
 		// Test Storing New
 		T template = this.delegate.makeNew();
+		template.setModelKey(null);	// Make sure it has no key set.
 
 		assertTrue(template.getModelKey() == null);
 
+		// Store It
 		storer.store(template);
-
 		assertFalse(template.getModelKey() == null);
+
+		// Test It Was Stored
+		assertTrue(this.getter.exists(template));
 
 		// Test Storing existing fails.
 		try {
@@ -105,6 +126,7 @@ public class SetterTestUtility<T extends MutableUniqueModel> {
 		} catch (StoreKeyedEntityException e) {
 
 		}
+
 	}
 
 	// MARK: Updater
@@ -114,6 +136,7 @@ public class SetterTestUtility<T extends MutableUniqueModel> {
 		Deleter<T> deleter = this.setter;
 
 		T template = this.delegate.makeNew();
+		template.setModelKey(null);	// Make sure it has no key set.
 
 		// Test Updating un-initiated fails.
 		try {
@@ -150,6 +173,8 @@ public class SetterTestUtility<T extends MutableUniqueModel> {
 
 		// Test deleting something
 		T template = this.delegate.makeNew();
+		template.setModelKey(null);	// Make sure it has no key set.
+
 		storer.store(template);
 
 		assertTrue(this.getter.exists(template));
@@ -164,6 +189,41 @@ public class SetterTestUtility<T extends MutableUniqueModel> {
 		public T makeNew();
 
 		public ModelKey makeKey();
+
+	}
+
+	public static class TestModelGeneratorSetterTestUtilityDelegateImpl<T extends MutableUniqueModel>
+	        implements SetterTestUtilityDelegate<T> {
+
+		private ModelGenerator<T> generator;
+
+		public TestModelGeneratorSetterTestUtilityDelegateImpl(ModelGenerator<T> generator) {
+			super();
+			this.setGenerator(generator);
+		}
+
+		public ModelGenerator<T> getGenerator() {
+			return this.generator;
+		}
+
+		public void setGenerator(ModelGenerator<T> generator) {
+			if (generator == null) {
+				throw new IllegalArgumentException("generator cannot be null.");
+			}
+
+			this.generator = generator;
+		}
+
+		// MARK: SetterTestUtilityDelegate
+		@Override
+		public T makeNew() {
+			return this.generator.generate();
+		}
+
+		@Override
+		public ModelKey makeKey() {
+			return this.generator.generateKey();
+		}
 
 	}
 

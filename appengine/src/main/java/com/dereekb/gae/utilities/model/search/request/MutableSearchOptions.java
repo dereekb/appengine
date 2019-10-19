@@ -1,29 +1,29 @@
 package com.dereekb.gae.utilities.model.search.request;
 
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
-import com.dereekb.gae.utilities.misc.parameters.MutableParameters;
 
 /**
- * {@link SearchOptions} with setters accessible.
+ * Mutable {@link SearchOptions}.
  *
  * @author dereekb
  *
  */
 public interface MutableSearchOptions
-        extends SearchOptions, MutableParameters {
+        extends SearchOptions {
 
 	/**
 	 * Sets the results cursor.
-	 * 
+	 *
 	 * @param cursor
 	 *            {@link String}, or {@code null} to not use cursor.
 	 * @deprecated Use {@link #setCursor(ResultsCursor)} instead
 	 */
+	@Deprecated
 	public void setCursor(String cursor);
 
 	/**
 	 * Sets the results cursor.
-	 * 
+	 *
 	 * @param cursor
 	 *            {@link String}, or {@code null} to not use cursor.
 	 */
@@ -31,7 +31,7 @@ public interface MutableSearchOptions
 
 	/**
 	 * Sets the results offset.
-	 * 
+	 *
 	 * @param limit
 	 *            {@link Integer}, or {@code null} to use default.
 	 * @throws IllegalArgumentException
@@ -41,7 +41,7 @@ public interface MutableSearchOptions
 
 	/**
 	 * Sets the results limit.
-	 * 
+	 *
 	 * @param limit
 	 *            {@link Integer}, or {@code null} to use default.
 	 * @throws IllegalArgumentException

@@ -14,6 +14,13 @@ public interface ApiSearchReadRequest
         extends SearchRequest {
 
 	/**
+	 * Returns the index to search.
+	 *
+	 * @return {@link String} or {@code null} if default search.
+	 */
+	public String getIndex();
+
+	/**
 	 * Returns the query parameter.
 	 *
 	 * @return the query parameter. Never {@code null} or an empty string,

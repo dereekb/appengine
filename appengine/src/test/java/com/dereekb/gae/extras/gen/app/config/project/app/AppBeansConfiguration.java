@@ -48,6 +48,10 @@ public interface AppBeansConfiguration {
 
 	public String getCrudDeleteModelRoleRefBeanId();
 
+	public String getLoginTokenModelContextServiceBeanId();
+
+	public String getLoginTokenModelContextSetDencoderBeanId();
+
 	public String getAnonymousModelRoleSetContextServiceBeanId();
 
 	public String getAppLoginSecurityServiceBeanId();
@@ -61,6 +65,8 @@ public interface AppBeansConfiguration {
 	public String getLoginTokenDecoderBeanId();
 
 	public String getMailServiceBeanId();
+
+	public String getFirebaseServiceBeanId();
 
 	// Utility
 	public AppUtilityBeansConfiguration getUtilityBeans();

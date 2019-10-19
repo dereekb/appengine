@@ -2,6 +2,7 @@ package com.dereekb.gae.extras.gen.app.config.app.model.local;
 
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.AppModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelContextConfigurer;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKeyEnforcement;
 
 /**
  * {@link AppModelConfiguration} extension for local models.
@@ -17,6 +18,14 @@ public interface LocalModelConfiguration
 
 	@Override
 	public LocalModelBeansConfiguration getBeansConfiguration();
+
+	// Utility
+	public LocalModelUtilityBeansConfiguration getUtilityBeans();
+
+	/**
+	 * Returns the key enforcement for this model.
+	 */
+	public ObjectifyDatabaseEntityKeyEnforcement getKeyEnforcement();
 
 	public Class<?> getModelQueryClass();
 

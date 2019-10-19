@@ -7,7 +7,7 @@ import com.googlecode.objectify.annotation.Index;
 
 /**
  * {@link DatabaseModel} extension with an indexed date.
- * 
+ *
  * @author dereekb
  *
  */
@@ -17,7 +17,7 @@ public abstract class DatedDatabaseModel extends DatabaseModel
 	private static final long serialVersionUID = 1L;
 
 	@Index
-	protected Date date = new Date();
+	protected Date date = this.initDate();
 
 	@Override
 	public Date getDate() {
@@ -27,6 +27,11 @@ public abstract class DatedDatabaseModel extends DatabaseModel
 	@Override
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	// MARK: Internal
+	protected Date initDate() {
+		return new Date();
 	}
 
 }

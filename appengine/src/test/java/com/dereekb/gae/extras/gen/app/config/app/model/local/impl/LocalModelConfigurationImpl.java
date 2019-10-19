@@ -6,9 +6,12 @@ import java.util.logging.Logger;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelCrudsConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelUtilityBeansConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.impl.AppModelConfigurationImpl;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.impl.LocalModelContextConfigurerImpl;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKeyEnforcement;
+import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyUtility;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.path.PathUtility;
 
@@ -19,6 +22,10 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
         implements LocalModelConfiguration, LocalModelCrudsConfiguration, LocalModelBeansConfiguration {
 
 	private static final Logger LOGGER = Logger.getLogger(LocalModelConfigurationImpl.class.getName());
+
+	private ObjectifyDatabaseEntityKeyEnforcement keyEnforcement;
+
+	private LocalModelUtilityBeansConfiguration utilityBeans;
 
 	private Class<Object> modelDataBuilderClass;
 	private Class<Object> modelDataReaderClass;
@@ -60,6 +67,16 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 
 		String modelSecurityContextServiceEntry = baseClassPath + ".security." + baseClassSimpleName
 		        + "SecurityContextServiceEntry";
+
+		// Set Key Enforcement if set
+		try {
+			this.keyEnforcement = ObjectifyUtility.readObjectifyDatabaseEntityKeyEnforcement(this.getModelClass(),
+			        true);
+		} catch (IllegalArgumentException e) {
+
+			// Key enforcement is the default.
+			this.keyEnforcement = ObjectifyDatabaseEntityKeyEnforcement.DEFAULT;
+		}
 
 		// Find Edit Controller Name
 		List<String> packagePathComponents = PathUtility.getComponents(baseClassPath, "\\.");
@@ -103,6 +120,74 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 		} catch (ClassNotFoundException e) {
 
 		}
+
+		// Utility Beans
+		this.utilityBeans = new LocalModelUtilityBeansConfigurationImpl();
+	}
+
+	/**
+	 * Internal {@link LocalModelUtilityBeansConfiguration} implementation.
+	 *
+	 * @author dereekb
+	 *
+	 */
+	private class LocalModelUtilityBeansConfigurationImpl
+	        implements LocalModelUtilityBeansConfiguration {
+
+		private String typedModelSearchServiceBeanId;
+		private String modelSearchFactoryBeanId;
+		private String modelSearchInitializerBeanId;
+
+		public LocalModelUtilityBeansConfigurationImpl() {
+			super();
+
+			String prefix = StringUtility
+			        .firstLetterLowerCase(LocalModelConfigurationImpl.this.getBaseClassSimpleName());
+
+			this.setTypedModelSearchServiceBeanId(prefix + "ModelSearchService");
+			this.setModelSearchFactoryBeanId(prefix + "ModelSearchFactory");
+			this.setModelSearchInitializerBeanId(prefix + "ModelSearchInitializer");
+		}
+
+		@Override
+		public String getTypedModelSearchServiceBeanId() {
+			return this.typedModelSearchServiceBeanId;
+		}
+
+		public void setTypedModelSearchServiceBeanId(String typedModelSearchServiceBeanId) {
+			if (typedModelSearchServiceBeanId == null) {
+				throw new IllegalArgumentException("typedModelSearchServiceBeanId cannot be null.");
+			}
+
+			this.typedModelSearchServiceBeanId = typedModelSearchServiceBeanId;
+		}
+
+		@Override
+		public String getModelSearchFactoryBeanId() {
+			return this.modelSearchFactoryBeanId;
+		}
+
+		public void setModelSearchFactoryBeanId(String modelSearchFactoryBeanId) {
+			if (modelSearchFactoryBeanId == null) {
+				throw new IllegalArgumentException("modelSearchFactoryBeanId cannot be null.");
+			}
+
+			this.modelSearchFactoryBeanId = modelSearchFactoryBeanId;
+		}
+
+		@Override
+		public String getModelSearchInitializerBeanId() {
+			return this.modelSearchInitializerBeanId;
+		}
+
+		public void setModelSearchInitializerBeanId(String modelSearchInitializerBeanId) {
+			if (modelSearchInitializerBeanId == null) {
+				throw new IllegalArgumentException("modelSearchInitializerBeanId cannot be null.");
+			}
+
+			this.modelSearchInitializerBeanId = modelSearchInitializerBeanId;
+		}
+
 	}
 
 	@Override
@@ -134,6 +219,32 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 	 */
 	public void setIsReadOnly() {
 		this.setCrudsConfiguration(LocalModelCrudsConfigurationImpl.makeReadOnlyConfiguration(this));
+	}
+
+	@Override
+	public LocalModelUtilityBeansConfiguration getUtilityBeans() {
+		return this.utilityBeans;
+	}
+
+	public void setUtilityBeans(LocalModelUtilityBeansConfiguration utilityBeans) {
+		if (utilityBeans == null) {
+			throw new IllegalArgumentException("utilityBeans cannot be null.");
+		}
+
+		this.utilityBeans = utilityBeans;
+	}
+
+	@Override
+	public ObjectifyDatabaseEntityKeyEnforcement getKeyEnforcement() {
+		return this.keyEnforcement;
+	}
+
+	public void setKeyEnforcement(ObjectifyDatabaseEntityKeyEnforcement keyEnforcement) {
+		if (keyEnforcement == null) {
+			throw new IllegalArgumentException("keyEnforcement cannot be null.");
+		}
+
+		this.keyEnforcement = keyEnforcement;
 	}
 
 	@Override
@@ -353,6 +464,11 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 	}
 
 	@Override
+	public String getModelScheduleDeleteBeanId() {
+		return this.getBeansConfiguration().getModelScheduleDeleteBeanId();
+	}
+
+	@Override
 	public String getModelRoleSetLoaderBeanId() {
 		return this.getBeansConfiguration().getModelRoleSetLoaderBeanId();
 	}
@@ -360,6 +476,16 @@ public class LocalModelConfigurationImpl extends AppModelConfigurationImpl<Local
 	@Override
 	public String getModelQueryInitializerBeanId() {
 		return this.getBeansConfiguration().getModelQueryInitializerBeanId();
+	}
+
+	@Override
+	public String getSecuredModelQueryInitializerBeanId() {
+		return this.getBeansConfiguration().getSecuredModelQueryInitializerBeanId();
+	}
+
+	@Override
+	public String getSecuredModelQueryInitializerDelegateBeanId() {
+		return this.getBeansConfiguration().getSecuredModelQueryInitializerDelegateBeanId();
 	}
 
 	@Override

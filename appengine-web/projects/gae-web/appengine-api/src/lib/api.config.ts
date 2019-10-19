@@ -3,6 +3,10 @@ import { ValueUtility, ModelType } from '@gae-web/appengine-utility';
 
 // MARK: Module
 export abstract class ApiModuleInfo {
+  /**
+   * Server to send requests to.
+   */
+  readonly server?: string;
   readonly version: string;
   readonly name: string;
 }
@@ -11,7 +15,7 @@ export abstract class ApiModuleInfo {
  * Info configuration for an Appengine module.
  */
 export class GaeApiModuleInfo implements ApiModuleInfo {
-  constructor(public readonly version: string, public readonly name: string) { }
+  constructor(public readonly version: string, public readonly name: string, public readonly server: string = '') { }
 }
 
 // MARK: Route
@@ -27,11 +31,11 @@ export class GaeApiModuleRouteConfiguration implements ApiModuleRouteConfigurati
   private _fullRoute: string;
 
   public static makeWithInfo(info: ApiModuleInfo, prefix?: string): GaeApiModuleRouteConfiguration {
-    return new GaeApiModuleRouteConfiguration(info.name + '/' + info.version, prefix);
+    return new GaeApiModuleRouteConfiguration(info.name + '/' + info.version, prefix, info.server);
   }
 
-  constructor(_route: string, _prefix: string = '/api') {
-    this._fullRoute = _prefix + '/' + _route;
+  constructor(_route: string,  _prefix: string = '/api', _server: string = '') {
+    this._fullRoute = _server + _prefix + '/' + _route;
   }
 
   // MARK: ApiModuleRouteConfiguration
@@ -83,6 +87,7 @@ export class GaeApiModuleTypesConfiguration implements ApiModuleTypesConfigurati
  * Helper interface used for ApiModuleConfiguration static constructors.
  */
 export interface ApiModuleConstructorConfiguration {
+  server?: string;
   version?: string;
   name?: string;
   types?: ModelType[];

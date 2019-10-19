@@ -6,14 +6,13 @@
   </bean>
   <bean class="com.dereekb.gae.server.datastore.objectify.query.impl.TaskedObjectifyQueryRequestLimitedBuilderInitializer" id="securedLoginKeyQueryInitializer">
     <constructor-arg index="0" ref="loginKeyQueryInitializer"/>
-    <constructor-arg index="1">
-      <bean class="com.dereekb.gae.server.auth.security.model.query.task.impl.LoginSecurityModelQueryTaskOverrideImpl">
-        <constructor-arg index="0">
-          <list>
-            <ref bean="loginOwnedModelQuerySecurityDelegate"/>
-          </list>
-        </constructor-arg>
-      </bean>
+    <constructor-arg index="1" ref="securedLoginKeyQueryInitializerDelegate"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.security.model.query.task.impl.LoginSecurityModelQueryTaskOverrideImpl" id="securedLoginKeyQueryInitializerDelegate">
+    <constructor-arg index="0">
+      <list>
+        <ref bean="loginOwnedModelQuerySecurityDelegate"/>
+      </list>
     </constructor-arg>
   </bean>
   <!--Security-->

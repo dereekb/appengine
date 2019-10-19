@@ -5,13 +5,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GaeListComponentsModule } from './list.module';
 import { ListViewSource, ListViewSourceState } from './source';
 import { GaeTestFooListComponent, GaeTestFooListContentComponent } from './list-view.component.spec';
-import { GaeListViewKeyQuerySourceDirective } from './source.directive';
+import { GaeListViewKeySearchSourceDirective } from './source.directive';
 import { ReadSource, TestFooReadSourceFactory, TestFooTestReadSourceFactory, TestFooTestKeyQuerySource } from '@gae-web/appengine-client';
 import { TestFoo, TestFooReadService } from '@gae-web/appengine-api';
 import { first, filter } from 'rxjs/operators';
 import { SourceState, ModelKey } from '@gae-web/appengine-utility';
 
-describe('GaeListViewKeyQuerySourceDirective', () => {
+describe('GaeListViewKeySearchSourceDirective', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -26,7 +26,7 @@ describe('GaeListViewKeyQuerySourceDirective', () => {
   let component: GaeTestFooListComponent;
   let testComponent: GaeListViewReadSourceDirectiveTestViewComponent;
   let fixture: ComponentFixture<GaeListViewReadSourceDirectiveTestViewComponent>;
-  let sourceDirective: GaeListViewKeyQuerySourceDirective<TestFoo>;
+  let sourceDirective: GaeListViewKeySearchSourceDirective<TestFoo>;
 
   beforeEach(async(() => {
     fixture = TestBed.createComponent(GaeListViewReadSourceDirectiveTestViewComponent);
@@ -48,7 +48,7 @@ describe('GaeListViewKeyQuerySourceDirective', () => {
      */
     function setKeysAndSources(keys: ModelKey[]) {
       testQuerySource.testQueryService.keyResults = keys;
-      sourceDirective.querySource = testQuerySource;
+      sourceDirective.iterateSource = testQuerySource;
       sourceDirective.readSource = testReadSource;
     }
 
@@ -116,7 +116,7 @@ describe('GaeListViewKeyQuerySourceDirective', () => {
 
 @Component({
   template: `
-    <gae-test-model-list gaeListViewKeyQuerySource></gae-test-model-list>
+    <gae-test-model-list gaeListViewKeySearchSource></gae-test-model-list>
   `
 })
 class GaeListViewReadSourceDirectiveTestViewComponent {
@@ -124,8 +124,8 @@ class GaeListViewReadSourceDirectiveTestViewComponent {
   @ViewChild(GaeTestFooListComponent, {static: true})
   public component: GaeTestFooListComponent;
 
-  @ViewChild(GaeListViewKeyQuerySourceDirective, {static: true})
-  public sourceDirective: GaeListViewKeyQuerySourceDirective<TestFoo>;
+  @ViewChild(GaeListViewKeySearchSourceDirective, {static: true})
+  public sourceDirective: GaeListViewKeySearchSourceDirective<TestFoo>;
 
   public source: ListViewSource<TestFoo>;
 

@@ -62,7 +62,7 @@ public class RemoteAppLoginTokenSecurityConfigurerImpl
 
 		// Configure the decoder
 		SpringBeansXMLBeanBuilder<?> decoderBean = builder.bean(appConfig.getAppBeans().getLoginTokenDecoderBeanId());
-		appConfig.getAppSecurityBeansConfigurer().configureTokenEncoderDecoder(appConfig, decoderBean);
+		appConfig.getAppSecurityBeansConfigurer().configureTokenEncoderDecoder(appConfig, decoderBean, false);
 
 		// TODO: Unneeded by the remote server and can probably be removed.
 		// SpringBeansXMLBeanBuilder<?> loginTokenBuilderBuilder = builder.bean("loginTokenBuilder");

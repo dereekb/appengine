@@ -6,7 +6,8 @@ import com.dereekb.gae.server.datastore.models.impl.AbstractUniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
 /**
- * 
+ * {@link LoginTokenModelContext} implementation.
+ *
  * @author dereekb
  *
  */

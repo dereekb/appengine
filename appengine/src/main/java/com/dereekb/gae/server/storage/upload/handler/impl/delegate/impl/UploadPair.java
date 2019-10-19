@@ -5,16 +5,16 @@ import java.util.List;
 
 import com.dereekb.gae.server.storage.upload.handler.impl.delegate.UploadedFileResult;
 import com.dereekb.gae.server.storage.upload.reader.UploadedFile;
-import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultPairImpl;
 
 /**
- * {@link ResultsPair} that contains an {@link UploadedFile} and the
+ * {@link ResultPairImpl} that contains an {@link UploadedFile} and the
  * {@link UploadedFileResult} result.
  *
  * @author dereekb
  *
  */
-public class UploadPair extends ResultsPair<UploadedFile, UploadedFileResult> {
+public class UploadPair extends ResultPairImpl<UploadedFile, UploadedFileResult> {
 
 	public UploadPair(UploadedFile source) {
 		super(source);

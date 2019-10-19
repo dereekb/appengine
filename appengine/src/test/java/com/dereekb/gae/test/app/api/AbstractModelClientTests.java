@@ -8,14 +8,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.dereekb.gae.client.api.auth.model.ClientModelRolesContextServiceRequestSender;
-import com.dereekb.gae.client.api.auth.model.ClientModelRolesLoginTokenContextRequest;
-import com.dereekb.gae.client.api.auth.model.ClientModelRolesLoginTokenContextResponse;
-import com.dereekb.gae.client.api.auth.model.impl.ClientModelRolesLoginTokenContextRequestImpl;
-import com.dereekb.gae.client.api.exception.ClientIllegalArgumentException;
+import com.dereekb.gae.client.api.auth.model.roles.ClientModelRolesServiceRequestSender;
 import com.dereekb.gae.client.api.exception.ClientRequestFailureException;
 import com.dereekb.gae.client.api.model.crud.builder.ClientCreateRequestSender;
 import com.dereekb.gae.client.api.model.crud.builder.ClientDeleteRequestSender;
@@ -29,9 +26,11 @@ import com.dereekb.gae.client.api.model.crud.response.ClientDeleteResponse;
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientCreateApiResponse;
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientReadApiResponse;
 import com.dereekb.gae.client.api.model.crud.response.SerializedClientUpdateApiResponse;
-import com.dereekb.gae.client.api.model.exception.ClientAtomicOperationException;
 import com.dereekb.gae.client.api.model.exception.ClientKeyedInvalidAttributeException;
 import com.dereekb.gae.client.api.model.extension.link.ClientLinkServiceRequestSender;
+import com.dereekb.gae.client.api.model.extension.search.document.builder.ClientTypedModelSearchRequestSender;
+import com.dereekb.gae.client.api.model.extension.search.document.response.ClientTypedModelSearchResponse;
+import com.dereekb.gae.client.api.model.extension.search.document.response.SerializedClientTypedModelSearchApiResponse;
 import com.dereekb.gae.client.api.model.extension.search.query.builder.impl.ClientQueryRequestSenderImpl;
 import com.dereekb.gae.client.api.model.extension.search.query.response.ClientModelQueryResponse;
 import com.dereekb.gae.client.api.service.response.SerializedClientApiResponse;
@@ -52,6 +51,8 @@ import com.dereekb.gae.model.crud.services.response.CreateResponse;
 import com.dereekb.gae.model.crud.services.response.SimpleReadResponse;
 import com.dereekb.gae.model.crud.services.response.SimpleUpdateResponse;
 import com.dereekb.gae.model.crud.task.impl.delegate.impl.IsUniqueCreateTaskValidatorImpl;
+import com.dereekb.gae.model.extension.search.document.service.TypedModelSearchServiceRequest;
+import com.dereekb.gae.model.extension.search.document.service.impl.TypedModelSearchServiceRequestImpl;
 import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryRequestImpl;
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.dto.LoginData;
@@ -61,19 +62,15 @@ import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyModelKeyUti
 import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext;
 import com.dereekb.gae.test.server.auth.TestLoginTokenPair;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
-import com.dereekb.gae.utilities.misc.keyed.Keyed;
 import com.dereekb.gae.utilities.model.search.request.MutableSearchRequest;
 import com.dereekb.gae.utilities.model.search.request.SearchRequest;
 import com.dereekb.gae.utilities.query.builder.parameters.ConfigurableEncodedQueryParameters;
-import com.dereekb.gae.web.api.auth.controller.model.ApiLoginTokenModelContextType;
-import com.dereekb.gae.web.api.auth.controller.model.impl.ApiLoginTokenModelContextTypeImpl;
-import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
 import com.dereekb.gae.web.api.util.attribute.KeyedInvalidAttribute;
 import com.dereekb.gae.web.api.util.attribute.exception.MultiKeyedInvalidAttributeException;
 import com.googlecode.objectify.Key;
 
 /**
- *
+ * Base class for building custom model client tests.
  *
  * @author dereekb
  *
@@ -81,11 +78,11 @@ import com.googlecode.objectify.Key;
 public abstract class AbstractModelClientTests extends AbstractAppTestingContext {
 
 	// Login
-	@Autowired
+	@Autowired(required = false)
 	@Qualifier("loginClientReadRequestSender")
 	protected ClientReadRequestSenderImpl<Login, LoginData> loginReadRequestSender;
 
-	@Autowired
+	@Autowired(required = false)
 	@Qualifier("loginClientUpdateRequestSender")
 	protected ClientUpdateRequestSenderImpl<Login, LoginData> loginUpdateRequestSender;
 
@@ -95,8 +92,13 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 	protected ClientLinkServiceRequestSender linkRequestSender;
 
 	@Autowired
-	@Qualifier("clientModelRolesContextServiceRequestSender")
-	protected ClientModelRolesContextServiceRequestSender modelRolesRequestSender;
+	@Qualifier("clientModelRolesServiceRequestSender")
+	protected ClientModelRolesServiceRequestSender modelRolesRequestSender;
+
+	@AfterEach
+	public void waitForTaskQueueAfterTest() {
+		this.waitForTaskQueueToComplete();
+	}
 
 	protected interface BasicTestUserSetup
 	        extends TestingInstanceObject {
@@ -194,27 +196,6 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 
 		}
 
-		// MARK: Security
-		public ClientRequestSecurity createModelRolesContextRequest(ClientModelRolesLoginTokenContextRequest request) {
-			try {
-				return this.sendModelRolesContextRequest(request);
-			} catch (ClientRequestFailureException e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-		public ClientRequestSecurity sendModelRolesContextRequest(ClientModelRolesLoginTokenContextRequest request)
-		        throws ClientIllegalArgumentException,
-		            ClientAtomicOperationException,
-		            ClientRequestFailureException {
-			ClientRequestSecurity requestSecurity = AbstractTestingInstance.this.getSecurity();
-			ClientModelRolesLoginTokenContextResponse response = AbstractModelClientTests.this.modelRolesRequestSender
-			        .getContextForModels(request, requestSecurity);
-			LoginTokenPair pair = response.getLoginTokenPair();
-			ClientRequestSecurityImpl security = new ClientRequestSecurityImpl(pair);
-			return security;
-		}
-
 		// MARK: Instances
 		public abstract class AbstractModelTestingInstance<T extends UniqueModel> extends AbstractQueryableModelTestingInstance<T> {
 
@@ -233,7 +214,16 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 			        ClientCreateRequestSender<T> createRequestSender,
 			        ClientUpdateRequestSender<T> updateRequestSender,
 			        ClientDeleteRequestSender<T> deleteRequestSender) {
-				super(readRequestSender, queryRequestSender);
+				this(readRequestSender, queryRequestSender, createRequestSender, updateRequestSender, deleteRequestSender, null);
+			}
+
+			public AbstractModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
+			        ClientQueryRequestSenderImpl<T, ?> queryRequestSender,
+			        ClientCreateRequestSender<T> createRequestSender,
+			        ClientUpdateRequestSender<T> updateRequestSender,
+			        ClientDeleteRequestSender<T> deleteRequestSender,
+			        ClientTypedModelSearchRequestSender<T> searchRequestSender) {
+				super(readRequestSender, queryRequestSender, searchRequestSender);
 				this.createRequestSender = createRequestSender;
 				this.updateRequestSender = updateRequestSender;
 				this.deleteRequestSender = deleteRequestSender;
@@ -339,7 +329,8 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				return this.sendUpdate(request);
 			}
 
-			public SerializedClientUpdateApiResponse<T> sendUpdate(UpdateRequest<T> updateRequest) throws AssertionError {
+			public SerializedClientUpdateApiResponse<T> sendUpdate(UpdateRequest<T> updateRequest)
+			        throws AssertionError {
 				try {
 					return this.updateRequestSender.sendRequest(updateRequest,
 					        AbstractTestingInstance.this.getSecurity());
@@ -378,11 +369,19 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 		public abstract class AbstractQueryableModelTestingInstance<T extends UniqueModel> extends AbstractReadOnlyModelTestingInstance<T> {
 
 			protected final ClientQueryRequestSenderImpl<T, ?> queryRequestSender;
+			protected final ClientTypedModelSearchRequestSender<T> searchRequestSender;
 
 			public AbstractQueryableModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
 			        ClientQueryRequestSenderImpl<T, ?> queryRequestSender) {
+				this(readRequestSender, queryRequestSender, null);
+			}
+
+			public AbstractQueryableModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
+			        ClientQueryRequestSenderImpl<T, ?> queryRequestSender,
+			        ClientTypedModelSearchRequestSender<T> searchRequestSender) {
 				super(readRequestSender);
 				this.queryRequestSender = queryRequestSender;
+				this.searchRequestSender = searchRequestSender;
 			}
 
 			public ClientQueryRequestSenderImpl<T, ?> getQueryRequestSender() {
@@ -400,14 +399,16 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				return this.query(queryRequest);
 			}
 
-			public ClientModelQueryResponse<T> query(ConfigurableEncodedQueryParameters query) throws MultiKeyedInvalidAttributeException {
+			public ClientModelQueryResponse<T> query(ConfigurableEncodedQueryParameters query)
+			        throws MultiKeyedInvalidAttributeException {
 				MutableSearchRequest queryRequest = new ModelQueryRequestImpl();
 				queryRequest.setSearchParameters(query.getParameters());
 				queryRequest.setKeysOnly(false);
 				return this.query(queryRequest);
 			}
 
-			public ClientModelQueryResponse<T> query(SearchRequest queryRequest) throws MultiKeyedInvalidAttributeException {
+			public ClientModelQueryResponse<T> query(SearchRequest queryRequest)
+			        throws MultiKeyedInvalidAttributeException {
 				try {
 					return this.sendQuery(queryRequest).getSerializedResponse();
 				} catch (ClientKeyedInvalidAttributeException e) {
@@ -419,12 +420,44 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				}
 			}
 
+			public ClientTypedModelSearchResponse<T> search(ConfigurableEncodedQueryParameters parameters)
+			        throws MultiKeyedInvalidAttributeException {
+				TypedModelSearchServiceRequestImpl searchRequest = new TypedModelSearchServiceRequestImpl();
+				searchRequest.setSearchParameters(parameters);
+				searchRequest.setKeysOnly(false);
+				return this.search(searchRequest);
+			}
+
+			public ClientTypedModelSearchResponse<T> search(TypedModelSearchServiceRequest searchRequest)
+			        throws MultiKeyedInvalidAttributeException {
+				try {
+					return this.sendSearch(searchRequest).getSerializedResponse();
+				} catch (ClientKeyedInvalidAttributeException e) {
+					throw new MultiKeyedInvalidAttributeException(e.getInvalidAttributes());
+				} catch (ClientResponseSerializationException | ClientRequestFailureException e) {
+					e.printStackTrace();
+					fail("Failed search.");
+					throw new RuntimeException();
+				}
+			}
+
 			public SerializedClientApiResponse<ClientModelQueryResponse<T>> sendQuery(SearchRequest queryRequest) {
 				try {
-					return this.queryRequestSender.sendRequest(queryRequest, AbstractTestingInstance.this.getSecurity());
+					return this.queryRequestSender.sendRequest(queryRequest,
+					        AbstractTestingInstance.this.getSecurity());
 				} catch (ClientRequestFailureException e) {
 					e.printStackTrace();
 					fail("Failed querying.");
+					throw new RuntimeException();
+				}
+			}
+
+			public SerializedClientTypedModelSearchApiResponse<T> sendSearch(TypedModelSearchServiceRequest searchRequest) {
+				try {
+					return this.searchRequestSender.sendRequest(searchRequest, AbstractTestingInstance.this.getSecurity());
+				} catch (ClientRequestFailureException e) {
+					e.printStackTrace();
+					fail("Failed search.");
 					throw new RuntimeException();
 				}
 			}
@@ -455,6 +488,22 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 			public T tryRead(T model) {
 				try {
 					return this.read(model);
+				} catch (AssertionError e) {
+					return null;
+				}
+			}
+
+			public T tryRead(Key<T> key) {
+				try {
+					return this.readByKey(key);
+				} catch (AssertionError e) {
+					return null;
+				}
+			}
+
+			public T tryRead(ModelKey key) {
+				try {
+					return this.readByKey(key);
 				} catch (AssertionError e) {
 					return null;
 				}
@@ -504,6 +553,32 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				}
 			}
 
+			public SerializedClientReadApiResponse<T> sendRead(T model) {
+				return this.sendRead(ListUtility.wrap(model));
+			}
+
+			public SerializedClientReadApiResponse<T> sendReadByKey(Key<T> key) {
+				return this.sendReadByRelatedKey(key);
+			}
+
+			public SerializedClientReadApiResponse<T> sendReadByRelatedKey(Key<?> key) {
+				ModelKey modelKey = ObjectifyModelKeyUtil.readModelKey(key);
+				return this.sendReadByKey(modelKey);
+			}
+
+			public SerializedClientReadApiResponse<T> sendReadByKey(ModelKey modelKey) {
+				return this.sendReadByKey(ListUtility.wrap(modelKey));
+			}
+
+			public SerializedClientReadApiResponse<T> sendRead(Iterable<T> types) {
+				return this.sendReadByKey(ModelKey.readModelKeys(types));
+			}
+
+			public SerializedClientReadApiResponse<T> sendReadByKey(Collection<ModelKey> keys) {
+				ClientReadRequestImpl clientReadRequest = this.makeAtomicReadRequest(keys);
+				return this.read(clientReadRequest);
+			}
+
 			public SerializedClientReadApiResponse<T> read(ClientReadRequest readRequest) {
 				try {
 					return this.readRequestSender.sendRequest(readRequest, AbstractTestingInstance.this.getSecurity());
@@ -511,30 +586,6 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 					fail("Failed reading.");
 					throw new RuntimeException(e);
 				}
-			}
-
-			// MARK: Client Security
-			public ClientRequestSecurity sendModelSecurityContext(Key<T> key)
-			        throws ClientIllegalArgumentException,
-			            ClientAtomicOperationException,
-			            ClientRequestFailureException {
-				ModelKey modelKey = ObjectifyModelKeyUtil.readModelKey(key);
-				return this.sendModelSecurityContext(modelKey);
-			}
-
-			public ClientRequestSecurity sendModelSecurityContext(Keyed<ModelKey> keyed)
-			        throws ClientIllegalArgumentException,
-			            ClientAtomicOperationException,
-			            ClientRequestFailureException {
-
-				String modelType = this.readRequestSender.getModelType();
-				ClientModelRolesLoginTokenContextRequestImpl request = new ClientModelRolesLoginTokenContextRequestImpl();
-
-				ApiLoginTokenModelContextType modelContextType = ApiLoginTokenModelContextTypeImpl.fromKeyed(modelType,
-				        keyed);
-				request.setRequestedContexts(modelContextType);
-
-				return AbstractTestingInstance.this.sendModelRolesContextRequest(request);
 			}
 
 			// MARK: Utility
@@ -611,6 +662,15 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 		}
 
 		// MARK: Tests
+		public void testCreateFails(T template) {
+			try {
+				this.instance.sendCreate(template).getSerializedResponse();
+				fail("Create should have failed.");
+			} catch (ClientRequestFailureException e) {
+				assertTrue(e.getResponse().getStatus() < 500, "Response status was a server error.");
+			}
+		}
+
 		public void testCreateFailsDueToKeyedAttributeFailure(T template,
 		                                                      final String attributeName) {
 			this.testCreateFailsDueToKeyedAttributeFailure(template, attributeName, null);
@@ -642,6 +702,7 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				assertFalse(attributes.isEmpty());
 				delegate.checkAndAssert(attributes);
 			} catch (ClientRequestFailureException e) {
+				e.printStackTrace();
 				fail();
 			}
 		}
@@ -667,12 +728,12 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 		                                                  String failureCode) {
 			KeyedInvalidAttribute attribute = attributes.get(0);
 
-			assertTrue(attribute.getAttribute().equals(attributeName), "Expected attribute name to be '" + attributeName + "' but was '"
-			        + attribute.getAttribute() + "' instead. -> " + attribute);
+			assertTrue(attribute.getAttribute().equals(attributeName), "Expected attribute name to be '" + attributeName
+			        + "' but was '" + attribute.getAttribute() + "' instead. -> " + attribute);
 
 			if (failureCode != null) {
-				assertTrue(attribute.getCode().equals(failureCode), "Expected failure code to be '" + failureCode + "' but was '" + attribute.getCode()
-		        + "' instead. -> " + attribute);
+				assertTrue(attribute.getCode().equals(failureCode), "Expected failure code to be '" + failureCode
+				        + "' but was '" + attribute.getCode() + "' instead. -> " + attribute);
 			}
 		}
 

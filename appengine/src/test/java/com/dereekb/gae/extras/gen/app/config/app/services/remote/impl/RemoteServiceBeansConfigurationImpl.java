@@ -23,7 +23,7 @@ public class RemoteServiceBeansConfigurationImpl
 	private String clientApiRequestSenderBeanId;
 	private String securedClientApiRequestSenderBeanId;
 	private String clientScheduleTaskServiceBeanId;
-	private String clientModelRolesContextServiceBeanId;
+	private String clientModelRolesServiceBeanId;
 	private String clientModelLinkServiceBeanId;
 
 	public RemoteServiceBeansConfigurationImpl(AppServiceConfigurationInfo appServiceConfigurationInfo) {
@@ -38,7 +38,7 @@ public class RemoteServiceBeansConfigurationImpl
 		this.setClientApiRequestSenderBeanId(serviceBeanPrefix + "ClientApiRequestSender");
 		this.setSecuredClientApiRequestSenderBeanId(serviceBeanPrefix + "SecuredClientApiRequestSender");
 		this.setClientScheduleTaskServiceBeanId(serviceBeanPrefix + "ScheduleTaskService");
-		this.setClientModelRolesContextServiceBeanId(serviceBeanPrefix + "ClientModelRolesContextService");
+		this.setClientModelRolesServiceBeanId(serviceBeanPrefix + "ClientModelRolesService");
 		this.setClientModelLinkServiceBeanId(serviceBeanPrefix + "ClientLinkService");
 	}
 
@@ -135,16 +135,16 @@ public class RemoteServiceBeansConfigurationImpl
 	}
 
 	@Override
-	public String getClientModelRolesContextServiceBeanId() {
-		return this.clientModelRolesContextServiceBeanId;
+	public String getClientModelRolesServiceBeanId() {
+		return this.clientModelRolesServiceBeanId;
 	}
 
-	public void setClientModelRolesContextServiceBeanId(String clientModelRolesContextServiceBeanId) {
-		if (clientModelRolesContextServiceBeanId == null) {
-			throw new IllegalArgumentException("clientModelRolesContextServiceBeanId cannot be null.");
+	public void setClientModelRolesServiceBeanId(String clientModelRolesServiceBeanId) {
+		if (clientModelRolesServiceBeanId == null) {
+			throw new IllegalArgumentException("clientModelRolesServiceBeanId cannot be null.");
 		}
 
-		this.clientModelRolesContextServiceBeanId = clientModelRolesContextServiceBeanId;
+		this.clientModelRolesServiceBeanId = clientModelRolesServiceBeanId;
 	}
 
 	@Override

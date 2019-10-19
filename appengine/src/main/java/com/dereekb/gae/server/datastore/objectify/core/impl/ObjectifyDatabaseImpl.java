@@ -59,6 +59,7 @@ import com.dereekb.gae.server.datastore.objectify.query.order.ObjectifyQueryOrde
 import com.dereekb.gae.server.datastore.utility.GetterUtility;
 import com.dereekb.gae.utilities.collections.IteratorUtility;
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
+import com.dereekb.gae.utilities.misc.parameters.Parameters;
 import com.dereekb.gae.utilities.model.search.exception.NoSearchCursorException;
 import com.dereekb.gae.utilities.query.exception.IllegalQueryArgumentException;
 import com.google.cloud.datastore.Cursor;
@@ -87,9 +88,11 @@ public class ObjectifyDatabaseImpl
 	private Map<String, Class<?>> aliases = new HashMap<>();
 	private Map<Class<?>, ObjectifyDatabaseEntityDefinition> definitions = new HashMap<>();
 
-	public ObjectifyDatabaseImpl(ObjectifyInitializer initializer, Iterable<ObjectifyDatabaseEntityDefinition> entities) {
+	public ObjectifyDatabaseImpl(ObjectifyInitializer initializer,
+	        Iterable<ObjectifyDatabaseEntityDefinition> entities) {
 		super();
-		initializer.initialize();				// Call initialize to prepare it for use.
+		initializer.initialize();				// Call initialize to prepare it
+		                         				// for use.
 		this.addEntityDefinitions(entities);
 	}
 
@@ -1095,8 +1098,19 @@ public class ObjectifyDatabaseImpl
 		}
 
 		@Override
+		public IndexedModelQueryIterable<T> makeIterable(Parameters parameters) {
+			return this.iterableFactory.makeIterable(parameters);
+		}
+
+		@Override
 		public IndexedModelQueryIterable<T> makeIterable(Map<String, String> parameters) {
 			return this.iterableFactory.makeIterable(parameters);
+		}
+
+		@Override
+		public IndexedModelQueryIterable<T> makeIterable(Parameters parameters,
+		                                                 ResultsCursor cursor) {
+			return this.iterableFactory.makeIterable(parameters, cursor);
 		}
 
 		@Override

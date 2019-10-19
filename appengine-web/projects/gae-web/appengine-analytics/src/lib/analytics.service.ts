@@ -94,8 +94,22 @@ export abstract class AbstractAnalyticsServiceListener implements AnalyticsServi
 
 export class AnalyticsServiceConfiguration {
   listeners: AnalyticsServiceListener[];
-  hostnames?: string[];
+  isProduction?: boolean;
   userSource?: AnalyticsUserSource;
+}
+
+export class AnalyticsStreamEventAnalyticsEventWrapper implements AnalyticsStreamEvent {
+
+  constructor(public readonly event: UserAnalyticsEvent, public readonly type: AnalyticsStreamEventType = AnalyticsStreamEventType.Event) { }
+
+  public get user() {
+    return this.event.user;
+  }
+
+  public get userId() {
+    return (this.user) ? this.user.user : undefined;
+  }
+
 }
 
 /**
@@ -205,42 +219,24 @@ export class AnalyticsService implements AnalyticsSender {
 
   // MARK: Internal
   private _init() {
-    const hostnames = this._config.hostnames || [];
 
-    // Check Hostname is whitelisted, if list exists.
-    if (hostnames.length > 0) {
-      const nameSet = new Set<string>(hostnames);
-      const currentHostName = window.location.hostname;
+    if (this._config.isProduction) {
 
-      if (!nameSet.has(currentHostName)) {
-        // Create a new subscription
-        this._subject.subscribe((x) => {
-          console.log(`Analytics Event: ${AnalyticsStreamEventType[x.type]} User: ${x.userId} Data: ${JSON.stringify(x.event)}.`);
-        });
+      // Initialize listeners.
+      this._config.listeners.forEach((listener) => {
+        listener.listenToService(this);
+      });
 
-        console.warn('Hostname not whitelisted. All analytics events are ignored.');
-        return;
-      }
+    } else {
+
+      // Create a new subscription
+      this._subject.subscribe((x) => {
+        console.log(`Analytics Event: ${AnalyticsStreamEventType[x.type]} User: ${x.userId} Data: ${JSON.stringify(x.event)}.`);
+      });
+
+      console.warn('Analytics not in production mode. All analytics events are ignored.');
+      return;
     }
-
-    // Initialize listeners.
-    this._config.listeners.forEach((listener) => {
-      listener.listenToService(this);
-    });
-  }
-
-}
-
-export class AnalyticsStreamEventAnalyticsEventWrapper implements AnalyticsStreamEvent {
-
-  constructor(public readonly event: UserAnalyticsEvent, public readonly type: AnalyticsStreamEventType = AnalyticsStreamEventType.Event) { }
-
-  public get user() {
-    return this.event.user;
-  }
-
-  public get userId() {
-    return (this.user) ? this.user.user : undefined;
   }
 
 }

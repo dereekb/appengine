@@ -32,6 +32,7 @@ describe('Analytics Service', () => {
   beforeEach(() => {
     const configuration: AnalyticsServiceConfiguration = {
       listeners: [testListener],
+      isProduction: true,
       userSource: testUserSource
     };
 

@@ -7,10 +7,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.dereekb.gae.client.api.auth.model.security.ClientLoginTokenModelContextServiceEntryFactory;
+import com.dereekb.gae.client.api.auth.model.roles.security.ClientLoginTokenModelContextServiceEntryFactory;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigurationGroup;
+import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationGroupImpl;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.filter.NotInternalModelConfigurationFilter;
@@ -33,6 +34,7 @@ import com.dereekb.gae.extras.gen.utility.spring.security.SpringSecurityXMLHttpB
 import com.dereekb.gae.extras.gen.utility.spring.security.impl.HasAnyRoleConfig;
 import com.dereekb.gae.extras.gen.utility.spring.security.impl.HasRoleConfig;
 import com.dereekb.gae.extras.gen.utility.spring.security.impl.RoleConfigImpl;
+import com.dereekb.gae.model.extension.search.document.service.impl.ModelSearchServiceImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.AppServiceVersionInfoImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.SystemAppInfoFactoryImpl;
 import com.dereekb.gae.server.app.model.app.info.impl.SystemAppInfoImpl;
@@ -57,6 +59,7 @@ import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringLongMo
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.StringModelKeyConverterImpl;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyInitializerImpl;
+import com.dereekb.gae.server.search.service.impl.GcsSearchServiceImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticatorImpl;
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
@@ -106,6 +109,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		folder.addFile(new SecurityConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new LoginConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new UtilityConfigurationGenerator().generateConfigurationFile());
+		folder.addFile(new SearchConfigurationGenerator().generateConfigurationFile());
 
 		// Main Server File
 		folder.addFile(this.makeServerFile(folder));
@@ -258,18 +262,24 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 		public void addCommonLoginTokenBeansToXMLConfigurationFile(SpringBeansXMLBuilder builder) {
 
+			AppConfiguration appConfig = this.getAppConfig();
+
 			builder.comment("Login Token Utilities");
 			builder.comment("Login Models Service");
 
+			String loginTokenModelContextServiceBeanId = appConfig.getAppBeans()
+			        .getLoginTokenModelContextServiceBeanId();
+			String loginTokenModelContextSetDencoderBeanId = appConfig.getAppBeans()
+			        .getLoginTokenModelContextSetDencoderBeanId();
 			String loginTokenModelContextServiceEntriesBeanId = "loginTokenModelContextServiceEntries";
 
-			builder.bean("loginTokenModelContextService").beanClass(LoginTokenModelContextServiceImpl.class).c()
+			builder.bean(loginTokenModelContextServiceBeanId).beanClass(LoginTokenModelContextServiceImpl.class).c()
 			        .ref(loginTokenModelContextServiceEntriesBeanId);
 
-			builder.alias("loginTokenModelContextService",
-			        this.getAppConfig().getAppBeans().getAnonymousModelRoleSetContextServiceBeanId());
+			builder.alias(loginTokenModelContextServiceBeanId,
+			        appConfig.getAppBeans().getAnonymousModelRoleSetContextServiceBeanId());
 
-			builder.bean("loginTokenModelContextSetDencoder")
+			builder.bean(loginTokenModelContextSetDencoderBeanId)
 			        .beanClass(LoginTokenModelContextSetEncoderDecoderImpl.class).c()
 			        .ref("loginTokenModelContextServiceDencoderEntries");
 
@@ -285,11 +295,12 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			 * SecurityExtensionConfigurationGenerator in
 			 * ContextModelsConfigurationGenerator.
 			 */
-			for (LocalModelConfigurationGroup group : this.getAppConfig().getLocalModelConfigurations()) {
+			for (LocalModelConfigurationGroup group : appConfig.getLocalModelConfigurations()) {
 				String groupName = group.getGroupName();
 				entitiesList.getRawXMLBuilder().c(groupName);
 
-				List<LocalModelConfiguration> modelConfigs = ListUtility.filter(group.getModelConfigurations(), NotInternalModelConfigurationFilter.make());
+				List<LocalModelConfiguration> modelConfigs = ListUtility.filter(group.getModelConfigurations(),
+				        NotInternalModelConfigurationFilter.make());
 				for (LocalModelConfiguration modelConfig : modelConfigs) {
 					entitiesList.ref(modelConfig.getModelSecurityContextServiceEntryBeanId());
 				}
@@ -297,7 +308,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			// Remote Types
 			entitiesList.getRawXMLBuilder().c("Remote");
-			for (RemoteServiceConfiguration remoteService : this.getAppConfig().getRemoteServices()) {
+			for (RemoteServiceConfiguration remoteService : appConfig.getRemoteServices()) {
 				entitiesList.getRawXMLBuilder()
 				        .c(remoteService.getAppServiceConfigurationInfo().getAppServiceName() + " Service");
 				for (RemoteModelConfigurationGroup group : remoteService.getServiceModelConfigurations()) {
@@ -391,6 +402,55 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 	}
 
+	public class SearchConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
+
+		public SearchConfigurationGenerator() {
+			super(ContextServerConfigurationsGenerator.this);
+			this.setFileName("search");
+		}
+
+		@Override
+		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
+			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+			boolean hasSearchApiUsage = false;
+
+			List<LocalModelConfigurationGroup> groups = this.getAppConfig().getLocalModelConfigurations();
+			List<LocalModelConfiguration> modelConfigs = LocalModelConfigurationGroupImpl
+			        .readModelConfigurations(groups);
+
+			for (LocalModelConfiguration x : modelConfigs) {
+				if (x.getCustomModelContextConfigurer().hasSearchComponents()) {
+					hasSearchApiUsage = true;
+					break;
+				}
+			}
+
+			if (hasSearchApiUsage) {
+				this.makeSearchBeans(builder);
+			}
+
+			return builder;
+		}
+
+		protected void makeSearchBeans(SpringBeansXMLBuilder builder) {
+			AppConfiguration appConfig = this.getAppConfig();
+
+			// MARK: Search Service
+			builder.comment("Model Search Service");
+
+			String searchServiceBeanId = appConfig.getAppBeans().getUtilityBeans().getSearchServiceBeanId();
+			builder.bean(searchServiceBeanId).beanClass(GcsSearchServiceImpl.class);
+
+			builder.bean(appConfig.getAppBeans().getUtilityBeans().getModelSearchServiceBeanId())
+			        .beanClass(ModelSearchServiceImpl.class)
+			        .c()
+			        .ref(searchServiceBeanId)
+			        .ref(appConfig.getAppBeans().getModelKeyTypeConverterId());
+		}
+
+	}
+
 	public class SecurityConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
 
 		public SecurityConfigurationGenerator() {
@@ -447,24 +507,32 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				        .access(HasAnyRoleConfig.not("ROLE_LOGINTYPE_API", "ROLE_ANON"));
 			}
 
+			// TODO: Add debug only building for a non-production environment.
+			http.getRawXMLBuilder().c("Allow any logged in user to debug the server");
+			http.intercept(serviceApiPath + "/debug/**", RoleConfigImpl.make("permitAll"));
+
 			if (hasSecureLocalModelConfigs) {
 				http.getRawXMLBuilder().c("Secured Owned Model Patterns");
+				http.intercept(serviceApiPath + "/model/roles", HasRoleConfig.make("ROLE_USER"), HttpMethod.PUT);
 				http.intercept().matcherRef(securedModelPatternMatcherBeanId).access(HasRoleConfig.make("ROLE_USER"));
 			}
 
 			http.getRawXMLBuilder().c("Other Extension Resources");
 			http.intercept(serviceApiPath + "/search/**", HasRoleConfig.make("ROLE_ADMIN"));
 
-			// Login Registration Patterns
+			// Login Token and Registration Patterns
 			if (this.getAppConfig().isLoginServer()) {
+
 				http.getRawXMLBuilder().c("Register Patterns");
 				http.intercept(serviceApiPath + "/login/auth/register", HasRoleConfig.make("ROLE_NEW_USER"),
 				        HttpMethod.POST);
 				http.intercept(serviceApiPath + "/login/auth/register/token", HasRoleConfig.make("ROLE_USER"),
 				        HttpMethod.POST);
 
-				http.getRawXMLBuilder().c("Taken Patterns");
-				http.intercept(serviceApiPath + "/login/auth/model/*", HasRoleConfig.make("ROLE_USER"), HttpMethod.PUT);
+				http.getRawXMLBuilder().c("Token Patterns");
+				// http.intercept(serviceApiPath + "/login/auth/model/*",
+				// HasRoleConfig.make("ROLE_USER"), HttpMethod.PUT); //
+				// DEPRECATED
 				http.intercept(serviceApiPath + "/login/auth/token/refresh", HasRoleConfig.make("ROLE_USER"),
 				        HttpMethod.GET);
 				http.intercept(serviceApiPath + "/login/auth/token/reset", HasRoleConfig.make("ROLE_USER"),
@@ -580,7 +648,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		}
 
 		private List<LocalModelConfiguration> loadSecureLocalModelConfigs() {
-			List<LocalModelConfiguration> allLocalModelConfigs = AppConfigurationUtility.readLocalModelConfigurations(this.getAppConfig());
+			List<LocalModelConfiguration> allLocalModelConfigs = AppConfigurationUtility
+			        .readLocalModelConfigurations(this.getAppConfig());
 			return ListUtility.filter(allLocalModelConfigs, NotInternalModelConfigurationFilter.make());
 		}
 

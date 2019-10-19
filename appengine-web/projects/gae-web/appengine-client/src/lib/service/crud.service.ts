@@ -1,4 +1,4 @@
-import { UniqueModel, ModelKey, SourceState, KeyedCacheLoad, ModelUtility, ValueUtility, ConversionSourceInputResult } from '@gae-web/appengine-utility';
+import { UniqueModel, ModelKey, ModelOrKey, SourceState, KeyedCacheLoad, ModelUtility, ValueUtility, ConversionSourceInputResult, Keyed } from '@gae-web/appengine-utility';
 import { ReadSourceFactory, ReadSourceConfiguration, ReadSource, ReadServiceReadSourceFactory } from './source';
 import { ModelServiceWrapper } from './model.service';
 import { ReadService, ReadRequest, ModelServiceResponse, ReadResponse, UpdateService, UpdateResponse, UpdateRequest, DeleteService, DeleteRequest, DeleteResponse } from '@gae-web/appengine-api';
@@ -95,6 +95,23 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
   }
 
   /**
+   * Convenience function for reading a single model.
+   *
+   * @param key Model or key to read.
+   * @param skipCache Whether or not to skip the internal read cache.
+   * @param atomic Whether or not to throw an error. If false, the observable will return undefined if the model is unavailable.
+   */
+  public readOne(key: ModelOrKey<T>, skipCache: boolean = false, atomic = false): Observable<T | undefined> {
+    const inputKey = ModelUtility.readModelKey(key);
+    return this.read({
+      modelKeys: [inputKey],
+      atomic
+    }, skipCache).pipe(
+      map(x => x.models[0])
+    );
+  }
+
+  /**
    * Single read that checks the cache before sending a request.
    */
   public read(request: ReadRequest, skipCache: boolean = false): Observable<ReadResponse<T>> {
@@ -105,6 +122,23 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
         shareReplay()   // Share the single result with all subscribers.
       );
     }
+  }
+
+  /**
+   * Convenience function for reading a single model.
+   *
+   * @param key Model or key to read.
+   * @param atomic Whether or not to throw an error. If false, the observable will return undefined if the model is unavailable.
+   * @param debounce Optional debounce.
+   */
+  public continuousReadOne(key: ModelOrKey<T>, atomic = false, debounce?: number): Observable<T | undefined> {
+    const inputKey = ModelUtility.readModelKey(key);
+    return this.continuousRead({
+      modelKeys: [inputKey],
+      atomic
+    }, debounce).pipe(
+      map(x => x.models[0])
+    );
   }
 
   /**

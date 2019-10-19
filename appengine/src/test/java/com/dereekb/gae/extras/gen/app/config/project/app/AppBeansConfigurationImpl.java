@@ -29,10 +29,13 @@ public class AppBeansConfigurationImpl
 	public static final String SYSTEM_LOGIN_TOKEN_SERVICE_BEAN_ID = "systemLoginTokenService";
 	public static final String SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID = "systemLoginTokenFactory";
 	public static final String MAIL_SERVICE_BEAN_ID = "mailService";
+	public static final String FIREBASE_SERVICE_BEAN_ID = "firebaseService";
 
 	public static final String CRUD_READ_MODEL_ROLE_REF_BEAN_ID = "crudReadModelRole";
 	public static final String CRUD_UPDATE_MODEL_ROLE_REF_BEAN_ID = "crudUpdateModelRole";
 	public static final String CRUD_DELETE_MODEL_ROLE_REF_BEAN_ID = "crudDeleteModelRole";
+	public static final String LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_BEAN_ID = "loginTokenModelContextService";
+	public static final String LOGIN_TOKEN_MODEL_CONTEXT_SET_DENCODER_BEAN_ID = "loginTokenModelContextSetDencoder";
 	public static final String ANONYMOUS_MODEL_ROLE_SET_CONTEXT_SERVICE_BEAN_ID = "anonymousModelRoleSetContextService";
 
 	public static final String APP_LOGIN_SECURITY_SERVICE_BEAN_ID = "appLoginSecurityService";
@@ -47,6 +50,9 @@ public class AppBeansConfigurationImpl
 	public static final String LOGIN_ADMIN_ROLES_BEAN_ID = "loginAdminRoles";
 	public static final String LOGIN_ROLES_SERVICE_BEAN_ID = "loginRolesService";
 	public static final String LOGIN_TOKEN_USER_DETAILS_BUILDER_BEAN_ID = "loginTokenUserDetailsBuilder";
+
+	public static final String MODEL_SEARCH_SERVICE_BEAN_ID = "modelSearchService";
+	public static final String SEARCH_SERVICE_BEAN_ID = "searchService";
 
 	public static final String ADMIN_ONLY_SECURITY_MODEL_QUERY_TASK_BEAN_ID = "adminOnlySecurityModelQueryTask";
 	public static final String ALLOW_ALL_SECURITY_MODEL_QUERY_TASK_BEAN_ID = "allowAllSecurityModelQueryTask";
@@ -73,6 +79,9 @@ public class AppBeansConfigurationImpl
 	private String systemLoginTokenServiceBeanId = SYSTEM_LOGIN_TOKEN_SERVICE_BEAN_ID;
 	private String systemLoginTokenFactoryBeanId = SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID;
 	private String mailServiceBeanId = MAIL_SERVICE_BEAN_ID;
+	private String firebaseServiceBeanId = FIREBASE_SERVICE_BEAN_ID;
+	private String loginTokenModelContextServiceBeanId = LOGIN_TOKEN_MODEL_CONTEXT_SERVICE_BEAN_ID;
+	private String loginTokenModelContextSetDencoderBeanId = LOGIN_TOKEN_MODEL_CONTEXT_SET_DENCODER_BEAN_ID;
 	private String anonymousModelRoleSetContextServiceBeanId = ANONYMOUS_MODEL_ROLE_SET_CONTEXT_SERVICE_BEAN_ID;
 
 	private String appLoginSecurityServiceBeanId = APP_LOGIN_SECURITY_SERVICE_BEAN_ID;
@@ -98,6 +107,8 @@ public class AppBeansConfigurationImpl
 		private String loginAdminRolesBeanId = LOGIN_ADMIN_ROLES_BEAN_ID;
 		private String loginRolesServiceBeanId = LOGIN_ROLES_SERVICE_BEAN_ID;
 		private String loginTokenUserDetailsBuilderBeanId = LOGIN_TOKEN_USER_DETAILS_BUILDER_BEAN_ID;
+		private String modelSearchServiceBeanId = MODEL_SEARCH_SERVICE_BEAN_ID;
+		private String searchServiceBeanId = SEARCH_SERVICE_BEAN_ID;
 
 		// MARK: AppUtilityBeansConfiguration
 		@Override
@@ -177,6 +188,32 @@ public class AppBeansConfigurationImpl
 			}
 
 			this.loginTokenUserDetailsBuilderBeanId = loginTokenUserDetailsBuilderBeanId;
+		}
+
+		@Override
+		public String getModelSearchServiceBeanId() {
+			return this.modelSearchServiceBeanId;
+		}
+
+		public void setModelSearchServiceBeanId(String modelSearchServiceBeanId) {
+			if (modelSearchServiceBeanId == null) {
+				throw new IllegalArgumentException("modelSearchServiceBeanId cannot be null.");
+			}
+
+			this.modelSearchServiceBeanId = modelSearchServiceBeanId;
+		}
+
+		@Override
+		public String getSearchServiceBeanId() {
+			return this.searchServiceBeanId;
+		}
+
+		public void setSearchServiceBeanId(String searchServiceBeanId) {
+			if (searchServiceBeanId == null) {
+				throw new IllegalArgumentException("searchServiceBeanId cannot be null.");
+			}
+
+			this.searchServiceBeanId = searchServiceBeanId;
 		}
 
 		@Override
@@ -427,6 +464,19 @@ public class AppBeansConfigurationImpl
 	}
 
 	@Override
+	public String getFirebaseServiceBeanId() {
+		return this.firebaseServiceBeanId;
+	}
+
+	public void setFirebaseServiceBeanId(String firebaseServiceBeanId) {
+		if (firebaseServiceBeanId == null) {
+			throw new IllegalArgumentException("firebaseServiceBeanId cannot be null.");
+		}
+
+		this.firebaseServiceBeanId = firebaseServiceBeanId;
+	}
+
+	@Override
 	public String getSystemLoginTokenFactoryBeanId() {
 		return this.systemLoginTokenFactoryBeanId;
 	}
@@ -437,6 +487,32 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.systemLoginTokenFactoryBeanId = systemLoginTokenFactoryBeanId;
+	}
+
+	@Override
+	public String getLoginTokenModelContextServiceBeanId() {
+		return this.loginTokenModelContextServiceBeanId;
+	}
+
+	public void setLoginTokenModelContextServiceBeanId(String loginTokenModelContextServiceBeanId) {
+		if (loginTokenModelContextServiceBeanId == null) {
+			throw new IllegalArgumentException("loginTokenModelContextServiceBeanId cannot be null.");
+		}
+
+		this.loginTokenModelContextServiceBeanId = loginTokenModelContextServiceBeanId;
+	}
+
+	@Override
+	public String getLoginTokenModelContextSetDencoderBeanId() {
+		return this.loginTokenModelContextSetDencoderBeanId;
+	}
+
+	public void setLoginTokenModelContextSetDencoderBeanId(String loginTokenModelContextSetDencoderBeanId) {
+		if (loginTokenModelContextSetDencoderBeanId == null) {
+			throw new IllegalArgumentException("loginTokenModelContextSetDencoderBeanId cannot be null.");
+		}
+
+		this.loginTokenModelContextSetDencoderBeanId = loginTokenModelContextSetDencoderBeanId;
 	}
 
 	@Override

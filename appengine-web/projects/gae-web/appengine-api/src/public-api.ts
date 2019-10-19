@@ -23,6 +23,7 @@ export * from './lib/model/extension/link/link.service';
 export * from './lib/model/extension/link/link';
 export * from './lib/model/extension/scheduler/scheduler.service';
 export * from './lib/model/extension/search/query/query.service';
+export * from './lib/model/extension/search/document/search.service';
 export * from './lib/model/extension/search/search.service';
 export * from './lib/model/client.service';
 export * from './lib/model/client';

@@ -5,4 +5,5 @@
   <import resource="/schedule.xml"/>
   <import resource="/search.xml"/>
   <import resource="/server.xml"/>
+  <import resource="/debug.xml"/>
 </beans>

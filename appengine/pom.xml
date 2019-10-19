@@ -9,15 +9,15 @@
 
 	<groupId>com.dereekb.gae</groupId>
 	<artifactId>gae-core</artifactId>
-	<version>2.0.2-SNAPSHOT</version>
+	<version>2.0.3-SNAPSHOT</version>
 
 	<properties>
 		<packaging.type>war</packaging.type>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<appengine.target.version>1.9.75</appengine.target.version>
-		<appengine-cloud.target.version>1.78.0</appengine-cloud.target.version>
+		<appengine.target.version>1.9.76</appengine.target.version>
+		<appengine-cloud.target.version>1.87.0</appengine-cloud.target.version>
 		<google-cloud.target.version>2.0.0</google-cloud.target.version>
 		<spring.target.version>5.1.8.RELEASE</spring.target.version>
 		<spring-security.target.version>5.1.5.RELEASE</spring-security.target.version>
@@ -172,6 +172,14 @@
 		    <version>4.5.9</version>
 		</dependency>
 		
+		<!-- Firebase -->
+		<!-- Used for push notifications -->
+		<dependency>
+		  <groupId>com.google.firebase</groupId>
+		  <artifactId>firebase-admin</artifactId>
+		  <version>6.10.0</version>
+		</dependency>
+				
 		<!-- Jersey -->
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
@@ -208,6 +216,13 @@
 			<groupId>com.googlecode.libphonenumber</groupId>
 			<artifactId>libphonenumber</artifactId>
 			<version>8.8.6</version>
+		</dependency>
+		
+		<!-- Geospacial -->
+		<dependency>
+		    <groupId>org.apache.lucene</groupId>
+		    <artifactId>lucene-spatial</artifactId>
+		    <version>8.2.0</version>
 		</dependency>
 
 		<!-- Test Dependencies -->

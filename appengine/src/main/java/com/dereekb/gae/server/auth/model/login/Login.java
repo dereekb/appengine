@@ -10,7 +10,8 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyGenerationType;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyInfo;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
-import com.dereekb.gae.server.datastore.objectify.ObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.MutableObjectifyModel;
+import com.dereekb.gae.server.datastore.objectify.keys.util.ObjectifyKeyUtility;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
@@ -33,7 +34,7 @@ import com.googlecode.objectify.condition.IfNull;
 @Entity
 @ModelKeyInfo(value = ModelKeyType.NUMBER, generation = ModelKeyGenerationType.AUTOMATIC)
 public final class Login extends DescribedDatabaseModel
-        implements ObjectifyModel<Login>, EncodedRolesBearer {
+        implements MutableObjectifyModel<Login>, EncodedRolesBearer {
 
 	private static final long serialVersionUID = 1L;
 
@@ -94,6 +95,8 @@ public final class Login extends DescribedDatabaseModel
 	@Deprecated
 	@IgnoreSave({ IfEmpty.class })
 	private Set<Key<Login>> children = new HashSet<Key<Login>>();
+
+	// TODO: Consider adding model key string for the User model type to reduce amount of querying required
 
 	public Login() {}
 
@@ -206,7 +209,7 @@ public final class Login extends DescribedDatabaseModel
 	// Objectify Model
 	@Override
 	public Key<Login> getObjectifyKey() {
-		return Key.create(Login.class, this.identifier);
+		return ObjectifyKeyUtility.createKey(Login.class, this.identifier);
 	}
 
 	@Override

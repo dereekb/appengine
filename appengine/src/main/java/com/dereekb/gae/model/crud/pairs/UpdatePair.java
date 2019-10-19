@@ -7,14 +7,14 @@ import java.util.List;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
-import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultPairImpl;
 import com.dereekb.gae.utilities.collections.pairs.impl.SuccessResultsPair;
 import com.dereekb.gae.web.api.util.attribute.exception.InvalidAttributeException;
 
 /**
  * A pair containing and target and a template to process an edit with.
  *
- * The {@link ResultsPair} key is the target.
+ * The {@link ResultPairImpl} key is the target.
  *
  * @author dereekb
  *

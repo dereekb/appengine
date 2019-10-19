@@ -20,7 +20,7 @@ describe('GaeSignOutComponent', () => {
   const httpClient = httpClientSpy as any;
   const testOAuthLoginApiService = new OAuthLoginApiService(httpClient, TestUtility.testApiRouteConfig());
 
-  const storageAccessor = StoredTokenStorageAccessor.getLocalStorageOrBackupAccessor();
+  const storageAccessor = new StoredTokenStorageAccessor();
   const tokenAuthenticator: UserLoginTokenAuthenticator = {} as any;
 
   const testUserLoginTokenService = new LegacyAppTokenUserService(new AppTokenStorageService(storageAccessor), tokenAuthenticator);
@@ -31,13 +31,21 @@ describe('GaeSignOutComponent', () => {
         NoopAnimationsModule,
         UIRouterModule.forRoot(),
         TestAnalyticsModule.forRoot(),
-        GaeGoogleModule.forRoot(new GoogleOAuthServiceConfig(''), false),
-        GaeFacebookModule.forRoot(new FacebookApiServiceConfig(''), false),
+        GaeGoogleModule.forRoot(false),
+        GaeFacebookModule.forRoot(false),
         GaeGatewayViewsModule.forRoot({})
       ],
       providers: [{
         provide: OAuthLoginApiService,
         useValue: testOAuthLoginApiService
+      },
+      {
+        provide: GoogleOAuthServiceConfig,
+        useValue: new GoogleOAuthServiceConfig('')
+      },
+      {
+        provide: FacebookApiServiceConfig,
+        useValue: new FacebookApiServiceConfig('')
       },
       {
         provide: UserLoginTokenService,

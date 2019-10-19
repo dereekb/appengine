@@ -13,7 +13,7 @@ import com.dereekb.gae.utilities.filters.FilterResults;
 /**
  * {@link ReadTaskImpl} extension that filters out result models that should not
  * be returned.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -46,6 +46,11 @@ public class FilteredReadTaskImpl<T extends UniqueModel> extends ReadTaskImpl<T>
 		List<T> models = super.loadModels(set);
 		FilterResults<T> results = this.filter.filterObjects(models);
 		return results.getPassingObjects();
+	}
+
+	@Override
+	public String toString() {
+		return "FilteredReadTaskImpl [filter=" + this.filter + ", getGetter()=" + this.getGetter() + "]";
 	}
 
 }

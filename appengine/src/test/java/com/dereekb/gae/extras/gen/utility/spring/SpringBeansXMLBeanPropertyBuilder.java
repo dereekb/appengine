@@ -15,6 +15,8 @@ public interface SpringBeansXMLBeanPropertyBuilder<T>
 
 	public SpringBeansXMLBeanPropertyBuilder<T> value(String value);
 
+	public SpringBeansXMLBeanPropertyBuilder<T> value(Enum<?> value);
+
 	public SpringBeansXMLBeanPropertyBuilder<T> ref(String ref);
 
 	/**

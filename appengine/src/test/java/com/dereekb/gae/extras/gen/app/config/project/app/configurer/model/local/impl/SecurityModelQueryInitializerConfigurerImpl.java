@@ -6,7 +6,7 @@ import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.SecuredQueryInitializerConfigurer;
-import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 
@@ -46,12 +46,13 @@ public class SecurityModelQueryInitializerConfigurerImpl
 	@Override
 	public void configureSecuredQueryInitializer(AppConfiguration appConfig,
 	                                             LocalModelConfiguration modelConfig,
-	                                             SpringBeansXMLBeanConstructorBuilder<?> beanConstructor) {
+	                                             String securedQueryInitializerDelegateId,
+	                                             SpringBeansXMLBuilder builder) {
 		AppSecurityBeansConfigurer securityConfigurer = appConfig.getAppSecurityBeansConfigurer();
 
 		Class<?> taskOverrideClass = securityConfigurer.getLoginSecurityModelQueryTaskOverrideClass();
 
-		SpringBeansXMLListBuilder<?> listBuilder = beanConstructor.bean().beanClass(taskOverrideClass).c().list();
+		SpringBeansXMLListBuilder<?> listBuilder = builder.bean(securedQueryInitializerDelegateId).beanClass(taskOverrideClass).c().list();
 
 		for (String ref : this.delegateBeanRefs) {
 			listBuilder.ref(ref);

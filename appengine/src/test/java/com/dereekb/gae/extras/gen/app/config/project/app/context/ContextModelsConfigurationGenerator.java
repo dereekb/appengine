@@ -16,11 +16,12 @@ import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.
 import com.dereekb.gae.extras.gen.app.config.project.app.context.shared.AppModelBeansConfigurationWriterUtility;
 import com.dereekb.gae.extras.gen.utility.GenFile;
 import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
-import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanConstructorBuilder;
+import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLListBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLMapBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
+import com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask;
 import com.dereekb.gae.model.crud.task.impl.task.ScheduleCreateReviewTask;
 import com.dereekb.gae.model.crud.task.impl.task.ScheduleUpdateReviewTask;
 import com.dereekb.gae.model.extension.links.service.impl.LinkServiceImpl;
@@ -28,6 +29,7 @@ import com.dereekb.gae.model.extension.links.system.modification.utility.LinkMod
 import com.dereekb.gae.model.extension.search.query.service.impl.ModelQueryServiceImpl;
 import com.dereekb.gae.server.datastore.models.keys.ModelKeyType;
 import com.dereekb.gae.server.datastore.models.keys.conversion.impl.TypeModelKeyConverterImpl;
+import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntityKeyEnforcement;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseEntityDefinitionImpl;
 import com.dereekb.gae.server.datastore.objectify.query.impl.TaskedObjectifyQueryRequestLimitedBuilderInitializer;
 import com.dereekb.gae.server.datastore.task.impl.IterableSetterTaskImpl;
@@ -165,21 +167,11 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 	public GenFolderImpl makeModelClientConfiguration(LocalModelConfiguration modelConfig) {
 		GenFolderImpl folder = super.makeModelClientConfiguration(modelConfig);
 
-		if (modelConfig.isInternalModelOnly() == false) {
-			// TODO: If internal model usage changes from
-			// "isReadOnlyInternalModel" design then will need to add these
-			// configuration
-			// generators back.
+		// Crud
+		folder.addFile(new CrudConfigurationGenerator(modelConfig).generateConfigurationFile());
 
-			if (modelConfig.getCrudsConfiguration().hasCrudService()) {
-
-				// Crud
-				folder.addFile(new CrudConfigurationGenerator(modelConfig).generateConfigurationFile());
-			}
-
-			// Extensions
-			folder.addFolder(this.makeModelExtensionsConfigurationsFolder(modelConfig));
-		}
+		// Extensions
+		folder.addFolder(this.makeModelExtensionsConfigurationsFolder(modelConfig));
 
 		return folder;
 	}
@@ -198,9 +190,17 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		        .beanClass(modelConfig.getModelQueryInitializerClass());
 
 		// Entry
-		builder.bean(modelConfig.getModelObjectifyEntryBeanId()).beanClass(ObjectifyDatabaseEntityDefinitionImpl.class)
+		SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> entryBeanBuilder = builder
+		        .bean(modelConfig.getModelObjectifyEntryBeanId()).beanClass(ObjectifyDatabaseEntityDefinitionImpl.class)
 		        .c().ref(modelConfig.getModelTypeBeanId()).ref(modelConfig.getModelClassBeanId())
-		        .ref(modelConfig.getModelIdTypeBeanId()).ref(modelConfig.getModelQueryInitializerBeanId());
+		        .ref(modelConfig.getModelIdTypeBeanId()).ref(modelConfig.getModelQueryInitializerBeanId()).up();
+
+		ObjectifyDatabaseEntityKeyEnforcement keyEnforcement = modelConfig.getKeyEnforcement();
+
+		if (keyEnforcement != ObjectifyDatabaseEntityKeyEnforcement.DEFAULT) {
+			// Set key enforcement if necessary
+			entryBeanBuilder.property("keyEnforcement").value(keyEnforcement.toString());
+		}
 
 		// Registry
 		builder.bean(modelConfig.getModelRegistryId())
@@ -212,10 +212,12 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 		builder.comment("Configured Aliases");
 		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelGetterBeanId());
 
+		// Still available if internal model
+		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelStorerBeanId());
+		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelUpdaterBeanId());
+		builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelDeleterBeanId());
+
 		if (modelConfig.isInternalModelOnly() == false) {
-			builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelStorerBeanId());
-			builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelUpdaterBeanId());
-			builder.alias(modelConfig.getModelRegistryId(), modelConfig.getModelDeleterBeanId());
 
 			// TODO: Update configuration if internal model is not read-only.
 
@@ -229,6 +231,14 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			builder.bean(modelConfig.getModelScheduleUpdateReviewBeanId()).beanClass(ScheduleUpdateReviewTask.class).c()
 			        .ref(modelConfig.getModelTypeBeanId()).ref(getAppConfig().getAppBeans().getTaskSchedulerId());
 
+			builder.comment("Delete Task");
+
+			// TODO: Add configuration to not add the schedule delete task.
+
+			builder.bean(modelConfig.getModelScheduleDeleteBeanId()).beanClass(ScheduleDeleteTask.class).c()
+			        .ref(modelConfig.getModelTypeBeanId())
+			        .ref(this.getAppConfig().getAppBeans().getTaskSchedulerId());
+
 			builder.comment("Setter Task");
 			builder.bean(modelConfig.getModelSetterTaskBeanId()).beanClass(IterableSetterTaskImpl.class).c()
 			        .ref(modelConfig.getModelRegistryId());
@@ -238,13 +248,17 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			builder.alias(modelConfig.getModelSetterTaskBeanId(), modelConfig.getModelBeanPrefix() + "DeleterTask");
 
 			builder.comment("Import");
-			builder.imp("/crud.xml");
 			builder.imp("/extensions/data.xml");
 			builder.imp("/extensions/link.xml");
 			builder.imp("/extensions/generation.xml");
 			builder.imp("/extensions/search.xml");
-			builder.imp("/extensions/security.xml");
+		} else {
+			builder.comment("Import");
 		}
+
+		// Crud and Security always generated
+		builder.imp("/crud.xml");
+		builder.imp("/extensions/security.xml");
 
 		return builder;
 	}
@@ -328,18 +342,24 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			builder.comment("Query Services");
 
 			String queryInitializerId = this.modelConfig.getModelQueryInitializerBeanId();
-			String securedQueryInitializerId = "secured" + StringUtility.firstLetterUpperCase(queryInitializerId);
+			String securedQueryInitializerId = this.modelConfig.getSecuredModelQueryInitializerBeanId();
+			String securedQueryInitializerDelegateId = this.modelConfig.getSecuredModelQueryInitializerDelegateBeanId();
 
 			builder.bean(this.modelConfig.getModelQueryServiceId()).beanClass(ModelQueryServiceImpl.class).c()
 			        .ref(this.modelConfig.getModelRegistryId()).ref(securedQueryInitializerId);
 
-			SpringBeansXMLBeanConstructorBuilder<?> securedLoginQueryInitializer = builder
-			        .bean(securedQueryInitializerId)
-			        .beanClass(TaskedObjectifyQueryRequestLimitedBuilderInitializer.class).c().ref(queryInitializerId);
+			builder.bean(securedQueryInitializerId)
+			        .beanClass(TaskedObjectifyQueryRequestLimitedBuilderInitializer.class).c().ref(queryInitializerId)
+			        .ref(securedQueryInitializerDelegateId);
 
 			LocalModelContextConfigurer configuration = this.modelConfig.getCustomModelContextConfigurer();
 			configuration.configureSecuredQueryInitializer(this.getAppConfig(), this.modelConfig,
-			        securedLoginQueryInitializer);
+			        securedQueryInitializerDelegateId, builder);
+
+			if (configuration.hasSearchComponents()) {
+				builder.comment("Search");
+				configuration.configureSearchComponents(this.getAppConfig(), this.modelConfig, builder);
+			}
 
 			builder.comment("Security");
 			if (this.modelConfig.getModelOwnedModelQuerySecurityDelegateClass() != null) {
@@ -392,10 +412,14 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 	public GenFolderImpl makeModelExtensionsConfigurationsFolder(LocalModelConfiguration modelConfig) {
 		GenFolderImpl folder = new GenFolderImpl("extensions");
 
-		folder.addFile(new DataExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
-		folder.addFile(new GenerationExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
-		folder.addFile(new LinkExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
-		folder.addFile(new SearchExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
+		if (modelConfig.isInternalModelOnly() == false) {
+			folder.addFile(new DataExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
+			folder.addFile(new GenerationExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
+			folder.addFile(new LinkExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
+			folder.addFile(new SearchExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
+		}
+
+		// Always add security
 		folder.addFile(new SecurityExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
 
 		return folder;

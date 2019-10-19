@@ -11,7 +11,7 @@ import com.dereekb.gae.utilities.collections.map.MapUtility;
 
 /**
  * Utility used with a {@link Getter} instance.
- * 
+ *
  * @author dereekb
  *
  * @param <T>
@@ -42,7 +42,6 @@ public class GetterUtility<T extends UniqueModel> {
 		Map<ModelKey, T> map = ModelKey.makeModelKeyMap(entities);
 		Set<ModelKey> existing = this.getter.getExisting(map.keySet());
 		return MapUtility.getValuesForKeys(map, existing);
-
 	}
 
 }

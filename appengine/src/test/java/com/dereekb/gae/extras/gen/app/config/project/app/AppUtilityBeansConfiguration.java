@@ -32,5 +32,9 @@ public interface AppUtilityBeansConfiguration {
 
 	public String getAllowAllSecurityModelQueryTaskBeanId();
 
+	// MARK: Search
+	public String getModelSearchServiceBeanId();
+
+	public String getSearchServiceBeanId();
 
 }

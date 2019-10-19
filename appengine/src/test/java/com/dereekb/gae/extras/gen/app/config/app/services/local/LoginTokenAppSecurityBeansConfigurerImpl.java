@@ -18,6 +18,7 @@ import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderIm
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl;
 import com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl;
+import com.dereekb.gae.test.server.auth.impl.TestRemoteLoginSystemLoginTokenContextImpl;
 
 /**
  * Default {@link AppSecurityBeansConfigurer} implementation.
@@ -27,6 +28,9 @@ import com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthen
  */
 public class LoginTokenAppSecurityBeansConfigurerImpl
         implements AppSecurityBeansConfigurer {
+
+	public static final String TEST_LOGIN_TOKEN_BUILDER_LOGIN_GETTER_BEAN_ID = "testLoginTokenBuilderLoginGetter";
+	public static final String TEST_LOGIN_TOKEN_SIGNATURE_FACTORY_BEAN_ID = "testLoginTokenSignatureFactory";
 
 	private String loginTokenSignatureFactoryBeanId = "loginTokenSignatureFactory";
 	private String refreshTokenSignatureFactoryBeanId = "refreshTokenSignatureFactory";
@@ -41,6 +45,7 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 	private Class<?> loginTokenUserDetailsBuilderClass = LoginTokenUserDetailsBuilderImpl.class;
 
 	private Class<?> loginSecurityModelQueryTaskOverrideClass = LoginSecurityModelQueryTaskOverrideImpl.class;
+	private Class<?> testRemoteLoginSystemLoginTokenContextClass = TestRemoteLoginSystemLoginTokenContextImpl.class;
 
 	private SystemLoginTokenFactoryConfigurer systemLoginTokenFactoryConfigurer;
 
@@ -60,6 +65,7 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		this.setLoginTokenAuthenticationProviderClass(LoginTokenAuthenticationProviderImpl.class);
 		this.setLoginTokenUserDetailsBuilderClass(LoginTokenUserDetailsBuilderImpl.class);
 		this.setLoginSecurityModelQueryTaskOverrideClass(LoginSecurityModelQueryTaskOverrideImpl.class);
+		this.setTestRemoteLoginSystemLoginTokenContextClass(TestRemoteLoginSystemLoginTokenContextImpl.class);
 	}
 
 	@Override
@@ -181,6 +187,18 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		this.systemLoginTokenFactoryConfigurer = systemLoginTokenFactoryConfigurer;
 	}
 
+	public Class<?> getTestRemoteLoginSystemLoginTokenContextClass() {
+		return this.testRemoteLoginSystemLoginTokenContextClass;
+	}
+
+	public void setTestRemoteLoginSystemLoginTokenContextClass(Class<?> testRemoteLoginSystemLoginTokenContextClass) {
+		if (testRemoteLoginSystemLoginTokenContextClass == null) {
+			throw new IllegalArgumentException("testRemoteLoginSystemLoginTokenContextClass cannot be null.");
+		}
+
+		this.testRemoteLoginSystemLoginTokenContextClass = testRemoteLoginSystemLoginTokenContextClass;
+	}
+
 	// MARK: AppSecurityBeansConfigurer
 	@Override
 	public Class<?> getLoginSecurityModelQueryTaskOverrideClass() {
@@ -197,15 +215,59 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 
 	@Override
 	public void configureTokenEncoderDecoder(AppConfiguration appConfig,
-	                                         SpringBeansXMLBeanBuilder<?> beanBuilder) {
+	                                         SpringBeansXMLBeanBuilder<?> beanBuilder,
+	                                         boolean forTests) {
+		String loginTokenSignatureFactoryBeanId = this.getLoginTokenSignatureFactoryBeanId(appConfig, forTests);
 		beanBuilder.beanClass(this.loginTokenEncoderDecoderClass).c().bean()
-		        .factoryBean(this.loginTokenSignatureFactoryBeanId).factoryMethod("make");
+		        .factoryBean(loginTokenSignatureFactoryBeanId).factoryMethod("make");
+	}
+
+	protected String getLoginTokenSignatureFactoryBeanId(AppConfiguration appConfig,
+	                                                     boolean forTests) {
+		String beanId;
+
+		if (this.shouldSetBeanForRemoteServerTests(forTests, appConfig)) {
+			beanId = TEST_LOGIN_TOKEN_SIGNATURE_FACTORY_BEAN_ID;
+		} else {
+			beanId = this.loginTokenSignatureFactoryBeanId;
+		}
+
+		return beanId;
 	}
 
 	@Override
 	public void configureTokenBuilder(AppConfiguration appConfig,
-	                                  SpringBeansXMLBeanBuilder<?> beanBuilder) {
-		beanBuilder.beanClass(this.loginTokenBuilderClass).c().ref("loginGetter");
+	                                  SpringBeansXMLBeanBuilder<?> beanBuilder,
+	                                  boolean forTests) {
+		String loginGetterBeanId = this.getTokenBuilderLoginGetterBeanId(appConfig, forTests);
+		beanBuilder.beanClass(this.loginTokenBuilderClass).c().ref(loginGetterBeanId);
+	}
+
+	protected String getTokenBuilderLoginGetterBeanId(AppConfiguration appConfig,
+	                                                  boolean forTests) {
+		String loginGetterBeanId;
+
+		if (this.shouldSetBeanForRemoteServerTests(forTests, appConfig)) {
+			loginGetterBeanId = TEST_LOGIN_TOKEN_BUILDER_LOGIN_GETTER_BEAN_ID;
+		} else {
+			loginGetterBeanId = "loginGetter";	// Login Server already has this
+			                                  	// available
+		}
+
+		return loginGetterBeanId;
+	}
+
+	/**
+	 * Whether or not the bean being used/set will be a special case for the
+	 * test server.
+	 *
+	 * @param forTests
+	 * @param appConfig
+	 * @return
+	 */
+	protected boolean shouldSetBeanForRemoteServerTests(boolean forTests,
+	                                                    AppConfiguration appConfig) {
+		return forTests && !appConfig.isLoginServer();
 	}
 
 	@Override
@@ -275,6 +337,13 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 			map.keyRefValueRefEntry(googleOAuthPointerTypeBeanId, googleOAuthServiceBeanId);
 		}
 
+	}
+
+	@Override
+	public void configureTestRemoteLoginSystemLoginTokenContext(AppConfiguration appConfig,
+	                                                            SpringBeansXMLBeanBuilder<SpringBeansXMLBuilder> loginTokenContextBuilder) {
+		loginTokenContextBuilder.beanClass(this.testRemoteLoginSystemLoginTokenContextClass).primary(false).c()
+		        .ref("testLoginTokenService");
 	}
 
 }

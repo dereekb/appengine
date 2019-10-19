@@ -7,8 +7,8 @@ import java.util.List;
 import com.dereekb.gae.model.crud.services.response.ModelServiceResponse;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.utilities.collections.pairs.ResultsPairState;
-import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.ResultPairState;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultPairImpl;
 
 /**
  * {@link ServiceResponseImpl} extension for
@@ -65,7 +65,7 @@ public class ModelServiceResponseImpl<T extends UniqueModel> extends ServiceResp
 	// MARK: Utility
 	/**
 	 * Generates a new {@link ServiceResponseImpl} using a set of
-	 * {@link ResultsPair} values.
+	 * {@link ResultPairImpl} values.
 	 *
 	 * The pairs are iterated over and are put into three lists used to
 	 * initialize the {@link ServiceResponseImpl}.
@@ -73,13 +73,13 @@ public class ModelServiceResponseImpl<T extends UniqueModel> extends ServiceResp
 	 * @param pairs
 	 * @return
 	 */
-	public static <T extends UniqueModel, P extends ResultsPair<ModelKey, T>> ModelServiceResponseImpl<T> responseForPairs(Iterable<P> pairs) {
+	public static <T extends UniqueModel, P extends ResultPairImpl<ModelKey, T>> ModelServiceResponseImpl<T> responseForPairs(Iterable<P> pairs) {
 		List<T> models = new ArrayList<T>();
 		List<ModelKey> filtered = new ArrayList<ModelKey>();
 		List<ModelKey> unavailable = new ArrayList<ModelKey>();
 
 		for (P pair : pairs) {
-			ResultsPairState state = pair.getState();
+			ResultPairState state = pair.getState();
 
 			switch (state) {
 				case REPLACED:

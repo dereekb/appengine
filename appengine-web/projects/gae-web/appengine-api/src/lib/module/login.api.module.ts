@@ -20,8 +20,8 @@ export class GaeLoginApiModuleService extends ApiModuleService { }
  */
 export class GaeLoginApiModuleConfiguration extends GaeApiModuleConfiguration {
 
-  public static make({ version = 'v1', name = 'login', types = ['app', 'login', 'loginpointer', 'loginkey'] }: ApiModuleConstructorConfiguration): GaeLoginApiModuleConfiguration {
-    const info = new GaeApiModuleInfo(version, name);
+  public static make({ version = 'v1', name = 'login', types = ['app', 'login', 'loginpointer', 'loginkey'], server = '' }: ApiModuleConstructorConfiguration): GaeLoginApiModuleConfiguration {
+    const info = new GaeApiModuleInfo(version, name, server);
     const typesConfig = new GaeApiModuleTypesConfiguration(types);
     return new GaeLoginApiModuleConfiguration(info, typesConfig);
   }
@@ -39,52 +39,6 @@ export function loginApiModuleRouteConfigurationFactory(moduleConfig: GaeLoginAp
   return moduleConfig.routeConfig;
 }
 
-export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, apiConfig: GaeLoginApiModuleConfiguration) {
-  const throwNoTokenError = false;
-  const skipWhenExpired = false;
-  const whitelistedDomains = [];
-
-  function makeRouteRegex(route: string, openEnd = true, addRoot = true) {
-    let prefix = '.*';
-
-    if (addRoot) {
-      prefix = prefix + apiConfig.routeConfig.root;
-    }
-
-    route = prefix + route;
-
-    // Escape all route slashes
-    route = route.replace(/\//g, '\\/');
-
-    if (openEnd) {
-      route = route + '.*';
-    }
-
-    return new RegExp(route, 'i');
-  }
-
-  const blacklistedRoutes = [
-    makeRouteRegex(OAuthLoginApiService.SERVICE_PATH),
-    makeRouteRegex(PublicLoginTokenApiService.SERVICE_PATH),
-  ];
-
-  // TODO: Add black/white list parameters using the module's info.
-
-  return {
-    tokenGetter: () => {
-      const obs = userLoginTokenService.getEncodedLoginToken().pipe(
-        catchError(() => of(null))
-      );
-
-      return obs.toPromise() as Promise<string | null>;
-    },
-    throwNoTokenError,
-    skipWhenExpired,
-    whitelistedDomains,
-    blacklistedRoutes
-  };
-}
-
 /**
  * Configuration for accessing the Login module.
  */
@@ -95,25 +49,11 @@ export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, 
 })
 export class GaeLoginApiModule {
 
-  static makeJwtModuleForRoot(): ModuleWithProviders {
-    return JwtModule.forRoot({
-      jwtOptionsProvider: {
-        provide: JWT_OPTIONS,
-        useFactory: jwtOptionsFactory,
-        deps: [UserLoginTokenService, GaeLoginApiModuleConfiguration]
-      }
-    });
-  }
-
-  static forApp(config: GaeLoginApiModuleConfiguration = GaeLoginApiModuleConfiguration.make({})): ModuleWithProviders {
+  static forApp(): ModuleWithProviders {
     return {
       ngModule: GaeLoginApiModule,
       providers: [
         // Configurations
-        {
-          provide: GaeLoginApiModuleConfiguration,
-          useValue: config
-        },
         {
           provide: LOGIN_API_ROUTE_CONFIGURATION_TOKEN,
           useExisting: GaeLoginApiModuleConfiguration
@@ -155,3 +95,73 @@ export class GaeLoginApiModule {
   }
 
 }
+
+// MARK: Configured JWT
+export class GaeJwtConfiguration {
+  whitelistedDomains?: string[];
+  blacklistedRoutes?: RegExp[];
+  constructor() { }
+}
+
+export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, apiConfig: GaeLoginApiModuleConfiguration, gaeJwtConfiguration: GaeJwtConfiguration) {
+  const throwNoTokenError = false;
+  const skipWhenExpired = false;
+  const whitelistedDomains = gaeJwtConfiguration.whitelistedDomains || [];
+
+  function makeRouteRegex(route: string, openEnd = true, addRoot = true) {
+    let prefix = '.*';
+
+    if (addRoot) {
+      prefix = prefix + apiConfig.routeConfig.root;
+    }
+
+    route = prefix + route;
+
+    // Escape all route slashes
+    route = route.replace(/\//g, '\\/');
+
+    if (openEnd) {
+      route = route + '.*';
+    }
+
+    return new RegExp(route, 'i');
+  }
+
+  const blacklistedRoutes = [
+    makeRouteRegex(OAuthLoginApiService.SERVICE_PATH),
+    makeRouteRegex(PublicLoginTokenApiService.SERVICE_PATH),
+  ].concat(gaeJwtConfiguration.blacklistedRoutes || []);
+
+  // TODO: Add black/white list parameters using the module's info.
+
+  return {
+    tokenGetter: () => {
+      const obs = userLoginTokenService.getEncodedLoginToken().pipe(
+        catchError(() => of(null))
+      );
+
+      return obs.toPromise() as Promise<string | null>;
+    },
+    throwNoTokenError,
+    skipWhenExpired,
+    whitelistedDomains,
+    blacklistedRoutes
+  };
+}
+
+/**
+ * Convenience module with default configuration for JwtModule for GaeLoginApi.
+ */
+@NgModule({
+  imports: [
+    GaeTokenModule,
+    JwtModule.forRoot({
+      jwtOptionsProvider: {
+        provide: JWT_OPTIONS,
+        useFactory: jwtOptionsFactory,
+        deps: [UserLoginTokenService, GaeLoginApiModuleConfiguration, GaeJwtConfiguration]
+      }
+    }),
+  ]
+})
+export class GaeLoginApiConfiguredJwtModule { }

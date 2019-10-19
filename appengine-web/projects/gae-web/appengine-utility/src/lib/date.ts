@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { SortDirection } from './collection';
 import { TimedCache } from './cache';
-import { ValueUtility } from './value';
+import { OneOrMore, ValueUtility } from './value';
 
 export type ISO8601DateString = string;
 export type DateInput = DateTime | Date | undefined;
@@ -171,7 +171,22 @@ const TIME_RELATION_STATES = [TimeRelationState.Before, TimeRelationState.Now, T
 
 export class DateTimeUtility {
 
-  public static sortDateTimeFn<T>(getTime: (x: T) => FullDateInput, direction: SortDirection = SortDirection.Descending) {
+  public static sortDatedModels<T extends DatedModel>(models: OneOrMore<T>, direction: SortDirection = SortDirection.Descending, getTime?: (x: T) => FullDateInput): T[] {
+    const modelsArray: T[] = ValueUtility.normalizeArrayCopy(models);
+    return modelsArray.sort(DateTimeUtility.sortDatedModelsFn(direction, getTime));
+  }
+
+  public static sortDatedModelsFn<T extends DatedModel>(direction: SortDirection = SortDirection.Descending, getTime: (x: T) => FullDateInput = (x) => x.date): (x: T, y: T) => number {
+    const result = this.sortModelsByDateFn(direction, getTime);
+    return result;
+  }
+
+  public static sortModelsByDateFn<T>(direction: SortDirection = SortDirection.Descending, getTime: (x: T) => FullDateInput): (x: T, y: T) => number {
+    const result = this.sortDateTimeFn(getTime, direction);
+    return result;
+  }
+
+  public static sortDateTimeFn<T>(getTime: (x: T) => FullDateInput, direction: SortDirection = SortDirection.Descending): (x: T, y: T) => number {
     const sort: (x: DateTime, y: DateTime) => number = (direction === SortDirection.Descending)
       ? ((x, y) => y.diff(x).milliseconds)
       : ((x, y) => x.diff(y).milliseconds);

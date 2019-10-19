@@ -10,7 +10,8 @@ import com.dereekb.gae.utilities.model.source.Source;
  * @author dereekb
  *
  */
-public class SourceFactoryImpl<T> implements Factory<T> {
+public class SourceFactoryImpl<T>
+        implements Factory<T> {
 
 	private Source<T> source;
 
@@ -35,7 +36,11 @@ public class SourceFactoryImpl<T> implements Factory<T> {
 	// MARK: Factory
 	@Override
 	public T make() throws FactoryMakeFailureException {
-		return this.source.loadObject();
+		try {
+			return this.source.loadObject();
+		} catch (RuntimeException e) {
+			throw new FactoryMakeFailureException(e);
+		}
 	}
 
 	@Override

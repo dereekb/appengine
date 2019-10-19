@@ -21,7 +21,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.utilities.collections.SingleItem;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
-import com.dereekb.gae.utilities.collections.pairs.impl.ResultsPair;
+import com.dereekb.gae.utilities.collections.pairs.impl.ResultPairImpl;
 import com.dereekb.gae.utilities.filters.FilterResult;
 import com.dereekb.gae.utilities.task.IterableTask;
 
@@ -123,7 +123,7 @@ public class ReadServiceImpl<T extends UniqueModel>
 			errorKeys = Collections.emptyList();
 			models = ReadPair.getObjects(pairs);
 		} else {
-			HashMapWithList<FilterResult, ReadPair<T>> results = ResultsPair.filterSuccessfulPairs(pairs);
+			HashMapWithList<FilterResult, ReadPair<T>> results = ResultPairImpl.filterSuccessfulPairs(pairs);
 
 			List<ReadPair<T>> errorPairs = results.valuesForKey(FilterResult.FAIL);
 			errorKeys = ReadPair.getKeys(errorPairs);

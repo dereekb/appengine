@@ -13,8 +13,8 @@ export class GaeEventApiModuleService extends ApiModuleService { }
  */
 export class GaeEventApiModuleConfiguration extends GaeApiModuleConfiguration {
 
-  public static make({ version = 'v1', name = 'event', types = []}: ApiModuleConstructorConfiguration): GaeEventApiModuleConfiguration {
-    const info = new GaeApiModuleInfo(version, name);
+  public static make({ version = 'v1', name = 'event', types = [], server = '' }: ApiModuleConstructorConfiguration): GaeEventApiModuleConfiguration {
+    const info = new GaeApiModuleInfo(version, name, server);
     const typesConfig = new GaeApiModuleTypesConfiguration(types);
     return new GaeEventApiModuleConfiguration(info, typesConfig);
   }
@@ -34,15 +34,11 @@ export function eventApiModuleServiceFactory(moduleConfig: GaeEventApiModuleConf
 @NgModule()
 export class GaeEventApiModule {
 
-  static forApp(config: GaeEventApiModuleConfiguration = GaeEventApiModuleConfiguration.make({})): ModuleWithProviders {
+  static forApp(): ModuleWithProviders {
     return {
       ngModule: GaeEventApiModule,
       providers: [
         // Configurations
-        {
-          provide: GaeEventApiModuleConfiguration,
-          useValue: config
-        },
         {
           provide: EVENT_API_ROUTE_CONFIGURATION_TOKEN,
           useExisting: GaeEventApiModuleConfiguration

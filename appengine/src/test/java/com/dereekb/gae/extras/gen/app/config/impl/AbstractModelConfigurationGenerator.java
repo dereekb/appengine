@@ -1,6 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 
@@ -556,6 +557,16 @@ public abstract class AbstractModelConfigurationGenerator extends AbstractConfig
 				}
 			}
 		}
+
+		configs.sort(new Comparator<AppModelConfiguration>() {
+
+			@Override
+			public int compare(AppModelConfiguration o1,
+			                   AppModelConfiguration o2) {
+				return o1.getModelType().compareToIgnoreCase(o2.getModelType());
+			}
+
+		});
 
 		return configs;
 	}

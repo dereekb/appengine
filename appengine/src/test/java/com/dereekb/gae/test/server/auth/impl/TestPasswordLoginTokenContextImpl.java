@@ -22,28 +22,23 @@ import com.dereekb.gae.web.api.auth.response.LoginTokenPair;
  * @author dereekb
  *
  */
-public class TestPasswordLoginTokenContextImpl extends AbstractTestLoginTokenContextImpl
+public class TestPasswordLoginTokenContextImpl extends AbstractLoginPointerTestLoginTokenContextImpl
         implements TestLoginTokenContext {
-
-	private static String ANONYMOUS_LOGIN_TOKEN_KEY = "LOGIN-TOKEN";
 
 	private PasswordLoginController passwordController;
 	private LoginRegisterService registerService;
-	private LoginTokenService<LoginToken> service;
 
 	public ObjectifyRegistry<LoginPointer> loginPointerRegistry;
 	public ObjectifyRegistry<Login> loginRegistry;
-
-	private LoginPointer pointer = null;
 
 	public TestPasswordLoginTokenContextImpl(PasswordLoginController passwordController,
 	        LoginRegisterService registerService,
 	        LoginTokenService<LoginToken> service,
 	        ObjectifyRegistry<LoginPointer> loginPointerRegistry,
 	        ObjectifyRegistry<Login> loginRegistry) {
+		super(service);
 		this.passwordController = passwordController;
 		this.registerService = registerService;
-		this.service = service;
 		this.loginPointerRegistry = loginPointerRegistry;
 		this.loginRegistry = loginRegistry;
 	}
@@ -64,14 +59,6 @@ public class TestPasswordLoginTokenContextImpl extends AbstractTestLoginTokenCon
 		this.registerService = registerService;
 	}
 
-	public LoginTokenService<LoginToken> getService() {
-		return this.service;
-	}
-
-	public void setService(LoginTokenService<LoginToken> service) {
-		this.service = service;
-	}
-
 	public ObjectifyRegistry<LoginPointer> getLoginPointerRegistry() {
 		return this.loginPointerRegistry;
 	}
@@ -88,51 +75,7 @@ public class TestPasswordLoginTokenContextImpl extends AbstractTestLoginTokenCon
 		this.loginRegistry = loginRegistry;
 	}
 
-	public LoginPointer getPointer() {
-		return this.pointer;
-	}
-
-	public void setPointer(LoginPointer pointer) {
-		this.pointer = pointer;
-	}
-
 	// MARK: TestLoginTokenContext
-	@Override
-	public String getToken() {
-		String token = null;
-		LoginToken loginToken = this.getLoginToken();
-
-		if (loginToken != null) {
-			token = this.service.encodeLoginToken(loginToken);
-		}
-
-		return token;
-	}
-
-	@Override
-	public LoginToken getLoginToken() {
-		LoginToken token = null;
-
-		if (this.pointer != null) {
-			token = this.service.buildLoginToken(this.pointer, this.isRefreshAllowed());
-		} else {
-			this.service.buildAnonymousLoginToken(ANONYMOUS_LOGIN_TOKEN_KEY);
-		}
-
-		return token;
-	}
-
-	@Override
-	public String generateAnonymousToken() {
-		return this.service.encodeAnonymousLoginToken("ANONYMOUS");
-	}
-
-	@Override
-	public void generateAnonymousLogin() {
-		this.clearLogin();
-		this.setDefaultToAnonymous(true);
-	}
-
 	@Override
 	public TestLoginTokenPair generateLogin(String username,
 	                                        Long roles) {
@@ -160,42 +103,10 @@ public class TestPasswordLoginTokenContextImpl extends AbstractTestLoginTokenCon
 	}
 
 	@Override
-	public void clearLogin() {
-		this.pointer = null;
-		this.setDefaultToAnonymous(false);
-	}
-
-	@Override
 	public void setLogin(LoginToken token) {
 		String pointerId = token.getLoginPointerId();
 		LoginPointer pointer = this.loginPointerRegistry.get(new ModelKey(pointerId));
 		this.setLogin(pointer);
-	}
-
-	@Override
-	public void setLogin(LoginPointer pointer) {
-		this.pointer = pointer;
-	}
-
-	/**
-	 * {@link TestLoginTokenPair} implementation.
-	 *
-	 * @author dereekb
-	 *
-	 */
-	private class TestLoginTokenPairImpl extends AbstractTestLoginTokenPairImpl
-	        implements TestLoginTokenPair {
-
-		public TestLoginTokenPairImpl(Login login, LoginPointer loginPointer) {
-			super(login, loginPointer);
-		}
-
-		@Override
-		public String makeNewToken() {
-			return TestPasswordLoginTokenContextImpl.this.service.encodeLoginToken(this.getLoginPointer(),
-			        TestPasswordLoginTokenContextImpl.this.isRefreshAllowed());
-		}
-
 	}
 
 }

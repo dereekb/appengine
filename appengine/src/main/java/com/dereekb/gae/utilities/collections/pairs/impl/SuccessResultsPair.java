@@ -1,7 +1,7 @@
 package com.dereekb.gae.utilities.collections.pairs.impl;
 
 import com.dereekb.gae.utilities.collections.pairs.MutableSuccessPair;
-import com.dereekb.gae.utilities.collections.pairs.ResultsPairState;
+import com.dereekb.gae.utilities.collections.pairs.ResultPairState;
 import com.dereekb.gae.utilities.collections.pairs.SuccessPair;
 import com.dereekb.gae.utilities.misc.success.SuccessModel;
 
@@ -13,7 +13,7 @@ import com.dereekb.gae.utilities.misc.success.SuccessModel;
  * @param <T>
  *            model type
  */
-public class SuccessResultsPair<T> extends ResultsPair<T, Boolean> implements SuccessPair<T> {
+public class SuccessResultsPair<T> extends ResultPairImpl<T, Boolean> implements SuccessPair<T> {
 
 	public SuccessResultsPair(T source) {
 		super(source);
@@ -30,22 +30,22 @@ public class SuccessResultsPair<T> extends ResultsPair<T, Boolean> implements Su
 	}
 
 	@Override
-	public ResultsPairState getState() {
+	public ResultPairState getState() {
 		if (this.hasFailed()) {
-			return ResultsPairState.FAILURE;
+			return ResultPairState.FAILURE;
 		} else {
 			return super.getState();
 		}
 	}
 
 	@Override
-	protected ResultsPairState recalculateState(Boolean newValue, Boolean oldValue) {
+	protected ResultPairState recalculateState(Boolean newValue, Boolean oldValue) {
 		if (newValue == null || oldValue == null) {
 			return super.recalculateState(newValue, oldValue);
 		} else if (newValue == true) {
-			return ResultsPairState.SUCCESS;
+			return ResultPairState.SUCCESS;
 		} else {
-			return ResultsPairState.FAILURE;
+			return ResultPairState.FAILURE;
 		}
 	}
 

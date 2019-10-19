@@ -93,6 +93,14 @@ export class ValueUtility {
     return object;
   }
 
+  static lastValueInArray<T>(array: T[] | undefined): T | undefined {
+    if (array) {
+      return array[array.length - 1];
+    } else {
+      return undefined;
+    }
+  }
+
   static batch<T>(array: T[], batchSize: number): T[][] {
     array = [].concat(array);
     const batch = [];
@@ -545,7 +553,7 @@ export class ValueUtility {
    * @param array Array to filter on.
    * @param keyFn Property key function.
    */
-  static getUniqueValues<T>(array: T[], keyFn: MakePropertyKeyFunction<T> = ((x: any) => x as any)): object {
+  static getUniqueValues<T>(array: T[], keyFn: MakePropertyKeyFunction<T> = ((x: any) => x as any)): T[] {
     const map = {};
 
     array.forEach((element) => {

@@ -4,7 +4,7 @@ import { catchError, map } from 'rxjs/operators';
 import { DateTime } from 'luxon';
 
 import {
-  StorageAccessor, AbstractStorageAccessor, StorageObject, DataDoesNotExistError, StorageUtility, ISO8601DateString, DateTimeUtility
+  StorageAccessor, AbstractStorageAccessor, StorageObject, DataDoesNotExistError, ISO8601DateString, DateTimeUtility, MemoryStorageObject
 } from '@gae-web/appengine-utility';
 
 export class StoredTokenUnavailableError extends DataDoesNotExistError {
@@ -178,11 +178,7 @@ export class StoredTokenStorageAccessor extends AbstractStorageAccessor<StoredTo
 
   public static readonly DEFAULT_PREFIX = 'TOKEN_';
 
-  public static getLocalStorageOrBackupAccessor(): StoredTokenStorageAccessor {
-    return new StoredTokenStorageAccessor();
-  }
-
-  constructor(storageObject: StorageObject = StorageUtility.getAvailableLocalStorage(), prefix: string = StoredTokenStorageAccessor.DEFAULT_PREFIX) {
+  constructor(storageObject: StorageObject = new MemoryStorageObject(), prefix: string = StoredTokenStorageAccessor.DEFAULT_PREFIX) {
     super(storageObject, prefix);
   }
 

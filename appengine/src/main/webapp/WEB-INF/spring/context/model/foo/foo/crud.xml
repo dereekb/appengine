@@ -53,17 +53,15 @@
   <!--Delete Service-->
   <bean class="com.dereekb.gae.model.crud.services.components.impl.DeleteServiceImpl" id="fooDeleteService">
     <constructor-arg index="0" ref="fooReadService"/>
-    <constructor-arg index="1" ref="fooDeleteTask"/>
-  </bean>
-  <!--Delete Task-->
-  <alias alias="fooDeleteTask" name="fooScheduleDeleteTask"/>
-  <bean class="com.dereekb.gae.model.crud.task.impl.delete.ScheduleDeleteTask" id="fooScheduleDeleteTask">
-    <constructor-arg index="0" ref="fooType"/>
-    <constructor-arg index="1" ref="taskScheduler"/>
-    <property name="deleteFilter">
-      <bean factory-bean="fooSecurityContextServiceEntry" factory-method="makeRoleFilter">
-        <constructor-arg index="0" ref="crudDeleteModelRole"/>
+    <constructor-arg index="1">
+      <bean class="com.dereekb.gae.model.crud.task.impl.filtered.FilteredScheduleDeleteTask">
+        <constructor-arg index="0" ref="fooScheduleDelete"/>
+        <constructor-arg index="1">
+          <bean factory-bean="fooSecurityContextServiceEntry" factory-method="makeRoleFilter">
+            <constructor-arg index="0" ref="crudDeleteModelRole"/>
+          </bean>
+        </constructor-arg>
       </bean>
-    </property>
+    </constructor-arg>
   </bean>
 </beans>

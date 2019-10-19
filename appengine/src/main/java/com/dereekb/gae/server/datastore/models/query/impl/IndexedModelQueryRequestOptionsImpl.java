@@ -2,7 +2,7 @@ package com.dereekb.gae.server.datastore.models.query.impl;
 
 import com.dereekb.gae.server.datastore.models.query.IndexedModelQueryRequestOptions;
 import com.dereekb.gae.utilities.collections.iterator.cursor.ResultsCursor;
-import com.dereekb.gae.utilities.model.search.request.SearchOptions;
+import com.dereekb.gae.utilities.model.search.request.ParameterSearchOptions;
 import com.dereekb.gae.utilities.model.search.request.impl.SearchOptionsImpl;
 
 /**
@@ -26,7 +26,7 @@ public class IndexedModelQueryRequestOptionsImpl extends SearchOptionsImpl
 		super(options);
 	}
 
-	public IndexedModelQueryRequestOptionsImpl(SearchOptions options) {
+	public IndexedModelQueryRequestOptionsImpl(ParameterSearchOptions options) {
 		super(options);
 	}
 

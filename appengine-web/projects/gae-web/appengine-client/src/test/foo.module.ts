@@ -10,7 +10,7 @@ import { GaeClientModule } from '../lib/client.module';
 import { ModelServiceWrapper, ModelServiceWrapperSet, ModelCreateService } from '../lib/service/model.service';
 import { UniqueModel, SourceFactory } from '@gae-web/appengine-utility';
 import { ModelReadService, ModelDeleteService, ModelUpdateService } from '../lib/service/crud.service';
-import { ModelQueryService } from '../lib/service/query.service';
+import { ModelQueryService } from '../lib/service/search.service';
 
 export function fooServiceFactory(make: (config: any) => any) {
   return (s: TestFooSerializer, h: HttpClient, r: ApiModuleRouteConfiguration) => {

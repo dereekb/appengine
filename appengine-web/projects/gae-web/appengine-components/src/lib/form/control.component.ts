@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 
-import { FormGroup } from '@angular/forms';
+import { FormGroup, AbstractControl } from '@angular/forms';
 
 import { FormErrors, FormGroupComponent } from './form.component';
 import { ThemePalette } from '@angular/material/core';
@@ -62,6 +62,9 @@ export abstract class AbstractFormControlComponent {
     @Input()
     public hint: string;
 
+    @Input()
+    public ariaLabel: string;
+
     private _placeholder?: string;
 
     @Input()
@@ -99,6 +102,10 @@ export abstract class AbstractExtendedFormControlComponent extends AbstractFormC
 
     ngOnDestroy() {
         this._errorSub.destroy();
+    }
+
+    public get formControl(): AbstractControl {
+        return this.form.get(this.field);
     }
 
     public get hasError(): boolean {
