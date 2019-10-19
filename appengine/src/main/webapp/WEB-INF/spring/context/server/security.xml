@@ -231,11 +231,11 @@
   </bean>
   <!--Secure Model Types-->
   <util:list id="secureModelTypes">
+    <ref bean="loginKeyType"/>
+    <ref bean="fooType"/>
+    <ref bean="appType"/>
     <ref bean="appHookType"/>
     <ref bean="loginPointerType"/>
-    <ref bean="loginKeyType"/>
-    <ref bean="appType"/>
-    <ref bean="fooType"/>
     <ref bean="loginType"/>
   </util:list>
   <!--Exception Handler-->

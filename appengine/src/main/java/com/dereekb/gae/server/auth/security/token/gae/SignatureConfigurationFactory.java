@@ -40,4 +40,8 @@ public class SignatureConfigurationFactory extends GoogleAppEngineContextualFact
 		});
 	}
 
+	public void setProductionSecret(String secret) {
+		this.setProductionSingleton(new SignatureConfigurationImpl(secret));
+	}
+
 }

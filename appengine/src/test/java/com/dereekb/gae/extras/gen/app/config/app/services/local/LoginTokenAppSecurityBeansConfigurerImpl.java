@@ -230,8 +230,8 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		String loginTokenSecret = EnvStringUtility.readProdEnv(PROD_LOGIN_TOKEN_SIGNATURE_SECRET_ENV_VAR, SIGNATURE_SECRET_NOT_SET_VALUE);
 		String refreshTokenSecret = EnvStringUtility.readProdEnv(PROD_REFRESH_TOKEN_SIGNATURE_SECRET_ENV_VAR, SIGNATURE_SECRET_NOT_SET_VALUE);
 
-		builder.bean(loginTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).property("productionSingleton").value(loginTokenSecret);
-		builder.bean(refreshTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).property("productionSingleton").value(refreshTokenSecret);
+		builder.bean(loginTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).property("productionSecret").value(loginTokenSecret);
+		builder.bean(refreshTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).property("productionSecret").value(refreshTokenSecret);
 	}
 
 	@Override
