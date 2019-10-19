@@ -64,6 +64,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticato
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.data.StringUtility;
+import com.dereekb.gae.utilities.misc.env.EnvStringUtility;
 import com.dereekb.gae.utilities.web.matcher.MultiRequestMatcher;
 import com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher;
 import com.dereekb.gae.utilities.web.matcher.MultiTypeMapAntRequestMatcher;
@@ -476,8 +477,11 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			List<LocalModelConfiguration> secureLocalModelConfigs = this.loadSecureLocalModelConfigs();
 			boolean hasSecureLocalModelConfigs = (secureLocalModelConfigs.isEmpty() == false);
 
-			builder.comment("No HTTP Security For Google App Engine Test Server");
-			builder.httpSecurity().pattern("/_ah/**").security("none");
+			// Not necessary in production.
+			if (!EnvStringUtility.isProduction()) {
+				builder.comment("No HTTP Security For Google App Engine Test Server");
+				builder.httpSecurity().pattern("/_ah/**").security("none");
+			}
 
 			builder.comment("Allow anyone to initialize the server via GET.");
 			builder.httpSecurity().pattern(serviceApiPath + "/server/initialize").security("none");
@@ -507,9 +511,11 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				        .access(HasAnyRoleConfig.not("ROLE_LOGINTYPE_API", "ROLE_ANON"));
 			}
 
-			// TODO: Add debug only building for a non-production environment.
-			http.getRawXMLBuilder().c("Allow any logged in user to debug the server");
-			http.intercept(serviceApiPath + "/debug/**", RoleConfigImpl.make("permitAll"));
+			// Only allow debug if we're not in production.
+			if (!EnvStringUtility.isProduction()) {
+				http.getRawXMLBuilder().c("Allow any logged in user to debug the server");
+				http.intercept(serviceApiPath + "/debug/**", RoleConfigImpl.make("permitAll"));
+			}
 
 			if (hasSecureLocalModelConfigs) {
 				http.getRawXMLBuilder().c("Secured Owned Model Patterns");
