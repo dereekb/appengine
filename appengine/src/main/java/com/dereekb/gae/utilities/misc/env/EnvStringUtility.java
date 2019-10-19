@@ -12,7 +12,7 @@ import com.dereekb.gae.utilities.model.lazy.exception.UnavailableSourceObjectExc
  */
 public class EnvStringUtility {
 
-	public static final String PROD_ENV_VARIABLE = "GAE_PRODUCTION";
+	public static final String IS_PRODUCTION_ENV_VAR = "GAE_PRODUCTION";
 
 	private static final Logger LOGGER = Logger.getLogger(EnvStringUtility.class);
 
@@ -60,7 +60,7 @@ public class EnvStringUtility {
 	}
 
 	public static boolean isProduction() throws RuntimeException, UnavailableSourceObjectException {
-		String isProduction = readEnv(PROD_ENV_VARIABLE, "false");
+		String isProduction = readEnv(IS_PRODUCTION_ENV_VAR, "false");
 		return isProduction.equalsIgnoreCase("true");
 	}
 

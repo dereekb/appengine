@@ -56,6 +56,12 @@ public interface AppSecurityBeansConfigurer
 	                                  boolean forTests);
 
 	// Security
+	/**
+	 * Configures the login token signature factory and refresh token signature factory for the app.
+	 */
+	public void configureTokenSignatureFactories(AppConfiguration appConfig,
+                                                 SpringBeansXMLBuilder builder);
+
 	public void configureTokenAuthenticationProvider(AppConfiguration appConfig,
 	                                                 SpringBeansXMLBeanBuilder<?> beanBuilder);
 

@@ -15,8 +15,8 @@ import com.dereekb.gae.utilities.model.source.Source;
  */
 public class SignatureConfigurationFactory extends GoogleAppEngineContextualFactoryImpl<SignatureConfiguration> {
 
-	public static final String TEST_SIGNATURE_SECRET = "3xSigP7IfiCCDa7EE5aCradtF94giUGizNr9yb8E/QU=";
-	public static final String DEV_SIGNATURE_SECRET = "4xSigP7IfiCCDa7EE5aCradtF94giUGizNr9yb8E/QU=";
+	public static final String TEST_SIGNATURE_SECRET = "MzXHEF63iSLa6OksSfZ4hvtXZMTHu7QNkhUToOaAQPel29NwutgFGiV68XYrcJF";
+	public static final String DEV_SIGNATURE_SECRET = "C7D0hkvFGJESTg1CpFZpGxGtEqLOs7AU06DwJjI9zNm6lBTP1OQx9Dv3tQFjb88";
 
 	public SignatureConfigurationFactory() {
 		super(true);

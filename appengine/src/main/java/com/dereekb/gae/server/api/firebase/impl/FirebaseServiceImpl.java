@@ -24,7 +24,7 @@ import com.google.firebase.FirebaseOptions.Builder;
 public class FirebaseServiceImpl
         implements FirebaseService, Factory<FirebaseApp>, Source<FirebaseApp> {
 
-	public static final String CREDENTIALS_KEY_ENVIRONMENT_VARIABLE = "GOOGLE_APPLICATION_CREDENTIALS";
+	public static final String CREDENTIALS_KEY_ENV_VAR = "GOOGLE_APPLICATION_CREDENTIALS";
 
 	/**
 	 * Optional key file path to specify. If provided, the key will attempt to

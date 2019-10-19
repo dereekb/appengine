@@ -14,11 +14,13 @@ import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthClientConfigIm
 import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.facebook.FacebookOAuthService;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.google.GoogleOAuthService;
 import com.dereekb.gae.server.auth.security.model.query.task.impl.LoginSecurityModelQueryTaskOverrideImpl;
+import com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderImpl;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenEncoderDecoderImpl;
 import com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTokenUserDetailsBuilderImpl;
 import com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl;
 import com.dereekb.gae.test.server.auth.impl.TestRemoteLoginSystemLoginTokenContextImpl;
+import com.dereekb.gae.utilities.misc.env.EnvStringUtility;
 
 /**
  * Default {@link AppSecurityBeansConfigurer} implementation.
@@ -28,6 +30,11 @@ import com.dereekb.gae.test.server.auth.impl.TestRemoteLoginSystemLoginTokenCont
  */
 public class LoginTokenAppSecurityBeansConfigurerImpl
         implements AppSecurityBeansConfigurer {
+
+	public static final String PROD_LOGIN_TOKEN_SIGNATURE_SECRET_ENV_VAR = "LOGIN_TOKEN_SIGNATURE_SECRET";
+	public static final String PROD_REFRESH_TOKEN_SIGNATURE_SECRET_ENV_VAR = "REFRESH_TOKEN_SIGNATURE_SECRET";
+
+	public static final String SIGNATURE_SECRET_NOT_SET_VALUE = "SIGNATURE_NOT_SET";
 
 	public static final String TEST_LOGIN_TOKEN_BUILDER_LOGIN_GETTER_BEAN_ID = "testLoginTokenBuilderLoginGetter";
 	public static final String TEST_LOGIN_TOKEN_SIGNATURE_FACTORY_BEAN_ID = "testLoginTokenSignatureFactory";
@@ -211,6 +218,20 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		}
 
 		this.loginSecurityModelQueryTaskOverrideClass = loginSecurityModelQueryTaskOverrideClass;
+	}
+
+	@Override
+	public void configureTokenSignatureFactories(AppConfiguration appConfig,
+	                                             SpringBeansXMLBuilder builder) {
+
+		String loginTokenSignatureFactoryId = this.getLoginTokenSignatureFactoryBeanId();
+		String refreshTokenSignatureFactoryId = this.getRefreshTokenSignatureFactoryBeanId();
+
+		String loginTokenSecret = EnvStringUtility.readProdEnv(PROD_LOGIN_TOKEN_SIGNATURE_SECRET_ENV_VAR, SIGNATURE_SECRET_NOT_SET_VALUE);
+		String refreshTokenSecret = EnvStringUtility.readProdEnv(PROD_REFRESH_TOKEN_SIGNATURE_SECRET_ENV_VAR, SIGNATURE_SECRET_NOT_SET_VALUE);
+
+		builder.bean(loginTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).property("productionSingleton").value(loginTokenSecret);
+		builder.bean(refreshTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).property("productionSingleton").value(refreshTokenSecret);
 	}
 
 	@Override

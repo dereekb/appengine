@@ -18,7 +18,6 @@ import com.dereekb.gae.server.auth.security.login.password.impl.PasswordLoginSer
 import com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceEmailDelegateImpl;
 import com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceImpl;
 import com.dereekb.gae.server.auth.security.login.password.recover.impl.PasswordRecoveryServiceTokenDelegateImpl;
-import com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory;
 import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenServiceImpl;
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.refresh.impl.RefreshTokenServiceImpl;
@@ -48,13 +47,7 @@ public class LocalAppLoginTokenSecurityConfigurerImpl
 
 		builder.comment("Local Login Service");
 		builder.comment("Signatures");
-		String loginTokenSignatureFactoryId = appSecurityBeansConfigurer.getLoginTokenSignatureFactoryBeanId();
-		String refreshTokenSignatureFactoryId = appSecurityBeansConfigurer.getRefreshTokenSignatureFactoryBeanId();
-
-		builder.bean(loginTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).getRawXMLBuilder()
-		        .comment("TODO: Add production source.");
-		builder.bean(refreshTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).getRawXMLBuilder()
-		        .comment("TODO: Add production source.");
+		appSecurityBeansConfigurer.configureTokenSignatureFactories(appConfig, builder);
 
 		builder.comment("LoginToken Service");
 		SpringBeansXMLBeanBuilder<?> loginTokenEncoderDecoderBuilder = builder
