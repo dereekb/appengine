@@ -91,7 +91,7 @@ public class GoogleAppEngineUtility {
 
 		Environment environment = getApiEnvironment();
 
-		String app = environment.getAppId();
+		String app = sanitizeAppId(environment.getAppId());
 		String service = environment.getModuleId();
 		String version = environment.getVersionId();
 
@@ -109,8 +109,12 @@ public class GoogleAppEngineUtility {
 		return appId.replaceFirst(".+~", "");
 	}
 
-	public static String getApplicationId() {
+	public static String getRawApplicationId() {
 		return ApiProxy.getCurrentEnvironment().getAppId();
+	}
+
+	public static String getApplicationId() {
+		return sanitizeAppId(ApiProxy.getCurrentEnvironment().getAppId());
 	}
 
 	public static String getApplicationVersionId() {
@@ -149,6 +153,9 @@ public class GoogleAppEngineUtility {
 	public static String urlForService(String appProjectId,
 	                                   String appServiceName,
 	                                   String appMajorVersion) {
+
+		// Ensure if a raw app ID is passed it is sanitized.
+		appProjectId = sanitizeAppId(appProjectId);
 
 		String subdomain = StringUtility.joinValues(APP_ENGINE_HTTPS_URL_DOT, appMajorVersion, appServiceName,
 		        appProjectId);
