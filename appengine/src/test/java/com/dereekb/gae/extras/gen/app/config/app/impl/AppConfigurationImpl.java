@@ -39,7 +39,7 @@ public class AppConfigurationImpl
 	private String appDevelopmentServerHostUrl = "http://localhost:4400";
 
 	private AppServicesConfigurer appServicesConfigurer;
-	private AppServiceConfigurationInfo appServiceConfigurationInfo = new AppServiceConfigurationInfoImpl("app", "app");
+	private AppServiceConfigurationInfo appServiceConfigurationInfo = new AppServiceConfigurationInfoImpl("app", "app", "v1");
 
 	private boolean isRootServer = false;
 	private boolean isLoginServer = true;

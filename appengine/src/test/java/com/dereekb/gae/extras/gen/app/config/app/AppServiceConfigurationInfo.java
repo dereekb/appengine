@@ -30,13 +30,33 @@ public interface AppServiceConfigurationInfo {
 	public String getAppVersion();
 
 	/**
-	 * Returns the root API path for this service.
+	 * Returns the api version (I.E. "v1")
+	 *
+	 * @return {@link String}. Never {@code null}.
 	 */
-	public String getRootAppApiPath();
+	public String getApiVersion();
 
 	/**
-	 * Returns the full API path for this service.
+	 * Returns the root app service path for this app.
+	 * <p>
+	 * Example: v1-dot-service-dot-example.appspot.com
 	 */
-	public String getFullAppApiPath();
+	public String getAppServicePath();
+
+	/**
+	 * Returns the full API path for this service relative to the full domain.
+	 * <p>
+	 * Example: example.appspot.com/api/exampleservice/v1
+	 */
+	public String getFullDomainAppApiPath();
+
+	/**
+	 * Returns the root API path for this service relative to the full domain.
+	 * <p>
+	 * This API path is by design and includes /api, the service name, and the api version.
+	 * <p>
+	 * Example: /api/exampleservice/v1
+	 */
+	public String getFullDomainRootAppApiPath();
 
 }

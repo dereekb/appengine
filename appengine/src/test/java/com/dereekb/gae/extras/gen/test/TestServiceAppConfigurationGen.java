@@ -50,6 +50,7 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		String appProjectId = "gae-test";
 		String appProjectService = "test";
 		String appProjectVersion = "v1";
+		String appApiVersion = "v1";
 
 		String appName = "GAE Core Test App";
 		String developmentProxy = "http://gae-nginx:8080";	// Unused
@@ -79,7 +80,7 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		        appProjectService, appProjectVersion);
 
 		// Services
-		RemoteEventServiceConfigurationGen remoteEventServiceGen = new RemoteEventServiceConfigurationGen(appProjectId);
+		RemoteEventServiceConfigurationGen remoteEventServiceGen = new RemoteEventServiceConfigurationGen(appProjectId, appProjectVersion, appApiVersion);
 		RemoteServiceConfigurationImpl remoteEventService = remoteEventServiceGen.make();
 
 		// Configuration

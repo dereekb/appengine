@@ -27,9 +27,6 @@
   <bean class="com.google.appengine.tools.development.testing.LocalImagesServiceTestConfig" id="localImagesServiceTestConfig"/>
   <bean class="com.google.appengine.tools.development.testing.LocalURLFetchServiceTestConfig" id="localURLFetchServiceTestConfig"/>
   <bean class="com.google.appengine.tools.development.testing.LocalAppIdentityServiceTestConfig" id="localAppIdentityServiceTestConfig"/>
-  <bean class="java.lang.String" id="datastoreIndexesXmlPath">
-    <constructor-arg index="0" value="src/main/webapp/WEB-INF/datastore-indexes.xml"/>
-  </bean>
   <bean class="java.lang.String" id="taskQueueXmlPath">
     <constructor-arg index="0" value="src/main/webapp/WEB-INF/queue.xml"/>
   </bean>

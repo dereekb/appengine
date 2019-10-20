@@ -707,7 +707,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		}
 
 		private String getServiceApiPath() {
-			return this.getAppConfig().getAppServiceConfigurationInfo().getRootAppApiPath();
+			return this.getAppConfig().getAppServiceConfigurationInfo().getFullDomainRootAppApiPath();
 		}
 
 	}

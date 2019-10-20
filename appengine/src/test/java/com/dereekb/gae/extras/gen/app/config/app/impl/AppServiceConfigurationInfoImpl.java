@@ -13,23 +13,31 @@ import com.dereekb.gae.utilities.gae.GoogleAppEngineUtility;
 public class AppServiceConfigurationInfoImpl
         implements AppServiceConfigurationInfo {
 
-	public String appProjectId;
-	public String appServiceName;
-	public String appVersion;
+	public static final String DEFAULT_API_VERSION = "v1";
 
-	public AppServiceConfigurationInfoImpl(String appProjectId, String appServiceName) {
-		this(appProjectId, appServiceName, "v1");
-	}
+	private String apiVersion;
 
-	public AppServiceConfigurationInfoImpl(AppServiceVersionInfo serviceVersionInfo) {
+	private String appProjectId;
+	private String appServiceName;
+	private String appVersion;
+
+	public AppServiceConfigurationInfoImpl(AppServiceVersionInfo serviceVersionInfo, String apiVersion) {
 		this(serviceVersionInfo.getAppProjectId(), serviceVersionInfo.getAppService(),
 		        serviceVersionInfo.getAppVersion().getMajorVersion());
 	}
 
 	public AppServiceConfigurationInfoImpl(String appProjectId, String appServiceName, String appVersion) {
+		this(appProjectId, appServiceName, appVersion, DEFAULT_API_VERSION);
+	}
+
+	public AppServiceConfigurationInfoImpl(String appProjectId,
+	        String appServiceName,
+	        String appVersion,
+	        String apiVersion) {
 		this.setAppProjectId(appProjectId);
 		this.setAppServiceName(appServiceName);
 		this.setAppVersion(appVersion);
+		this.setApiVersion(apiVersion);
 	}
 
 	// MARK: AppServiceConfigurationInfo
@@ -65,22 +73,35 @@ public class AppServiceConfigurationInfoImpl
 	}
 
 	public void setAppVersion(String appVersion) {
-		if (appVersion == null) {
-			throw new IllegalArgumentException("appVersion cannot be null.");
-		}
-
 		this.appVersion = appVersion;
 	}
 
-	@Override
-	public String getFullAppApiPath() {
-		return GoogleAppEngineUtility.urlForService(this.getAppProjectId(), this.getAppServiceName(),
-		        this.getAppVersion()) + this.getRootAppApiPath();
+	public String getApiVersion() {
+		return this.apiVersion;
+	}
+
+	public void setApiVersion(String apiVersion) {
+		if (apiVersion == null) {
+			throw new IllegalArgumentException("apiVersion cannot be null.");
+		}
+
+		this.apiVersion = apiVersion;
 	}
 
 	@Override
-	public String getRootAppApiPath() {
-		return "/api/" + this.getAppServiceName() + "/" + this.getAppVersion();
+	public String getAppServicePath() {
+		return GoogleAppEngineUtility.urlForService(this.getAppProjectId(), this.getAppServiceName(),
+		        this.getAppVersion());
+	}
+
+	@Override
+	public String getFullDomainAppApiPath() {
+		return this.getAppServicePath() + this.getFullDomainRootAppApiPath();
+	}
+
+	@Override
+	public String getFullDomainRootAppApiPath() {
+		return "/api/" + this.getAppServiceName() + "/" + this.getApiVersion();
 	}
 
 }

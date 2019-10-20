@@ -190,7 +190,7 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 		builder.bean("defaultSecurityServletPath").beanClass(String.class).c().ref("productionApiServletPath");
 
 		builder.stringBean("productionApiServletPath",
-		        this.getAppConfig().getAppServiceConfigurationInfo().getRootAppApiPath());
+		        this.getAppConfig().getAppServiceConfigurationInfo().getFullDomainRootAppApiPath());
 
 		builder.stringBean("productionTaskqueueServletPath", "/taskqueue");
 

@@ -135,6 +135,16 @@ public class GoogleAppEngineUtility {
 		return new AppVersionImpl(split[0], split[1]);
 	}
 
+	/**
+	 * Returns the domain of the current app.
+	 *
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public static String urlForCurrentApp() {
+		String appId = getApplicationId();
+		return urlForService(appId, null, null);
+	}
+
 	public static String urlForCurrentService() {
 		return urlForCurrentService(false);
 	}
@@ -143,6 +153,10 @@ public class GoogleAppEngineUtility {
 		AppServiceVersionInfo appInfo = getApplicationInfo();
 		return urlForService(appInfo.getAppProjectId(), appInfo.getAppService(),
 		        (includeVersion) ? appInfo.getAppVersion().getMajorVersion() : null);
+	}
+
+	public static String urlForApp(String appProjectId) {
+		return urlForService(appProjectId, null, null);
 	}
 
 	public static String urlForService(String appProjectId,
