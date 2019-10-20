@@ -98,6 +98,17 @@ public class GoogleAppEngineUtility {
 		return new AppServiceVersionInfoImpl(app, service, decodeAppVersion(version));
 	}
 
+	/**
+	 * Google App Engine's environment will occasionally append a region prefix
+	 * to appId values. This function will remove that prefix if present.
+	 *
+	 * @param appId
+	 * @return
+	 */
+	public static String sanitizeAppId(String appId) {
+		return appId.replaceFirst(".+~", "");
+	}
+
 	public static String getApplicationId() {
 		return ApiProxy.getCurrentEnvironment().getAppId();
 	}
