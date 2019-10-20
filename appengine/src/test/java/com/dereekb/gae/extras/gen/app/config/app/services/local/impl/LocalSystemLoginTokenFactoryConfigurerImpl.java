@@ -58,9 +58,21 @@ public class LocalSystemLoginTokenFactoryConfigurerImpl
 		builder.bean(appLoginSecurityDetailsServiceId).beanClass(AppLoginSecurityDetailsServiceImpl.class).c()
 		        .ref("appRegistry");
 
+		// TODO: Allow specifying it this way if on production and the AppID is directly available.
+		// "Issue" with providing the below only is that when the app is initialized the ID is created then,
+		// but the signing service requires info right away.
+
 		builder.bean(appLoginSecuritySigningServiceId).beanClass(AppConfiguredAppLoginSecuritySigningServiceImpl.class)
 		        .c().ref(appConfig.getAppBeans().getAppInfoBeanId())
 		        .ref(appConfig.getAppBeans().getAppLoginSecurityServiceBeanId());
+
+		/*
+		String appLoginSecurityDetailsBeanId = "appLoginSecurityDetails";
+		builder.bean(appLoginSecurityDetailsBeanId).beanClass(LocalQueryAppLoginSecurityDetailsImpl.class).c()
+		        .ref(appConfig.getAppBeans().getAppInfoBeanId()).ref("appRegistry");
+		builder.bean(appLoginSecuritySigningServiceId).beanClass(PreConfiguredAppLoginSecuritySigningServiceImpl.class)
+        		.c().ref(appLoginSecurityDetailsBeanId);
+		*/
 
 	}
 

@@ -13,7 +13,6 @@ import com.dereekb.gae.server.auth.security.app.service.ConfiguredAppLoginSecuri
  * configured app.
  *
  * @author dereekb
- *
  */
 public class AppConfiguredAppLoginSecuritySigningServiceImpl extends AbstractConfiguredAppLoginSecuritySigningServiceImpl {
 

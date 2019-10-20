@@ -138,8 +138,6 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 
 		builder.bean("localAppIdentityServiceTestConfig").beanClass(LocalAppIdentityServiceTestConfig.class);
 
-		builder.stringBean("datastoreIndexesXmlPath", "src/main/webapp/WEB-INF/datastore-indexes.xml");
-
 		builder.stringBean("taskQueueXmlPath", "src/main/webapp/WEB-INF/queue.xml");
 
 		// Objectify Initializer is here as a helper. Required by

@@ -54,6 +54,11 @@ public class RootServerInitializeService extends AbstractRootServerInitializeSer
 	private String developmentEmail = DEFAULT_DEVELOPMENT_EMAIL;
 
 	/**
+	 * Whether or not to generate the admin login in the production environment.
+	 */
+	private boolean generateAdminLoginInProduction = false;
+
+	/**
 	 * Whether or not to generate the non-admin users in the production
 	 * environment.
 	 */
@@ -112,6 +117,14 @@ public class RootServerInitializeService extends AbstractRootServerInitializeSer
 		}
 
 		this.mailService = mailService;
+	}
+
+	public boolean isGenerateAdminLoginInProduction() {
+		return this.generateAdminLoginInProduction;
+	}
+
+	public void setGenerateAdminLoginInProduction(boolean generateAdminLoginInProduction) {
+		this.generateAdminLoginInProduction = generateAdminLoginInProduction;
 	}
 
 	public boolean isGenerateUserLoginsInProduction() {
@@ -186,8 +199,8 @@ public class RootServerInitializeService extends AbstractRootServerInitializeSer
 	@Override
 	protected void initializeServerForFirstSetup(App app,
 	                                             boolean isProduction) {
-		this.makeInitialUserLogins(isProduction);
 		this.initializeDefaultApps(isProduction);
+		this.makeInitialUserLogins(isProduction);
 	}
 
 	@Override
@@ -199,8 +212,10 @@ public class RootServerInitializeService extends AbstractRootServerInitializeSer
 	protected Collection<Login> makeInitialUserLogins(boolean isProduction) {
 		Collection<Login> logins = new ArrayList<Login>();
 
-		Login admin = this.makeAdminLogin(isProduction);
-		ListUtility.addElements(logins, admin);
+		if (this.generateAdminLoginInProduction && isProduction) {
+			Login admin = this.makeAdminLogin(isProduction);
+			ListUtility.addElements(logins, admin);
+		}
 
 		if (this.generateUserLoginsInProduction && isProduction) {
 			Collection<Login> developmentLogins = this.makeUserLogins(isProduction);
@@ -232,7 +247,6 @@ public class RootServerInitializeService extends AbstractRootServerInitializeSer
 	protected Login makeAdminLogin(String email,
 	                               String password) {
 		Login login = null;
-
 		PasswordLoginPair passwordLoginPair = new PasswordLoginPairImpl(email, password);
 
 		try {

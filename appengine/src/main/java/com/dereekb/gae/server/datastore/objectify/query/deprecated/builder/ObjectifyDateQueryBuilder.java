@@ -81,7 +81,7 @@ public class ObjectifyDateQueryBuilder<T> extends ObjectifyQueryBuilder<T> {
 	 *            Value of the field
 	 * @param ordering
 	 *            The ordering here should match the one in
-	 *            datastore-indexes.xml
+	 *            index.yaml
 	 * @return
 	 */
 	public ConfiguredObjectifyQuery<T> recentFieldSearch(String field,
