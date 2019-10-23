@@ -153,6 +153,7 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
     config.limit = template.limit || DEFAULT_CONFIG.limit;
     config.cursor = template.cursor || DEFAULT_CONFIG.cursor;
     config.filters = { ...DEFAULT_CONFIG.filters, ...template.filters };
+    config.autoNextOnReset = template.autoNextOnReset || false;
   }
 
   protected _resetForNewConfig() {

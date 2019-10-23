@@ -61,4 +61,13 @@ describe('ValueUtility', () => {
 
   });
 
+  describe('#isEqualIgnoreCase()', () => {
+
+    it('should return true if the two values are equal with different cases.', () => {
+      const isEqual = ValueUtility.isEqualIgnoreCase('ABC', 'abc');
+      expect(isEqual).toBeTrue();
+    });
+
+  });
+
 });

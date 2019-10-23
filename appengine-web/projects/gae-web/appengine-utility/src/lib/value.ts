@@ -827,4 +827,20 @@ export class ValueUtility {
     return value.charAt(0).toLowerCase() + value.slice(1);
   }
 
+  static isEqualIgnoreCase(a: string, b: string) {
+    const result = a.toLowerCase() === b.toLowerCase();
+    return result;
+  }
+
+  static filterIsEqualIgnoreCase<T>(a: string | undefined, values: T[], getString: (x: T) => string, keepSame = true): T[] {
+    const lowerCaseA = String(a || '').toLowerCase();
+    const result = values.filter(x => {
+      const xString = (getString(x) || '').toLowerCase();
+
+      const isSame = lowerCaseA === xString;
+      return (isSame) ? keepSame : !keepSame;
+    });
+    return result;
+  }
+
 }
