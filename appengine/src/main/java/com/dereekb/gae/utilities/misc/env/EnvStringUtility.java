@@ -21,11 +21,23 @@ public class EnvStringUtility {
 		return readEnv(env, null);
 	}
 
+	public static String tryReadEnv(String env) throws RuntimeException, UnavailableSourceObjectException {
+		return readEnv(env, null, false);
+	}
+
 	public static String readEnv(String env,
 	                             String defaultValue)
 	        throws RuntimeException,
 	            UnavailableSourceObjectException {
-		return new EnvStringFactory(env, defaultValue).loadObject();
+		return readEnv(env, defaultValue, true);
+	}
+
+	public static String readEnv(String env,
+	                             String defaultValue,
+	                             boolean nonNullValueRequired)
+	        throws RuntimeException,
+	            UnavailableSourceObjectException {
+		return new EnvStringFactory(env, defaultValue, nonNullValueRequired).loadObject();
 	}
 
 	// MARK: Production

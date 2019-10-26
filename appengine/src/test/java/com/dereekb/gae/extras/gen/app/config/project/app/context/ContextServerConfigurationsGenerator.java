@@ -15,6 +15,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConf
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.filter.NotInternalModelConfigurationFilter;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppFirebaseServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppTaskSchedulerEnqueuerConfigurer;
@@ -105,6 +106,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		folder.addFile(new DatabaseConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new KeysConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new MailConfigurationGenerator().generateConfigurationFile());
+		folder.addFile(new FirebaseConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new RefConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new TaskQueueConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new SecurityConfigurationGenerator().generateConfigurationFile());
@@ -341,6 +343,31 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 			AppConfiguration appConfig = this.getAppConfig();
 			appConfig.getAppServicesConfigurer().getAppMailServiceConfigurer().configureMailService(appConfig, builder);
+
+			return builder;
+		}
+
+	}
+
+	public class FirebaseConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
+
+		public FirebaseConfigurationGenerator() {
+			super(ContextServerConfigurationsGenerator.this);
+			this.setFileName("firebase");
+		}
+
+		@Override
+		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
+			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+			AppConfiguration appConfig = this.getAppConfig();
+			AppFirebaseServiceConfigurer configurer = appConfig.getAppServicesConfigurer().getAppFirebaseServiceConfigurer();
+
+			if (configurer != null) {
+				configurer.configureFirebaseService(appConfig, builder);
+			} else {
+				builder.comment("This app is not configured to use Firebase.");
+			}
 
 			return builder;
 		}

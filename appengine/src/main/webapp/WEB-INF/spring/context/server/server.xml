@@ -39,6 +39,7 @@
   <import resource="/database.xml"/>
   <import resource="/key.xml"/>
   <import resource="/mail.xml"/>
+  <import resource="/firebase.xml"/>
   <import resource="/ref.xml"/>
   <import resource="/taskqueue.xml"/>
   <import resource="/security.xml"/>
