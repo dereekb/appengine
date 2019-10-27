@@ -68,6 +68,10 @@ public interface AppBeansConfiguration {
 
 	public String getFirebaseServiceBeanId();
 
+	public String getPushNotificationServiceBeanId();
+
+	public String getUserPushNotificationServiceBeanId();
+
 	// Utility
 	public AppUtilityBeansConfiguration getUtilityBeans();
 

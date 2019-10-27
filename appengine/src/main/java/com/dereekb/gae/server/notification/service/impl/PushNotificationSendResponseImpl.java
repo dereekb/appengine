@@ -1,5 +1,6 @@
 package com.dereekb.gae.server.notification.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.server.notification.service.PushNotificationSendResponse;
@@ -23,6 +24,10 @@ public class PushNotificationSendResponseImpl
 		super();
 		this.setSuccessfulTokens(successfulTokens2);
 		this.setFailedTokens(failedTokens);
+	}
+
+	public static PushNotificationSendResponseImpl empty() {
+		return new PushNotificationSendResponseImpl(Collections.emptyList(), Collections.emptyList());
 	}
 
 	// MARK: PushNotificationSendResponse

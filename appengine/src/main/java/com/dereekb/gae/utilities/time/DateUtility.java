@@ -168,13 +168,15 @@ public class DateUtility {
 		return roundedTimeDoubleToDate(minutes, DateUtility.TIME_IN_MINUTE);
 	}
 
-	public static Double dateToRoundedTimeDouble(Date date, Long roundedTime) {
+	public static Double dateToRoundedTimeDouble(Date date,
+	                                             Long roundedTime) {
 		Long time = date.getTime();
 		time = time / roundedTime;				// Round Value To Minutes
 		return time.doubleValue();
 	}
 
-	public static Date roundedTimeDoubleToDate(Double seconds, Long roundedTime) {
+	public static Date roundedTimeDoubleToDate(Double seconds,
+	                                           Long roundedTime) {
 		Long time = seconds.longValue();
 		time = time * roundedTime;				// Convert back to timestamp
 		return new Date(time);
@@ -205,14 +207,14 @@ public class DateUtility {
 	}
 
 	public static boolean dateIsInTheFutureAtleast(Date date,
-	                                               long minimumScheduleTime) {
-		return dateIsInTheFutureAtleast(date, minimumScheduleTime, 0L);
+	                                               long milliseconds) {
+		return dateIsInTheFutureAtleast(date, milliseconds, 0L);
 	}
 
 	public static boolean dateIsInTheFutureAtleast(Date date,
-	                                               long minimumScheduleTime,
+	                                               long milliseconds,
 	                                               long leeway) {
-		Long futureTime = Math.min(0L, minimumScheduleTime - leeway);
+		Long futureTime = Math.min(0L, milliseconds - leeway);
 		Date futureDate = DateUtility.getDateIn(futureTime);
 		return futureDate.after(date);
 	}

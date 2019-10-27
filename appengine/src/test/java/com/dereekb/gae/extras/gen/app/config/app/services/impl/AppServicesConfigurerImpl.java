@@ -9,6 +9,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListen
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppTaskSchedulerEnqueuerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppUserNotificationServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 
 /**
@@ -29,6 +30,7 @@ public class AppServicesConfigurerImpl
 	private AppTaskSchedulerEnqueuerConfigurer appTaskSchedulerEnqueuerConfigurer = new AppTaskSchedulerEnqueuerConfigurerImpl();
 	private AppDebugApiConfigurer appDebugConfigurer = null;
 	private AppFirebaseServiceConfigurer appFirebaseServiceConfigurer = null;
+	private AppUserNotificationServiceConfigurer appUserNotificationServiceConfigurer = null;
 
 	public AppServicesConfigurerImpl(AppServerInitializationConfigurer appServerInitializationConfigurer,
 	        AppLoginTokenSecurityConfigurer appLoginTokenSecurityConfigurer,
@@ -160,6 +162,14 @@ public class AppServicesConfigurerImpl
 
 	public void setAppFirebaseServiceConfigurer(AppFirebaseServiceConfigurer appFirebaseServiceConfigurer) {
 		this.appFirebaseServiceConfigurer = appFirebaseServiceConfigurer;
+	}
+
+	public AppUserNotificationServiceConfigurer getAppUserNotificationServiceConfigurer() {
+		return this.appUserNotificationServiceConfigurer;
+	}
+
+	public void setAppUserNotificationServiceConfigurer(AppUserNotificationServiceConfigurer appUserNotificationServiceConfigurer) {
+		this.appUserNotificationServiceConfigurer = appUserNotificationServiceConfigurer;
 	}
 
 }

@@ -2,7 +2,7 @@ package com.dereekb.gae.server.notification.model.token;
 
 import java.util.Date;
 
-import com.dereekb.gae.server.notification.service.PushNotificationToken;
+import com.dereekb.gae.server.notification.service.PushNotificationDevice;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.time.model.DatedModel;
 
@@ -13,7 +13,7 @@ import com.dereekb.gae.utilities.time.model.DatedModel;
  *
  */
 public class NotificationToken
-        implements PushNotificationToken, DatedModel {
+        implements PushNotificationDevice, DatedModel {
 
 	/**
 	 * Device identifier/UUID.
@@ -32,6 +32,10 @@ public class NotificationToken
 
 	public NotificationToken() {}
 
+	public NotificationToken(PushNotificationDevice device) {
+		this(device.getDevice(), device.getNotificationToken(), new Date());
+	}
+
 	public NotificationToken(String device, String token) {
 		this(device, token, new Date());
 	}
@@ -43,6 +47,7 @@ public class NotificationToken
 		this.setDate(date);
 	}
 
+	@Override
 	public String getDevice() {
 		return this.device;
 	}
@@ -61,7 +66,7 @@ public class NotificationToken
 
 	public void setToken(String token) {
 		if (StringUtility.isEmptyString(token)) {
-			throw new IllegalArgumentException("token cannot be null.");
+			throw new IllegalArgumentException("token cannot be null or empty.");
 		}
 
 		this.token = token;

@@ -16,9 +16,11 @@ import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityC
 import com.dereekb.gae.extras.gen.app.config.app.services.AppMailServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListenerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppUserNotificationServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppFirebaseServiceConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppServicesConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.app.services.impl.FirebaseUserNotificationServiceConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.LoginServerAppServerInitializationConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.MailgunAppMailServiceConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.LoginTokenAppSecurityBeansConfigurerImpl;
@@ -29,6 +31,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.remote.impl.event.Noop
 import com.dereekb.gae.extras.gen.app.config.project.service.AbstractWebServiceAppConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.local.AppGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.local.LoginGroupConfigurationGen;
+import com.dereekb.gae.extras.gen.app.gae.local.NotificationGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.app.gae.remote.RemoteEventServiceConfigurationGen;
 import com.dereekb.gae.extras.gen.test.app.gae.local.TestModelGroupConfigurationGen;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
@@ -62,7 +65,7 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 
 		Long appId = 1L;
 
-		MailUser systemMailUser =  new MailUserImpl("test@gae.dereekb.com", "Test Server");
+		MailUser systemMailUser = new MailUserImpl("test@gae.dereekb.com", "Test Server");
 
 		// Models
 		// Login
@@ -71,16 +74,22 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		// App
 		LocalModelConfigurationGroupImpl appGroup = AppGroupConfigurationGen.makeLocalAppGroupConfig();
 
+		// Notification
+		LocalModelConfigurationGroupImpl notificationGroup = NotificationGroupConfigurationGen
+		        .makeInternalLocalNotificationGroupConfig();
+
 		// Foo
 		LocalModelConfigurationGroupImpl fooGroup = TestModelGroupConfigurationGen.makeLocalTestGroupConfig();
 
-		List<LocalModelConfigurationGroup> modelConfigurations = ListUtility.toList(loginGroup, appGroup, fooGroup);
+		List<LocalModelConfigurationGroup> modelConfigurations = ListUtility.toList(loginGroup, appGroup,
+		        notificationGroup, fooGroup);
 
 		AppServiceConfigurationInfo appServiceConfigurationInfo = new AppServiceConfigurationInfoImpl(appProjectId,
 		        appProjectService, appProjectVersion);
 
 		// Services
-		RemoteEventServiceConfigurationGen remoteEventServiceGen = new RemoteEventServiceConfigurationGen(appProjectId, appProjectVersion, appApiVersion);
+		RemoteEventServiceConfigurationGen remoteEventServiceGen = new RemoteEventServiceConfigurationGen(appProjectId,
+		        appProjectVersion, appApiVersion);
 		RemoteServiceConfigurationImpl remoteEventService = remoteEventServiceGen.make();
 
 		// Configuration
@@ -111,9 +120,16 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		        appServerInitializationConfigurer, appLoginTokenSecurityConfigurer, appEventServiceListenersConfigurer,
 		        appWebHookEventServiceConfigurer, appModelKeyEventListenerConfigurer, appMailServiceConfigurer);
 
-		AppFirebaseServiceConfigurer firebaseServiceConfigurer = new AppFirebaseServiceConfigurerImpl(firebaseDatabaseUrl, developmentFirebaseDatabaseUrl);
+		// Firebase
+		AppFirebaseServiceConfigurer firebaseServiceConfigurer = new AppFirebaseServiceConfigurerImpl(
+		        firebaseDatabaseUrl, developmentFirebaseDatabaseUrl);
 		appServicesConfigurer.setAppFirebaseServiceConfigurer(firebaseServiceConfigurer);
 
+		// Push Notifications
+		AppUserNotificationServiceConfigurer appUserNotificationServiceConfigurer = new FirebaseUserNotificationServiceConfigurerImpl();
+		appServicesConfigurer.setAppUserNotificationServiceConfigurer(appUserNotificationServiceConfigurer);
+
+		// Configuration
 		AppConfigurationImpl configuration = new AppConfigurationImpl(appServiceConfigurationInfo,
 		        appServicesConfigurer, modelConfigurations);
 
@@ -128,6 +144,7 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		configuration.setIsLoginServer(true);
 		configuration.setRemoteServices(remoteEventService);
 
+		// Security
 		LoginTokenAppSecurityBeansConfigurerImpl appSecurityBeansConfigurer = new LoginTokenAppSecurityBeansConfigurerImpl();
 
 		appSecurityBeansConfigurer.setFacebookOAuthConfig(TestStaticServerConfiguration.TEST_FACEBOOK_OAUTH_CONFIG);

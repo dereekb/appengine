@@ -18,6 +18,7 @@ import com.dereekb.gae.server.notification.service.exception.SystemConfiguration
 import com.dereekb.gae.server.notification.service.exception.SystemUnavailablePushNotificationSendException;
 import com.dereekb.gae.server.notification.service.impl.PushNotificationSendResponseImpl;
 import com.dereekb.gae.server.notification.service.impl.PushNotificationSendResponseTokenErrorImpl;
+import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.parameters.utility.ParameterUtility;
 import com.google.firebase.messaging.ApnsConfig;
 import com.google.firebase.messaging.Aps;
@@ -36,6 +37,9 @@ import com.google.firebase.messaging.SendResponse;
  */
 public class FirebasePushNotificationServiceImpl
         implements PushNotificationService {
+
+	private static final String ANDROID_COLLAPSE_ID_KEY = "collapseKey";
+	private static final String APNS_COLLAPSE_ID_KEY = "apns-collapse-id";
 
 	private FirebaseService firebaseService;
 
@@ -88,10 +92,18 @@ public class FirebasePushNotificationServiceImpl
 
 		Map<String, String> data = ParameterUtility.safeMap(request.getData());
 
+		String collapsesKey = null;	// TODO: Add collapse key usage later.
+
 		Aps aps = Aps.builder().setContentAvailable(contentAvailable).build();
-		ApnsConfig apnsConfig = ApnsConfig.builder().setAps(aps).build();
+		ApnsConfig.Builder apnsConfigBuilder = ApnsConfig.builder().setAps(aps);
 
 		// TODO: Add android-specific config?
+
+		if (!StringUtility.isEmptyString(collapsesKey)) {
+			apnsConfigBuilder.putHeader(APNS_COLLAPSE_ID_KEY, collapsesKey);
+		}
+
+		ApnsConfig apnsConfig = apnsConfigBuilder.build();
 
 		return MulticastMessage.builder().addAllTokens(tokenStrings).setNotification(notification).putAllData(data)
 		        .setApnsConfig(apnsConfig).build();
