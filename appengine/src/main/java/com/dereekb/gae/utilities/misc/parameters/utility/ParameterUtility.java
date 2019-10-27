@@ -38,6 +38,10 @@ public class ParameterUtility {
 		return KeyedEncodedParameterImpl.makeParametersWithMap(map);
 	}
 
+	public static Map<String, String> safeMap(Parameters parameters) {
+		return safe(parameters).getParameters();
+	}
+
 	public static Parameters safe(Parameters parameters) {
 		if (parameters == null) {
 			return new ParametersImpl();

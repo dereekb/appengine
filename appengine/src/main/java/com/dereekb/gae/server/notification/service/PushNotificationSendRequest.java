@@ -1,5 +1,7 @@
 package com.dereekb.gae.server.notification.service;
 
+import com.dereekb.gae.utilities.misc.parameters.Parameters;
+
 /**
  * {@link PushNotificationService} send request.
  *
@@ -11,9 +13,9 @@ public interface PushNotificationSendRequest {
 	/**
 	 * Returns the token the notification is being sent to.
 	 *
-	 * @return {@link PushNotificationToken}. Never {@code null}.
+	 * @return {@link PushNotificationTokenSet}. Never {@code null}.
 	 */
-	public PushNotificationToken getToken();
+	public PushNotificationTokenSet getTokenSet();
 
 	/**
 	 * Returns the title.
@@ -30,10 +32,26 @@ public interface PushNotificationSendRequest {
 	public String getMessage();
 
 	/**
+	 * Returns an image url.
+	 *
+	 * @return {@link String} or {@code null}.
+	 */
+	public String getImageUrl();
+
+	/**
 	 * Returns the data associated with the request.
 	 *
-	 * @return {@link Object} or {@code null}.
+	 * @return {@link Parameters} or {@code null}.
 	 */
-	public Object getData();
+	public Parameters getData();
+
+	/**
+	 * Whether or not there is info that should be processed immediately.
+	 * <p>
+	 * Used for priority requests.
+	 *
+	 * @return {@code true} if content is available.
+	 */
+	public boolean isContentAvailable();
 
 }

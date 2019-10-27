@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.dereekb.gae.server.notification.service.PushNotificationToken;
 import com.dereekb.gae.utilities.data.StringUtility;
+import com.dereekb.gae.utilities.time.model.DatedModel;
 
 /**
  * Notification token stored within {@link NotificationSettings}.
@@ -12,10 +13,21 @@ import com.dereekb.gae.utilities.data.StringUtility;
  *
  */
 public class NotificationToken
-        implements PushNotificationToken {
+        implements PushNotificationToken, DatedModel {
 
+	/**
+	 * Device identifier/UUID.
+	 */
 	private String device;
+
+	/**
+	 * Notification token.
+	 */
 	private String token;
+
+	/**
+	 * Date the identifier was added.
+	 */
 	private Date date;
 
 	public NotificationToken() {}
@@ -55,6 +67,7 @@ public class NotificationToken
 		this.token = token;
 	}
 
+	@Override
 	public Date getDate() {
 		return this.date;
 	}
