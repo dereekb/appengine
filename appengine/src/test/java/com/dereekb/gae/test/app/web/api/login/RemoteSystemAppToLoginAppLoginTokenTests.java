@@ -71,10 +71,10 @@ public class RemoteSystemAppToLoginAppLoginTokenTests extends AbstractAppTesting
 
 	// MARK: Mock Tests
 	@Test
-	public void testRemoteAppComponentsValidatesValidSignedTokenUsingTokenValidationRequestSender() throws Exception
-	{
+	public void testRemoteAppComponentsValidatesValidSignedTokenUsingTokenValidationRequestSender() throws Exception {
 		App app = this.generateTestApp();
-		PreConfiguredAppLoginSecuritySigningServiceImpl signingService = new PreConfiguredAppLoginSecuritySigningServiceImpl(app);
+		PreConfiguredAppLoginSecuritySigningServiceImpl signingService = new PreConfiguredAppLoginSecuritySigningServiceImpl(
+		        app);
 
 		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
 
@@ -87,7 +87,8 @@ public class RemoteSystemAppToLoginAppLoginTokenTests extends AbstractAppTesting
 
 		ClientLoginTokenValidationRequest clientRequest = new ClientLoginTokenValidationRequestImpl(signedToken);
 
-		SerializedClientApiResponse<ClientLoginTokenValidationResponse> response = this.sender.sendRequest(clientRequest, ClientRequestSecurityImpl.none());
+		SerializedClientApiResponse<ClientLoginTokenValidationResponse> response = this.sender
+		        .sendRequest(clientRequest, ClientRequestSecurityImpl.none());
 
 		assertTrue(response.getSerializedResponse() != null);
 	}
@@ -101,7 +102,8 @@ public class RemoteSystemAppToLoginAppLoginTokenTests extends AbstractAppTesting
 	public void testRemoteAppComponentsValidatesValidSignedToken() throws Exception {
 
 		App app = this.generateTestApp();
-		PreConfiguredAppLoginSecuritySigningServiceImpl signingService = new PreConfiguredAppLoginSecuritySigningServiceImpl(app);
+		PreConfiguredAppLoginSecuritySigningServiceImpl signingService = new PreConfiguredAppLoginSecuritySigningServiceImpl(
+		        app);
 
 		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
 
@@ -119,7 +121,8 @@ public class RemoteSystemAppToLoginAppLoginTokenTests extends AbstractAppTesting
 	}
 
 	/**
-	 * Tests that the login server does not validate a server token with an invalid signature.
+	 * Tests that the login server does not validate a server token with an
+	 * invalid signature.
 	 */
 	@Test
 	public void testRemoteAppComponentsFailsWithInvalidTokenSignature() throws Exception {

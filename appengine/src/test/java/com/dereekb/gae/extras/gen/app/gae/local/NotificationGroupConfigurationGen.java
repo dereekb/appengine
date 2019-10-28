@@ -32,6 +32,7 @@ public class NotificationGroupConfigurationGen {
 		LocalModelConfigurationImpl readOnlyAppModel = new LocalModelConfigurationImpl(NotificationSettings.class);
 
 		readOnlyAppModel.setInternalModelOnly(true);
+		readOnlyAppModel.setSystemModelOnly(true);
 		readOnlyAppModel.setIsReadOnly();
 
 		return readOnlyAppModel;

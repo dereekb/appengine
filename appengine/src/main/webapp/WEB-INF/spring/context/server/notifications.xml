@@ -1,20 +1,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-  <bean class="com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyInitializerImpl" id="objectifyInitializer" lazy-init="false"/>
-  <bean class="com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl" id="objectifyDatabase" lazy-init="false">
-    <constructor-arg index="0" ref="objectifyInitializer"/>
-    <constructor-arg index="1" ref="objectifyDatabaseEntities"/>
+  <!--User Push Notification Service-->
+  <bean class="com.dereekb.gae.server.notification.user.service.impl.UserPushNotificationServiceImpl" id="userPushNotificationService">
+    <constructor-arg index="0" ref="pushNotificationService"/>
+    <constructor-arg index="1" ref="notificationSettingsTokenService"/>
   </bean>
-  <util:list id="objectifyDatabaseEntities">
-    <!--login-->
-    <ref bean="loginObjectifyEntry"/>
-    <ref bean="loginPointerObjectifyEntry"/>
-    <ref bean="loginKeyObjectifyEntry"/>
-    <!--app-->
-    <ref bean="appObjectifyEntry"/>
-    <ref bean="appHookObjectifyEntry"/>
-    <!--notification-->
-    <ref bean="notificationSettingsObjectifyEntry"/>
-    <!--foo-->
-    <ref bean="fooObjectifyEntry"/>
-  </util:list>
+  <bean class="com.dereekb.gae.server.notification.user.service.impl.NotificationSettingsTokenServiceImpl" id="notificationSettingsTokenService">
+    <constructor-arg index="0" ref="notificationSettingsRegistry"/>
+  </bean>
+  <!--Push Notification Service-->
+  <bean class="com.dereekb.gae.server.notification.service.impl.firebase.FirebasePushNotificationServiceImpl" id="pushNotificationService">
+    <constructor-arg index="0" ref="firebaseService"/>
+  </bean>
 </beans>

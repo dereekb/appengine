@@ -40,4 +40,13 @@ public interface AppModelConfiguration
 	 */
 	public boolean isInternalModelOnly();
 
+	/**
+	 * Whether or not this model is an system-only model that has no outside
+	 * access of any sort and does not require security checks.
+	 * <p>
+	 * Similar to {@link #isInternalModelOnly()} but additional components are
+	 * disabled/skipped from generation, such as security.
+	 */
+	public boolean isSystemModelOnly();
+
 }

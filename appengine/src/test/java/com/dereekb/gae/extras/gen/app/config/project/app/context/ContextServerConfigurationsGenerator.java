@@ -19,6 +19,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.AppFirebaseServiceConf
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppTaskSchedulerEnqueuerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppUserNotificationServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.AppConfigurationUtility;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
@@ -107,6 +108,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		folder.addFile(new KeysConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new MailConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new FirebaseConfigurationGenerator().generateConfigurationFile());
+		folder.addFile(new UserPushNotificationConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new RefConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new TaskQueueConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new SecurityConfigurationGenerator().generateConfigurationFile());
@@ -361,12 +363,39 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
 
 			AppConfiguration appConfig = this.getAppConfig();
-			AppFirebaseServiceConfigurer configurer = appConfig.getAppServicesConfigurer().getAppFirebaseServiceConfigurer();
+			AppFirebaseServiceConfigurer configurer = appConfig.getAppServicesConfigurer()
+			        .getAppFirebaseServiceConfigurer();
 
 			if (configurer != null) {
 				configurer.configureFirebaseService(appConfig, builder);
 			} else {
 				builder.comment("This app is not configured to use Firebase.");
+			}
+
+			return builder;
+		}
+
+	}
+
+	public class UserPushNotificationConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
+
+		public UserPushNotificationConfigurationGenerator() {
+			super(ContextServerConfigurationsGenerator.this);
+			this.setFileName("notifications");
+		}
+
+		@Override
+		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
+			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+			AppConfiguration appConfig = this.getAppConfig();
+			AppUserNotificationServiceConfigurer configurer = appConfig.getAppServicesConfigurer()
+			        .getAppUserNotificationServiceConfigurer();
+
+			if (configurer != null) {
+				configurer.configureUserNotificationService(appConfig, builder);
+			} else {
+				builder.comment("This app is not configured to use user push notifications.");
 			}
 
 			return builder;
@@ -471,9 +500,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.bean(searchServiceBeanId).beanClass(GcsSearchServiceImpl.class);
 
 			builder.bean(appConfig.getAppBeans().getUtilityBeans().getModelSearchServiceBeanId())
-			        .beanClass(ModelSearchServiceImpl.class)
-			        .c()
-			        .ref(searchServiceBeanId)
+			        .beanClass(ModelSearchServiceImpl.class).c().ref(searchServiceBeanId)
 			        .ref(appConfig.getAppBeans().getModelKeyTypeConverterId());
 		}
 

@@ -26,7 +26,18 @@ public interface AppServicesConfigurer {
 
 	public AppMailServiceConfigurer getAppMailServiceConfigurer();
 
+	/**
+	 * @return {@link AppFirebaseServiceConfigurer}, or {@code null} if
+	 *         no firebase components.
+	 */
 	public AppFirebaseServiceConfigurer getAppFirebaseServiceConfigurer();
+
+	/**
+	 * @return {@link AppUserNotificationServiceConfigurer}, or {@code null} if
+	 *         no
+	 *         user notification components.
+	 */
+	public AppUserNotificationServiceConfigurer getAppUserNotificationServiceConfigurer();
 
 	/**
 	 * @return {@link AppDebugApiConfigurer}, or {@code null} if no
