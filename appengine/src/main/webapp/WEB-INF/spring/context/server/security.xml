@@ -81,6 +81,8 @@
     <security:intercept-url access="hasRole('ROLE_USER')" method="GET" pattern="/api/test/v1/login/auth/token/refresh"/>
     <security:intercept-url access="hasRole('ROLE_USER')" method="POST" pattern="/api/test/v1/login/auth/token/reset"/>
     <security:intercept-url access="hasRole('ROLE_ADMIN')" method="POST" pattern="/api/test/v1/login/auth/token/reset/*"/>
+    <!--Notification Pattern-->
+    <security:intercept-url access="hasRole('ROLE_USER')" pattern="/api/test/v1/notification/**"/>
     <!--Scheduling Pattern-->
     <security:intercept-url access="hasRole('ROLE_ADMIN')" method="POST" pattern="/api/test/v1/scheduler/schedule"/>
     <!--Everything Else Is Denied-->
@@ -231,12 +233,12 @@
   </bean>
   <!--Secure Model Types-->
   <util:list id="secureModelTypes">
-    <ref bean="loginKeyType"/>
-    <ref bean="loginType"/>
-    <ref bean="appHookType"/>
     <ref bean="fooType"/>
     <ref bean="appType"/>
+    <ref bean="appHookType"/>
     <ref bean="loginPointerType"/>
+    <ref bean="loginType"/>
+    <ref bean="loginKeyType"/>
   </util:list>
   <!--Exception Handler-->
   <bean class="com.dereekb.gae.server.auth.security.token.exception.handler.ApiTokenExceptionHandler" id="loginTokenExceptionHandler"/>

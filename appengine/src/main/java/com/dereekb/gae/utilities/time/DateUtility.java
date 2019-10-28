@@ -1,8 +1,12 @@
 package com.dereekb.gae.utilities.time;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.dereekb.gae.utilities.time.model.DatedModel;
 
 public class DateUtility {
 
@@ -233,6 +237,41 @@ public class DateUtility {
 	public static Long getDifference(Date start,
 	                                 Date end) {
 		return end.getTime() - start.getTime();
+	}
+
+	public static <T extends DatedModel> List<T> sortDatedModelsAscendingOrder(List<T> models) {
+		return sortDatedModels(models, true);
+	}
+
+	public static <T extends DatedModel> List<T> sortDatedModelsDescendingOrder(List<T> models) {
+		return sortDatedModels(models, false);
+	}
+
+	public static <T extends DatedModel> List<T> sortDatedModels(List<T> models,
+	                                                             boolean sortAscending) {
+
+		models.sort(new Comparator<T>() {
+
+			@Override
+			public int compare(T o1,
+			                   T o2) {
+				Date d1 = (sortAscending) ? o1.getDate() : o2.getDate();
+				Date d2 = (sortAscending) ? o2.getDate() : o1.getDate();
+
+				if (d1 != null && d2 != null) {
+					return d1.compareTo(d2);
+				} else if (d1 != null) {
+					return (sortAscending) ? 1 : -1;
+				} else if (d2 != null) {
+					return (sortAscending) ? -1 : 1;
+				} else {
+					return 0;
+				}
+			}
+
+		});
+
+		return models;
 	}
 
 }

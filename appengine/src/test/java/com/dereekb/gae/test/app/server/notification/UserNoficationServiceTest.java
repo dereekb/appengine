@@ -71,4 +71,22 @@ public class UserNoficationServiceTest extends AbstractAppTestingContext {
 		assertTrue(accessor.getUserPushNotificationTokens().isEmpty());
 	}
 
+	@Test
+	public void testAddOverMaximumNumberOfDevice() {
+		NotificationSettingsTokenAccessorImpl accessor = this.notificationSettingsTokenServiceImpl
+		        .makeTokenAccessor(TEST_MODEL_KEY);
+
+		int maxDevices = this.notificationSettingsTokenServiceImpl.getMaximumDevicesAllowed();
+
+		assertTrue(accessor.getUserPushNotificationTokens().isEmpty());
+
+		for (int i = 0; i < (maxDevices + 5); i += 1) {
+			PushNotificationDevice device = new PushNotificationDeviceImpl(TEST_DEVICE_ID + i, TEST_TOKEN + i);
+			accessor.addDevice(device);
+		}
+
+		assertFalse(accessor.getUserPushNotificationTokens().isEmpty());
+		assertTrue(accessor.getUserPushNotificationTokens().size() == maxDevices);
+	}
+
 }

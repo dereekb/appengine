@@ -11,12 +11,12 @@
     <constructor-arg index="0" ref="modelKeyTypeConverter"/>
     <constructor-arg index="1">
       <map key-type="java.lang.String">
-        <entry key-ref="loginKeyType" value-ref="loginKeyReadControllerEntry"/>
-        <entry key-ref="loginType" value-ref="loginReadControllerEntry"/>
-        <entry key-ref="appHookType" value-ref="appHookReadControllerEntry"/>
         <entry key-ref="fooType" value-ref="fooReadControllerEntry"/>
         <entry key-ref="appType" value-ref="appReadControllerEntry"/>
+        <entry key-ref="appHookType" value-ref="appHookReadControllerEntry"/>
         <entry key-ref="loginPointerType" value-ref="loginPointerReadControllerEntry"/>
+        <entry key-ref="loginType" value-ref="loginReadControllerEntry"/>
+        <entry key-ref="loginKeyType" value-ref="loginKeyReadControllerEntry"/>
       </map>
     </constructor-arg>
   </bean>

@@ -109,12 +109,12 @@
   <bean class="com.dereekb.gae.server.auth.security.model.roles.loader.impl.SecurityContextAnonymousModelRoleSetContextService" id="securityContextAnonymousModelRoleSetContextService"/>
   <util:list id="loginTokenModelContextServiceEntries">
     <!--login-->
-    <ref bean="loginKeySecurityContextServiceEntry"/>
-    <ref bean="loginSecurityContextServiceEntry"/>
     <ref bean="loginPointerSecurityContextServiceEntry"/>
+    <ref bean="loginSecurityContextServiceEntry"/>
+    <ref bean="loginKeySecurityContextServiceEntry"/>
     <!--app-->
-    <ref bean="appHookSecurityContextServiceEntry"/>
     <ref bean="appSecurityContextServiceEntry"/>
+    <ref bean="appHookSecurityContextServiceEntry"/>
     <!--notification-->
     <!--foo-->
     <ref bean="fooSecurityContextServiceEntry"/>

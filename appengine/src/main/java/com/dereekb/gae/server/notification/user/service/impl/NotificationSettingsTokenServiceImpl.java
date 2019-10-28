@@ -34,10 +34,13 @@ public class NotificationSettingsTokenServiceImpl
         implements UserPushNotificationTokenService {
 
 	private static final Logger LOGGER = Logger.getLogger(NotificationSettingsTokenServiceImpl.class.getName());
-	private static final Long DEFAULT_MINIMUM_TOKEN_UPDATE_TIME = DateUtility.timeInDays(2);
+
+	public static final Long DEFAULT_MINIMUM_TOKEN_UPDATE_TIME = DateUtility.timeInDays(2);
+	public static final Integer DEFAULT_MAXIMUM_DEVICES_ALLOWED = 6;
 
 	private ObjectifyRegistry<NotificationSettings> notificationSettingsRegistry;
 	private Long minimumTokenUpdateTime = DEFAULT_MINIMUM_TOKEN_UPDATE_TIME;
+	private Integer maximumDevicesAllowed = DEFAULT_MAXIMUM_DEVICES_ALLOWED;
 
 	public NotificationSettingsTokenServiceImpl(ObjectifyRegistry<NotificationSettings> notificationSettingsRegistry) {
 		super();
@@ -66,6 +69,18 @@ public class NotificationSettingsTokenServiceImpl
 		}
 
 		this.minimumTokenUpdateTime = minimumTokenUpdateTime;
+	}
+
+	public Integer getMaximumDevicesAllowed() {
+		return this.maximumDevicesAllowed;
+	}
+
+	public void setMaximumDevicesAllowed(Integer maximumDevicesAllowed) {
+		if (maximumDevicesAllowed == null) {
+			throw new IllegalArgumentException("maximumDevicesAllowed cannot be null.");
+		}
+
+		this.maximumDevicesAllowed = maximumDevicesAllowed;
 	}
 
 	// MARK: UserPushNotificationTokenService
@@ -161,7 +176,14 @@ public class NotificationSettingsTokenServiceImpl
 					}
 
 					if (wasUpdated) {
-						settings.setTokens(currentTokensDeviceMap.values());
+						List<NotificationToken> newTokens = ListUtility.copy(currentTokensDeviceMap.values());
+
+						if (newTokens.size() >= NotificationSettingsTokenServiceImpl.this.maximumDevicesAllowed) {
+							newTokens = DateUtility.sortDatedModelsDescendingOrder(newTokens);
+							newTokens = newTokens.subList(0, NotificationSettingsTokenServiceImpl.this.maximumDevicesAllowed);
+						}
+
+						settings.setTokens(newTokens);
 					}
 
 					if (isNew) {

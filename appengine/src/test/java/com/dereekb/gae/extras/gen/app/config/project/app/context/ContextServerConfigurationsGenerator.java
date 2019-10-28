@@ -601,6 +601,10 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				        HttpMethod.POST);
 			}
 
+			// User Notification Routes
+			http.getRawXMLBuilder().c("Notification Pattern");
+			http.intercept(serviceApiPath + "/notification/**", HasRoleConfig.make("ROLE_USER"));
+
 			// Server Scheduler Routes
 			http.getRawXMLBuilder().c("Scheduling Pattern");
 			http.intercept(serviceApiPath + "/scheduler/schedule", HasRoleConfig.make("ROLE_ADMIN"), HttpMethod.POST);

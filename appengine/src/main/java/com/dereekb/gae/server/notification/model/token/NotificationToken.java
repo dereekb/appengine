@@ -78,6 +78,10 @@ public class NotificationToken
 	}
 
 	public void setDate(Date date) {
+		if (date == null) {
+			throw new IllegalArgumentException("date cannot be null.");
+		}
+
 		this.date = date;
 	}
 
@@ -89,7 +93,7 @@ public class NotificationToken
 
 	@Override
 	public String toString() {
-		return "NotificationToken [device=" + this.device + ", token=" + this.token + "]";
+		return "NotificationToken [device=" + this.device + ", token=" + this.token + ", date=" + this.date + "]";
 	}
 
 }

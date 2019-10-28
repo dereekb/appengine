@@ -10,6 +10,7 @@ import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiDebug
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiLinkConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiLoginConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiModelContextConfigurationGenerator;
+import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiNotificationConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiScheduleConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiSearchConfigurationGenerator;
 import com.dereekb.gae.extras.gen.app.config.project.app.api.extensions.ApiServerConfigurationGenerator;
@@ -97,6 +98,10 @@ public class ApiConfigurationGenerator extends AbstractConfigurationFileGenerato
 
 		// Schedule
 		extensions.merge(new ApiScheduleConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
+		        .generateConfigurations());
+
+		// Notification
+		extensions.merge(new ApiNotificationConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
 		        .generateConfigurations());
 
 		// Search
