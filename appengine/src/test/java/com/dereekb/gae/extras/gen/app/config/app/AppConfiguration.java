@@ -116,4 +116,11 @@ public interface AppConfiguration {
 
 	public boolean isLoginServer();
 
+	/**
+	 * True if this app has push notification services enabled.
+	 *
+	 * @return {@code true} if push notification services are available.
+	 */
+	public boolean hasNotificationServices();
+
 }

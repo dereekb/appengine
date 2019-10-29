@@ -306,4 +306,9 @@ public class AppConfigurationImpl
 		this.localModelConfigurations = localModelConfigurations;
 	}
 
+	@Override
+	public boolean hasNotificationServices() {
+		return this.getAppServicesConfigurer().getAppUserNotificationServiceConfigurer() != null;
+	}
+
 }

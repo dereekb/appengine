@@ -82,38 +82,44 @@ public class ApiConfigurationGenerator extends AbstractConfigurationFileGenerato
 	public GenFolderImpl generateExtensions() {
 		GenFolderImpl extensions = new GenFolderImpl("extension");
 
+		AppConfiguration appConfig = this.getAppConfig();
+
 		// Login
-		if (this.getAppConfig().isLoginServer()) {
-			extensions.merge(new ApiLoginConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
+		if (appConfig.isLoginServer()) {
+			extensions.merge(new ApiLoginConfigurationGenerator(appConfig, this.getOutputProperties())
 			        .generateConfigurations());
 		}
 
 		// Model Context / Roles
-		extensions.merge(new ApiModelContextConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
+		extensions.merge(new ApiModelContextConfigurationGenerator(appConfig, this.getOutputProperties())
 		        .generateConfigurations());
 
 		// Link
-		extensions.merge(new ApiLinkConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
+		extensions.merge(new ApiLinkConfigurationGenerator(appConfig, this.getOutputProperties())
 		        .generateConfigurations());
 
 		// Schedule
-		extensions.merge(new ApiScheduleConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
+		extensions.merge(new ApiScheduleConfigurationGenerator(appConfig, this.getOutputProperties())
 		        .generateConfigurations());
 
 		// Notification
-		extensions.merge(new ApiNotificationConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
-		        .generateConfigurations());
+		if (appConfig.hasNotificationServices() && appConfig.isRootServer()) {
+
+			// Only add the notifications API to the root server.
+			extensions.merge(new ApiNotificationConfigurationGenerator(appConfig, this.getOutputProperties())
+			        .generateConfigurations());
+		}
 
 		// Search
-		extensions.merge(new ApiSearchConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
+		extensions.merge(new ApiSearchConfigurationGenerator(appConfig, this.getOutputProperties())
 		        .generateConfigurations());
 
 		// Server
-		extensions.merge(new ApiServerConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
+		extensions.merge(new ApiServerConfigurationGenerator(appConfig, this.getOutputProperties())
 		        .generateConfigurations());
 
 		// Debug
-		extensions.merge(new ApiDebugConfigurationGenerator(this.getAppConfig(), this.getOutputProperties())
+		extensions.merge(new ApiDebugConfigurationGenerator(appConfig, this.getOutputProperties())
 		        .generateConfigurations());
 
 		// Extensions Import File

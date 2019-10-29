@@ -602,8 +602,12 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			}
 
 			// User Notification Routes
-			http.getRawXMLBuilder().c("Notification Pattern");
-			http.intercept(serviceApiPath + "/notification/**", HasRoleConfig.make("ROLE_USER"));
+			boolean hasNotificationRoute = this.getAppConfig().hasNotificationServices() && this.getAppConfig().isRootServer();
+
+			if (hasNotificationRoute) {
+				http.getRawXMLBuilder().c("Notification Pattern");
+				http.intercept(serviceApiPath + "/notification/**", HasRoleConfig.make("ROLE_USER"));
+			}
 
 			// Server Scheduler Routes
 			http.getRawXMLBuilder().c("Scheduling Pattern");
