@@ -10,6 +10,7 @@ import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
 import com.dereekb.gae.server.datastore.models.keys.accessor.task.impl.AbstractModelKeyListAccessorTask;
+import com.dereekb.gae.server.datastore.models.keys.accessor.task.impl.AbstractModelTransactionUpdateTask;
 import com.dereekb.gae.server.datastore.objectify.helpers.ObjectifyTransactionUtility;
 import com.dereekb.gae.server.datastore.objectify.helpers.PartitionDelegate;
 import com.dereekb.gae.server.datastore.objectify.helpers.impl.RunnablePartitionDelegateImpl;
@@ -24,6 +25,7 @@ import com.dereekb.gae.utilities.task.exception.FailedTaskException;
  *
  * @param <T>
  *            model type
+ * @see AbstractModelTransactionUpdateTask as an alternative implementation.
  */
 public abstract class AbstractTransactionModelUpdaterTask<T extends UniqueModel> extends AbstractModelKeyListAccessorTask<T> {
 

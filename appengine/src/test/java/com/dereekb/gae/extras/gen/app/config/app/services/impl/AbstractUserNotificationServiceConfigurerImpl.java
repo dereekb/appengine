@@ -54,7 +54,6 @@ public abstract class AbstractUserNotificationServiceConfigurerImpl
 		}
 
 		builder.comment("User Push Notification Service");
-
 		String notificationSettingsTokenServiceBeanId = "notificationSettingsTokenService";
 		builder.bean(userPushNotificationBeanId).beanClass(UserPushNotificationServiceImpl.class).c()
 		        .ref(primaryPushNotificationBeanId).ref(notificationSettingsTokenServiceBeanId);
@@ -63,7 +62,6 @@ public abstract class AbstractUserNotificationServiceConfigurerImpl
 		        .ref("notificationSettingsRegistry");
 
 		builder.comment("Push Notification Service");
-
 		if (makeWrappedPushNotificationBean) {
 			builder.bean(primaryPushNotificationBeanId).beanClass(TestPushNotificationServiceImpl.class)
 			        .factoryMethod("makeForEnvironment").c().ref(pushNotificationBeanId);

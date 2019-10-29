@@ -31,6 +31,10 @@ public class PushNotificationSendRequestBodyImpl
 		this(title, message, null, null);
 	}
 
+	public PushNotificationSendRequestBodyImpl(String title, String message, Parameters data, boolean contentAvailable) {
+		this(title, message, null, null, contentAvailable);
+	}
+
 	public PushNotificationSendRequestBodyImpl(PushNotificationSendRequestBody body) {
 		this(body.getTitle(), body.getMessage(), body.getImageUrl(), body.getData(), body.isContentAvailable());
 	}
