@@ -21,6 +21,7 @@ export * from './lib/model/crud/update.service';
 export * from './lib/model/extension/link/error';
 export * from './lib/model/extension/link/link.service';
 export * from './lib/model/extension/link/link';
+export * from './lib/model/extension/notification/notification.service';
 export * from './lib/model/extension/scheduler/scheduler.service';
 export * from './lib/model/extension/search/query/query.service';
 export * from './lib/model/extension/search/document/search.service';

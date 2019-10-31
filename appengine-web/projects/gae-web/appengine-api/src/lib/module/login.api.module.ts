@@ -9,6 +9,9 @@ import { OAuthLoginApiService } from '../auth/oauth.service';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ApiModuleService } from '../api.service';
+import { ClientUserNotificationService } from '../model/extension/notification/notification.service';
+import { ClientServiceConfig } from '../model/client.service';
+import { UserNotificationService } from '@gae-web/appengine-api/public-api';
 
 /**
  * ApiModuleService for the Login API Module.
@@ -37,6 +40,15 @@ export function loginApiModuleServiceFactory(moduleConfig: GaeLoginApiModuleConf
 
 export function loginApiModuleRouteConfigurationFactory(moduleConfig: GaeLoginApiModuleConfiguration) {
   return moduleConfig.routeConfig;
+}
+
+export function clientUserNotificationServiceFactory(moduleConfig: GaeLoginApiModuleConfiguration, httpClient: HttpClient) {
+  const clientConfig: ClientServiceConfig = {
+    httpClient,
+    routeConfig: moduleConfig.routeConfig
+  };
+
+  return new ClientUserNotificationService(clientConfig);
 }
 
 /**
@@ -89,6 +101,16 @@ export class GaeLoginApiModule {
           provide: UserLoginTokenAuthenticator,
           useClass: ApiUserLoginTokenAuthenticator,
           deps: [PublicLoginTokenApiService]
+        },
+        // ClientUserNotificationService
+        {
+          provide: ClientUserNotificationService,
+          useFactory: clientUserNotificationServiceFactory,
+          deps: [GaeLoginApiModuleConfiguration, HttpClient]
+        },
+        {
+          provide: UserNotificationService,
+          useExisting: ClientUserNotificationService
         }
       ]
     };

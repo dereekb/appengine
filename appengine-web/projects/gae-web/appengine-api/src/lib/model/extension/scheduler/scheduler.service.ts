@@ -60,13 +60,12 @@ export class ClientSchedulerService extends AbstractClientService implements Sch
     }
 
     protected handleScheduleResponse(request: ScheduleRequest, obs: Observable<HttpResponse<ApiResponseJson>>): Observable<ScheduleResponse> {
-        return obs.pipe(
-            catchError((e) => this.catchHttpResponseError(e)),
-            map((response: ClientApiResponse) => {
-                return {
-                    success: true
-                };
-            })
+        return super.handleResponse(obs).pipe(
+          map((response: ClientApiResponse) => {
+            return {
+              success: true
+            };
+          })
         );
     }
 
