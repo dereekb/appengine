@@ -9,9 +9,8 @@ import { OAuthLoginApiService } from '../auth/oauth.service';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ApiModuleService } from '../api.service';
-import { ClientUserNotificationService } from '../model/extension/notification/notification.service';
+import { ClientUserNotificationService, UserNotificationService } from '../model/extension/notification/notification.service';
 import { ClientServiceConfig } from '../model/client.service';
-import { UserNotificationService } from '@gae-web/appengine-api/public-api';
 
 /**
  * ApiModuleService for the Login API Module.
