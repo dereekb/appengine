@@ -43,14 +43,14 @@ export enum SourceState {
     Reset = 0,
 
     /**
-     * Not loading more elements. (can load more when requested.)
-     */
-    Idle = 1,
-
-    /**
      * Loading more elements.
      */
-    Loading = 2,
+    Loading = 1,
+
+    /**
+     * Not loading more elements. (can load more when requested.)
+     */
+    Idle = 2,
 
     /**
      * The source has reached the end (no more will load when requested.)
@@ -68,6 +68,21 @@ export enum SourceState {
      * Source has been stopped permenantly.
      */
     Stopped = 5
+
+}
+
+// MARK: Source Utiltiy
+export class SourceUtility {
+
+    /**
+     * Returns true if the source event has finished loading and is no longer idle.
+     *
+     * @param event Event to check.
+     */
+    static sourceEventHasFinishedLoading(event: SourceEvent<any>): boolean {
+        const result = event.state > SourceState.Loading;
+        return result;
+    }
 
 }
 
