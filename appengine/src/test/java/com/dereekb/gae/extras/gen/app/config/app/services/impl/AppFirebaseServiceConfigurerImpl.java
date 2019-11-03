@@ -3,7 +3,7 @@ package com.dereekb.gae.extras.gen.app.config.app.services.impl;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppFirebaseServiceConfigurer;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
-import com.dereekb.gae.server.api.firebase.impl.DefaultFirebaseServiceImpl;
+import com.dereekb.gae.server.api.firebase.impl.FirebaseServiceImpl;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.misc.env.EnvStringUtility;
 
@@ -91,7 +91,7 @@ public class AppFirebaseServiceConfigurerImpl
 		}
 
 		String firebaseServiceBeanId = appConfiguration.getAppBeans().getFirebaseServiceBeanId();
-		builder.bean(firebaseServiceBeanId).beanClass(DefaultFirebaseServiceImpl.class).c().value(databaseUrl)
+		builder.bean(firebaseServiceBeanId).beanClass(FirebaseServiceImpl.class).c().value(databaseUrl)
 		        .value(serviceAccountKeyFilePath);
 	}
 
