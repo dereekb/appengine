@@ -12,6 +12,15 @@ import com.dereekb.gae.utilities.misc.parameters.Parameters;
 public interface PushNotificationSendRequestBody {
 
 	/**
+	 * Returns the push notification code type.
+	 * <p>
+	 * This code should be unique to the type of notification received.
+	 *
+	 * @return {@link String}, or {@code null} if not applicable.
+	 */
+	public String getCode();
+
+	/**
 	 * Returns the title.
 	 *
 	 * @return {@link String}. Never {@code null}.

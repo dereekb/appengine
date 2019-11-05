@@ -12,6 +12,8 @@ import com.dereekb.gae.utilities.misc.parameters.Parameters;
 public class PushNotificationSendRequestBodyImpl
         implements PushNotificationSendRequestBody {
 
+	private String code;
+
 	private String title;
 	private String message;
 	private String imageUrl;
@@ -19,33 +21,48 @@ public class PushNotificationSendRequestBodyImpl
 
 	private boolean contentAvailable = false;
 
-	public PushNotificationSendRequestBodyImpl(String title) {
-		this(title, null, null);
+	public PushNotificationSendRequestBodyImpl(String code, String title) {
+		this(code, title, null, null);
 	}
 
-	public PushNotificationSendRequestBodyImpl(String title, String message) {
-		this(title, message, null);
+	public PushNotificationSendRequestBodyImpl(String code, String title, String message) {
+		this(code, title, message, null);
 	}
 
-	public PushNotificationSendRequestBodyImpl(String title, String message, Parameters data) {
-		this(title, message, null, null);
+	public PushNotificationSendRequestBodyImpl(String code, String title, String message, Parameters data) {
+		this(code, title, message, null, null);
 	}
 
-	public PushNotificationSendRequestBodyImpl(String title, String message, Parameters data, boolean contentAvailable) {
-		this(title, message, null, null, contentAvailable);
+	public PushNotificationSendRequestBodyImpl(String code,
+	        String title,
+	        String message,
+	        Parameters data,
+	        boolean contentAvailable) {
+		this(code, title, message, null, null, contentAvailable);
 	}
 
 	public PushNotificationSendRequestBodyImpl(PushNotificationSendRequestBody body) {
-		this(body.getTitle(), body.getMessage(), body.getImageUrl(), body.getData(), body.isContentAvailable());
+		this(body.getCode(), body.getTitle(), body.getMessage(), body.getImageUrl(), body.getData(),
+		        body.isContentAvailable());
 	}
 
-	public PushNotificationSendRequestBodyImpl(String title, String message, String imageUrl, Parameters data, boolean contentAvailable) {
-		this(title, message, imageUrl, data);
+	public PushNotificationSendRequestBodyImpl(String code,
+	        String title,
+	        String message,
+	        String imageUrl,
+	        Parameters data,
+	        boolean contentAvailable) {
+		this(code, title, message, imageUrl, data);
 		this.setContentAvailable(contentAvailable);
 	}
 
-	public PushNotificationSendRequestBodyImpl(String title, String message, String imageUrl, Parameters data) {
+	public PushNotificationSendRequestBodyImpl(String code,
+	        String title,
+	        String message,
+	        String imageUrl,
+	        Parameters data) {
 		super();
+		this.setCode(code);
 		this.setTitle(title);
 		this.setMessage(message);
 		this.setImageUrl(imageUrl);
@@ -53,6 +70,15 @@ public class PushNotificationSendRequestBodyImpl
 	}
 
 	// MARK: PushNotificationSendRequest
+	@Override
+	public String getCode() {
+		return this.code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
 	@Override
 	public String getTitle() {
 		return this.title;

@@ -90,7 +90,12 @@ public class FirebasePushNotificationServiceImpl
 
 		Notification notification = new Notification(title, body, image);
 
+		String code = request.getCode();
 		Map<String, String> data = ParameterUtility.safeMap(request.getData());
+
+		if (code != null) {
+			data.put("code", code);
+		}
 
 		String collapsesKey = null;	// TODO: Add collapse key usage later.
 
