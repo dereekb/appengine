@@ -4,89 +4,12 @@ import { catchError, map } from 'rxjs/operators';
 import { DateTime } from 'luxon';
 
 import {
-  StorageAccessor, AbstractStorageAccessor, StorageObject, DataDoesNotExistError, ISO8601DateString, DateTimeUtility, MemoryStorageObject
+  StorageAccessor, AbstractStorageAccessor, StorageObject, DataDoesNotExistError, ISO8601DateString, DateTimeUtility, MemoryStorageObject, LimitedStorageAccessor,
+  WrappedAsyncStorageAccessorDelegate, AsyncStorageAccessor, StoredDataString
 } from '@gae-web/appengine-utility';
 
 export class StoredTokenUnavailableError extends DataDoesNotExistError {
   constructor(message?: string) { super(message); }
-}
-
-export class AppTokenStorageService {
-
-  constructor(private _storage: StorageTokenAccessor) { }
-
-  public addToken(token: LoginTokenPair): Observable<{}> {
-    const storedToken: StoredToken = this.convertToStoredToken(token);
-    return this._storage.setToken(storedToken);
-  }
-
-  public getTokenWithKey(key: string): Observable<LoginTokenPair> {
-    return this._storage.get(key).pipe(
-      catchError((e) => {
-        const isMissing = (e instanceof DataDoesNotExistError);
-        const error = (isMissing) ? new StoredTokenUnavailableError() : e;
-        return throwError(error);
-      }),
-      map((result: StoredToken) => this.convertToLoginTokenPair(result))
-    );
-  }
-
-  public getTokens(): Observable<LoginTokenPair> {
-    return this._storage.all().pipe(
-      map((result) => this.convertToLoginTokenPair(result))
-    );
-  }
-
-  public removeToken(token: LoginTokenPair): Observable<{}> {
-    const key = this.makeKeyForTokenPair(token);
-    return this.removeTokenWithKey(key);
-  }
-
-  public removeTokenWithKey(key: string): Observable<{}> {
-    return this._storage.remove(key);
-  }
-
-  public clear(): Observable<{}> {
-    return this._storage.clear();
-  }
-
-  // MARK: Token
-  private convertToLoginTokenPair(token: StoredToken): LoginTokenPair {
-    return new LoginTokenPair(token.encoded, token.pointer);
-  }
-
-  private convertToStoredToken(token: LoginTokenPair): StoredToken {
-    const decoded = token.decode();
-    const storedToken = new StoredToken();
-
-    storedToken.type = decoded.type;
-    storedToken.pointer = decoded.pointer;
-    storedToken.encoded = decoded.encodedToken;
-    storedToken.expires = decoded.expiration;
-    storedToken.key = this.makeKeyForStoredToken(storedToken);
-
-    if (decoded instanceof DecodedLoginIncludedToken) {
-      storedToken.login = decoded.login;
-    } else {
-      storedToken.login = 0;
-    }
-
-    return storedToken;
-  }
-
-  private makeKeyForTokenPair(tokenPair: LoginTokenPair): string {
-    const decoded = tokenPair.decode();
-    return this.makeKey(decoded.type, decoded.pointer);
-  }
-
-  private makeKeyForStoredToken(token: StoredToken): string {
-    return this.makeKey(token.type, token.pointer);
-  }
-
-  private makeKey(type: TokenType, pointer: string): string {
-    return type + '_' + pointer; // Key is the type and pointer, meaning naturally over time tokens will be overwritten.
-  }
-
 }
 
 /**
@@ -167,13 +90,160 @@ export class StoredToken {
 
 }
 
+abstract class AbstractTokenStorageService {
+
+  // MARK: Token
+  protected convertToLoginTokenPair(token: StoredToken): LoginTokenPair {
+    return new LoginTokenPair(token.encoded, token.pointer);
+  }
+
+  protected convertToStoredToken(token: LoginTokenPair): StoredToken {
+    const decoded = token.decode();
+    const storedToken = new StoredToken();
+
+    storedToken.type = decoded.type;
+    storedToken.pointer = decoded.pointer;
+    storedToken.encoded = decoded.encodedToken;
+    storedToken.expires = decoded.expiration;
+    storedToken.key = this.makeKeyForStoredToken(storedToken);
+
+    if (decoded instanceof DecodedLoginIncludedToken) {
+      storedToken.login = decoded.login;
+    } else {
+      storedToken.login = 0;
+    }
+
+    return storedToken;
+  }
+
+  protected makeKeyForTokenPair(tokenPair: LoginTokenPair): string {
+    const decoded = tokenPair.decode();
+    return this.makeKey(decoded.type, decoded.pointer);
+  }
+
+  protected makeKeyForStoredToken(token: StoredToken): string {
+    return this.makeKey(token.type, token.pointer);
+  }
+
+  protected makeKey(type: TokenType, pointer: string): string {
+    return type + '_' + pointer; // Key is the type and pointer, meaning naturally over time tokens will be overwritten.
+  }
+
+}
+
+// MARK: Async
+export class AsyncAppTokenStorageService extends AbstractTokenStorageService {
+
+  private static readonly DEFAULT_PREFIX = 'STORED_TOKEN_';
+  private static readonly TOKEN_KEY = 'USER_TOKEN';
+
+  private _storage: LimitedStorageAccessor<StoredToken>;
+
+  constructor(tokenStringStorage: LimitedStorageAccessor<string>) {
+    super();
+    this._storage = this._makeStorage(tokenStringStorage);
+  }
+
+  // MARK: Tokens
+  public getToken(key: string = AsyncAppTokenStorageService.TOKEN_KEY): Observable<LoginTokenPair> {
+    return this._storage.get(key).pipe(
+      catchError((e) => {
+        const isMissing = (e instanceof DataDoesNotExistError);
+        const error = (isMissing) ? new StoredTokenUnavailableError() : e;
+        return throwError(error);
+      }),
+      map((result: StoredToken) => this.convertToLoginTokenPair(result))
+    );
+  }
+
+  public setToken(token: LoginTokenPair, key: string = AsyncAppTokenStorageService.TOKEN_KEY): Observable<{}> {
+    const storedToken: StoredToken = this.convertToStoredToken(token);
+    return this._storage.set(key, storedToken);
+  }
+
+  public clearToken(key: string = AsyncAppTokenStorageService.TOKEN_KEY): Observable<{}> {
+    return this._storage.remove(key);
+  }
+
+  public clearAllTokens(): Observable<{}> {
+    return this._storage.clear();
+  }
+
+  // MARK: Internal
+  _makeStorage(tokenStringStorage: LimitedStorageAccessor<string>): LimitedStorageAccessor<StoredToken> {
+    const delegate = new WrappedAsyncStorageAccessorDelegate<StoredToken>(tokenStringStorage, {
+
+      stringifyValue(value: StoredToken): StoredDataString {
+        return JSON.stringify(value);
+      },
+
+      parseValue(data: StoredDataString): StoredToken {
+        return StoredToken.fromJSON(data);
+      }
+
+    });
+
+    return new AsyncStorageAccessor<StoredToken>(delegate, AsyncAppTokenStorageService.DEFAULT_PREFIX);
+  }
+
+}
+
+// MARK: Legacy
+/**
+ * @deprecated
+ */
+export class AppTokenStorageService extends AbstractTokenStorageService {
+
+  constructor(private _storage: StorageTokenAccessor) { super(); }
+
+  public addToken(token: LoginTokenPair): Observable<{}> {
+    const storedToken: StoredToken = this.convertToStoredToken(token);
+    return this._storage.setToken(storedToken);
+  }
+
+  public getTokenWithKey(key: string): Observable<LoginTokenPair> {
+    return this._storage.get(key).pipe(
+      catchError((e) => {
+        const isMissing = (e instanceof DataDoesNotExistError);
+        const error = (isMissing) ? new StoredTokenUnavailableError() : e;
+        return throwError(error);
+      }),
+      map((result: StoredToken) => this.convertToLoginTokenPair(result))
+    );
+  }
+
+  public getTokens(): Observable<LoginTokenPair> {
+    return this._storage.all().pipe(
+      map((result) => this.convertToLoginTokenPair(result))
+    );
+  }
+
+  public removeToken(token: LoginTokenPair): Observable<{}> {
+    const key = this.makeKeyForTokenPair(token);
+    return this.removeTokenWithKey(key);
+  }
+
+  public removeTokenWithKey(key: string): Observable<{}> {
+    return this._storage.remove(key);
+  }
+
+  public clear(): Observable<{}> {
+    return this._storage.clear();
+  }
+
+}
+
 /**
  * Class/Interface for storing StoredToken values.
+ * @deprecated
  */
 export abstract class StorageTokenAccessor extends StorageAccessor<StoredToken> {
   abstract setToken(token: StoredToken, key?: string): Observable<{}>;
 }
 
+/**
+ * @deprecated
+ */
 export class StoredTokenStorageAccessor extends AbstractStorageAccessor<StoredToken> implements StorageTokenAccessor {
 
   public static readonly DEFAULT_PREFIX = 'TOKEN_';

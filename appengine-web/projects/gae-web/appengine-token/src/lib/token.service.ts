@@ -4,10 +4,10 @@ import { TokenType, EncodedRefreshToken, DecodedLoginIncludedToken, LoginId, Log
 import { ExpiredTokenAuthorizationError, TokenAuthorizationError, UnavailableLoginTokenError, TokenExpiredError, TokenLoginError, TokenLoginCommunicationError } from './error';
 
 import { FullStorageObject, MemoryStorageObject, StorageObject } from '@gae-web/appengine-utility';
-import { AppTokenStorageService, StoredTokenUnavailableError } from './storage.service';
+import { AppTokenStorageService, StoredTokenUnavailableError, AsyncAppTokenStorageService } from './storage.service';
 
-import { Observable, BehaviorSubject, of, throwError, empty, forkJoin, from, EMPTY } from 'rxjs';
-import { map, catchError, filter, flatMap, first, toArray, concat, throwIfEmpty, share, tap, finalize, shareReplay } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of, throwError, empty, forkJoin, from, EMPTY, merge } from 'rxjs';
+import { map, catchError, filter, flatMap, first, toArray, concat, throwIfEmpty, share, tap, finalize, shareReplay, distinctUntilChanged } from 'rxjs/operators';
 import { InvalidLoginTokenError } from './error';
 import { BaseError } from 'make-error';
 
@@ -45,6 +45,83 @@ export abstract class UserLoginTokenService {
 
 }
 
+export type AppTokenKeySelector = string | undefined;
+
+/**
+ * Shiny new UserLoginTokenService implementation.
+ */
+@Injectable()
+export class AsyncAppTokenUserService implements UserLoginTokenService {
+
+  private _selector = new BehaviorSubject<AppTokenKeySelector>(undefined);
+
+  private _pair: Observable<AppTokenUserServicePair | undefined>;
+
+  constructor(private _storage: AsyncAppTokenStorageService) {
+    this._pair = this._makePairPipe();
+  }
+
+  // MARK: Key Changes
+  get selector() {
+    return this._selector.value;
+  }
+
+  set selector(selector) {
+    this._selector.next(selector);
+  }
+
+  // MARK: Login Token
+  /**
+   * Sets the login token and the selector.
+   */
+  setLoginToken(token: LoginTokenPair, selector: AppTokenKeySelector = this.selector): Observable<LoginTokenPair> {
+    return this.updateLoginToken(token, selector).pipe(
+      // Refresh the selector
+      tap(() => this.selector = selector)
+    );
+  }
+
+  /**
+   * Only updates the stored value for the selector.
+   */
+  updateLoginToken(token: LoginTokenPair, selector: AppTokenKeySelector = this.selector): Observable<LoginTokenPair> {
+
+  }
+
+  // MARK: Internal
+  _makePairPipe(): Observable<AppTokenUserServicePair | undefined> {
+    const obs = this._selector.pipe(
+      flatMap((x) => {
+        return this._loadAppTokenUserServicePairForSelector(x);
+      })
+    );
+
+    return merge(of(undefined), obs).pipe(
+      distinctUntilChanged(),
+      shareReplay()
+    );
+  }
+
+  _loadAppTokenUserServicePairForSelector(selector): Observable<AppTokenUserServicePair | undefined> {
+
+    /*
+        return this._storage.getToken(x).pipe(
+          catchError(e => {
+            if (!(e instanceof StoredTokenUnavailableError)) {
+              console.warn('AsyncAppTokenUserService encountered an error in the pipe: ' + e);
+            }
+
+            return undefined;
+          })
+        );
+    */
+  }
+
+  // _tryGetStorageTokenForSelector()
+
+}
+
+// MARK: Legacy
 /**
  * Way the service was declared in the past.
  */
@@ -410,10 +487,10 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
 
   // MARK: Remove
   private deleteServicePair(pair: AppTokenUserServicePair): Observable<{}> {
-    return forkJoin(
+    return forkJoin([
       this.removeTokenFromStorage(pair.token),
       this.removeTokenFromStorage(pair.refreshToken)
-    );
+    ]);
   }
 
   private removeTokenFromStorage(loginToken: LoginTokenPair): Observable<{}> {
