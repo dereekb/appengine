@@ -6,6 +6,7 @@ import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 import { CreateResponse } from '@gae-web/appengine-api';
 import { FooCreateActionDirective } from 'src/app/secure/shared/components/model/foo/client/create.directive';
 import { MatProgressButtonOptions } from 'mat-progress-buttons';
+import { UserLoginTokenService } from '@gae-web/appengine-token';
 
 @Component({
   templateUrl: './list.component.html',
@@ -21,7 +22,7 @@ export class ModelListComponent {
 
   private _ref: MatDialogRef<FooCreateDialogComponent>;
 
-  constructor(private _dialog: MatDialog) { }
+  constructor(private _dialog: MatDialog, private _tokenService: UserLoginTokenService) { }
 
   openCreateDialog() {
     if (!this._ref) {
@@ -40,6 +41,14 @@ export class ModelListComponent {
   createJunk() {
     this._createAction.testCreate(20).subscribe(() => {
       this._searchSource.refresh();
+    });
+  }
+
+  test() {
+    this._tokenService.getEncodedLoginToken().subscribe({
+      next: (x) => {
+        console.log('Token: ' + x);
+      }
     });
   }
 

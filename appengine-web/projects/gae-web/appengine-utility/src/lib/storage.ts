@@ -4,6 +4,7 @@ import { map, flatMap, filter } from 'rxjs/operators';
 import { BaseError } from 'make-error';
 import { DateTime } from 'luxon';
 import * as localStorageMemory from 'localstorage-memory';
+import { ValueUtility } from './value';
 
 /**
  * Stored object accessor that can get/set/remove via a key, or be cleared entirely.
@@ -73,6 +74,8 @@ export abstract class FullStorageObject extends StorageObject {
   readonly isPersistant: boolean;
 
   readonly isAvailable: boolean;
+
+  abstract removeAll(): string[];
 
 }
 
@@ -261,6 +264,8 @@ export class AsyncStorageAccessor<T> implements LimitedStorageAccessor<T> {
 // MARK: Legacy
 /**
  * (Legacy) StorageAccessor implementation that wraps a StorageObject and implements the StorageAccessor interface.
+ *
+ * @deprecated Legacy
  */
 export abstract class AbstractStorageAccessor<T> implements StorageAccessor<T>, InstantStorageAccessor<T> {
 
@@ -458,6 +463,18 @@ export class FullLocalStorageObject implements FullStorageObject {
     return this._localStorage.key(index);
   }
 
+  removeAll(): string[] {
+    const length = this.length;
+    let keys = [];
+
+    if (length > 0) {
+      keys = ValueUtility.range(0, length).map((x) => this.key(x));
+      keys.forEach(x => this.removeItem(x));
+    }
+
+    return keys;
+  }
+
 }
 
 export class MemoryStorageObject extends FullLocalStorageObject {
@@ -472,6 +489,47 @@ export class MemoryStorageObject extends FullLocalStorageObject {
 
   constructor(memoryStorage: StorageObject = localStorageMemory) {
     super(memoryStorage);
+  }
+
+}
+
+/**
+ * LimitedStorageAccessor implementation that wraps a FullStorageObject.
+ */
+export class StorageObjectLimitedStorageAccessor implements LimitedStorageAccessor<string> {
+
+  constructor(private readonly _storage: FullStorageObject) { }
+
+  get(key: string): Observable<string> {
+    return new Observable((x) => {
+      const value = this._storage.getItem(key);
+      x.next(value);
+      x.complete();
+    });
+  }
+
+  set(key: string, value: string): Observable<{}> {
+    return new Observable((x) => {
+      const result = this._storage.setItem(key, value);
+      x.next(result);
+      x.complete();
+    });
+  }
+
+  remove(key: string): Observable<{}> {
+    return new Observable((x) => {
+      const removed = this._storage.removeItem(key);
+      x.next(removed);
+      x.complete();
+    });
+  }
+
+  clear(): Observable<{}> {
+    return new Observable((x) => {
+      const removed = this._storage.removeAll();
+      x.next(removed);
+      x.complete();
+    });
   }
 
 }

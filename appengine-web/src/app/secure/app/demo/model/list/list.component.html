@@ -2,11 +2,13 @@
   <gae-page-fab icon="note_add" (buttonClicked)="openCreateDialog()"></gae-page-fab>
   <div>
     <mat-spinner-button [options]="createJunkButtonOptions" (click)="createJunk()">Create 20 Items</mat-spinner-button>
+    <button mat-button (click)="test()">Test</button>
   </div>
-  <div class="gae-model-list" infinite-scroll [infiniteScrollDistance]="2" [immediateCheck]="true" [scrollWindow]="false"
-    (scrolled)="listSource.more()">
+  <div class="gae-model-list" infinite-scroll [infiniteScrollDistance]="2" [immediateCheck]="true"
+    [scrollWindow]="false" (scrolled)="listSource.more()">
     <app-foo-read-source #readSource></app-foo-read-source>
     <app-foo-default-query-source #iterateSource></app-foo-default-query-source>
-    <app-foo-list-view (itemSelected)="segue.segueToFoo($event)" #listSource="gaeListViewKeySearchSource" gaeListViewKeySearchSource [readComponent]="readSource" [iterateComponent]="iterateSource"></app-foo-list-view>
+    <app-foo-list-view (itemSelected)="segue.segueToFoo($event)" #listSource="gaeListViewKeySearchSource"
+      gaeListViewKeySearchSource [readComponent]="readSource" [iterateComponent]="iterateSource"></app-foo-list-view>
   </div>
 </ng-container>

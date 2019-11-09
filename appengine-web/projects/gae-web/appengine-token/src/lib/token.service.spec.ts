@@ -2,9 +2,8 @@ import { LoginTokenUtility, EncodedRefreshToken, LoginTokenPair } from './token'
 import { StoredTokenStorageAccessor, AppTokenStorageService } from './storage.service';
 import { UserLoginTokenAuthenticator, LegacyAppTokenUserService } from './token.service';
 import { Observable, of } from 'rxjs';
-import { MemoryStorageObject } from '@gae-web/appengine-utility';
 
-describe('LegacyAppTokenUserService', () => {
+describe('UserLoginTokenService', () => {
 
   const userLoginTokenAuthenticator: UserLoginTokenAuthenticator = {
     createRefreshToken(encodedToken: EncodedRefreshToken): Observable<LoginTokenPair> {
@@ -15,15 +14,27 @@ describe('LegacyAppTokenUserService', () => {
     }
   };
 
-  const storedTokenStorageAccessor = new StoredTokenStorageAccessor();
-  const appTokenStorageService = new AppTokenStorageService(storedTokenStorageAccessor);
-  const legacyAppTokenUserService = new LegacyAppTokenUserService(appTokenStorageService, userLoginTokenAuthenticator);
+  describe('AsyncAppTokenUserService', () => {
 
-  describe('if authenticated', () => {
+    // TODO: ...
 
   });
 
-  describe('if not authenticated', () => {
+  // TODO: Add tests for AsyncAppTokenUserService
+
+  describe('LegacyAppTokenUserService', () => {
+
+    const storedTokenStorageAccessor = new StoredTokenStorageAccessor();
+    const appTokenStorageService = new AppTokenStorageService(storedTokenStorageAccessor);
+    const legacyAppTokenUserService = new LegacyAppTokenUserService(appTokenStorageService, userLoginTokenAuthenticator);
+
+    describe('if authenticated', () => {
+
+    });
+
+    describe('if not authenticated', () => {
+
+    });
 
   });
 

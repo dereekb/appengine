@@ -1,13 +1,12 @@
 import { ModuleWithProviders, NgModule, InjectionToken } from '@angular/core';
-import { UserLoginTokenService, LegacyAppTokenUserService } from './token.service';
-import { AppTokenStorageService, StoredTokenStorageAccessor } from './storage.service';
-
-export function appTokenStorageServiceFactory(accessor: StoredTokenStorageAccessor) {
-  return new AppTokenStorageService(accessor);
-}
+import { UserLoginTokenService, LegacyAppTokenUserService, AsyncAppTokenUserService } from './token.service';
+import { AppTokenStorageService, StoredTokenStorageAccessor, AsyncAppTokenStorageService } from './storage.service';
+import { StorageObjectLimitedStorageAccessor, MemoryStorageObject } from '@gae-web/appengine-utility';
 
 export function memoryStoredTokenStorageAccessorFactory() {
-  return new StoredTokenStorageAccessor();
+  const storageObject = new MemoryStorageObject();
+  const accessor = new StorageObjectLimitedStorageAccessor(storageObject);
+  return new AsyncAppTokenStorageService(accessor);
 }
 
 /**
@@ -26,12 +25,7 @@ export class GaeTokenModule {
       providers: [
         {
           provide: UserLoginTokenService,
-          useClass: LegacyAppTokenUserService
-        },
-        {
-          provide: AppTokenStorageService,
-          useFactory: appTokenStorageServiceFactory,
-          deps: [StoredTokenStorageAccessor]
+          useClass: AsyncAppTokenUserService
         }
       ]
     };
@@ -45,7 +39,7 @@ export class GaeTokenModule {
 @NgModule({
   imports: [GaeTokenModule.forRoot()],
   providers: [{
-    provide: StoredTokenStorageAccessor,
+    provide: AsyncAppTokenStorageService,
     useFactory: memoryStoredTokenStorageAccessorFactory
   }]
 })

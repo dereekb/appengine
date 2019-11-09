@@ -1,6 +1,7 @@
 import 'jasmine-expect';
 import { TestReadService } from './model';
 import { TestFooReadService, TestFoo } from './foo.model';
+import { first } from 'rxjs/operators';
 
 describe('TestReadService', () => {
 
@@ -13,7 +14,9 @@ describe('TestReadService', () => {
 
       const result = await testReadService.read({
         modelKeys: [1, 2]
-      }).toPromise();
+      }).pipe(
+        first()
+      ).toPromise();
 
       expect(result.failed).toContain(1);
       expect(result.models).not.toBeEmptyArray();

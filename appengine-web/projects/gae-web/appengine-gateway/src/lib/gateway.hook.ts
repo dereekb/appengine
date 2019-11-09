@@ -1,7 +1,7 @@
 import { TransitionService, TransitionHookFn, Transition, HookResult, StateService } from '@uirouter/core';
 import { of } from 'rxjs';
 import { UserLoginTokenService } from '@gae-web/appengine-token';
-import { catchError, timeout, map } from 'rxjs/operators';
+import { catchError, timeout, map, first } from 'rxjs/operators';
 
 const DEFAULT_SIGN_IN_STATE = 'signin';
 
@@ -38,6 +38,7 @@ export function secureGatewayHook(transitionService: TransitionService, signInSt
     // Take at max 5000ms.
     return tokenService.isAuthenticated()
       .pipe(
+        first(),
         catchError(catchFn('error')),
         timeout(5000),
         catchError(catchFn('timeout')),

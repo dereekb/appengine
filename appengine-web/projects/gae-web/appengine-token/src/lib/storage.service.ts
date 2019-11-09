@@ -7,7 +7,6 @@ import {
   StorageAccessor, AbstractStorageAccessor, StorageObject, DataDoesNotExistError, ISO8601DateString, DateTimeUtility, MemoryStorageObject, LimitedStorageAccessor,
   WrappedAsyncStorageAccessorDelegate, AsyncStorageAccessor, StoredDataString
 } from '@gae-web/appengine-utility';
-import { DecodedLoginToken } from '@gae-web/appengine-token/lib/token';
 
 export class StoredTokenUnavailableError extends DataDoesNotExistError {
   constructor(message?: string) { super(message); }

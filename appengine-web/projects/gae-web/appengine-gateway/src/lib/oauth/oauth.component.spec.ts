@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OAuthSignInGatewayComponent } from './oauth.component';
 import { GaeGoogleModule, GaeFacebookModule, GoogleOAuthServiceConfig, FacebookApiServiceConfig } from '@gae-web/appengine-services';
 import { OAuthLoginApiService, TestUtility } from '@gae-web/appengine-api';
-import { UserLoginTokenService, LegacyAppTokenUserService, StoredTokenStorageAccessor, UserLoginTokenAuthenticator, AppTokenStorageService } from '@gae-web/appengine-token';
+import { UserLoginTokenService, BasicTokenUserService, StoredTokenStorageAccessor, UserLoginTokenAuthenticator, AppTokenStorageService } from '@gae-web/appengine-token';
 import { GaeGatewayOAuthModule } from './oauth.module';
 
 describe('OAuthSignInGatewayComponent', () => {
@@ -15,10 +15,7 @@ describe('OAuthSignInGatewayComponent', () => {
   const httpClient = httpClientSpy as any;
   const testOAuthLoginApiService = new OAuthLoginApiService(httpClient, TestUtility.testApiRouteConfig());
 
-  const storageAccessor = new StoredTokenStorageAccessor();
-  const tokenAuthenticator: UserLoginTokenAuthenticator = {} as any;
-
-  const testUserLoginTokenService = new LegacyAppTokenUserService(new AppTokenStorageService(storageAccessor), tokenAuthenticator);
+  const testUserLoginTokenService = new BasicTokenUserService();
 
   beforeEach(async(() => {
 

@@ -4,7 +4,7 @@ import { GaeGoogleModule, GaeFacebookModule, GoogleOAuthServiceConfig, FacebookA
 import { GaeGatewayViewsModule } from '../view.module';
 import { OAuthLoginApiService, TestUtility, RegisterApiService } from '@gae-web/appengine-api';
 import { GaeSignUpComponent } from './signup.component';
-import { UserLoginTokenService, LegacyAppTokenUserService, StoredTokenStorageAccessor, UserLoginTokenAuthenticator, AppTokenStorageService } from '@gae-web/appengine-token';
+import { UserLoginTokenService, BasicTokenUserService, StoredTokenStorageAccessor, UserLoginTokenAuthenticator, AppTokenStorageService } from '@gae-web/appengine-token';
 import { GatewaySegueService } from '../../state.service';
 import { TestGatewaySegueService } from '../../../test/state.service';
 import { TestAnalyticsModule } from '@gae-web/appengine-analytics';
@@ -21,10 +21,7 @@ describe('GaeSignUpComponent', () => {
   const testRegisterApiService = new RegisterApiService(httpClient, TestUtility.testApiRouteConfig());
   const testOAuthLoginApiService = new OAuthLoginApiService(httpClient, TestUtility.testApiRouteConfig());
 
-  const storageAccessor = new StoredTokenStorageAccessor();
-  const tokenAuthenticator: UserLoginTokenAuthenticator = {} as any;
-
-  const testUserLoginTokenService = new LegacyAppTokenUserService(new AppTokenStorageService(storageAccessor), tokenAuthenticator);
+  const testUserLoginTokenService = new BasicTokenUserService();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

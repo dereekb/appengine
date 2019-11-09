@@ -6,8 +6,8 @@ import { ExpiredTokenAuthorizationError, TokenAuthorizationError, UnavailableLog
 import { FullStorageObject, MemoryStorageObject, StorageObject } from '@gae-web/appengine-utility';
 import { AppTokenStorageService, StoredTokenUnavailableError, AsyncAppTokenStorageService } from './storage.service';
 
-import { Observable, BehaviorSubject, of, throwError, empty, forkJoin, from, EMPTY, merge, interval } from 'rxjs';
-import { map, catchError, filter, flatMap, first, toArray, concat, throwIfEmpty, share, tap, finalize, shareReplay, distinctUntilChanged, timeoutWith, throttleTime } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of, throwError, empty, forkJoin, from, concat, EMPTY, merge, interval } from 'rxjs';
+import { map, catchError, filter, flatMap, first, toArray, throwIfEmpty, share, tap, finalize, shareReplay, distinctUntilChanged, timeoutWith, throttleTime } from 'rxjs/operators';
 import { InvalidLoginTokenError } from './error';
 import { BaseError } from 'make-error';
 import { DateTime } from 'luxon';
@@ -73,9 +73,9 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
   public isAuthenticated(): Observable<boolean> {
     return this.getLoginToken().pipe(
       map((x) => Boolean(x)),
-      catchError((x) => {
-        if ((x instanceof NoLoginSetError) === false) {
-          console.error('Error while checking authentication.');
+      catchError((e) => {
+        if ((e instanceof NoLoginSetError) === false) {
+          console.error('Error while checking authentication: ' + e);
         }
 
         return of(false);
@@ -168,7 +168,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
   }
 
   private _makePairPipe(): Observable<AppTokenUserServicePair | undefined> {
-    const obs = this._selector.pipe(
+    const obs: Observable<AppTokenUserServicePair | undefined> = this._selector.pipe(
       map(x => [x, DateTime.local()] as [string, DateTime]),
       distinctUntilChanged((a, b) => {
         let allow: boolean;
@@ -187,11 +187,13 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
         const selector = x[0];
         return this._loadAppTokenUserServicePairForSelector(selector);
       }),
-      catchError(_ => undefined)
+      catchError(_ => of(undefined))
     );
 
-    return merge(of(undefined), obs).pipe(
+    return obs.pipe(
+      // Don't propogate until changed.
       distinctUntilChanged(),
+      // Subsequent calls should not hit the chain again.
       shareReplay()
     );
   }
@@ -265,7 +267,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
   }
 
   private _loadTokenFromStorage(selector: AppTokenKeySelector, type: TokenType) {
-    return this._storage.getToken(selector, TokenType.Full).pipe(
+    return this._storage.getToken(selector, type).pipe(
       // Catch Read Errors
       catchError((e) => {
         if (e instanceof StoredTokenUnavailableError) {
@@ -310,6 +312,46 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
       // Causes the selector value to be updated and refresh.
       this.selector = this.selector;
     }
+  }
+
+}
+
+// MARK: Testing
+/**
+ * Simple UserLoginTokenService implementation that uses a behavior subject.
+ */
+export class BasicTokenUserService implements UserLoginTokenService {
+
+  private readonly _token = new BehaviorSubject<LoginTokenPair>(undefined);
+
+  constructor() { }
+
+  isAuthenticated(): Observable<boolean> {
+    return this.getLoginToken().pipe(map(x => Boolean(x)));
+  }
+
+  getEncodedLoginToken(): Observable<EncodedToken> {
+    return this.getLoginToken().pipe(map(x => x.token));
+  }
+
+  getLoginToken(): Observable<LoginTokenPair> {
+    return this._token.asObservable();
+  }
+
+  login(fullToken: LoginTokenPair, selector?: AppTokenKeySelector): Observable<LoginTokenPair> {
+    return new Observable((x) => {
+      this._token.next(fullToken);
+      x.next(fullToken);
+      x.complete();
+    });
+  }
+
+  logout(): Observable<boolean> {
+    return new Observable((x) => {
+      this._token.next(undefined);
+      x.next(true);
+      x.complete();
+    });
   }
 
 }
@@ -695,7 +737,7 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
 
 /**
  * Accessor used for reading/writing which login to use.
- * 
+ *
  * @deprecated Legacy
  */
 export class AppTokenLoginAccessor {

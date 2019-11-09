@@ -19,9 +19,6 @@ export class SignInGatewaySuccessDirective implements OnDestroy {
     public redirect = true;
 
     @Input()
-    public stayLoggedIn = true;
-
-    @Input()
     public newUserLogin = false;
 
     private _sub = new SubscriptionObject();
@@ -43,7 +40,7 @@ export class SignInGatewaySuccessDirective implements OnDestroy {
 
     // MARK: Login
     protected login(token: LoginTokenPair) {
-        const sub = this._service.login(token, this.stayLoggedIn)
+        const sub = this._service.login(token)
             .subscribe((result) => {
 
                 if (this.redirect) {
