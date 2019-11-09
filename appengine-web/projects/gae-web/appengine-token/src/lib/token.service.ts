@@ -83,15 +83,15 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
     );
   }
 
-  public getEncodedLoginToken(): Observable<EncodedToken> {
+  public getEncodedLoginToken(): Observable<EncodedToken | undefined> {
     return this.getLoginToken().pipe(
-      map((x) => x.token)
+      map(x => (x) ? x.token : undefined)
     );
   }
 
-  public getLoginToken(): Observable<LoginTokenPair> {
+  public getLoginToken(): Observable<LoginTokenPair | undefined> {
     return this._pair.pipe(
-      map(x => x.token)
+      map(x => (x) ? x.token : undefined)
     );
   }
 
