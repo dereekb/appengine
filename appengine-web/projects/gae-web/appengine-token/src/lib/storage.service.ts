@@ -1,5 +1,5 @@
 import { TokenType, DecodedLoginIncludedToken, LoginTokenPair, LoginId, LoginPointerId, EncodedToken } from './token';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, merge } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DateTime } from 'luxon';
 
@@ -7,6 +7,7 @@ import {
   StorageAccessor, AbstractStorageAccessor, StorageObject, DataDoesNotExistError, ISO8601DateString, DateTimeUtility, MemoryStorageObject, LimitedStorageAccessor,
   WrappedAsyncStorageAccessorDelegate, AsyncStorageAccessor, StoredDataString
 } from '@gae-web/appengine-utility';
+import { DecodedLoginToken } from '@gae-web/appengine-token/lib/token';
 
 export class StoredTokenUnavailableError extends DataDoesNotExistError {
   constructor(message?: string) { super(message); }
@@ -145,8 +146,8 @@ export class AsyncAppTokenStorageService extends AbstractTokenStorageService {
   }
 
   // MARK: Tokens
-  public getToken(key: string = AsyncAppTokenStorageService.TOKEN_KEY): Observable<LoginTokenPair> {
-    return this._storage.get(key).pipe(
+  public getToken(key: string = AsyncAppTokenStorageService.TOKEN_KEY, type: TokenType = TokenType.Refresh): Observable<LoginTokenPair> {
+    return this._storage.get(this._makeStorageKey(key, type)).pipe(
       catchError((e) => {
         const isMissing = (e instanceof DataDoesNotExistError);
         const error = (isMissing) ? new StoredTokenUnavailableError() : e;
@@ -157,12 +158,17 @@ export class AsyncAppTokenStorageService extends AbstractTokenStorageService {
   }
 
   public setToken(token: LoginTokenPair, key: string = AsyncAppTokenStorageService.TOKEN_KEY): Observable<{}> {
+    const type: TokenType = token.decode().type;
     const storedToken: StoredToken = this.convertToStoredToken(token);
-    return this._storage.set(key, storedToken);
+    return this._storage.set(this._makeStorageKey(key, type), storedToken);
   }
 
-  public clearToken(key: string = AsyncAppTokenStorageService.TOKEN_KEY): Observable<{}> {
-    return this._storage.remove(key);
+  public clearAllTokensWithKey(key: string = AsyncAppTokenStorageService.TOKEN_KEY): Observable<{}> {
+    return merge(this.clearToken(key, TokenType.Refresh), this.clearToken(key, TokenType.Full));
+  }
+
+  public clearToken(key: string = AsyncAppTokenStorageService.TOKEN_KEY, type: TokenType = TokenType.Refresh): Observable<{}> {
+    return this._storage.remove(this._makeStorageKey(key, type));
   }
 
   public clearAllTokens(): Observable<{}> {
@@ -186,11 +192,15 @@ export class AsyncAppTokenStorageService extends AbstractTokenStorageService {
     return new AsyncStorageAccessor<StoredToken>(delegate, AsyncAppTokenStorageService.DEFAULT_PREFIX);
   }
 
+  _makeStorageKey(key: string, type: TokenType) {
+    return `${key}_${type}`;
+  }
+
 }
 
 // MARK: Legacy
 /**
- * @deprecated
+ * @deprecated Legacy
  */
 export class AppTokenStorageService extends AbstractTokenStorageService {
 
@@ -235,14 +245,15 @@ export class AppTokenStorageService extends AbstractTokenStorageService {
 
 /**
  * Class/Interface for storing StoredToken values.
- * @deprecated
+ *
+ * @deprecated Legacy
  */
 export abstract class StorageTokenAccessor extends StorageAccessor<StoredToken> {
   abstract setToken(token: StoredToken, key?: string): Observable<{}>;
 }
 
 /**
- * @deprecated
+ * @deprecated Legacy
  */
 export class StoredTokenStorageAccessor extends AbstractStorageAccessor<StoredToken> implements StorageTokenAccessor {
 
