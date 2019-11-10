@@ -150,7 +150,15 @@ public class LoginTokenControllerDelegateImpl
 
 	@Override
 	public LoginTokenPair makeRefreshToken(EncodedLoginToken token) throws TokenUnauthorizedException {
-		DecodedLoginToken<LoginToken> decodedLoginToken = this.refreshTokenEncoderDecoder
+		/*
+		 * We decode a token using the LoginTokenService since we don't want
+		 * refresh tokens to be able to refresh themselves.
+		 *
+		 * Refresh token signing has their own secret/signature to prevent them
+		 * from being decoded properly here, but also the token service rejects
+		 * tokens with a refresh token type.
+		 */
+		DecodedLoginToken<LoginToken> decodedLoginToken = this.loginTokenService
 		        .decodeLoginToken(token.getEncodedLoginToken());
 		LoginToken refreshToken = this.refreshTokenService.makeRefreshToken(decodedLoginToken.getLoginToken());
 		String encodedToken = this.refreshTokenEncoderDecoder.encodeLoginToken(refreshToken);

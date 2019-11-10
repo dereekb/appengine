@@ -146,6 +146,7 @@ public class RefreshTokenServiceImpl
 		Login login = this.loadLogin(loginPointer);
 
 		this.assertRefreshIsAllowed(loginToken);
+		this.assertIsNotRefreshToken(loginToken);
 		this.assertAuthenticationValid(login, loginToken);
 
 		LoginTokenImpl refreshToken = new LoginTokenImpl();
@@ -178,9 +179,15 @@ public class RefreshTokenServiceImpl
 		return loginPointer;
 	}
 
-	private void assertRefreshIsAllowed(LoginToken refreshToken) throws TokenUnauthorizedException {
-		if (refreshToken.isRefreshAllowed() == false) {
+	private void assertRefreshIsAllowed(LoginToken loginToken) throws TokenUnauthorizedException {
+		if (loginToken.isRefreshAllowed() == false) {
 			throw new TokenUnauthorizedException("This token is not authorized for refreshing.");
+		}
+	}
+
+	private void assertIsNotRefreshToken(LoginToken loginToken) throws TokenUnauthorizedException {
+		if (loginToken.getPointerType() == LoginPointerType.REFRESH_TOKEN) {
+			throw new TokenUnauthorizedException("Refresh tokens are not allowed to refresh.");
 		}
 	}
 
