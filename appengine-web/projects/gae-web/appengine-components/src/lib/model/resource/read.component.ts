@@ -142,7 +142,7 @@ export abstract class AbstractSingleElementSourceKeysProvider<T extends UniqueMo
     if (source) {
       this._source.readSourceKeys = source.first.pipe(
         map((x) => ((x) ? this.mapToKeys(x) || [] : [])),
-        shareReplay()
+        shareReplay(1)
       );
     } else {
       this._source.readSourceKeys = undefined;

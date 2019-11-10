@@ -119,7 +119,7 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
       return this._read(request);
     } else {
       return this.continuousRead(request, 0).pipe(
-        shareReplay()   // Share the single result with all subscribers.
+        shareReplay(1)   // Share the single result with all subscribers.
       );
     }
   }
@@ -204,7 +204,8 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
           this._parent.cache.removeAll(response.failed);  // Remove "missing" models from cache.
           this._working.delete(hash);  // Remove from working.
         }),
-        shareReplay()
+        // Share the latest response
+        shareReplay(1)
       );
 
       this._working.set(hash, obs);

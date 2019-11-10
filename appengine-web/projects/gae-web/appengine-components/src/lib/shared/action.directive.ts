@@ -56,7 +56,7 @@ export abstract class AbstractActionDirective<E extends ActionEvent> extends Act
     } else {
       this.next(this.makeWorkingState());
 
-      const obs = doFn().pipe(shareReplay()); // Share result so action is not re-executed multiple times.
+      const obs = doFn().pipe(shareReplay(1)); // Share latest result so action is not re-executed multiple times.
 
       this._sub.subscription = obs.subscribe((r) => {
         const completedState = success(r);

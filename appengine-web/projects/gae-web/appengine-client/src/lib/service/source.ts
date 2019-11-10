@@ -267,7 +267,8 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
       map((response: ModelSearchResponse<T>) => {
         return new KeyResultPair<T>(request, response);
       }),
-      shareReplay()
+      // Share the latest response
+      shareReplay(1)
     );
 
     return obs;
@@ -494,7 +495,8 @@ export class MergedReadIterateSource<T extends UniqueModel> implements Controlla
           state
         };
       }),
-      shareReplay()
+      // Share the latest response
+      shareReplay(1)
     );
   }
 

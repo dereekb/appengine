@@ -67,7 +67,7 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
     } else {
       return [];
     }
-  }), shareReplay());
+  }), shareReplay(1));
 
   private _lastSourceState = ListViewSourceState.Init;
   private _selected?: T;
@@ -84,7 +84,7 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
   @Output()
   public itemSelected = new EventEmitter<T>();
 
-  constructor(@Inject(ChangeDetectorRef) private cdRef: ChangeDetectorRef) {}
+  constructor(@Inject(ChangeDetectorRef) private cdRef: ChangeDetectorRef) { }
 
   ngAfterContentInit() {
     this._initialize();

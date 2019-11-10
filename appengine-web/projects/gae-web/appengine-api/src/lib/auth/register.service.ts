@@ -33,7 +33,7 @@ export class RegisterApiService {
       headers
     }).pipe(
       map(LoginTokenPair.fromResponse),
-      shareReplay()
+      shareReplay(1)
     );
 
   }

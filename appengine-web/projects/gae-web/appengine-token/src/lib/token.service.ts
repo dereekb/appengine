@@ -53,8 +53,8 @@ export type AppTokenKeySelector = string | undefined;
  */
 export class AppTokenUserServicePair {
   public selector: AppTokenKeySelector;
-  public token: LoginTokenPair;
-  public refreshToken: LoginTokenPair;
+  public token?: LoginTokenPair;
+  public refreshToken?: LoginTokenPair;
 }
 
 /**
@@ -64,7 +64,7 @@ export class AppTokenUserServicePair {
 export class AsyncAppTokenUserService implements UserLoginTokenService {
 
   private _selector = new BehaviorSubject<AppTokenKeySelector>(undefined);
-  private _pair: Observable<AppTokenUserServicePair | undefined>;
+  private readonly _pair: Observable<AppTokenUserServicePair>;
 
   constructor(private _storage: AsyncAppTokenStorageService, private _tokenService: UserLoginTokenAuthenticator) {
     this._pair = this._makePairPipe();
@@ -91,7 +91,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
   }
 
   public getLoginToken(): Observable<LoginTokenPair | undefined> {
-    return this._pair.pipe(
+    return this.servicePairObs.pipe(
       map(x => (x) ? x.token : undefined)
     );
   }
@@ -105,7 +105,15 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
   }
 
   public logout(): Observable<boolean> {
-    return this._clearAllTokens().pipe(map(_ => true));
+    return this._clearAllTokens().pipe(
+      flatMap((_) => {
+        // Watch for the token to no longer be set.
+        return this.servicePairObs.pipe(
+          filter(x => !x.token)
+        );
+      }),
+      map(_ => true)
+    );
   }
 
   // MARK: Accessors
@@ -123,7 +131,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
   }
 
   public getRawLoginTokenStream(): Observable<LoginTokenPair | undefined> {
-    return this._pair.pipe(
+    return this.servicePairObs.pipe(
       map((x) => ((x) ? x.token : undefined))
     );
   }
@@ -152,9 +160,9 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
         // Set the new selector.
         this.selector = selector;
 
-        // Watch for the selector to come through the pipe.
+        // Watch for the selector to come through the pipe with the token.
         return this.servicePairObs.pipe(
-          filter(x => x.selector === selector),
+          filter(x => x.selector === selector && Boolean(x.token)),
           map(x => x.token)
         );
       })
@@ -181,34 +189,49 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
     return this._storage.setToken(refreshToken, selector);
   }
 
-  private _makePairPipe(): Observable<AppTokenUserServicePair | undefined> {
-    const obs: Observable<AppTokenUserServicePair | undefined> = this._selector.pipe(
+  private _makePairPipe(): Observable<AppTokenUserServicePair> {
+    const obs: Observable<AppTokenUserServicePair> = this._selector.pipe(
       map(x => [x, DateTime.local()] as [string, DateTime]),
+      // tap((x) => console.log('Selector updated: "' + x[0] + '" ' + x[1].toISO())),
+      // Should not use distinctUntilChanged due to the lack of information here.
+      /*
       distinctUntilChanged((a, b) => {
         let allow: boolean;
 
         if (a[0] === b[0]) {
           // Throttle for 1 second if the same.
           const SECONDS_TO_THROTTLE = 1;
-          allow = (a[1].diff(b[1], 'seconds').seconds > SECONDS_TO_THROTTLE);
+          allow = Math.abs(a[1].diff(b[1], 'seconds').seconds) > SECONDS_TO_THROTTLE;
         } else {
           allow = true;
         }
 
         return !allow;  // distinctUntilChanged uses equality.
       }),
+      */
       flatMap((x) => {
         const selector = x[0];
-        return this._loadAppTokenUserServicePairForSelector(selector);
-      }),
-      catchError(_ => of(undefined))
+        return this._loadAppTokenUserServicePairForSelector(selector).pipe(
+          // On errors, return a service pair that has just the selector.
+          catchError(_ => of({
+            selector
+          }))
+        );
+      })
     );
 
     return obs.pipe(
-      // Don't propogate until changed.
-      distinctUntilChanged(),
+      distinctUntilChanged((a, b) => {
+        // Don't propogate until the pair changes in some way.
+        if (a && b) {
+          return a.selector === b.selector && a.token === b.token && a.refreshToken === b.refreshToken;
+        } else {
+          return !a && !b; // Not the same.
+        }
+      }),
       // Subsequent calls should not hit the chain again.
-      shareReplay()
+      shareReplay(1),
+      // tap((x) => console.log(`Pipe called > S: ${ x.selector} T: ${ x.token }`)),
     );
   }
 
@@ -702,7 +725,7 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
         finalize(() => {
           this.refreshTokenLoginObsMap.delete(refreshToken.token);  // Delete once finished.
         }),
-        shareReplay()
+        shareReplay(1)
       );
       this.refreshTokenLoginObsMap.set(refreshToken.token, refreshObs);
     }

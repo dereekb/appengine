@@ -33,7 +33,7 @@ export class GaePageToolbarComponent extends AbstractSubscriptionComponent imple
       }),
       flatMap((x: Observable<GaePageToolbarConfiguration>[]) => {
         if (x.length > 0) {
-          return combineLatest(...x).pipe(
+          return combineLatest(x).pipe(
             map((y: GaePageToolbarConfiguration[]) => {
               const validConfigs = y.filter((config) => Boolean(config));
               return validConfigs[validConfigs.length - 1];
@@ -51,7 +51,7 @@ export class GaePageToolbarComponent extends AbstractSubscriptionComponent imple
         };
       }),
       tap((x) => this._configuration = x),
-      shareReplay()
+      shareReplay(1)
     );
 
     this._configurationObs = obs.pipe();

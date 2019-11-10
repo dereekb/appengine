@@ -411,7 +411,7 @@ export class GaeTransformationSourceDirective<I, O> extends AbstractTransformati
         console.error('Transformation error: ' + x);
         return throwError(x);
       }),
-      shareReplay()
+      shareReplay(1)
     );
   }
 
