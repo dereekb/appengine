@@ -46,15 +46,16 @@ export abstract class UserLoginTokenService {
 
 }
 
+export type AppTokenKeySelector = string | undefined;
+
 /**
  * Internal cache used by an AppTokenUserService instance.
  */
 export class AppTokenUserServicePair {
+  public selector: AppTokenKeySelector;
   public token: LoginTokenPair;
   public refreshToken: LoginTokenPair;
 }
-
-export type AppTokenKeySelector = string | undefined;
 
 /**
  * Shiny new UserLoginTokenService implementation.
@@ -127,6 +128,10 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
     );
   }
 
+  public get servicePairObs(): Observable<AppTokenUserServicePair> {
+    return this._pair;
+  }
+
   // MARK: Key Changes
   get selector() {
     return this._selector.value;
@@ -142,8 +147,17 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
    */
   public setLoginToken(fullToken: LoginTokenPair, selector: AppTokenKeySelector = this.selector): Observable<LoginTokenPair> {
     return this.updateLoginToken(fullToken, selector).pipe(
-      // Set the new selector.
-      tap(() => this.selector = selector)
+      flatMap((_) => {
+
+        // Set the new selector.
+        this.selector = selector;
+
+        // Watch for the selector to come through the pipe.
+        return this.servicePairObs.pipe(
+          filter(x => x.selector === selector),
+          map(x => x.token)
+        );
+      })
     );
   }
 
