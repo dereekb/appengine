@@ -692,6 +692,22 @@ export class ValueUtility {
     return array;
   }
 
+  /**
+   * Converts a map to an array of key/value pairs.
+   */
+  static convertMapToPairsArray<T>(map: UniqueArrayMap<T>): { key: string, value: string | number | undefined | any }[] {
+    const array: { key: string, value: string }[] = [];
+
+    ValueUtility.forEachProperty(map, (value, key) => {
+      array.push({
+        key,
+        value: (value !== undefined) ? value : undefined
+      });
+    });
+
+    return array;
+  }
+
   static convertIndexedMapToArray<T>(map: Map<number, T>, emptyValue: T, maxDefaultLimit: number = 1000, indexLimit?: number): T[] {
     if (indexLimit === undefined) {
       const getDefaultLimit = () => {

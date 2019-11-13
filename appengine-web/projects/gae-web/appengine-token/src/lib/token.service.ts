@@ -231,6 +231,9 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
       }),
       // Subsequent calls should not hit the chain again.
       shareReplay(1),
+
+      // TODO: Fix issue where the token can expire. If the token is close to expiring, or is expired when called, then refresh it before returning.
+
       // tap((x) => console.log(`Pipe called > S: ${ x.selector} T: ${ x.token }`)),
     );
   }

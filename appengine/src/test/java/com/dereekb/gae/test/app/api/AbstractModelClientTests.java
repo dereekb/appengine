@@ -218,6 +218,11 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 			}
 
 			public AbstractModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
+			        ClientUpdateRequestSender<T> updateRequestSender) {
+				this(readRequestSender, null, null, updateRequestSender, null, null);
+			}
+
+			public AbstractModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
 			        ClientQueryRequestSenderImpl<T, ?> queryRequestSender,
 			        ClientCreateRequestSender<T> createRequestSender,
 			        ClientUpdateRequestSender<T> updateRequestSender,

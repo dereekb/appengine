@@ -17,6 +17,12 @@ export interface AnalyticsEventData {
   readonly [key: string]: string | number | boolean;
 }
 
+export type NewUserRegistrationMethod = 'facebook' | 'google' | 'email' | string;
+
+export interface NewUserAnalyticsEventData extends AnalyticsEventData {
+  method: NewUserRegistrationMethod;
+}
+
 export interface AnalyticsEvent {
   readonly name?: AnalyticsEventName;
   readonly value?: number;
@@ -29,7 +35,7 @@ export interface UserAnalyticsEvent extends AnalyticsEvent {
 
 export abstract class AnalyticsSender {
 
-  abstract sendNewUserEvent(user: AnalyticsUser, data?: AnalyticsEventData);
+  abstract sendNewUserEvent(user: AnalyticsUser, data: NewUserAnalyticsEventData);
 
   abstract sendUserLoginEvent(user: AnalyticsUser, data?: AnalyticsEventData);
 
@@ -39,7 +45,7 @@ export abstract class AnalyticsSender {
 
   abstract sendEvent(event: AnalyticsEvent);
 
-  abstract sendPageView();
+  abstract sendPageView(page?: string);
 
 }
 
@@ -152,7 +158,7 @@ export class AnalyticsService implements AnalyticsSender {
   /**
    * Sends an event.
    */
-  public sendNewUserEvent(user: AnalyticsUser, data?: AnalyticsEventData) {
+  public sendNewUserEvent(user: AnalyticsUser, data: NewUserAnalyticsEventData) {
     this.sendNextEvent({
       name: AnalyticsService.USER_REGISTRATION_EVENT_NAME,
       data
@@ -190,8 +196,10 @@ export class AnalyticsService implements AnalyticsSender {
     this.sendNextEvent(event, AnalyticsStreamEventType.Event);
   }
 
-  public sendPageView() {
-    this.sendNextEvent({}, AnalyticsStreamEventType.PageView);
+  public sendPageView(page?: string) {
+    this.sendNextEvent({
+      name: page
+    }, AnalyticsStreamEventType.PageView);
   }
 
   protected sendNextEvent(event: AnalyticsEvent = {}, type: AnalyticsStreamEventType, userOverride?: AnalyticsUser) {
