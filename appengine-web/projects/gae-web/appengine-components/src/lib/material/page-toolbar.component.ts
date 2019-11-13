@@ -118,7 +118,10 @@ export class GaePageToolbarComponent extends AbstractSubscriptionComponent imple
     const index = this.providers.indexOf(provider);
 
     if (index !== -1) {
-      this._providers.next(this.providers.splice(index, 1));
+      const newArray = [].concat(this.providers);
+      newArray.splice(index, 1);
+
+      this._providers.next(newArray);
     }
   }
 

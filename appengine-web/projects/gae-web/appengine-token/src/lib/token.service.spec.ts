@@ -51,7 +51,7 @@ describe('UserLoginTokenService', () => {
 
   };
 
-  fdescribe('AsyncAppTokenUserService', () => {
+  describe('AsyncAppTokenUserService', () => {
 
     let service: AsyncAppTokenUserService;
 
