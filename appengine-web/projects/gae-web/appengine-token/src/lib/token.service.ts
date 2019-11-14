@@ -253,7 +253,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
         return of(pair);
       }
     } else {
-      return undefined;
+      return of(undefined);
     }
   }
 
