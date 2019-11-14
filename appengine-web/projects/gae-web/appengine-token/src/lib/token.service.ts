@@ -242,8 +242,8 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
   private _refreshFullTokenIfNecessary(pair: AppTokenUserServicePair | undefined): Observable<AppTokenUserServicePair | undefined> {
     if (pair && pair.refreshToken && !pair.refreshToken.isExpired) {
       // If we don't have a token, or the token is expired, refresh.
-      if (!pair.token && pair.token.isExpired) {
-        // Reload both tokens.
+      if (!pair.token || pair.token.isExpired) {
+        // Reload both tokens if expired.
         return this._loadAppTokenUserServicePairForSelector(pair.selector).pipe(
           // Also tap to refresh the selector.
           tap((_) => this._triggerSelectorRefresh())
