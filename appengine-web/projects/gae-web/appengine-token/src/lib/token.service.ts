@@ -231,11 +231,30 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
       }),
       // Subsequent calls should not hit the chain again.
       shareReplay(1),
-
+      // Always check the token and refresh if necesary.
+      flatMap((x) => this._refreshFullTokenIfNecessary(x))
       // TODO: Fix issue where the token can expire. If the token is close to expiring, or is expired when called, then refresh it before returning.
 
       // tap((x) => console.log(`Pipe called > S: ${ x.selector} T: ${ x.token }`)),
     );
+  }
+
+  private _refreshFullTokenIfNecessary(pair: AppTokenUserServicePair | undefined): Observable<AppTokenUserServicePair | undefined> {
+    if (pair && pair.refreshToken && !pair.refreshToken.isExpired) {
+      // If we don't have a token, or the token is expired, refresh.
+      if (!pair.token && pair.token.isExpired) {
+        // Reload both tokens.
+        return this._loadAppTokenUserServicePairForSelector(pair.selector).pipe(
+          // Also tap to refresh the selector.
+          tap((_) => this._triggerSelectorRefresh())
+        );
+      } else {
+        // Pair is still ok.
+        return of(pair);
+      }
+    } else {
+      return undefined;
+    }
   }
 
   private _loadAppTokenUserServicePairForSelector(selector: AppTokenKeySelector): Observable<AppTokenUserServicePair | undefined> {
@@ -246,7 +265,9 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
         return this._loadFullToken(selector, refreshToken).pipe(
           // Map to a pair
           map(token => ({
-            token, refreshToken
+            selector,
+            token,
+            refreshToken
           }) as AppTokenUserServicePair)
         );
       }),
