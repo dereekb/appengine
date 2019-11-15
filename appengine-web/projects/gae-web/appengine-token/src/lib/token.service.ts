@@ -86,13 +86,13 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
 
   public getEncodedLoginToken(): Observable<EncodedToken | undefined> {
     return this.getLoginToken().pipe(
-      map(x => (x) ? x.token : undefined)
+      map(x => x.token)
     );
   }
 
   public getLoginToken(): Observable<LoginTokenPair | undefined> {
     return this.servicePairObs.pipe(
-      map(x => (x) ? x.token : undefined)
+      map(x => x.token)
     );
   }
 
@@ -239,7 +239,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
     );
   }
 
-  private _refreshFullTokenIfNecessary(pair: AppTokenUserServicePair | undefined): Observable<AppTokenUserServicePair | undefined> {
+  private _refreshFullTokenIfNecessary(pair: AppTokenUserServicePair): Observable<AppTokenUserServicePair> {
     if (pair && pair.refreshToken && !pair.refreshToken.isExpired) {
       // If we don't have a token, or the token is expired, refresh.
       if (!pair.token || pair.token.isExpired) {
@@ -253,11 +253,11 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
         return of(pair);
       }
     } else {
-      return of(undefined);
+      return of({ selector: pair.selector });
     }
   }
 
-  private _loadAppTokenUserServicePairForSelector(selector: AppTokenKeySelector): Observable<AppTokenUserServicePair | undefined> {
+  private _loadAppTokenUserServicePairForSelector(selector: AppTokenKeySelector): Observable<AppTokenUserServicePair> {
     // Load the refresh token
     return this._loadRefreshToken(selector).pipe(
       flatMap((refreshToken: LoginTokenPair) => {
