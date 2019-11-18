@@ -110,8 +110,8 @@ public class FirebasePushNotificationServiceImpl
 
 		ApnsConfig apnsConfig = apnsConfigBuilder.build();
 
-		return MulticastMessage.builder().addAllTokens(tokenStrings).setNotification(notification).putAllData(data)
-		        .setApnsConfig(apnsConfig).build();
+		return MulticastMessage.builder().addAllTokens(tokenStrings).setNotification(notification)
+		        .setApnsConfig(apnsConfig).putAllData(data).build();
 	}
 
 	private PushNotificationSendResponse buildResponse(PushNotificationSendRequest request,

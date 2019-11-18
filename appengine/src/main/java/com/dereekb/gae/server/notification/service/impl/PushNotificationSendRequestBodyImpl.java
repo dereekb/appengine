@@ -30,7 +30,7 @@ public class PushNotificationSendRequestBodyImpl
 	}
 
 	public PushNotificationSendRequestBodyImpl(String code, String title, String message, Parameters data) {
-		this(code, title, message, null, null);
+		this(code, title, message, null, data);
 	}
 
 	public PushNotificationSendRequestBodyImpl(String code,
@@ -38,7 +38,7 @@ public class PushNotificationSendRequestBodyImpl
 	        String message,
 	        Parameters data,
 	        boolean contentAvailable) {
-		this(code, title, message, null, null, contentAvailable);
+		this(code, title, message, null, data, contentAvailable);
 	}
 
 	public PushNotificationSendRequestBodyImpl(PushNotificationSendRequestBody body) {
