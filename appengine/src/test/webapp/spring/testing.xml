@@ -28,7 +28,7 @@
   <bean class="com.google.appengine.tools.development.testing.LocalURLFetchServiceTestConfig" id="localURLFetchServiceTestConfig"/>
   <bean class="com.google.appengine.tools.development.testing.LocalAppIdentityServiceTestConfig" id="localAppIdentityServiceTestConfig"/>
   <bean class="java.lang.String" id="taskQueueXmlPath">
-    <constructor-arg index="0" value="src/main/webapp/WEB-INF/queue.xml"/>
+    <constructor-arg index="0" value="src/main/webapp/WEB-INF/devqueue.xml"/>
   </bean>
   <bean class="com.dereekb.gae.test.server.datastore.objectify.TestObjectifyInitializerImpl" id="test_objectifyInitializer" lazy-init="false" primary="true"/>
   <bean class="com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig" id="localTaskQueueServiceTestConfig">
