@@ -268,6 +268,51 @@ export class ValueUtility {
   }
 
   /**
+   * Takes random elements from the input array.
+   */
+  static takeRandomElements<T>(array: OneOrMore<T>, limit?: number): T[] {
+    let copy = this.normalizeArrayCopy(array);
+    this.shuffleArray(copy, limit);
+
+    // If the limit is less, take the elements from the end of the array,
+    // as those are the ones that were shuffled.
+    if (limit && limit < copy.length) {
+      copy = copy.slice(copy.length - limit);
+    }
+
+    return copy;
+  }
+
+  /**
+   * Fisher–Yates Shuffle
+   * https://bost.ocks.org/mike/shuffle/
+   *
+   * Shuffles the input array, then returns that array.
+   *
+   * Can specify a limit on the number of elements to shuffle.
+   * Will shuffle from the end of the array to this point.
+   */
+  static shuffleArray<T>(array: T[], limit?: number): T[] {
+    let currentIndex = array.length;
+    const endIndex = (limit) ? Math.min(array.length, array.length - limit) : 0;
+
+    // Shuffle while we haven't reached the end yet.
+    while (currentIndex !== endIndex) {
+
+      // Pick a remaining element...
+      const randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      const temp = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temp;
+    }
+
+    return array;
+  }
+
+  /**
    * Takes the keys of the map and returns them within a new array.
    */
   static arrayFromMapKeys<K, V>(input: Map<K, V>): K[] {
