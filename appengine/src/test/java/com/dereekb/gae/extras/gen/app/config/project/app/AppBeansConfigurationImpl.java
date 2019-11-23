@@ -30,6 +30,7 @@ public class AppBeansConfigurationImpl
 	public static final String SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID = "systemLoginTokenFactory";
 	public static final String MAIL_SERVICE_BEAN_ID = "mailService";
 	public static final String FIREBASE_SERVICE_BEAN_ID = "firebaseService";
+	public static final String GOOGLE_CLOUD_STORAGE_SERVICE_BEAN_ID = "googleCloudStorageService";
 	public static final String PUSH_NOTIFICATION_SERVICE_BEAN_ID = "pushNotificationService";
 	public static final String USER_PUSH_NOTIFICATION_SERVICE_BEAN_ID = "userPushNotificationService";
 
@@ -82,6 +83,7 @@ public class AppBeansConfigurationImpl
 	private String systemLoginTokenFactoryBeanId = SYSTEM_LOGIN_TOKEN_FACTORY_BEAN_ID;
 	private String mailServiceBeanId = MAIL_SERVICE_BEAN_ID;
 	private String firebaseServiceBeanId = FIREBASE_SERVICE_BEAN_ID;
+	private String googleCloudStorageServiceBeanId = GOOGLE_CLOUD_STORAGE_SERVICE_BEAN_ID;
 	private String pushNotificationServiceBeanId = PUSH_NOTIFICATION_SERVICE_BEAN_ID;
 	private String userPushNotificationServiceBeanId = USER_PUSH_NOTIFICATION_SERVICE_BEAN_ID;
 
@@ -479,6 +481,19 @@ public class AppBeansConfigurationImpl
 		}
 
 		this.firebaseServiceBeanId = firebaseServiceBeanId;
+	}
+
+	@Override
+	public String getGoogleCloudStorageServiceBeanId() {
+		return this.googleCloudStorageServiceBeanId;
+	}
+
+	public void setGoogleCloudStorageServiceBeanId(String googleCloudStorageServiceBeanId) {
+		if (googleCloudStorageServiceBeanId == null) {
+			throw new IllegalArgumentException("googleCloudStorageServiceBeanId cannot be null.");
+		}
+
+		this.googleCloudStorageServiceBeanId = googleCloudStorageServiceBeanId;
 	}
 
 	@Override

@@ -2,11 +2,11 @@
   <!--Local Login Service-->
   <!--Signatures-->
   <bean class="com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory" id="loginTokenSignatureFactory">
-    <constructor-arg index="0" value="true"/>
+    <constructor-arg index="0" value="false"/>
     <property name="productionSecret" value="SIGNATURE_NOT_SET"/>
   </bean>
   <bean class="com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory" id="refreshTokenSignatureFactory">
-    <constructor-arg index="0" value="false"/>
+    <constructor-arg index="0" value="true"/>
     <property name="productionSecret" value="SIGNATURE_NOT_SET"/>
   </bean>
   <!--LoginToken Service-->
@@ -112,8 +112,8 @@
   <util:list id="loginTokenModelContextServiceEntries">
     <!--login-->
     <ref bean="loginPointerSecurityContextServiceEntry"/>
-    <ref bean="loginSecurityContextServiceEntry"/>
     <ref bean="loginKeySecurityContextServiceEntry"/>
+    <ref bean="loginSecurityContextServiceEntry"/>
     <!--app-->
     <ref bean="appSecurityContextServiceEntry"/>
     <ref bean="appHookSecurityContextServiceEntry"/>

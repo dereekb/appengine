@@ -13,7 +13,7 @@ public interface FirebaseService {
 	/**
 	 * Returns the initialized firebase app.
 	 *
-	 * @return
+	 * @return {@link FirebaseApp}. Never {@code null}.
 	 * @throws RuntimeException
 	 *             thrown if the app could not be initialized or is unavailable.
 	 */

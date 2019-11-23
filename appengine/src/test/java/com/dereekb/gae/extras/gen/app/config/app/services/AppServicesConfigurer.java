@@ -33,6 +33,12 @@ public interface AppServicesConfigurer {
 	public AppFirebaseServiceConfigurer getAppFirebaseServiceConfigurer();
 
 	/**
+	 * @return {@link AppGoogleCloudStorageServiceConfigurer}, or {@code null} if
+	 *         no firebase components.
+	 */
+	public AppGoogleCloudStorageServiceConfigurer getAppGoogleCloudStorageServiceConfigurer();
+
+	/**
 	 * @return {@link AppUserNotificationServiceConfigurer}, or {@code null} if
 	 *         no
 	 *         user notification components.

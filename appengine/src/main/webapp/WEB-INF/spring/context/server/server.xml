@@ -40,6 +40,7 @@
   <import resource="/key.xml"/>
   <import resource="/mail.xml"/>
   <import resource="/firebase.xml"/>
+  <import resource="/gcstorage.xml"/>
   <import resource="/notifications.xml"/>
   <import resource="/ref.xml"/>
   <import resource="/taskqueue.xml"/>

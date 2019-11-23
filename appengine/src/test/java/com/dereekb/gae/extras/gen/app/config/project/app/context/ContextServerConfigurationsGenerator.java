@@ -16,6 +16,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigu
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.filter.NotInternalModelConfigurationFilter;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppFirebaseServiceConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppGoogleCloudStorageServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppTaskSchedulerEnqueuerConfigurer;
@@ -108,6 +109,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		folder.addFile(new KeysConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new MailConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new FirebaseConfigurationGenerator().generateConfigurationFile());
+		folder.addFile(new GoogleCloudStorageConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new UserPushNotificationConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new RefConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new TaskQueueConfigurationGenerator().generateConfigurationFile());
@@ -370,6 +372,32 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				configurer.configureFirebaseService(appConfig, builder);
 			} else {
 				builder.comment("This app is not configured to use Firebase.");
+			}
+
+			return builder;
+		}
+
+	}
+
+	public class GoogleCloudStorageConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
+
+		public GoogleCloudStorageConfigurationGenerator() {
+			super(ContextServerConfigurationsGenerator.this);
+			this.setFileName("gcstorage");
+		}
+
+		@Override
+		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
+			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+			AppConfiguration appConfig = this.getAppConfig();
+			AppGoogleCloudStorageServiceConfigurer configurer = appConfig.getAppServicesConfigurer()
+			        .getAppGoogleCloudStorageServiceConfigurer();
+
+			if (configurer != null) {
+				configurer.configureGoogleCloudStorageService(appConfig, builder);
+			} else {
+				builder.comment("This app is not configured to use GoogleCloudStorage.");
 			}
 
 			return builder;

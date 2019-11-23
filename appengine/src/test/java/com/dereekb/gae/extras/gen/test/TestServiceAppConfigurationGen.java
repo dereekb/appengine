@@ -12,6 +12,7 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfigura
 import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConfigurationGroupImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppEventServiceListenersConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppFirebaseServiceConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppGoogleCloudStorageServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppLoginTokenSecurityConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppMailServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppModelKeyEventListenerConfigurer;
@@ -19,6 +20,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializatio
 import com.dereekb.gae.extras.gen.app.config.app.services.AppUserNotificationServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppWebHookEventServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppFirebaseServiceConfigurerImpl;
+import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppGoogleCloudStorageServiceConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.AppServicesConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.FirebaseUserNotificationServiceConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.app.services.impl.LoginServerAppServerInitializationConfigurerImpl;
@@ -128,6 +130,10 @@ public class TestServiceAppConfigurationGen extends AbstractWebServiceAppConfigu
 		// Push Notifications
 		AppUserNotificationServiceConfigurer appUserNotificationServiceConfigurer = new FirebaseUserNotificationServiceConfigurerImpl();
 		appServicesConfigurer.setAppUserNotificationServiceConfigurer(appUserNotificationServiceConfigurer);
+
+		// Google Cloud Storage
+		AppGoogleCloudStorageServiceConfigurer appGoogleCloudStorageServiceConfigurer = new AppGoogleCloudStorageServiceConfigurerImpl();
+		appServicesConfigurer.setAppGoogleCloudStorageServiceConfigurer(appGoogleCloudStorageServiceConfigurer);
 
 		// Configuration
 		AppConfigurationImpl configuration = new AppConfigurationImpl(appServiceConfigurationInfo,
