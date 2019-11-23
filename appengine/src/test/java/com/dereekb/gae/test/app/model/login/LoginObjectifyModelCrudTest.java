@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
-import com.dereekb.gae.test.app.server.datastore.objectify.AbstractObjectifyModelCrudTest;
+import com.dereekb.gae.test.app.mock.server.datastore.AbstractObjectifyModelCrudTest;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
 public class LoginObjectifyModelCrudTest extends AbstractObjectifyModelCrudTest<Login> {

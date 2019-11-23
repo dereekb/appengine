@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.app.server.datastore.objectify;
+package com.dereekb.gae.test.app.mock.server.datastore;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +10,7 @@ import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.core.ObjectifyDatabaseEntity;
 import com.dereekb.gae.server.datastore.objectify.core.impl.ObjectifyDatabaseImpl;
 import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext;
+import com.dereekb.gae.test.app.server.datastore.objectify.SetterTestUtility;
 import com.dereekb.gae.test.app.server.datastore.objectify.SetterTestUtility.SetterTestUtilityDelegate;
 import com.dereekb.gae.utilities.misc.random.PositiveLongGenerator;
 

@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.app.server.datastore.objectify;
+package com.dereekb.gae.test.app.mock.server.datastore;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,6 +7,7 @@ import com.dereekb.gae.server.datastore.objectify.MutableObjectifyModel;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.app.mock.client.tests.AbstractModelRequestSenderTests;
 import com.dereekb.gae.test.app.mock.context.AbstractAppContextOnlyTestingContext;
+import com.dereekb.gae.test.app.server.datastore.objectify.SetterTestUtility;
 import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 
 /**

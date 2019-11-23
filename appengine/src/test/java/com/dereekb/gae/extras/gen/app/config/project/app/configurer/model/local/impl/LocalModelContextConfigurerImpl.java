@@ -5,6 +5,7 @@ import java.util.Map;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.local.LocalModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.SecuredQueryInitializerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelApiControllerConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelChildrenRoleComponentConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelContextConfigurer;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.LocalModelCrudConfigurer;
@@ -26,6 +27,7 @@ public class LocalModelContextConfigurerImpl
 	private LocalModelCrudConfigurer customLocalModelCrudConfigurer = new LocalModelCrudConfigurerImpl();
 	private LocalModelSearchConfigurer customLocalModelSearchConfigurer = new NoOpLocalModelSearchConfigurerImpl();
 	private LocalModelIterateControllerConfigurer customLocalModelIterateControllerConfigurer = new LocalModelIterateControllerConfigurerImpl();
+	private LocalModelApiControllerConfigurer customLocalModelApiControllerConfigurer = new LocalModelApiControllerConfigurerImpl();
 	private LocalModelRoleSetLoaderConfigurer customLocalModelRoleSetLoaderConfigurer = new LocalModelRoleSetLoaderConfigurerImpl();
 	private LocalModelChildrenRoleComponentConfigurer customLocalModelChildrenRoleComponentConfigurer = new LocalModelChildrenRoleComponentConfigurerImpl();
 	private LocalModelEventListenerConfigurer customLocalModelEventListenerConfigurer = new NoOpCustomLocalModelEventListenerConfigurerImpl();
@@ -77,6 +79,18 @@ public class LocalModelContextConfigurerImpl
 		}
 
 		this.securedQueryInitializerConfigurer = securedQueryInitializerConfigurer;
+	}
+
+	public LocalModelApiControllerConfigurer getCustomLocalModelApiControllerConfigurer() {
+		return this.customLocalModelApiControllerConfigurer;
+	}
+
+	public void setCustomLocalModelApiControllerConfigurer(LocalModelApiControllerConfigurer customLocalModelApiControllerConfigurer) {
+		if (customLocalModelApiControllerConfigurer == null) {
+			throw new IllegalArgumentException("customLocalModelApiControllerConfigurer cannot be null.");
+		}
+
+		this.customLocalModelApiControllerConfigurer = customLocalModelApiControllerConfigurer;
 	}
 
 	public LocalModelRoleSetLoaderConfigurer getCustomLocalModelRoleSetLoaderConfigurer() {
@@ -157,6 +171,13 @@ public class LocalModelContextConfigurerImpl
 	                                           LocalModelConfiguration modelConfig,
 	                                           SpringBeansXMLBuilder builder) {
 		this.customLocalModelCrudConfigurer.configureCrudServiceComponents(appConfig, modelConfig, builder);
+	}
+
+	@Override
+	public void configureApiEditController(AppConfiguration appConfig,
+	                                       LocalModelConfiguration modelConfig,
+	                                       SpringBeansXMLBuilder builder) {
+		this.customLocalModelApiControllerConfigurer.configureApiEditController(appConfig, modelConfig, builder);
 	}
 
 	@Override

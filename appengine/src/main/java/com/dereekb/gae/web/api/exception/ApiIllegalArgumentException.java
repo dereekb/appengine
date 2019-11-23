@@ -23,6 +23,10 @@ public class ApiIllegalArgumentException extends IllegalArgumentException
 
 	public IllegalArgumentException exception;
 
+	public ApiIllegalArgumentException(String message) {
+		this(new IllegalArgumentException(message));
+	}
+
 	public ApiIllegalArgumentException(IllegalArgumentException exception) {
 		this.setException(exception);
 	}
