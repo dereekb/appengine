@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 
@@ -102,6 +103,33 @@ public class ServletAwareWebServiceRequestBuilder extends WebServiceRequestBuild
 		}
 
 		return this.requestBuilder.request(method, urlTemplate, uriVars).servletPath(servletPath);
+	}
+
+	@Override
+	public MockMultipartHttpServletRequestBuilder multipartRequest(URI uri) {
+		String servletPath = this.getServletPath(uri.getRawPath());
+
+		if (servletPath.isEmpty() == false) {
+			uri = URI.create(PathUtility.quickMerge(servletPath, uri.toString()));
+		}
+
+		MockMultipartHttpServletRequestBuilder builder = this.requestBuilder.multipartRequest(uri);
+		builder.servletPath(servletPath);
+		return builder;
+	}
+
+	@Override
+	public MockMultipartHttpServletRequestBuilder multipartRequest(String urlTemplate,
+	                                                               Object... uriVars) {
+		String servletPath = this.getServletPath(urlTemplate);
+
+		if (servletPath.isEmpty() == false) {
+			urlTemplate = PathUtility.quickMerge(servletPath, urlTemplate);
+		}
+
+		MockMultipartHttpServletRequestBuilder builder = this.requestBuilder.multipartRequest(urlTemplate, uriVars);
+		builder.servletPath(servletPath);
+		return builder;
 	}
 
 	// MARK: Internal

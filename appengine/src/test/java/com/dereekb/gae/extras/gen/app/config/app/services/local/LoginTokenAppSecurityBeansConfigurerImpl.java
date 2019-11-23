@@ -1,5 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.app.services.local;
 
+import java.util.List;
+
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.SystemLoginTokenFactoryConfigurer;
@@ -45,6 +47,8 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 
 	private OAuthClientConfig googleOAuthConfig;
 	private OAuthClientConfig facebookOAuthConfig;
+
+	private List<String> additionalSecureModelResources;
 
 	private Class<?> loginTokenEncoderDecoderClass = LoginTokenEncoderDecoderImpl.class;
 	private Class<?> loginTokenBuilderClass = LoginTokenBuilderImpl.class;
@@ -138,6 +142,15 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		this.facebookOAuthConfig = facebookOAuthConfig;
 	}
 
+	@Override
+	public List<String> getAdditionalSecureModelResources() {
+		return this.additionalSecureModelResources;
+	}
+
+	public void setAdditionalSecureModelResources(List<String> additionalSecureModelResources) {
+		this.additionalSecureModelResources = additionalSecureModelResources;
+	}
+
 	public Class<?> getLoginTokenEncoderDecoderClass() {
 		return this.loginTokenEncoderDecoderClass;
 	}
@@ -227,11 +240,15 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		String loginTokenSignatureFactoryId = this.getLoginTokenSignatureFactoryBeanId();
 		String refreshTokenSignatureFactoryId = this.getRefreshTokenSignatureFactoryBeanId();
 
-		String loginTokenSecret = EnvStringUtility.readProdEnv(PROD_LOGIN_TOKEN_SIGNATURE_SECRET_ENV_VAR, SIGNATURE_SECRET_NOT_SET_VALUE);
-		String refreshTokenSecret = EnvStringUtility.readProdEnv(PROD_REFRESH_TOKEN_SIGNATURE_SECRET_ENV_VAR, SIGNATURE_SECRET_NOT_SET_VALUE);
+		String loginTokenSecret = EnvStringUtility.readProdEnv(PROD_LOGIN_TOKEN_SIGNATURE_SECRET_ENV_VAR,
+		        SIGNATURE_SECRET_NOT_SET_VALUE);
+		String refreshTokenSecret = EnvStringUtility.readProdEnv(PROD_REFRESH_TOKEN_SIGNATURE_SECRET_ENV_VAR,
+		        SIGNATURE_SECRET_NOT_SET_VALUE);
 
-		builder.bean(loginTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).c().value("false").up().property("productionSecret").value(loginTokenSecret);
-		builder.bean(refreshTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).c().value("true").up().property("productionSecret").value(refreshTokenSecret);
+		builder.bean(loginTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).c().value("false")
+		        .up().property("productionSecret").value(loginTokenSecret);
+		builder.bean(refreshTokenSignatureFactoryId).beanClass(SignatureConfigurationFactory.class).c().value("true")
+		        .up().property("productionSecret").value(refreshTokenSecret);
 	}
 
 	@Override

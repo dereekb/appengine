@@ -134,6 +134,7 @@
     <value>query</value>
     <value>search</value>
     <value>link</value>
+    <value>image</value>
   </util:list>
   <!--Security-->
   <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher" id="securityRequestMatcher">

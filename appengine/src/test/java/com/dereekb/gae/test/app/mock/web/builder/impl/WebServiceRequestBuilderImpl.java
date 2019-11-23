@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.dereekb.gae.test.app.mock.web.builder.WebServiceRequestBuilder;
@@ -16,6 +17,7 @@ public class WebServiceRequestBuilderImpl
 	private boolean secure = true;
 
 	// MARK: WebServiceRequestBuilder
+
 	@Override
 	public MockHttpServletRequestBuilder get(String urlTemplate,
 	                                         Object... uriVars) {
@@ -54,6 +56,21 @@ public class WebServiceRequestBuilderImpl
 	                                             Object... uriVars) {
 
 		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.request(method, urlTemplate, uriVars);
+		builder.secure(this.secure);
+		return builder;
+	}
+
+	@Override
+	public MockMultipartHttpServletRequestBuilder multipartRequest(URI uri) {
+		MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart(uri);
+		builder.secure(this.secure);
+		return builder;
+	}
+
+	@Override
+	public MockMultipartHttpServletRequestBuilder multipartRequest(String urlTemplate,
+	                                                               Object... uriVars) {
+		MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart(urlTemplate, uriVars);
 		builder.secure(this.secure);
 		return builder;
 	}

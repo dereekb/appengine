@@ -630,7 +630,8 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			}
 
 			// User Notification Routes
-			boolean hasNotificationRoute = this.getAppConfig().hasNotificationServices() && this.getAppConfig().isRootServer();
+			boolean hasNotificationRoute = this.getAppConfig().hasNotificationServices()
+			        && this.getAppConfig().isRootServer();
 
 			if (hasNotificationRoute) {
 				http.getRawXMLBuilder().c("Notification Pattern");
@@ -670,8 +671,14 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				        .keyValueRefEntry("type", secureModelTypesBeanId)
 				        .keyValueRefEntry("res", securedModelResourcesBeanId);
 
-				builder.list(securedModelResourcesBeanId).values("create", "read", "update", "delete", "query",
-				        "search", "link");
+				List<String> secureModelResources = ListUtility.toList("create", "read", "update", "delete", "query",
+				        "search", "link", "image");
+
+				// Add additional resources.
+				ListUtility.addElements(secureModelResources,
+				        this.getAppConfig().getAppSecurityBeansConfigurer().getAdditionalSecureModelResources());
+
+				builder.list(securedModelResourcesBeanId).values(secureModelResources);
 			} else {
 				builder.comment("There are no models for this service.");
 			}

@@ -37,6 +37,8 @@ public interface SpringBeansXMLListBuilder<T>
 
 	public SpringBeansXMLListBuilder<T> values(String... values);
 
+	public SpringBeansXMLListBuilder<T> values(Iterable<String> values);
+
 	public SpringBeansXMLBeanBuilder<SpringBeansXMLListBuilder<T>> bean();
 
 }
