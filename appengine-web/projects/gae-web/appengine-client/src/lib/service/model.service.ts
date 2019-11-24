@@ -171,8 +171,12 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
     return new ModelReadService<T>(this, service);
   }
 
-  public wrapUpdateService(service: UpdateService<T>): ModelUpdateService<T> {
-    return new ModelUpdateService<T>(this, service);
+  public wrapUpdateService<S extends ModelUpdateService<T>>(service: UpdateService<T>, constructor?: (parent: ModelServiceWrapper<T>, updateService: UpdateService<T>) => S): S {
+    if (constructor) {
+      return constructor(this, service);
+    } else {
+      return new ModelUpdateService<T>(this, service) as S;
+    }
   }
 
   public wrapDeleteService(service: DeleteService<T>): ModelDeleteService<T> {
