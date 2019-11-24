@@ -219,12 +219,14 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
 // MARK: Update
 export class ModelUpdateService<T extends UniqueModel> implements UpdateService<T> {
 
-  constructor(private _parent: ModelServiceWrapper<T>, private _updateService: UpdateService<T>) { }
+  constructor(protected readonly _parent: ModelServiceWrapper<T>, protected readonly _updateService: UpdateService<T>) { }
 
   // MARK: Update Service
   public update(request: UpdateRequest<T>): Observable<UpdateResponse<T>> {
     return this._updateService.update(request).pipe(
-      tap((response) => this.updateWithUpdateResponse(request, response))
+      tap((response) => this.updateWithUpdateResponse(request, response)),
+      // Share replay to tap only once.
+      shareReplay(1)
     );
   }
 
