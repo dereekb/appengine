@@ -19,17 +19,19 @@
 		<appengine.target.version>1.9.77</appengine.target.version>
 		<appengine-cloud.target.version>1.101.0</appengine-cloud.target.version>
 		<google-cloud.target.version>2.0.0</google-cloud.target.version>
+		<firebase.target.version>6.11.0</firebase.target.version>
 		<spring.target.version>5.1.8.RELEASE</spring.target.version>
 		<spring-security.target.version>5.1.5.RELEASE</spring-security.target.version>
 		<junit.target.version>5.4.0</junit.target.version>
 		<jackson.target.version>2.9.9</jackson.target.version>
+		<opencensus.target.version>0.24.0</opencensus.target.version>
 	</properties>
-	
+
 	<!-- Declared WAR by default (above) for appengine:run. JAR values are published. -->
 	<packaging>${packaging.type}</packaging>
-	
+
 	<profiles>
-		<!--  Deploy Profile turns this into a JAR package. -->
+		<!-- Deploy Profile turns this into a JAR package. -->
 		<profile>
 			<id>deploy</id>
 			<properties>
@@ -58,12 +60,12 @@
 			<artifactId>google-cloud-datastore</artifactId>
 			<version>${appengine-cloud.target.version}</version>
 		</dependency>
-		
-		 <dependency>
-	        <groupId>com.google.cloud</groupId>
-	        <artifactId>google-cloud-storage</artifactId>
+
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-storage</artifactId>
 			<version>${appengine-cloud.target.version}</version>
-	    </dependency>
+		</dependency>
 
 		<dependency>
 			<groupId>com.google.appengine</groupId>
@@ -170,22 +172,45 @@
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.12</version>
 		</dependency>
-		
+
 		<dependency>
 			<!-- Used for Spring -->
-		    <groupId>org.apache.httpcomponents</groupId>
-		    <artifactId>httpclient</artifactId>
-		    <version>4.5.9</version>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.9</version>
 		</dependency>
-		
+
 		<!-- Firebase -->
 		<!-- Used for push notifications -->
 		<dependency>
-		  <groupId>com.google.firebase</groupId>
-		  <artifactId>firebase-admin</artifactId>
-		  <version>6.10.0</version>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>${firebase.target.version}</version>
 		</dependency>
-				
+
+		<!-- OpenCensus -->
+		<!-- Fixes for imports from Google Cloud Storage and Firebase -->
+		<dependency>
+			<groupId>io.opencensus</groupId>
+			<artifactId>opencensus-api</artifactId>
+			<version>${opencensus.target.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.opencensus</groupId>
+			<artifactId>opencensus-contrib-http-util</artifactId>
+			<version>${opencensus.target.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.opencensus</groupId>
+			<artifactId>opencensus-contrib-grpc-metrics</artifactId>
+			<version>${opencensus.target.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.opencensus</groupId>
+			<artifactId>opencensus-contrib-grpc-util</artifactId>
+			<version>${opencensus.target.version}</version>
+		</dependency>
+
 		<!-- Jersey -->
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
@@ -207,9 +232,9 @@
 
 		<!-- Validation -->
 		<dependency>
-		   <groupId>org.hibernate.validator</groupId>
-		   <artifactId>hibernate-validator</artifactId>
-		   <version>6.0.17.Final</version>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>6.0.17.Final</version>
 		</dependency>
 
 		<dependency>
@@ -223,12 +248,12 @@
 			<artifactId>libphonenumber</artifactId>
 			<version>8.8.6</version>
 		</dependency>
-		
+
 		<!-- Geospacial -->
 		<dependency>
-		    <groupId>org.apache.lucene</groupId>
-		    <artifactId>lucene-spatial</artifactId>
-		    <version>8.2.0</version>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-spatial</artifactId>
+			<version>8.2.0</version>
 		</dependency>
 
 		<!-- Test Dependencies -->
@@ -294,12 +319,12 @@
 			<version>${appengine.target.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Google Cloud Storage Testing -->
 		<dependency>
-		  <groupId>com.google.cloud</groupId>
-		  <artifactId>google-cloud-nio</artifactId>
-		  <version>0.119.0-alpha</version>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-nio</artifactId>
+			<version>0.119.0-alpha</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -500,31 +525,32 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
-				<!-- Since the pom is declared as a WAR, the JAR is not saved locally to the default. -->
+				<!-- Since the pom is declared as a WAR, the JAR is not saved locally 
+					to the default. -->
 				<executions>
 					<execution>
 						<phase>install</phase>
 						<goals>
 							<goal>install-file</goal>
 						</goals>
-			            <configuration>
-			                <packaging>jar</packaging>
-			                <artifactId>${project.artifactId}</artifactId>
-			                <groupId>${project.groupId}</groupId>
-			                <version>${project.version}</version>
-			                <file>
-			                    ${project.build.directory}/${project.artifactId}-${project.version}.jar
-			                </file>
-			            </configuration>
+						<configuration>
+							<packaging>jar</packaging>
+							<artifactId>${project.artifactId}</artifactId>
+							<groupId>${project.groupId}</groupId>
+							<version>${project.version}</version>
+							<file>
+								${project.build.directory}/${project.artifactId}-${project.version}.jar
+							</file>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 
 			<!-- Versioning -->
 			<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.7</version>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.7</version>
 			</plugin>
 
 			<!-- Artifactory Deploy -->

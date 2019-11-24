@@ -50,17 +50,24 @@ export class RegisterApiService {
     if ((error instanceof NoLoginSetError)) {
       throw new ApiJwtConfigurationError(`The OAuthLoginApiService's routes are not blacklisted.`);
     } else if (error instanceof HttpResponse) {
-      const apiResponse = ApiResponse.fromJson(error.body);
-      const apiError = apiResponse.errors.errors[0];
 
       let registrationError;
 
-      switch (apiError.code) {
-        case LoginExistsRegistrationError.CODE:
-          registrationError = new LoginExistsRegistrationError(apiError.detail);
-          break;
-        default:
-          registrationError = new LoginRegistrationError('An error occured while accessing the Login Server.');
+      if (error.body) {
+        const apiResponse = ApiResponse.fromJson(error.body);
+        const apiError = apiResponse.errors.errors[0];
+
+        switch (apiError.code) {
+          case LoginExistsRegistrationError.CODE:
+            registrationError = new LoginExistsRegistrationError(apiError.detail);
+            break;
+          default:
+            break;
+        }
+      }
+
+      if (!registrationError) {
+        registrationError = new LoginRegistrationError('An error occured while registering.');
       }
 
       return throwError(registrationError);
