@@ -180,4 +180,15 @@ public class GoogleAppEngineUtility {
 		return "https://" + subdomain + "." + APP_ENGINE_APP_DOMAIN;
 	}
 
+	// MARK: Google Cloud Storage Bucket
+	public static String getDefaultGoogleCloudStorageBucketName() {
+		String projectId = getApplicationId();
+		return getDefaultGoogleCloudStorageBucketName(projectId);
+	}
+
+	public static String getDefaultGoogleCloudStorageBucketName(String appProjectId) {
+		appProjectId = sanitizeAppId(appProjectId);
+		return appProjectId + "." + APP_ENGINE_APP_DOMAIN;
+	}
+
 }

@@ -21,7 +21,8 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 public abstract class AbstractGaeTestingContext {
 
 	public static final String SRC_PATH = "file:src/";
-	public static final String BASE_TESTING_PATH = SRC_PATH + "test/webapp/spring/";
+	public static final String BASE_TESTING_WEBAPP_FOLDER_PATH = SRC_PATH + "test/webapp/";
+	public static final String BASE_TESTING_PATH = BASE_TESTING_WEBAPP_FOLDER_PATH + "spring/";
 	public static final String GAE_TESTING_XML_PATH = BASE_TESTING_PATH + "testing.xml";
 
 	public static final String APPLICATION_TESTING_PATH = BASE_TESTING_PATH + "applications/";
