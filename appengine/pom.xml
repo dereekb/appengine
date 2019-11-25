@@ -74,6 +74,7 @@
 		</dependency>
 
 		<dependency>
+			<!-- TODO: Remove this later as we no longer need it. -->
 			<groupId>com.google.appengine.tools</groupId>
 			<artifactId>appengine-gcs-client</artifactId>
 			<version>0.8</version>
@@ -194,6 +195,12 @@
 			<groupId>com.google.api-client</groupId>
 			<artifactId>google-api-client</artifactId>
 			<version>1.30.5</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.google.api-client</groupId>
+		    <artifactId>google-api-client-appengine</artifactId>
+		    <version>1.30.5</version>
 		</dependency>
 
 		<!-- Fixes for imports from Google Cloud Storage and Firebase -->
