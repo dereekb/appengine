@@ -113,6 +113,11 @@ public class GoogleAppEngineUtility {
 		return ApiProxy.getCurrentEnvironment().getAppId();
 	}
 
+	/**
+	 * Returns the project id.
+	 * <p>
+	 * On development this will return "localdevapp".
+	 */
 	public static String getApplicationId() {
 		return sanitizeAppId(ApiProxy.getCurrentEnvironment().getAppId());
 	}

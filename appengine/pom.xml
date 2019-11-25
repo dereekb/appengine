@@ -94,7 +94,7 @@
 		<dependency>
 			<groupId>com.google.http-client</groupId>
 			<artifactId>google-http-client</artifactId>
-			<version>1.23.0</version>
+			<version>1.33.0</version>
 		</dependency>
 
 		<!-- Tokens -->
@@ -188,7 +188,14 @@
 			<version>${firebase.target.version}</version>
 		</dependency>
 
-		<!-- OpenCensus -->
+		<!-- Dependency Override Fixes -->
+		<!-- Various imports that are used for resolving mismatching versions. -->
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<version>1.30.5</version>
+		</dependency>
+
 		<!-- Fixes for imports from Google Cloud Storage and Firebase -->
 		<dependency>
 			<groupId>io.opencensus</groupId>
