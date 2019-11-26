@@ -294,7 +294,9 @@ export class ValueUtility {
    */
   static shuffleArray<T>(array: T[], limit?: number): T[] {
     let currentIndex = array.length;
-    const endIndex = (limit) ? Math.min(array.length, array.length - limit) : 0;
+
+    // End at 0 or limit-number of elements from the end.
+    const endIndex = (limit) ? Math.max(0, array.length - limit) : 0;
 
     // Shuffle while we haven't reached the end yet.
     while (currentIndex !== endIndex) {
