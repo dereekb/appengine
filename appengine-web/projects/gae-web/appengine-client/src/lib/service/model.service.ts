@@ -1,4 +1,7 @@
-import { UniqueModel, ModelKey, ModelUtility, AsyncModelCacheWrap, SourceFactory, KeySafeAsyncModelCacheWrap, TimedKeySafeAsyncModelCacheWrap } from '@gae-web/appengine-utility';
+import {
+  UniqueModel, ModelKey, ModelUtility, AsyncModelCacheWrap, SourceFactory,
+  KeySafeAsyncModelCacheWrap, TimedKeySafeAsyncModelCacheWrap, NonCacheAsyncModelCacheWrap
+} from '@gae-web/appengine-utility';
 import { ModelReadService, AppEngineReadSourceFactory, ModelUpdateService, ModelDeleteService } from './crud.service';
 import { WrapperEventType, ModelWrapperEvent, ModelServiceAnonymousWrapperEventSystem, AnonymousWrapperEvent, WrapperEvent, WrapperEventFilter } from './wrapper';
 import { Subject, Observable } from 'rxjs';
@@ -105,6 +108,11 @@ export abstract class ModelServiceWrapperConfig<T extends UniqueModel> {
   readonly type: string;
 
   /**
+   * Whether or not to cache values at all.
+   */
+  readonly cache?: boolean;
+
+  /**
    * Time to live of items in the cache.
    */
   readonly cacheTimeToLive?: number;
@@ -131,10 +139,14 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
     this._config = config;
 
     // Init Cache
-    if (config.cacheTimeToLive) {
-      this._cache = new TimedKeySafeAsyncModelCacheWrap<T>(config.cacheTimeToLive);
+    if (config.cache !== false) {
+      if (config.cacheTimeToLive) {
+        this._cache = new TimedKeySafeAsyncModelCacheWrap<T>(config.cacheTimeToLive);
+      } else {
+        this._cache = new KeySafeAsyncModelCacheWrap<T>();
+      }
     } else {
-      this._cache = new KeySafeAsyncModelCacheWrap<T>();
+      this._cache = new NonCacheAsyncModelCacheWrap<T>();
     }
 
     // Call Init Function

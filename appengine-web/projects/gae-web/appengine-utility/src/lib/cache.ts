@@ -775,6 +775,78 @@ export class AsyncModelCacheWrap<T extends UniqueModel> extends AsyncCacheWrap<M
 }
 
 /**
+ * AsyncModelCacheWrap implementation that implements the interface but does not cache values.
+ */
+export class NonCacheAsyncModelCacheWrap<T extends UniqueModel> extends AsyncModelCacheWrap<T> {
+
+  // TODO: Can consider making this implements AsyncModelCacheWrap<T>,
+  // but the implications of making readAsync be an observable that ends is unknown.
+
+  // MARK: ModelCache
+  put(key: ModelKey, model: T) {
+    // Do nothing.
+  }
+
+  putModel(model: T): boolean {
+    const key = ModelUtility.readModelKeyString(model);
+
+    if (key) {
+      super.put(key, model);
+      return true;
+    }
+
+    return false;
+  }
+
+  has(key: ModelKey): boolean {
+    return false;
+  }
+
+  remove(key: ModelKey) {
+    return undefined;
+  }
+
+  putModels(models: T[]): void {
+    // Do nothing.
+  }
+
+  load(keys: ModelKey[]) {
+    const results: KeyedCacheLoad<ModelKey, T> = {
+      hits: [],
+      misses: keys
+    };
+
+    return results;
+  }
+
+  hasModel(modelOrKey: ModelOrKey<T>): boolean {
+    return false;
+  }
+
+  removeModel(model: T): T {
+    return undefined;
+  }
+
+  removeModels(models: T[]): T[] {
+    return [];
+  }
+
+  // MARK: Cache
+  get keys(): Set<ModelKey> {
+    return new Set();
+  }
+
+  get(key: ModelKey): T | undefined {
+    return undefined;
+  }
+
+  clear() {
+    // Do nothing.
+  }
+
+}
+
+/**
  * AsyncModelCacheWrap extension that returns any "missed" keys using their original type.
  */
 export class KeySafeAsyncModelCacheWrap<T extends UniqueModel> extends AsyncModelCacheWrap<T> {
