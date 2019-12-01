@@ -272,6 +272,15 @@ export interface KeyedCache<K, T> {
 
 }
 
+export interface TimedKeyedCache<K, T> extends KeyedCache<K, T> {
+
+  /**
+   * Amount of time in milliseconds in which each item will live. If undefined, the item will not expire.
+   */
+  timeToLive: number | undefined;
+
+}
+
 // MARK: Observable
 export enum KeyedCacheChange {
   /**
@@ -394,6 +403,135 @@ export class MapKeyedCache<K, T> implements KeyedCache<K, T> {
 
 }
 
+/**
+ * Element used within the MapTimeKeyedCache.
+ */
+export class MapTimeKeyedCacheItem<K, T> {
+
+  public readonly resetTime?: DateTime;
+
+  constructor(public readonly key: K, public readonly item: T, timeToLive?: number) {
+    this.resetTime = (timeToLive) ? DateTime.local().plus({ milliseconds: timeToLive }) : undefined;
+  }
+
+  get hasExpired(): boolean {
+    if (this.resetTime) {
+      return DateTime.local() >= this.resetTime;
+    }
+
+    return false;
+  }
+
+}
+
+export type MapTimeKeyedCacheOnExpiredFunction<K, T> = (item: MapTimeKeyedCacheItem<K, T>) => void;
+
+export class MapTimeKeyedCache<K, T> implements TimedKeyedCache<K, T> {
+
+  private _timeToLive?: number;
+  private _cache: MapKeyedCache<K, MapTimeKeyedCacheItem<K, T>>;
+
+  constructor(timeToLive: number, private readonly _onItemExpired: MapTimeKeyedCacheOnExpiredFunction<K, T> = () => 0) {
+    this.timeToLive = timeToLive;
+  }
+
+  // MARK: TimedKeyedCache
+  get timeToLive() {
+    return this._timeToLive;
+  }
+
+  set timeToLive(timeToLive: number | undefined) {
+    this._cache = new MapKeyedCache();
+    this._timeToLive = timeToLive;
+  }
+
+  // MARK: Cache
+  get keys(): Set<K> {
+    return this._cache.keys;
+  }
+
+  load(keys: K[]): KeyedCacheLoad<K, T> {
+    const cacheResult: KeyedCacheLoad<K, MapTimeKeyedCacheItem<K, T>> = this._cache.load(keys);
+
+    const hits: T[] = [];
+    const misses: K[] = cacheResult.misses;
+
+    cacheResult.hits.forEach(x => {
+      if (this._isStillAliveCheck(x)) {
+        hits.push(x.item);
+      } else {
+        misses.push(x.key);
+      }
+    });
+
+    const result: KeyedCacheLoad<K, T> = {
+      hits,
+      misses
+    };
+
+    return result;
+  }
+
+  put(key: K, model: T) {
+    const cacheItem = new MapTimeKeyedCacheItem<K, T>(key, model, this.timeToLive);
+    this._cache.put(key, cacheItem);
+  }
+
+  get(key: K): T | undefined {
+    return this._isStillAliveCheckKey(key);
+  }
+
+  has(key: K): boolean {
+    return this._isStillAliveCheckKey(key) !== undefined;
+  }
+
+  remove(key: K): T {
+    const result = this._cache.remove(key);
+    return (result) ? result.item : undefined;
+  }
+
+  removeAll(keys: K[]): T[] {
+    return this._cache.removeAll(keys).map(x => x.item);
+  }
+
+  clear(): void {
+    this._cache.clear();
+  }
+
+  // MARK: Internal
+  private _isStillAliveCheckKey(key: K): T {
+    const cacheItem = this._cache.get(key);
+
+    if (cacheItem) {
+      return this._isStillAliveCheckItem(cacheItem);
+    } else {
+      return undefined;
+    }
+  }
+
+  private _isStillAliveCheckItem(cacheItem: MapTimeKeyedCacheItem<K, T>) {
+    if (this._isStillAliveCheck(cacheItem)) {
+      return cacheItem.item;
+    } else {
+      return undefined;
+    }
+  }
+
+  /**
+   * Checks the expiration of an item. If an item has expired, it is removed from the cache and false is returned.
+   */
+  private _isStillAliveCheck(cacheItem: MapTimeKeyedCacheItem<K, T>): boolean {
+    if (cacheItem.hasExpired) {
+      this._onItemExpired(cacheItem);
+      this._cache.remove(cacheItem.key);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+}
+
 export abstract class AbstractKeyedCacheWrap<K, T, C extends KeyedCache<K, T>> implements KeyedCache<K, T> {
 
   constructor(protected _cache: C) { }
@@ -479,6 +617,35 @@ export class ObservableCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, Keye
   // MARK: Cache Stream
   public get events(): Observable<KeyedCacheEvent<K>> {
     return this._subject.asObservable();
+  }
+
+}
+
+/**
+ * Convenience ObservableCacheWrap extension that uses a MapTimeKeyedCache and provides accessors to the expiration time.
+ */
+export class TimedObservableCacheWrap<K, T> extends ObservableCacheWrap<K, T> {
+
+  constructor(timeToLive?: number) {
+    super(new MapTimeKeyedCache<K, T>(timeToLive, (x) => this._onItemExpired(x)));
+  }
+
+  // MARK: Timed Cache
+  private get timedCache() {
+    return this._cache as MapTimeKeyedCache<K, T>;
+  }
+
+  get timeToLive(): number | undefined {
+    return this.timedCache.timeToLive;
+  }
+
+  set timeToLive(timeToLive: number | undefined) {
+    this.timedCache.timeToLive = timeToLive;
+  }
+
+  private _onItemExpired(item: MapTimeKeyedCacheItem<K, T>) {
+    // Notify that the item was removed from the cache.
+    this.next(KeyedCacheChange.Remove, item.key);
   }
 
 }
@@ -626,6 +793,30 @@ export class KeySafeAsyncModelCacheWrap<T extends UniqueModel> extends AsyncMode
       misses
     };
 
+  }
+
+}
+
+/**
+ * Convenience KeySafeAsyncModelCacheWrap extension that can let items expire.
+ */
+export class TimedKeySafeAsyncModelCacheWrap<T extends UniqueModel> extends KeySafeAsyncModelCacheWrap<T> {
+
+  constructor(timeToLive?: number) {
+    super(new TimedObservableCacheWrap<ModelKey, T>(timeToLive));
+  }
+
+  // MARK: Timed Cache
+  private get timedCache() {
+    return this._cache as TimedObservableCacheWrap<ModelKey, T>;
+  }
+
+  get timeToLive(): number | undefined {
+    return this.timedCache.timeToLive;
+  }
+
+  set timeToLive(timeToLive: number | undefined) {
+    this.timedCache.timeToLive = timeToLive;
   }
 
 }
