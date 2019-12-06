@@ -30,14 +30,46 @@ export abstract class UserLoginTokenAuthenticator {
   abstract loginWithRefreshToken(encodedToken: EncodedRefreshToken): Observable<LoginTokenPair>;
 }
 
+export enum TokenAuthenticationState {
+
+  /**
+   * Authentication encountered an error.
+   */
+  AuthenticationError = -1,
+
+  /**
+   * Has no token.
+   */
+  Unauthenticated,
+
+  /**
+   * Has a refresh token that is not expired, but could not get full authentication.
+   */
+  LimitedAuthentication,
+
+  /**
+   * Has a refresh token and full token.
+   */
+  FullAuthentication
+}
+
 /**
  * Class Interface used for managing the user token(s) within the application.
  */
 export abstract class UserLoginTokenService {
 
+  /**
+   * Whether or not the service is fully authenticated.
+   */
   abstract isAuthenticated(): Observable<boolean>;
+  abstract getAuthenticationState(): Observable<TokenAuthenticationState>;
   abstract getEncodedLoginToken(): Observable<EncodedToken>;
   abstract getLoginToken(): Observable<LoginTokenPair>;
+
+  /**
+   * Optional function that requests that the refresh token to be refreshed.
+   */
+  abstract refreshLoginToken?(): boolean;
 
   abstract login(fullToken: LoginTokenPair, selector?: AppTokenKeySelector): Observable<LoginTokenPair>;
   abstract logout(): Observable<boolean>;
@@ -48,13 +80,17 @@ export abstract class UserLoginTokenService {
 
 export type AppTokenKeySelector = string | undefined;
 
+export class LimitedAppTokenUserServicePair {
+  public selector: AppTokenKeySelector;
+  public refreshToken?: LoginTokenPair;
+}
+
 /**
  * Internal cache used by an AppTokenUserService instance.
  */
-export class AppTokenUserServicePair {
-  public selector: AppTokenKeySelector;
+export class AppTokenUserServicePair extends LimitedAppTokenUserServicePair {
   public token?: LoginTokenPair;
-  public refreshToken?: LoginTokenPair;
+  public tokenError?: Error;
 }
 
 /**
@@ -64,6 +100,8 @@ export class AppTokenUserServicePair {
 export class AsyncAppTokenUserService implements UserLoginTokenService {
 
   private _selector = new BehaviorSubject<AppTokenKeySelector>(undefined);
+  private _tokenRefresher = new BehaviorSubject<boolean>(true);
+
   private readonly _pair: Observable<AppTokenUserServicePair>;
 
   constructor(private _storage: AsyncAppTokenStorageService, private _tokenService: UserLoginTokenAuthenticator) {
@@ -72,27 +110,42 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
 
   // MARK: UserLoginTokenService
   public isAuthenticated(): Observable<boolean> {
-    return this.getLoginToken().pipe(
-      map((x) => Boolean(x)),
+    return this.getAuthenticationState().pipe(
+      map(x => x === TokenAuthenticationState.FullAuthentication)
+    );
+  }
+
+  public getAuthenticationState(): Observable<TokenAuthenticationState> {
+    return this.servicePairObs.pipe(
+      map(x => {
+        if (x.token) {
+          return TokenAuthenticationState.FullAuthentication;
+        } else if (x.refreshToken) {
+          return TokenAuthenticationState.LimitedAuthentication;
+        } else {
+          return TokenAuthenticationState.Unauthenticated;
+        }
+      }),
       catchError((e) => {
         if ((e instanceof NoLoginSetError) === false) {
           console.error('Error while checking authentication: ' + e);
+          return of(TokenAuthenticationState.LimitedAuthentication);
+        } else {
+          return of(TokenAuthenticationState.AuthenticationError);
         }
-
-        return of(false);
       })
     );
   }
 
   public getEncodedLoginToken(): Observable<EncodedToken | undefined> {
     return this.getLoginToken().pipe(
-      map(x => x.token)
+      map(x => (x) ? x.token : undefined)
     );
   }
 
   public getLoginToken(): Observable<LoginTokenPair | undefined> {
     return this.servicePairObs.pipe(
-      map(x => x.token)
+      map(x => (x.token) ? x.token : undefined)
     );
   }
 
@@ -233,16 +286,14 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
       shareReplay(1),
       // Always check the token and refresh if necesary.
       flatMap((x) => this._refreshFullTokenIfNecessary(x))
-      // TODO: Fix issue where the token can expire. If the token is close to expiring, or is expired when called, then refresh it before returning.
-
       // tap((x) => console.log(`Pipe called > S: ${ x.selector} T: ${ x.token }`)),
     );
   }
 
   private _refreshFullTokenIfNecessary(pair: AppTokenUserServicePair): Observable<AppTokenUserServicePair> {
     if (pair && pair.refreshToken && !pair.refreshToken.isExpired) {
-      // If we don't have a token, or the token is expired, refresh.
-      if (!pair.token || pair.token.isExpired) {
+      // If we don't have an error, or a token, or the token is expired, refresh.
+      if (!pair.tokenError && (!pair.token || pair.token.isExpired)) {
         // Reload both tokens if expired.
         return this._loadAppTokenUserServicePairForSelector(pair.selector).pipe(
           // Also tap to refresh the selector.
@@ -257,32 +308,55 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
     }
   }
 
+  /**
+   * Attempts to load the refresh token and the full token.
+   */
   private _loadAppTokenUserServicePairForSelector(selector: AppTokenKeySelector): Observable<AppTokenUserServicePair> {
     // Load the refresh token
-    return this._loadRefreshToken(selector).pipe(
-      flatMap((refreshToken: LoginTokenPair) => {
-        // Load the full token
-        return this._loadFullToken(selector, refreshToken).pipe(
+    return this._loadLimitedAppTokenUserServicePairForSelector(selector).pipe(
+      flatMap((pair) => {
+        return this._loadFullToken(selector, pair.refreshToken).pipe(
           // Map to a pair
           map(token => ({
-            selector,
-            token,
-            refreshToken
-          }) as AppTokenUserServicePair)
+            ...pair,
+            token
+          }) as AppTokenUserServicePair),
+          // If an error occurs, return it.
+          catchError((tokenError) => {
+            return of({
+              ...pair,
+              tokenError
+            });
+          })
         );
-      }),
-      // Catch Refresh Token Issues then throw error.
-      catchError((e) => {
-        if (e instanceof TokenLoginError) {
-          return this._clearTokensWithSelectorFromStorage(selector).pipe(
-            catchError(_ => of(undefined)),
-            flatMap(_ => throwError(e))
-          );
-        } else {
-          return throwError(e);
-        }
       })
     );
+  }
+
+  /**
+   * Attempts to load the limited token pair.
+   * 
+   * Will clear tokens with the given selector if they cannot be retrieved.
+   */
+  private _loadLimitedAppTokenUserServicePairForSelector(selector: AppTokenKeySelector): Observable<LimitedAppTokenUserServicePair> {
+    // Load the refresh token
+    return this._loadRefreshToken(selector).pipe(
+      map((refreshToken: LoginTokenPair) => ({
+        selector,
+        refreshToken
+      }) as LimitedAppTokenUserServicePair,
+        // Catch Refresh Token Issues then throw error.
+        catchError((e) => {
+          if (e instanceof TokenLoginError) {
+            return this._clearTokensWithSelectorFromStorage(selector).pipe(
+              catchError(_ => of(undefined)),
+              flatMap(_ => throwError(e))
+            );
+          } else {
+            return throwError(e);
+          }
+        })
+      ));
   }
 
   private _loadRefreshToken(selector: AppTokenKeySelector): Observable<LoginTokenPair> {
@@ -387,6 +461,12 @@ export class BasicTokenUserService implements UserLoginTokenService {
 
   constructor() { }
 
+  public getAuthenticationState(): Observable<TokenAuthenticationState> {
+    return this.isAuthenticated().pipe(
+      map(x => x ? TokenAuthenticationState.FullAuthentication : TokenAuthenticationState.Unauthenticated)
+    );
+  }
+
   isAuthenticated(): Observable<boolean> {
     return this.getLoginToken().pipe(map(x => Boolean(x)));
   }
@@ -438,14 +518,29 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
 
   // MARK: Accessors
   public isAuthenticated(): Observable<boolean> {
-    return this.getLoginToken().pipe(
-      map(() => true),
-      catchError((x) => {
-        if ((x instanceof NoLoginSetError) === false) {
-          console.error('Error while checking authentication.');
-        }
+    return this.getAuthenticationState().pipe(
+      map(x => x === TokenAuthenticationState.FullAuthentication)
+    );
+  }
 
-        return of(false);
+  public getAuthenticationState(): Observable<TokenAuthenticationState> {
+    return this._pair.pipe(
+      map(x => {
+        if (x.token) {
+          return TokenAuthenticationState.FullAuthentication;
+        } else if (x.refreshToken) {
+          return TokenAuthenticationState.LimitedAuthentication;
+        } else {
+          return TokenAuthenticationState.Unauthenticated;
+        }
+      }),
+      catchError((e) => {
+        if ((e instanceof NoLoginSetError) === false) {
+          console.error('Error while checking authentication: ' + e);
+          return of(TokenAuthenticationState.LimitedAuthentication);
+        } else {
+          return of(TokenAuthenticationState.AuthenticationError);
+        }
       })
     );
   }
