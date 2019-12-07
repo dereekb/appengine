@@ -701,7 +701,52 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 
 			try {
 				response.getSerializedResponse();
-				fail("Should have been an invalid request.");
+				fail("Should have encountered a failure response.");
+			} catch (ClientKeyedInvalidAttributeException e) {
+				List<KeyedInvalidAttribute> attributes = e.getInvalidAttributes();
+				assertFalse(attributes.isEmpty());
+				delegate.checkAndAssert(attributes);
+			} catch (ClientRequestFailureException e) {
+				e.printStackTrace();
+				fail();
+			}
+		}
+
+		public void testUpdateFails(T template) {
+			try {
+				this.instance.sendUpdate(template).getSerializedResponse();
+				fail("Update should have failed.");
+			} catch (ClientRequestFailureException e) {
+				assertTrue(e.getResponse().getStatus() < 500, "Response status was a server error.");
+			}
+		}
+
+		public void testUpdateFailsDueToKeyedAttributeFailure(T template,
+		                                                      final String attributeName) {
+			this.testUpdateFailsDueToKeyedAttributeFailure(template, attributeName, null);
+		}
+
+		public void testUpdateFailsDueToKeyedAttributeFailure(T template,
+		                                                      final String attributeName,
+		                                                      final String failureCode) {
+			UpdateRequest<T> createRequest = new UpdateRequestImpl<T>(template);
+			this.testUpdateFailsDueToKeyedAttributeFailure(createRequest, new ModelTestingSetInvalidTestDelegate() {
+
+				@Override
+				public void checkAndAssert(List<KeyedInvalidAttribute> attributes) {
+					checkAndAssertAttributeFailure(attributes, attributeName, failureCode);
+				}
+
+			});
+		}
+
+		public void testUpdateFailsDueToKeyedAttributeFailure(UpdateRequest<T> createRequest,
+		                                                      ModelTestingSetInvalidTestDelegate delegate) {
+			SerializedClientUpdateApiResponse<T> response = this.instance.sendUpdate(createRequest);
+
+			try {
+				response.getSerializedResponse();
+				fail("Should have encountered a failure response.");
 			} catch (ClientKeyedInvalidAttributeException e) {
 				List<KeyedInvalidAttribute> attributes = e.getInvalidAttributes();
 				assertFalse(attributes.isEmpty());
