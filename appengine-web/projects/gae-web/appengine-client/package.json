@@ -4,7 +4,6 @@
   "peerDependencies": {
     "rxjs": "*",
     "make-error": "*",
-    "@uirouter/angular": "*",
     "@angular/common": "^8.2.0",
     "@angular/core": "^8.2.0",
     "@gae-web/appengine-api": "*",
