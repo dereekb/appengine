@@ -1,4 +1,3 @@
-import { Input, Component } from '@angular/core';
 
 // MARK: Interfaces
 export interface ClickableFunction {

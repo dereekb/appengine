@@ -142,17 +142,22 @@ export class GaePageFabComponent extends GaePageButton implements OnInit, OnDest
   }
 
   public get btnOptions(): MatProgressButtonOptions {
-      return {
-          active: this.working,
-          icon: this.icon,
-          text: this.text,
-          buttonColor: 'accent',
-          barColor: 'accent',
-          fab: true,
-          mode: 'indeterminate',
-          // Only disabled if we're not working, in order to show the animation.
-          disabled: !this.working && this.disabled
-      };
+    const icon = (this.icon) ? {
+      fontIcon: this.icon
+    } : undefined;
+
+    return {
+      active: this.working,
+      icon,
+      // buttonIcon: icon,
+      text: this.text,
+      buttonColor: 'accent',
+      barColor: 'accent',
+      fab: true,
+      mode: 'indeterminate',
+      // Only disabled if we're not working, in order to show the animation.
+      disabled: !this.working && this.disabled
+    };
   }
 
 }
