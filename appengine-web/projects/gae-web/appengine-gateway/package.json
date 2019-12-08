@@ -10,8 +10,8 @@
     "@gae-web/appengine-utility": "*",
     "@gae-web/appengine-components": "*",
     "@gae-web/appengine-services": "*",
-    "@angular/common": "~8.1.0",
-    "@angular/core": "~8.1.0",
+    "@angular/common": "^8.2.0",
+    "@angular/core": "^8.2.0",
     "@angular/flex-layout": "^8.0.0-beta.26"
   }
 }
