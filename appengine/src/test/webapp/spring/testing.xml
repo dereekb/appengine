@@ -6,7 +6,6 @@
     <constructor-arg index="0">
       <array>
         <ref bean="localMemcacheServiceTestConfig"/>
-        <ref bean="localBlobstoreServiceTestConfig"/>
         <ref bean="localDatastoreServiceTestConfig"/>
         <ref bean="localSearchServiceTestConfig"/>
         <ref bean="localTaskQueueServiceTestConfig"/>

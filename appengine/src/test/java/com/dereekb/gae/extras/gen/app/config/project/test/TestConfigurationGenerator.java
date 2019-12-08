@@ -117,14 +117,15 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 
 		builder.comment("GAE Specific");
 		builder.bean("localServiceTestHelper").beanClass(LocalServiceTestHelper.class).lazy(false).c().array()
-		        .ref("localMemcacheServiceTestConfig").ref("localBlobstoreServiceTestConfig")
+		        .ref("localMemcacheServiceTestConfig")	//.ref("localBlobstoreServiceTestConfig")		// No blobstore for now
 		        .ref("localDatastoreServiceTestConfig").ref("localSearchServiceTestConfig")
 		        .ref("localTaskQueueServiceTestConfig").ref("localImagesServiceTestConfig")
 		        .ref("localURLFetchServiceTestConfig").ref("localAppIdentityServiceTestConfig");
 
 		builder.bean("localMemcacheServiceTestConfig").beanClass(LocalMemcacheServiceTestConfig.class);
 
-		builder.bean("localBlobstoreServiceTestConfig").beanClass(LocalBlobstoreServiceTestConfig.class);
+		builder.bean("localBlobstoreServiceTestConfig").beanClass(LocalBlobstoreServiceTestConfig.class)
+		        .property("noStorage").value("true");
 
 		builder.bean("localDatastoreServiceTestConfig").factoryBean("localDatastoreServiceTestConfigFactory")
 		        .factoryMethod("make");
