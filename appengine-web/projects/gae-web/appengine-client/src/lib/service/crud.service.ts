@@ -1,4 +1,4 @@
-import { UniqueModel, ModelKey, ModelOrKey, SourceState, KeyedCacheLoad, ModelUtility, ValueUtility, ConversionSourceInputResult, Keyed } from '@gae-web/appengine-utility';
+import { UniqueModel, ModelKey, ModelOrKey, ModelsOrKeys, SourceState, KeyedCacheLoad, ModelUtility, ValueUtility, ConversionSourceInputResult, Keyed, OneOrMore } from '@gae-web/appengine-utility';
 import { ReadSourceFactory, ReadSourceConfiguration, ReadSource, ReadServiceReadSourceFactory } from './source';
 import { ModelServiceWrapper } from './model.service';
 import { ReadService, ReadRequest, ModelServiceResponse, ReadResponse, UpdateService, UpdateResponse, UpdateRequest, DeleteService, DeleteRequest, DeleteResponse } from '@gae-web/appengine-api';
@@ -88,6 +88,11 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
   private _working = new Map<string, Observable<ReadResponse<T>>>();
 
   constructor(private _parent: ModelServiceWrapper<T>, private _readService: ReadService<T>) { }
+
+  // MARK: Cache
+  public clearFromCache(keys: ModelsOrKeys<T>): T[] {
+    return this._parent.clearFromCache(keys);
+  }
 
   // MARK: Read Service
   public get type() {

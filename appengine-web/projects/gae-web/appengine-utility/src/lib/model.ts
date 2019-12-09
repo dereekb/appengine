@@ -33,6 +33,11 @@ export type MultipleModelKeys = ModelKey[] | SpaceSeparatedModelKeys;
 export type ModelOrKey<T extends Keyed<ModelKey>> = T | ModelKey;
 
 /**
+ * OneOrMore type of ModelOrKey.
+ */
+export type ModelsOrKeys<T extends Keyed<ModelKey>> = OneOrMore<ModelOrKey<T>>;
+
+/**
  * Interface for unique models.
  */
 export interface UniqueModel extends Keyed<ModelKey> {
@@ -205,6 +210,11 @@ export class ModelUtility {
       .map((x: any) => this.readModelKey(x))
       .reduce(ValueUtility.reduceArrayFn(), [])
       .filter(ValueUtility.filterUniqueValuesFn());
+  }
+
+  static readModelKeysFromModelsOrKeys<T extends UniqueModel>(model: ModelsOrKeys<T>, read?: ReadModelKeyFunction<T>): ModelKey[] {
+    const array: ModelOrKey<T>[] = ValueUtility.normalizeArray(model);
+    return array.map(x => this.readModelKey(x, read));
   }
 
   static readModelKeysFromModels<T extends UniqueModel>(models: ModelOrKey<T>[], read?: ReadModelKeyFunction<T>): ModelKey[] {

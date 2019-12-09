@@ -1,6 +1,6 @@
 import {
   UniqueModel, ModelKey, ModelUtility, AsyncModelCacheWrap, SourceFactory,
-  KeySafeAsyncModelCacheWrap, TimedKeySafeAsyncModelCacheWrap, NonCacheAsyncModelCacheWrap
+  KeySafeAsyncModelCacheWrap, TimedKeySafeAsyncModelCacheWrap, NonCacheAsyncModelCacheWrap, ModelsOrKeys
 } from '@gae-web/appengine-utility';
 import { ModelReadService, AppEngineReadSourceFactory, ModelUpdateService, ModelDeleteService } from './crud.service';
 import { WrapperEventType, ModelWrapperEvent, ModelServiceAnonymousWrapperEventSystem, AnonymousWrapperEvent, WrapperEvent, WrapperEventFilter } from './wrapper';
@@ -249,6 +249,11 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
 
   public setFullAnnouncerWithReadService(readService: ModelReadService<T>) {
     this._announcer = new FullModelServiceEventAnnouncer(this, readService);
+  }
+
+  // MARK: Cache
+  public clearFromCache(keys: ModelsOrKeys<T>): T[] {
+    return this._cache.removeAll(ModelUtility.readModelKeysFromModelsOrKeys(keys));
   }
 
 }
