@@ -13,42 +13,43 @@ import com.dereekb.gae.server.datastore.models.keys.accessor.task.impl.AbstractM
 import com.dereekb.gae.server.datastore.utility.StagedTransactionAlreadyFinishedException;
 import com.dereekb.gae.server.datastore.utility.StagedTransactionChange;
 import com.dereekb.gae.server.datastore.utility.impl.StagedTransactionChangeCollection;
-import com.dereekb.gae.server.notification.model.shared.NotifiableUniqueModel;
+import com.dereekb.gae.server.notification.model.shared.NotifiableStateCode;
+import com.dereekb.gae.server.notification.model.shared.NotifiableStateUniqueModel;
 import com.dereekb.gae.server.notification.user.service.UserPushNotificationService;
 
 /**
  * {@link AbstractTransactionModelUpdaterTask} extension for
- * {@link NotifiableUniqueModel} that is typically used for updating the model
- * and then sending notifications, if a notification for this model has not yet
- * been sent.
+ * {@link NotifiableStateUniqueModel} that is typically used for updating the
+ * model and then sending notifications, if a notification for this model has
+ * not yet been sent.
  *
  * @author dereekb
  *
  * @param <T>
  *            model type
- *
- * @see AbstractNotifiableStateModelUpdaterTask
  */
-public abstract class AbstractNotifiableModelUpdaterTask<T extends NotifiableUniqueModel> extends AbstractModelTransactionUpdateTask<T> {
+public abstract class AbstractNotifiableStateModelUpdaterTask<T extends NotifiableStateUniqueModel<S>, S extends NotifiableStateCode> extends AbstractModelTransactionUpdateTask<T> {
 
 	private Updater<T> updater;
 	private UserPushNotificationService service;
 
-	public AbstractNotifiableModelUpdaterTask(GetterSetter<T> getterSetter, UserPushNotificationService service) {
+	public AbstractNotifiableStateModelUpdaterTask(GetterSetter<T> getterSetter, UserPushNotificationService service) {
 		this(null, getterSetter, getterSetter, service);
 	}
 
-	public AbstractNotifiableModelUpdaterTask(Integer partitionSize,
+	public AbstractNotifiableStateModelUpdaterTask(Integer partitionSize,
 	        GetterSetter<T> getterSetter,
 	        UserPushNotificationService service) {
 		this(partitionSize, getterSetter, getterSetter, service);
 	}
 
-	public AbstractNotifiableModelUpdaterTask(Getter<T> getter, Setter<T> setter, UserPushNotificationService service) {
+	public AbstractNotifiableStateModelUpdaterTask(Getter<T> getter,
+	        Setter<T> setter,
+	        UserPushNotificationService service) {
 		this(null, getter, setter, service);
 	}
 
-	public AbstractNotifiableModelUpdaterTask(Integer partitionSize,
+	public AbstractNotifiableStateModelUpdaterTask(Integer partitionSize,
 	        Getter<T> getter,
 	        Setter<T> setter,
 	        UserPushNotificationService service) {
@@ -81,10 +82,10 @@ public abstract class AbstractNotifiableModelUpdaterTask<T extends NotifiableUni
 		this.updater = updater;
 	}
 
-	// MARK: AbstractNotifiableModelUpdaterTask
-	protected abstract class AbstractNotificationTransactionWork extends AbstractModelTransactionUpdaterWork {
+	// MARK: AbstractNotifiableStateModelUpdaterTask
+	protected abstract class AbstractNotificationStateTransactionWork extends AbstractModelTransactionUpdaterWork {
 
-		public AbstractNotificationTransactionWork(Iterable<ModelKey> input) {
+		public AbstractNotificationStateTransactionWork(Iterable<ModelKey> input) {
 			super(input);
 		}
 
@@ -93,9 +94,12 @@ public abstract class AbstractNotifiableModelUpdaterTask<T extends NotifiableUni
 			List<T> modelsToSendNotifications = new ArrayList<T>();
 
 			for (T model : models) {
-				if (this.shouldSendNotificationForModel(model)) {
+				S nextNotificationState = this.getNextNotificationStateCode(model);
+
+				if (nextNotificationState != null
+				        && this.shouldSendNotificationForModel(model, nextNotificationState)) {
 					modelsToSendNotifications.add(model);
-					this.setModelAsNotified(model);
+					this.setModelAsNotified(model, nextNotificationState);
 				}
 			}
 
@@ -112,27 +116,45 @@ public abstract class AbstractNotifiableModelUpdaterTask<T extends NotifiableUni
 		}
 
 		/**
+		 * Returns the next notification state code for the model, if it can be
+		 * determined.
+		 *
+		 * @return {@link NotificationStateCode}, or {@code null} if the next
+		 *         state could not be determined.
+		 */
+		protected abstract S getNextNotificationStateCode(T model);
+
+		/**
 		 * Whether or not the model should send a notification.
 		 * <p>
-		 * By default returns {@code false} if notified is true.
+		 * By default returns {@code false} if the current state codes are the
+		 * same.
 		 *
+		 * @param model
+		 *            Model. Never {@code null}.
+		 * @param nextNotificationState
+		 *            Next notification state. Never {@code null}.
 		 * @return {@code true} if a notification for this model should be sent.
 		 */
-		protected boolean shouldSendNotificationForModel(T model) {
-			return model.isNotified() == false;
+		protected boolean shouldSendNotificationForModel(T model,
+		                                                 S nextNotificationState) {
+			return model.getNotifiableState().getStateCode() != nextNotificationState.getStateCode();
 		}
 
 		/**
-		 * Update the model to be notified.
+		 * Updates the model's notification state.
 		 */
-		protected abstract void setModelAsNotified(T model);
+		protected void setModelAsNotified(T model,
+		                                  S newNotificationState) {
+			model.setNotifiableState(newNotificationState);
+		}
 
 		/**
 		 * The updater updates all the models here. Can override to make any
 		 * last-second changes.
 		 */
 		protected void saveUpdatedModels(List<T> models) {
-			AbstractNotifiableModelUpdaterTask.this.updater.update(models);
+			AbstractNotifiableStateModelUpdaterTask.this.updater.update(models);
 		}
 
 		@Override
@@ -152,21 +174,26 @@ public abstract class AbstractNotifiableModelUpdaterTask<T extends NotifiableUni
 
 			@Override
 			public void finishChanges() throws StagedTransactionAlreadyFinishedException {
-				sendNotificationForModel(AbstractNotifiableModelUpdaterTask.this.service, this.model);
+				S notificationState = this.model.getNotifiableState();
+				sendNotificationForModel(AbstractNotifiableStateModelUpdaterTask.this.service, this.model,
+				        notificationState);
 			}
 
 		}
 
 		/**
-		 * Sends the notification for the target model.
+		 * Sends the target notification for the target model.
 		 *
 		 * @param service
 		 *            {@link UserPushNotificationService}. Never {@code null}.
 		 * @param model
 		 *            Model. Never {@code null}.
+		 * @param notificationState
+		 *            Notification State. Never {@code null}.
 		 */
 		protected abstract void sendNotificationForModel(UserPushNotificationService service,
-		                                                 T model);
+		                                                 T model,
+		                                                 S notificationState);
 
 	}
 

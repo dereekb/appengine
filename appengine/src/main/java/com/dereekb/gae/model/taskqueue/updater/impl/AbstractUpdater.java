@@ -40,7 +40,9 @@ public abstract class AbstractUpdater<T extends UniqueModel>
 
 	protected void finishChanges(Instance<T> instance,
 	                             RelatedModelUpdaterResult result) {
-		result.finishChanges();
+		if (result != null) {
+			result.finishChanges();
+		}
 	}
 
 	/**

@@ -6,6 +6,8 @@ package com.dereekb.gae.server.notification.model.shared;
  *
  * @author dereekb
  *
+ * @see {@link NotifiableStateCode} for models that may have multiple
+ *      notifications types.
  */
 public interface Notifiable {
 

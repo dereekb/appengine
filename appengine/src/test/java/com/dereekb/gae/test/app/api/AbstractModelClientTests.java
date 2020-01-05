@@ -440,6 +440,14 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 				}
 			}
 
+			public SerializedClientApiResponse<ClientModelQueryResponse<T>> sendQuery(ConfigurableEncodedQueryParameters query)
+			        throws MultiKeyedInvalidAttributeException {
+				MutableSearchRequest queryRequest = new ModelQueryRequestImpl();
+				queryRequest.setSearchParameters(query.getParameters());
+				queryRequest.setKeysOnly(false);
+				return this.sendQuery(queryRequest);
+			}
+
 			public SerializedClientApiResponse<ClientModelQueryResponse<T>> sendQuery(SearchRequest queryRequest) {
 				try {
 					return this.queryRequestSender.sendRequest(queryRequest,
