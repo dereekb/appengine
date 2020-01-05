@@ -146,7 +146,9 @@ public abstract class AbstractOneToIntermediaryToManyRelationUpdater<T extends U
 			List<R> updated = new ArrayList<R>();
 
 			for (R relation : relations) {
-				if (this.performChangesForRelation(model, relation, changes)) {
+				boolean wasChanged = this.performChangesForRelation(model, relation, changes);
+
+				if (wasChanged) {
 					updated.add(relation);
 				}
 			}
@@ -166,6 +168,8 @@ public abstract class AbstractOneToIntermediaryToManyRelationUpdater<T extends U
 		 *            Relation model. Never {@code null}.
 		 * @param changes
 		 *            Changes model. Never {@code null}.
+		 *
+		 * @return {@code true} if changes were performed on the model.
 		 */
 		protected abstract boolean performChangesForRelation(T model,
 		                                                     R relation,

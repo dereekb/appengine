@@ -88,7 +88,7 @@ public class FirebasePushNotificationServiceImpl
 		String body = request.getMessage();
 		String image = request.getImageUrl();
 
-		Notification notification = new Notification(title, body, image);
+		Notification notification = Notification.builder().setTitle(title).setBody(body).setImage(image).build();
 
 		String code = request.getCode();
 		Map<String, String> data = ParameterUtility.safeMap(request.getData());
