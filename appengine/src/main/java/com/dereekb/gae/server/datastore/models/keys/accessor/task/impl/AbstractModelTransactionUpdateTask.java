@@ -15,6 +15,7 @@ import com.dereekb.gae.server.datastore.utility.impl.StagedTransactionChangeColl
  * @author dereekb
  *
  * @param <T>
+ *            model type
  */
 public abstract class AbstractModelTransactionUpdateTask<T extends UniqueModel> extends AbstractModelStagedTransactionChangeTask<T> {
 
@@ -56,7 +57,9 @@ public abstract class AbstractModelTransactionUpdateTask<T extends UniqueModel> 
 			StagedTransactionChangeCollection changes = this.updateModels(models);
 
 			if (changes == null) {
-				changes = StagedTransactionChangeCollection.make();	// Always return changes.
+				changes = StagedTransactionChangeCollection.make();	// Always
+				                                                   	// return
+				                                                   	// changes.
 			}
 
 			return changes;

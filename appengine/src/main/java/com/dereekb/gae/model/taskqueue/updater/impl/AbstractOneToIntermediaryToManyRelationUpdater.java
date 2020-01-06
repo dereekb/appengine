@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.dereekb.gae.model.extension.taskqueue.scheduler.builder.impl.AbstractKeyQueryIterateTaskRequestBuilder;
 import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdaterResult;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
@@ -27,6 +28,15 @@ import com.googlecode.objectify.Work;
  * <p>
  * In most cases, the intermediate type will be queried for and
  * then used to load the multiple update types.
+ * <p>
+ * This is only for special cases.
+ *
+ * If you're attempting to use a model query to get relations, you might
+ * consider leveraging taskqueue queries instead, such as a
+ * {@link AbstractModelTransactionUpdater} that is scheduled via a scheduler and
+ * a {@link AbstractKeyQueryIterateTaskRequestBuilder} related type. This gives
+ * you more predictability and scalability as the taskqueue's query iterator
+ * would be used for handling and traversing the query results.
  *
  * @author dereekb
  *
