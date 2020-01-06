@@ -3,10 +3,15 @@ package com.dereekb.gae.model.taskqueue.updater.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dereekb.gae.model.extension.iterate.IterateTaskInput;
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdateType;
+import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdater;
 import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdaterResult;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.Updater;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
+import com.dereekb.gae.server.datastore.models.keys.accessor.ModelKeyListAccessor;
+import com.dereekb.gae.server.datastore.models.keys.accessor.task.ModelKeyListAccessorTask;
 import com.dereekb.gae.server.datastore.models.keys.accessor.task.impl.AbstractModelTransactionUpdateTask;
 import com.dereekb.gae.server.datastore.utility.StagedTransactionChange;
 import com.dereekb.gae.server.datastore.utility.StagedUpdater;
@@ -16,6 +21,10 @@ import com.dereekb.gae.utilities.collections.batch.Partitioner;
 import com.dereekb.gae.utilities.collections.batch.impl.PartitionerImpl;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
+import com.dereekb.gae.utilities.factory.exception.FactoryMakeFailureException;
+import com.dereekb.gae.utilities.task.Task;
+import com.dereekb.gae.utilities.task.exception.FailedTaskException;
+import com.dereekb.gae.web.taskqueue.model.extension.iterate.TaskQueueIterateTaskFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 
@@ -31,7 +40,8 @@ import com.googlecode.objectify.Work;
  * @see {@link AbstractModelTransactionUpdateTask} as an alternative
  *      implementation with different design goals.
  */
-public abstract class AbstractModelTransactionUpdater<T extends UniqueModel> extends AbstractUpdater<T> {
+public abstract class AbstractModelTransactionUpdater<T extends UniqueModel> extends AbstractUpdater<T>
+        implements ModelKeyListAccessorTask<T>, TaskQueueIterateTaskFactory<T> {
 
 	/**
 	 * Default size of the batches of models to update.
@@ -111,6 +121,21 @@ public abstract class AbstractModelTransactionUpdater<T extends UniqueModel> ext
 
 	public void setInstanceBatchSize(int instanceBatchSize) {
 		this.instanceBatchSize = instanceBatchSize;
+	}
+
+	// MARK: TaskQueueIterateTaskFactory
+	@Override
+	public Task<ModelKeyListAccessor<T>> makeTask(IterateTaskInput input) throws FactoryMakeFailureException {
+		return this;
+	}
+
+	// MARK: Task
+	@Override
+	public void doTask(ModelKeyListAccessor<T> input) throws FailedTaskException {
+		RelatedModelUpdater<T> updater = this.makeUpdater();
+
+		List<T> models = input.getModels();
+		updater.updateRelations(RelatedModelUpdateType.UPDATE, models);
 	}
 
 	// MARK: Instances
