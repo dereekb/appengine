@@ -1,6 +1,5 @@
 import { JsonConvertable } from './data';
 import { AssertMax, AssertMin } from './assert';
-import { ValueUtility } from '@gae-web/appengine-utility/lib/value';
 
 export interface PointLike {
   latitude: number;
