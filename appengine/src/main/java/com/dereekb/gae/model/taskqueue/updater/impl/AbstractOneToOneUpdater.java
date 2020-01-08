@@ -215,8 +215,8 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 
 		// MARK: Internal - Relation Changes
 		private final C performSafeChangesForRelation(final ModelKey inputRelationModelKey,
-		                                              final T value) {
-			final ModelKey inputModelKey = value.getModelKey();
+		                                              final T model) {
+			final ModelKey inputModelKey = model.getModelKey();
 
 			return ObjectifyService.ofy().transactNew(new Work<C>() {
 
@@ -225,7 +225,16 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 					ModelKey relationModelKey = inputRelationModelKey;
 
 					// Read the model again for transaction safety.
-					T inputModel = AbstractOneToOneUpdater.this.inputModelGetter.get(value);
+					T inputModel = AbstractOneToOneUpdater.this.inputModelGetter.get(model);
+
+					boolean modelExists = inputModel != null;
+
+					// Re-read the relation key from the transaction-safe model.
+					// The model may have been deleted, in which case we use the
+					// original value from above.
+					if (!modelExists) {
+						inputModel = model;
+					}
 
 					// Re-read the relation key from the transaction-safe model.
 					// The model may have been deleted, in which case we use the
@@ -234,17 +243,39 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 						relationModelKey = getRelationModelKey(inputModel);
 					}
 
-					// Attempts to load the models.
-					R relationModel = (relationModelKey != null)
-					        ? AbstractOneToOneUpdater.this.relationModelGetter.get(relationModelKey)
-					        : null;
+					if (AbstractInstance.this.shouldPerformChangesWithModel(inputModel, modelExists)) {
 
-					RelationChangesInputImpl input = new RelationChangesInputImpl(inputModelKey, relationModelKey,
-					        inputModel, relationModel);
-					return AbstractInstance.this.performChangesForRelation(input);
+						// Attempts to load the models.
+						R relationModel = (relationModelKey != null)
+						        ? AbstractOneToOneUpdater.this.relationModelGetter.get(relationModelKey)
+						        : null;
+
+						RelationChangesInputImpl input = new RelationChangesInputImpl(inputModelKey, relationModelKey,
+						        inputModel, relationModel);
+						return AbstractInstance.this.performChangesForRelation(input);
+					} else {
+						return AbstractInstance.this.makeNoChangesResult(model, modelExists);
+					}
 				}
 
 			});
+		}
+
+		protected boolean shouldPerformChangesWithModel(T model,
+		                                                boolean modelExists) {
+			return true;
+		}
+
+		/**
+		 * Creates a result when no changes occur.
+		 *
+		 * @param model
+		 *            Input model.
+		 * @return Result. Can be {@code null}.
+		 */
+		protected C makeNoChangesResult(T model,
+		                                boolean modelExists) {
+			return null;
 		}
 
 		private class RelationChangesInputImpl

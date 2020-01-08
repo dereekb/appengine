@@ -1,11 +1,17 @@
 import { JsonConvertable } from './data';
 import { AssertMax, AssertMin } from './assert';
+import { ValueUtility } from '@gae-web/appengine-utility/lib/value';
+
+export interface PointLike {
+  latitude: number;
+  longitude: number;
+}
 
 // MARK: General
 /**
  * Represents a point in the world with Latitude and Longitude.
  */
-export class Point implements JsonConvertable {
+export class Point implements PointLike, JsonConvertable {
 
   public static MIN_LATITUDE = -90.0;
   public static MAX_LATITUDE = 90.0;
@@ -19,7 +25,7 @@ export class Point implements JsonConvertable {
     return new Point(json);
   }
 
-  constructor(point?: { latitude: number, longitude: number }) {
+  constructor(point?: PointLike) {
     if (point) {
       this.latitude = point.latitude;
       this.longitude = point.longitude;
@@ -28,6 +34,14 @@ export class Point implements JsonConvertable {
 
   public static makePoint(latitude: number, longitude: number): Point {
     return new Point({ latitude, longitude });
+  }
+
+  public static pointsAreEqual(a: PointLike, b: PointLike) {
+    if (a && b) {
+      return a.latitude === b.latitude && a.longitude === b.longitude;
+    } else {
+      return a === b;
+    }
   }
 
   get latitude(): number {

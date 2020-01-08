@@ -344,7 +344,7 @@ public abstract class AbstractOneToIntermediaryToManyRelationUpdater<T extends U
 		}
 
 		/**
-		 * Creates a result
+		 * Creates a result when no changes occur.
 		 *
 		 * @param model
 		 *            Input model.
