@@ -1,6 +1,6 @@
 import {
   UniqueModel, ModelKey, ModelUtility, AsyncModelCacheWrap, SourceFactory,
-  KeySafeAsyncModelCacheWrap, TimedKeySafeAsyncModelCacheWrap, NonCacheAsyncModelCacheWrap, ModelsOrKeys
+  KeySafeAsyncModelCacheWrap, TimedKeySafeAsyncModelCacheWrap, NonCacheAsyncModelCacheWrap, ModelsOrKeys, ModelOrKey, ValueUtility
 } from '@gae-web/appengine-utility';
 import { ModelReadService, AppEngineReadSourceFactory, ModelUpdateService, ModelDeleteService } from './crud.service';
 import { WrapperEventType, ModelWrapperEvent, ModelServiceAnonymousWrapperEventSystem, AnonymousWrapperEvent, WrapperEvent, WrapperEventFilter } from './wrapper';
@@ -89,7 +89,6 @@ export class FullModelServiceEventAnnouncer<T extends UniqueModel> extends KeyOn
       this._wrapper.next({
         modelType: this._wrapper.type,
         eventType,
-
         models: result.models,
         keys
       } as ModelWrapperEvent);
@@ -254,6 +253,30 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
   // MARK: Cache
   public clearFromCache(keys: ModelsOrKeys<T>): T[] {
     return this._cache.removeAll(ModelUtility.readModelKeysFromModelsOrKeys(keys));
+  }
+
+  // MARK: Utility
+  /**
+   * Attempts to load and update the specified model if it exists in the cache.
+   *
+   * @param key Key of model to load.
+   * @param updateFn Update function. If a model is returned, the value will be replaced in the cache.
+   * If false is returned, no change occurs. If undefined is returned, the original model is notified to be updated.
+   */
+  public tryUpdateCachedModel(key: ModelOrKey<T>, updateFn: (model: T) => T | false | true | undefined | void) {
+    const keyValue = ModelUtility.readModelKey(key);
+
+    const cachedModel = this.cache.get(keyValue);
+
+    if (cachedModel) {
+      const updateFnResult = updateFn(cachedModel);
+
+      if (updateFnResult !== false) {
+        const updateValue = ((updateFnResult === true) ? cachedModel : updateFnResult) || cachedModel;
+        this._cache.putModel(updateValue);
+        this.announceUpdated([keyValue]);
+      }
+    }
   }
 
 }
