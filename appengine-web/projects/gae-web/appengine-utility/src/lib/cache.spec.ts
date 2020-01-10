@@ -32,6 +32,28 @@ describe('AsyncModelCacheWrap', () => {
     cache = new KeySafeAsyncModelCacheWrap<TestModel>();
   });
 
+  fdescribe('model with number key', () => {
+
+    describe('#get()', () => {
+
+      beforeEach(() => {
+        cache.putModel(testModel);
+      });
+
+      it('should return the requested model if the number key is passed as a string.', () => {
+        const result = cache.get(testModelKey.toString());
+        expect(result).toBe(testModel);
+      });
+
+      it('should return the requested model if the number key is passed as a number.', () => {
+        const result = cache.get(testModelKey);
+        expect(result).toBe(testModel);
+      });
+
+    });
+
+  });
+
   describe('#asyncRead()', () => {
 
     // TODO: Test ignoredChanges is used properly.

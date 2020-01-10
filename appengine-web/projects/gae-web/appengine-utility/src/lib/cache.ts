@@ -735,21 +735,13 @@ export class AsyncModelCacheWrap<T extends UniqueModel> extends AsyncCacheWrap<M
     return false;
   }
 
-  has(key: ModelKey): boolean {
-    return super.has(String(key));
-  }
-
-  remove(key: ModelKey) {
-    return super.remove(String(key));
-  }
-
-  putModels(models: T[]): void {
-    models.forEach((model) => this.putModel(model));
-  }
-
   load(keys: ModelKey[]) {
     const stringKeys = ModelUtility.makeStringModelKeysArray(keys, true);
     return super.load(stringKeys);
+  }
+
+  has(key: ModelKey): boolean {
+    return super.has(String(key));
   }
 
   hasModel(modelOrKey: ModelOrKey<T>): boolean {
@@ -760,6 +752,22 @@ export class AsyncModelCacheWrap<T extends UniqueModel> extends AsyncCacheWrap<M
     }
 
     return false;
+  }
+
+  get(key: ModelKey) {
+    return super.get(String(key));
+  }
+
+  remove(key: ModelKey) {
+    return super.remove(String(key));
+  }
+
+  removeAll(keys: ModelKey[]) {
+    return super.removeAll(keys.map(x => String(x)));
+  }
+
+  putModels(models: T[]): void {
+    models.forEach((model) => this.putModel(model));
   }
 
   removeModel(model: T): T {
