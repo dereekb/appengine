@@ -800,6 +800,17 @@ export class CachedKeySource<T extends UniqueModel> extends AbstractSource<Model
   }
 
   // MARK: Iterable
+  /**
+   * Calls next if the source has been reset, otherwise returns the current results.
+   */
+  public initial(): Promise<ModelKey[]> {
+    if (this.state === SourceState.Reset) {
+      return this.next();
+    } else {
+      return Promise.resolve(this.currentElements);
+    }
+  }
+
   hasNext(): boolean {
     const index = this.index;
     return this._cache.hasNext(index);

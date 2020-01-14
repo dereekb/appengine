@@ -155,6 +155,11 @@ export function ProvideControllableSource<S extends Source<any>>(type: Type<S>) 
 export abstract class IterableSource<T> extends ControllableSource<T> {
 
     /**
+     * Calls next() if the source has no items yet.
+     */
+    abstract initial(): Promise<T[]>;
+
+    /**
      * Next returns the requested type.
      */
     abstract next(): Promise<T[]>;
@@ -793,6 +798,10 @@ export class WrappedIterableSource<T> extends WrappedSource<T> implements Iterab
     }
 
     // MARK: Forwarded Accessor
+    public initial(): Promise<T[]> {
+        return this.source.initial();
+    }
+
     public hasNext(): boolean {
         return this._hasNext();
     }
