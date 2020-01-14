@@ -811,7 +811,7 @@ export class CachedKeySource<T extends UniqueModel> extends AbstractSource<Model
     }
   }
 
-  hasNext(): boolean {
+  public hasNext(): boolean {
     const index = this.index;
     return this._cache.hasNext(index);
   }
@@ -873,16 +873,16 @@ export class CachedKeySource<T extends UniqueModel> extends AbstractSource<Model
     }
   }
 
-  reset(): void {
+  public reset(): void {
     super.reset();
     this._next = undefined;
   }
 
-  refresh(): void {
+  public refresh(): void {
     // Do nothing, maybe reset the index?
   }
 
-  stop(): void {
+  public stop(): void {
     super.stop();
     this._cacheSub.unsubscribe();
   }

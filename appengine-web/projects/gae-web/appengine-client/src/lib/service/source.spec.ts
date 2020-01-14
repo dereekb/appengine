@@ -379,7 +379,7 @@ describe('Source', () => {
 
   });
 
-  fdescribe('CachedKeySource', () => {
+  describe('CachedKeySource', () => {
 
     let testQuerySource: TestFooTestKeyQuerySource;
     let testCachedKeySourceCache: CachedKeySourceCache<TestFoo>;
