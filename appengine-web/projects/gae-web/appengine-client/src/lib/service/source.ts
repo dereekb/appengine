@@ -187,6 +187,10 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
     }
   }
 
+  protected canDoNext() {
+    return this.hasNext() && !this.isStopped();
+  }
+
   private loadNext(): Promise<ModelKey[]> {
     if (this.canDoNext()) {
       this._next = this.doNext();
@@ -194,10 +198,6 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
     } else {
       return Promise.reject(new Error('No more elements to load.'));
     }
-  }
-
-  protected canDoNext() {
-    return this.hasNext() && !this.isStopped();
   }
 
   private doNext(): Promise<ModelKey[]> {
@@ -816,36 +816,49 @@ export class CachedKeySource<T extends UniqueModel> extends AbstractSource<Model
     return this._cache.hasNext(index);
   }
 
-  next(): Promise<ModelKey[]> {
-    if (!this._next) {
-      if (this.hasNext()) {
-        this.setState(SourceState.Loading);
-      } else {
-        this.setState(SourceState.Done);
-      }
-
-      const index = this.index;
-      const limit = this.limit;
-
-      // console.log('New next: ' + index)
-
-      this._next = this._cache.next(index, limit, () => {
-        this.setState(SourceState.Loading);
-      }).then((x) => {
-        // console.log('Next is done: ' + index)
-        this._next = undefined;
-        this.updateWithNext(x);
-        return x[0];
-      }, (error) => {
-        // console.log('Next failed: ' + index)
-        this._next = undefined;
-        return Promise.reject(error);
-      });
+  /**
+   * Loads the next values, extending the observable chain.
+   */
+  public next(): Promise<ModelKey[]> {
+    if (this._next) {
+      return this._next;
+    } else {
+      return this.loadNext();
     }
-
-    return this._next;
   }
 
+  protected canDoNext() {
+    return this.hasNext() && !this.isStopped();
+  }
+
+  private loadNext(): Promise<ModelKey[]> {
+    if (this.canDoNext()) {
+      this._next = this.doNext();
+      return this._next;
+    } else {
+      return Promise.reject(new Error('No more elements to load.'));
+    }
+  }
+
+  private doNext(): Promise<ModelKey[]> {
+    const index = this.index;
+    const limit = this.limit;
+
+    // console.log('New next: ' + index)
+
+    return this._cache.next(index, limit, () => {
+      this.setState(SourceState.Loading);
+    }).then((x) => {
+      // console.log('Next is done: ' + index)
+      this._next = undefined;
+      this.updateWithNext(x);
+      return x[0];
+    }, (error) => {
+      // console.log('Next failed: ' + index)
+      this._next = undefined;
+      return Promise.reject(error);
+    });
+  }
 
   private updateWithNext(next: CachedKeySourceCacheNext): void {
     const nextElements = next[0];
@@ -862,6 +875,7 @@ export class CachedKeySource<T extends UniqueModel> extends AbstractSource<Model
 
   reset(): void {
     super.reset();
+    this._next = undefined;
   }
 
   refresh(): void {
