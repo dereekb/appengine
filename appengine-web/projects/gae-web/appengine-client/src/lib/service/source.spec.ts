@@ -407,6 +407,26 @@ describe('Source', () => {
         testQuerySource.testQueryService.keyResults = testKeyResults;
       });
 
+      describe('reset()', () => {
+
+        describe('autoNextOnReset is true', () => {
+
+          beforeEach(() => {
+            testCachedKeySource.autoNextOnReset = true;
+          });
+
+          it('should call next() automatically when reset.', (done) => {
+            testCachedKeySource.reset();
+            testCachedKeySource.stream.pipe(filter(x => x.state === SourceState.Done)).subscribe((x) => {
+              expect(x.elements).toBeArrayOfNumbers();
+              done();
+            });
+          });
+
+        });
+
+      });
+
       describe('next()', () => {
 
         it('it should not emit loading when already in the done state.', (done) => {
@@ -426,9 +446,9 @@ describe('Source', () => {
               });
 
               // Call next several times back-to-back
-              testCachedKeySource.next().catch().finally(() =>
-                testCachedKeySource.next().catch().finally(() =>
-                  testCachedKeySource.next().catch()
+              testCachedKeySource.next().catch(() => undefined).finally(() =>
+                testCachedKeySource.next().catch(() => undefined).finally(() =>
+                  testCachedKeySource.next().catch(() => undefined)
                 )
               );
 

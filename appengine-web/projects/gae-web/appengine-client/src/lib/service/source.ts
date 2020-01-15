@@ -619,8 +619,8 @@ export class CachedKeySourceCache<T extends UniqueModel> {
   private _cacheEventsObs = this._cacheEvents.asObservable();
 
   constructor(private _source: IterableSource<ModelKey>, _stream: KeyedPredictiveOrderedQueryStream) {
-    this.resetCache();
     this._streamSub = _stream.delegateStream.subscribe((x) => this.updateCacheWithDelegateEvent(x));
+    this.resetCache();
   }
 
   // MARK: Events
@@ -681,6 +681,10 @@ export class CachedKeySourceCache<T extends UniqueModel> {
 
   public rebuildElements(index: number) {
     return this.buildNext(0, index);
+  }
+
+  public reset() {
+    this._source.reset();
   }
 
   // MARK: Internal
@@ -784,6 +788,8 @@ export class CachedKeySourceCache<T extends UniqueModel> {
  */
 export class CachedKeySource<T extends UniqueModel> extends AbstractSource<ModelKey> implements IterableSource<ModelKey> {
 
+  public autoNextOnReset = false;
+
   public limit = DEFAULT_CONFIG.limit;
 
   private _cacheSub: Subscription;
@@ -875,7 +881,10 @@ export class CachedKeySource<T extends UniqueModel> extends AbstractSource<Model
 
   public reset(): void {
     super.reset();
-    this._next = undefined;
+
+    if (this.autoNextOnReset) {
+      this.next().catch(() => undefined);
+    }
   }
 
   public refresh(): void {
