@@ -817,6 +817,15 @@ export class CachedKeySource<T extends UniqueModel> extends AbstractSource<Model
     }
   }
 
+  public reset(): void {
+    super.reset();
+    this._cache.reset();
+
+    if (this.autoNextOnReset) {
+      this.next().then(() => 0, () => 0);
+    }
+  }
+
   public hasNext(): boolean {
     const index = this.index;
     return this._cache.hasNext(index);
@@ -876,14 +885,6 @@ export class CachedKeySource<T extends UniqueModel> extends AbstractSource<Model
       this.addElements(nextElements, state);
     } else {
       this.addElements(nextElements, SourceState.Done);
-    }
-  }
-
-  public reset(): void {
-    super.reset();
-
-    if (this.autoNextOnReset) {
-      this.next().catch(() => undefined);
     }
   }
 

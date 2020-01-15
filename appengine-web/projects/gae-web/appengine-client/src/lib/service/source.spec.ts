@@ -425,6 +425,13 @@ describe('Source', () => {
 
         });
 
+        it('should not throw an error when initial is called after being reset.', (done) => {
+          testCachedKeySource.reset();
+          testCachedKeySource.initial().then(() => {
+            done();
+          });
+        });
+
       });
 
       describe('next()', () => {
