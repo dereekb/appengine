@@ -1,6 +1,6 @@
 {
   "name": "@gae-web/appengine-utility",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "peerDependencies": {
     "make-error": "*",
     "luxon": "*",
