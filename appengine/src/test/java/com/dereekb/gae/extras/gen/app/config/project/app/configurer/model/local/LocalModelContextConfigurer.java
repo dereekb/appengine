@@ -12,6 +12,7 @@ import com.dereekb.gae.extras.gen.app.config.project.app.configurer.model.local.
 public interface LocalModelContextConfigurer
         extends LocalModelCrudConfigurer, LocalModelSearchConfigurer, LocalModelEventListenerConfigurer,
         LocalModelIterateControllerConfigurer, LocalModelRoleSetLoaderConfigurer,
-        LocalModelChildrenRoleComponentConfigurer, SecuredQueryInitializerConfigurer {
+        LocalModelChildrenRoleComponentConfigurer, SecuredQueryInitializerConfigurer,
+        LocalModelApiControllerConfigurer {
 
 }

@@ -29,7 +29,8 @@ export function analyticsServiceConfigurationFactory(facebookApi: FacebookApiSer
   const facebookListener: AnalyticsServiceListener = new FacebookAnalyticsListenerService(facebookApi);
 
   const config: AnalyticsServiceConfiguration = {
-    hostnames: ['demo.com'],
+    // TODO: Specify production from environment.
+    isProduction: false,
     listeners: [
       // TODO: Add Google listener.
       facebookListener
@@ -73,10 +74,6 @@ export function makeFacebookConfig(): FacebookApiServiceConfig {
     })
   ],
   providers: [
-    {
-      provide: NgModuleFactoryLoader,
-      useClass: SystemJsNgModuleLoader
-    },
     {
       provide: GoogleOAuthServiceConfig,
       useFactory: makeGoogleConfig

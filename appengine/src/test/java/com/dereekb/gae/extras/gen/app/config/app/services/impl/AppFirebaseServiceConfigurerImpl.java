@@ -16,6 +16,9 @@ import com.dereekb.gae.utilities.misc.env.EnvStringUtility;
 public class AppFirebaseServiceConfigurerImpl
         implements AppFirebaseServiceConfigurer {
 
+	/**
+	 * Environmental variable that is read for the service account file name/path.
+	 */
 	public static final String SERVICE_ACCOUNT_FILE_ENV_VAR = "FIREBASE_SERVICE_ACCOUNT_FILE_PATH";
 
 	private boolean useServiceAccountFilePathForProduction = false;
@@ -84,7 +87,7 @@ public class AppFirebaseServiceConfigurerImpl
 		if (isProduction && this.useServiceAccountFilePathForProduction) {
 			serviceAccountKeyFilePath = EnvStringUtility.readProdEnv(SERVICE_ACCOUNT_FILE_ENV_VAR);
 		} else {
-			serviceAccountKeyFilePath = EnvStringUtility.readEnv(SERVICE_ACCOUNT_FILE_ENV_VAR);
+			serviceAccountKeyFilePath = EnvStringUtility.tryReadEnv(SERVICE_ACCOUNT_FILE_ENV_VAR);
 		}
 
 		String firebaseServiceBeanId = appConfiguration.getAppBeans().getFirebaseServiceBeanId();

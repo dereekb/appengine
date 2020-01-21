@@ -1,4 +1,4 @@
-package com.dereekb.gae.server.notification.service.impl.firebase;
+package com.dereekb.gae.server.notification.service.impl;
 
 import com.dereekb.gae.server.notification.service.PushNotificationToken;
 import com.dereekb.gae.utilities.data.StringUtility;

@@ -25,6 +25,8 @@ public abstract class AbstractRootServerInitializeService extends AbstractServer
 	private ObjectifyQueryService<App> appQueryService;
 	private AppLoginSecretGenerator appLoginSecretGenerator = AppLoginSecretGeneratorImpl.SINGLETON;
 
+	private boolean clearConfiguredRootAppModelKeyInProduction = false;
+
 	public AbstractRootServerInitializeService(SystemAppInfo appInfo,
 	        ForceGetterSetter<App> appGetterSetter,
 	        ObjectifyQueryService<App> appQueryService) {
@@ -71,7 +73,11 @@ public abstract class AbstractRootServerInitializeService extends AbstractServer
 		App app = this.makeRootAppForProduction();
 
 		// Store App
-		this.getAppGetterSetter().store(app);
+		if (this.clearConfiguredRootAppModelKeyInProduction) {
+			this.getAppGetterSetter().store(app);
+		} else {
+			this.getAppGetterSetter().forceStore(app);
+		}
 
 		// Initialize App
 		this.initializeServerForFirstSetup(app, true);
@@ -105,8 +111,10 @@ public abstract class AbstractRootServerInitializeService extends AbstractServer
 	protected App makeRootAppForProduction() {
 		App app = this.makeRootApp();
 
-		// Clear Model Key in production
-		app.setModelKey(null);
+		// Clear Model Key in production if specified
+		if (this.clearConfiguredRootAppModelKeyInProduction) {
+			app.setModelKey(null);
+		}
 
 		return app;
 	}

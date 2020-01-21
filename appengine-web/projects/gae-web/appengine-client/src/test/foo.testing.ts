@@ -24,8 +24,7 @@ export class TestFooTestKeyQuerySource extends KeyQuerySource<TestFoo> {
 
 }
 
-
-export class TestFooTestKeyTyoedModelSearchSource extends KeyTypedModelSearchSource<TestFoo> {
+export class TestFooTestKeyTypedModelSearchSource extends KeyTypedModelSearchSource<TestFoo> {
 
   constructor(public readonly testSearchService = new TestTypedModelSearchService<TestFoo>(), config?: TypedModelSearchSourceConfiguration) {
     super(testSearchService, config);

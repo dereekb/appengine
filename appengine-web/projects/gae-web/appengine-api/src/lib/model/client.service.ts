@@ -33,6 +33,7 @@ export abstract class AbstractClientService {
     // MARK: HttpResponse<ApiResponseJson> Handler
     protected handleResponse(obs: Observable<HttpResponse<ApiResponseJson>>): Observable<ClientApiResponse> {
         return obs.pipe(
+            // Here as a legacy option. HttpErrorResponse is the new response.
             catchError((e) => this.catchHttpResponseError(e)),
             catchError((e) => this.catchHttpErrorResponseError(e)),
             catchError((e) => this.catchClientApiResponseError(e)),

@@ -1,7 +1,5 @@
 import { Component, Input, Output, OnDestroy, AfterContentInit, EventEmitter, Type, ChangeDetectorRef, Inject } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription, of } from 'rxjs';
-import { Source, SourceState, ControllableSource, SubscriptionObject } from '@gae-web/appengine-utility';
-import { UniqueModel } from '@gae-web/appengine-utility';
 import { map, flatMap, share, startWith, tap, catchError, shareReplay } from 'rxjs/operators';
 import { ListViewSourceEvent, ListViewSource, ListViewSourceState } from './source';
 
@@ -67,7 +65,7 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
     } else {
       return [];
     }
-  }), shareReplay());
+  }), shareReplay(1));
 
   private _lastSourceState = ListViewSourceState.Init;
   private _selected?: T;
@@ -84,7 +82,7 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
   @Output()
   public itemSelected = new EventEmitter<T>();
 
-  constructor(@Inject(ChangeDetectorRef) private cdRef: ChangeDetectorRef) {}
+  constructor(@Inject(ChangeDetectorRef) private cdRef: ChangeDetectorRef) { }
 
   ngAfterContentInit() {
     this._initialize();

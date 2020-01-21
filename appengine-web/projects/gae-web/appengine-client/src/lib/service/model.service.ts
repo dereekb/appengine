@@ -1,4 +1,7 @@
-import { UniqueModel, ModelKey, ModelUtility, AsyncModelCacheWrap, SourceFactory, KeySafeAsyncModelCacheWrap } from '@gae-web/appengine-utility';
+import {
+  UniqueModel, ModelKey, ModelUtility, AsyncModelCacheWrap, SourceFactory,
+  KeySafeAsyncModelCacheWrap, TimedKeySafeAsyncModelCacheWrap, NonCacheAsyncModelCacheWrap, ModelsOrKeys, ModelOrKey, ValueUtility
+} from '@gae-web/appengine-utility';
 import { ModelReadService, AppEngineReadSourceFactory, ModelUpdateService, ModelDeleteService } from './crud.service';
 import { WrapperEventType, ModelWrapperEvent, ModelServiceAnonymousWrapperEventSystem, AnonymousWrapperEvent, WrapperEvent, WrapperEventFilter } from './wrapper';
 import { Subject, Observable } from 'rxjs';
@@ -86,7 +89,6 @@ export class FullModelServiceEventAnnouncer<T extends UniqueModel> extends KeyOn
       this._wrapper.next({
         modelType: this._wrapper.type,
         eventType,
-
         models: result.models,
         keys
       } as ModelWrapperEvent);
@@ -99,13 +101,27 @@ export class FullModelServiceEventAnnouncer<T extends UniqueModel> extends KeyOn
 
 // MARK: Wrapper
 export abstract class ModelServiceWrapperConfig<T extends UniqueModel> {
+  /**
+   * Model type
+   */
   readonly type: string;
+
+  /**
+   * Whether or not to cache values at all.
+   */
+  readonly cache?: boolean;
+
+  /**
+   * Time to live of items in the cache.
+   */
+  readonly cacheTimeToLive?: number;
+
   init?: (wrapper: ModelServiceWrapper<T>, wrapperSet: ModelServiceWrapperSet) => void;
 }
 
 export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceEventAnnouncer, ModelServiceAnonymousWrapperEventSystem {
 
-  private _cache = new KeySafeAsyncModelCacheWrap<T>();
+  private _cache: AsyncModelCacheWrap<T>;
   private _events = new Subject<ModelWrapperEvent>();
 
   private _config: ModelServiceWrapperConfig<T>;
@@ -121,6 +137,18 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
 
     this._config = config;
 
+    // Init Cache
+    if (config.cache !== false) {
+      if (config.cacheTimeToLive) {
+        this._cache = new TimedKeySafeAsyncModelCacheWrap<T>(config.cacheTimeToLive);
+      } else {
+        this._cache = new KeySafeAsyncModelCacheWrap<T>();
+      }
+    } else {
+      this._cache = new NonCacheAsyncModelCacheWrap<T>();
+    }
+
+    // Call Init Function
     if (config.init) {
       config.init(this, this._parent);
     }
@@ -171,8 +199,12 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
     return new ModelReadService<T>(this, service);
   }
 
-  public wrapUpdateService(service: UpdateService<T>): ModelUpdateService<T> {
-    return new ModelUpdateService<T>(this, service);
+  public wrapUpdateService<S extends ModelUpdateService<T>>(service: UpdateService<T>, constructor?: (parent: ModelServiceWrapper<T>, updateService: UpdateService<T>) => S): S {
+    if (constructor) {
+      return constructor(this, service);
+    } else {
+      return new ModelUpdateService<T>(this, service) as S;
+    }
   }
 
   public wrapDeleteService(service: DeleteService<T>): ModelDeleteService<T> {
@@ -216,6 +248,35 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
 
   public setFullAnnouncerWithReadService(readService: ModelReadService<T>) {
     this._announcer = new FullModelServiceEventAnnouncer(this, readService);
+  }
+
+  // MARK: Cache
+  public clearFromCache(keys: ModelsOrKeys<T>): T[] {
+    return this._cache.removeAll(ModelUtility.readModelKeysFromModelsOrKeys(keys));
+  }
+
+  // MARK: Utility
+  /**
+   * Attempts to load and update the specified model if it exists in the cache.
+   *
+   * @param key Key of model to load.
+   * @param updateFn Update function. If a model is returned, the value will be replaced in the cache.
+   * If false is returned, no change occurs. If undefined is returned, the original model is notified to be updated.
+   */
+  public tryUpdateCachedModel(key: ModelOrKey<T>, updateFn: (model: T) => T | false | true | undefined | void) {
+    const keyValue = ModelUtility.readModelKey(key);
+
+    const cachedModel = this.cache.get(keyValue);
+
+    if (cachedModel) {
+      const updateFnResult = updateFn(cachedModel);
+
+      if (updateFnResult !== false) {
+        const updateValue = ((updateFnResult === true) ? cachedModel : updateFnResult) || cachedModel;
+        this._cache.putModel(updateValue);
+        this.announceUpdated([keyValue]);
+      }
+    }
   }
 
 }

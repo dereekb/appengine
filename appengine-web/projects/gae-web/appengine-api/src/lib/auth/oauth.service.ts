@@ -65,7 +65,7 @@ export class OAuthLoginApiService {
     return responseObs.pipe(
       map(LoginTokenPair.fromResponse),
       catchError(this.handleRequestError),
-      shareReplay()
+      shareReplay(1)
     );
   }
 

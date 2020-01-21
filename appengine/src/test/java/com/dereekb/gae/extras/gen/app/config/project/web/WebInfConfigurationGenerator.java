@@ -70,7 +70,7 @@ public class WebInfConfigurationGenerator extends AbstractConfigurationFileGener
 		builder.getRawXMLBuilder().comment("API Servlet");
 		builder.addSpringServlet(apiServletName, "/WEB-INF/spring/api/api.xml", 0);
 
-		builder.addSpringServletMapping(apiServletName, this.getAppConfig().getAppServiceConfigurationInfo().getRootAppApiPath() + "/*");
+		builder.addSpringServletMapping(apiServletName, this.getAppConfig().getAppServiceConfigurationInfo().getFullDomainRootAppApiPath() + "/*");
 
 		// Taskqueue
 		String taskqueueServletName = "taskqueue";

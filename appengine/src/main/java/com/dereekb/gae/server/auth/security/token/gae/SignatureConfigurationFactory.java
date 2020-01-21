@@ -15,17 +15,25 @@ import com.dereekb.gae.utilities.model.source.Source;
  */
 public class SignatureConfigurationFactory extends GoogleAppEngineContextualFactoryImpl<SignatureConfiguration> {
 
-	public static final String TEST_SIGNATURE_SECRET = "3xSigP7IfiCCDa7EE5aCradtF94giUGizNr9yb8E/QU=";
-	public static final String DEV_SIGNATURE_SECRET = "4xSigP7IfiCCDa7EE5aCradtF94giUGizNr9yb8E/QU=";
+	public static final String TEST_REFRESH_SIGNATURE_SECRET = "MzXHEF63iSLa6OksSfZ4hvtXZMTHu7QNkhUToOaAQPel29NwutgFGiV68XYrcJF";
+	public static final String DEV_REFRESH_SIGNATURE_SECRET = "C7D0hkvFGJESTg1CpFZpGxGtEqLOs7AU06DwJjI9zNm6lBTP1OQx9Dv3tQFjb88";
+
+	public static final String TEST_LOGIN_SIGNATURE_SECRET = "MzXHEF63iSLa6OksSfZ4hvtXZMTHb7QNkhUToOaAQPel29NwutgFGiV68XYrcJF";
+	public static final String DEV_LOGIN_SIGNATURE_SECRET = "C7D0hkvFGJESTg1CpFZpGxGtEqLOs8AU06DwJjI9zNm6lBTP1OQx9Dv3tQFjb88";
 
 	public SignatureConfigurationFactory() {
+		this(true);
+	}
+
+	public SignatureConfigurationFactory(boolean refreshTokenService) {
 		super(true);
 
 		this.setTestSource(new Source<SignatureConfiguration>() {
 
 			@Override
 			public SignatureConfiguration loadObject() throws RuntimeException, UnavailableSourceObjectException {
-				return new SignatureConfigurationImpl(TEST_SIGNATURE_SECRET);
+				String secret = (refreshTokenService) ? TEST_REFRESH_SIGNATURE_SECRET : TEST_LOGIN_SIGNATURE_SECRET;
+				return new SignatureConfigurationImpl(secret);
 			}
 
 		});
@@ -34,10 +42,15 @@ public class SignatureConfigurationFactory extends GoogleAppEngineContextualFact
 
 			@Override
 			public SignatureConfiguration loadObject() throws RuntimeException, UnavailableSourceObjectException {
-				return new SignatureConfigurationImpl(DEV_SIGNATURE_SECRET);
+				String secret = (refreshTokenService) ? DEV_REFRESH_SIGNATURE_SECRET : DEV_LOGIN_SIGNATURE_SECRET;
+				return new SignatureConfigurationImpl(secret);
 			}
 
 		});
+	}
+
+	public void setProductionSecret(String secret) {
+		this.setProductionSingleton(new SignatureConfigurationImpl(secret));
 	}
 
 }

@@ -43,14 +43,14 @@ export enum SourceState {
     Reset = 0,
 
     /**
-     * Not loading more elements. (can load more when requested.)
-     */
-    Idle = 1,
-
-    /**
      * Loading more elements.
      */
-    Loading = 2,
+    Loading = 1,
+
+    /**
+     * Not loading more elements. (can load more when requested.)
+     */
+    Idle = 2,
 
     /**
      * The source has reached the end (no more will load when requested.)
@@ -68,6 +68,21 @@ export enum SourceState {
      * Source has been stopped permenantly.
      */
     Stopped = 5
+
+}
+
+// MARK: Source Utiltiy
+export class SourceUtility {
+
+    /**
+     * Returns true if the source event has finished loading and is no longer idle.
+     *
+     * @param event Event to check.
+     */
+    static sourceEventHasFinishedLoading(event: SourceEvent<any>): boolean {
+        const result = event.state > SourceState.Loading;
+        return result;
+    }
 
 }
 
@@ -138,6 +153,11 @@ export function ProvideControllableSource<S extends Source<any>>(type: Type<S>) 
 }
 
 export abstract class IterableSource<T> extends ControllableSource<T> {
+
+    /**
+     * Calls next() if the source has no items yet.
+     */
+    abstract initial(): Promise<T[]>;
 
     /**
      * Next returns the requested type.
@@ -778,6 +798,10 @@ export class WrappedIterableSource<T> extends WrappedSource<T> implements Iterab
     }
 
     // MARK: Forwarded Accessor
+    public initial(): Promise<T[]> {
+        return this.source.initial();
+    }
+
     public hasNext(): boolean {
         return this._hasNext();
     }

@@ -27,9 +27,13 @@
 
 	<ssl-enabled>true</ssl-enabled>
 
-	<!-- Configure java.util.logging -->
 	<system-properties>
+		<!-- Configure java.util.logging -->
 		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
+		
+		<!-- Configure Java EL -->
+		<!-- https://stackoverflow.com/questions/53365481/how-to-create-javax-el-expressionfactory-in-google-app-engine-to-use-hibernate-v/53627367#53627367 -->
+	    <property name="javax.el.ExpressionFactory" value="com.sun.el.ExpressionFactoryImpl" />
 	</system-properties>
-
+	
 </appengine-web-app>

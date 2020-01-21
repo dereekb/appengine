@@ -54,7 +54,22 @@ export class LoginRegisteredAnalyticsDirective extends AbstractLoginTokenAnalyti
         const type = decoded.pointerType;
         const typeString = LoginPointerType[type];
 
+        let method;
+
+        switch (type) {
+            case LoginPointerType.OAuthGoogle:
+                method = 'google';
+                break;
+            case LoginPointerType.OAuthFacebook:
+                method = 'facebook';
+                break;
+            case LoginPointerType.Password:
+                method = 'email';
+                break;
+        }
+
         analytics.sendNewUserEvent(user, {
+            method,
             type: typeString
         });
     }

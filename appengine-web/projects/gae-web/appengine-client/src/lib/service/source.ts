@@ -153,6 +153,7 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
     config.limit = template.limit || DEFAULT_CONFIG.limit;
     config.cursor = template.cursor || DEFAULT_CONFIG.cursor;
     config.filters = { ...DEFAULT_CONFIG.filters, ...template.filters };
+    config.autoNextOnReset = template.autoNextOnReset || false;
   }
 
   protected _resetForNewConfig() {
@@ -186,6 +187,10 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
     }
   }
 
+  protected canDoNext() {
+    return this.hasNext() && !this.isStopped();
+  }
+
   private loadNext(): Promise<ModelKey[]> {
     if (this.canDoNext()) {
       this._next = this.doNext();
@@ -193,10 +198,6 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
     } else {
       return Promise.reject(new Error('No more elements to load.'));
     }
-  }
-
-  protected canDoNext() {
-    return this.hasNext() && !this.isStopped();
   }
 
   private doNext(): Promise<ModelKey[]> {
@@ -266,7 +267,8 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
       map((response: ModelSearchResponse<T>) => {
         return new KeyResultPair<T>(request, response);
       }),
-      shareReplay()
+      // Share the latest response
+      shareReplay(1)
     );
 
     return obs;
@@ -493,7 +495,8 @@ export class MergedReadIterateSource<T extends UniqueModel> implements Controlla
           state
         };
       }),
-      shareReplay()
+      // Share the latest response
+      shareReplay(1)
     );
   }
 
@@ -616,8 +619,8 @@ export class CachedKeySourceCache<T extends UniqueModel> {
   private _cacheEventsObs = this._cacheEvents.asObservable();
 
   constructor(private _source: IterableSource<ModelKey>, _stream: KeyedPredictiveOrderedQueryStream) {
-    this.resetCache();
     this._streamSub = _stream.delegateStream.subscribe((x) => this.updateCacheWithDelegateEvent(x));
+    this.resetCache();
   }
 
   // MARK: Events
@@ -678,6 +681,10 @@ export class CachedKeySourceCache<T extends UniqueModel> {
 
   public rebuildElements(index: number) {
     return this.buildNext(0, index);
+  }
+
+  public reset() {
+    this._source.reset();
   }
 
   // MARK: Internal
@@ -781,6 +788,8 @@ export class CachedKeySourceCache<T extends UniqueModel> {
  */
 export class CachedKeySource<T extends UniqueModel> extends AbstractSource<ModelKey> implements IterableSource<ModelKey> {
 
+  public autoNextOnReset = false;
+
   public limit = DEFAULT_CONFIG.limit;
 
   private _cacheSub: Subscription;
@@ -797,41 +806,74 @@ export class CachedKeySource<T extends UniqueModel> extends AbstractSource<Model
   }
 
   // MARK: Iterable
-  hasNext(): boolean {
+  /**
+   * Calls next if the source has been reset, otherwise returns the current results.
+   */
+  public initial(): Promise<ModelKey[]> {
+    if (this.state === SourceState.Reset) {
+      return this.next();
+    } else {
+      return Promise.resolve(this.currentElements);
+    }
+  }
+
+  public reset(): void {
+    super.reset();
+    this._cache.reset();
+
+    if (this.autoNextOnReset) {
+      this.next().then(() => 0, () => 0);
+    }
+  }
+
+  public hasNext(): boolean {
     const index = this.index;
     return this._cache.hasNext(index);
   }
 
-  next(): Promise<ModelKey[]> {
-    if (!this._next) {
-      if (this.hasNext()) {
-        this.setState(SourceState.Loading);
-      } else {
-        this.setState(SourceState.Done);
-      }
-
-      const index = this.index;
-      const limit = this.limit;
-
-      // console.log('New next: ' + index)
-
-      this._next = this._cache.next(index, limit, () => {
-        this.setState(SourceState.Loading);
-      }).then((x) => {
-        // console.log('Next is done: ' + index)
-        this._next = undefined;
-        this.updateWithNext(x);
-        return x[0];
-      }, (error) => {
-        // console.log('Next failed: ' + index)
-        this._next = undefined;
-        return Promise.reject(error);
-      });
+  /**
+   * Loads the next values, extending the observable chain.
+   */
+  public next(): Promise<ModelKey[]> {
+    if (this._next) {
+      return this._next;
+    } else {
+      return this.loadNext();
     }
-
-    return this._next;
   }
 
+  protected canDoNext() {
+    return this.hasNext() && !this.isStopped();
+  }
+
+  private loadNext(): Promise<ModelKey[]> {
+    if (this.canDoNext()) {
+      this._next = this.doNext();
+      return this._next;
+    } else {
+      return Promise.reject(new Error('No more elements to load.'));
+    }
+  }
+
+  private doNext(): Promise<ModelKey[]> {
+    const index = this.index;
+    const limit = this.limit;
+
+    // console.log('New next: ' + index)
+
+    return this._cache.next(index, limit, () => {
+      this.setState(SourceState.Loading);
+    }).then((x) => {
+      // console.log('Next is done: ' + index)
+      this._next = undefined;
+      this.updateWithNext(x);
+      return x[0];
+    }, (error) => {
+      // console.log('Next failed: ' + index)
+      this._next = undefined;
+      return Promise.reject(error);
+    });
+  }
 
   private updateWithNext(next: CachedKeySourceCacheNext): void {
     const nextElements = next[0];
@@ -846,15 +888,11 @@ export class CachedKeySource<T extends UniqueModel> extends AbstractSource<Model
     }
   }
 
-  reset(): void {
-    super.reset();
-  }
-
-  refresh(): void {
+  public refresh(): void {
     // Do nothing, maybe reset the index?
   }
 
-  stop(): void {
+  public stop(): void {
     super.stop();
     this._cacheSub.unsubscribe();
   }

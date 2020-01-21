@@ -12,6 +12,8 @@
     <!--app-->
     <ref bean="appObjectifyEntry"/>
     <ref bean="appHookObjectifyEntry"/>
+    <!--notification-->
+    <ref bean="notificationSettingsObjectifyEntry"/>
     <!--foo-->
     <ref bean="fooObjectifyEntry"/>
   </util:list>

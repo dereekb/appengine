@@ -6,6 +6,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppServicesConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.local.LoginTokenAppSecurityBeansConfigurerImpl;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.utility.GenFile;
@@ -13,6 +14,7 @@ import com.dereekb.gae.extras.gen.utility.impl.GenFolderImpl;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBeanBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
+import com.dereekb.gae.server.api.google.cloud.storage.impl.InMemoryGoogleCloudStorageService;
 import com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenFactoryImpl;
 import com.dereekb.gae.server.auth.security.system.impl.SystemLoginTokenServiceImpl;
 import com.dereekb.gae.server.auth.security.token.gae.SignatureConfigurationFactory;
@@ -115,14 +117,15 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 
 		builder.comment("GAE Specific");
 		builder.bean("localServiceTestHelper").beanClass(LocalServiceTestHelper.class).lazy(false).c().array()
-		        .ref("localMemcacheServiceTestConfig").ref("localBlobstoreServiceTestConfig")
+		        .ref("localMemcacheServiceTestConfig")	//.ref("localBlobstoreServiceTestConfig")		// No blobstore for now
 		        .ref("localDatastoreServiceTestConfig").ref("localSearchServiceTestConfig")
 		        .ref("localTaskQueueServiceTestConfig").ref("localImagesServiceTestConfig")
 		        .ref("localURLFetchServiceTestConfig").ref("localAppIdentityServiceTestConfig");
 
 		builder.bean("localMemcacheServiceTestConfig").beanClass(LocalMemcacheServiceTestConfig.class);
 
-		builder.bean("localBlobstoreServiceTestConfig").beanClass(LocalBlobstoreServiceTestConfig.class);
+		builder.bean("localBlobstoreServiceTestConfig").beanClass(LocalBlobstoreServiceTestConfig.class)
+		        .property("noStorage").value("true");
 
 		builder.bean("localDatastoreServiceTestConfig").factoryBean("localDatastoreServiceTestConfigFactory")
 		        .factoryMethod("make");
@@ -138,9 +141,8 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 
 		builder.bean("localAppIdentityServiceTestConfig").beanClass(LocalAppIdentityServiceTestConfig.class);
 
-		builder.stringBean("datastoreIndexesXmlPath", "src/main/webapp/WEB-INF/datastore-indexes.xml");
-
-		builder.stringBean("taskQueueXmlPath", "src/main/webapp/WEB-INF/queue.xml");
+		// Development queue.xml - devqueue.xml
+		builder.stringBean("taskQueueXmlPath", "src/main/webapp/WEB-INF/devqueue.xml");
 
 		// Objectify Initializer is here as a helper. Required by
 		// CoreServiceTestingContext.
@@ -163,7 +165,8 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 		this.importFilesWithBuilder(builder, folder, true, true);
 
 		// Server Initializer
-		// TODO: Allow configuring whether or not this is generated. Also only build if App is available locally.
+		// TODO: Allow configuring whether or not this is generated. Also only
+		// build if App is available locally.
 		if (this.getAppConfig().isRootServer() == false) {
 
 			/*
@@ -173,12 +176,18 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 
 			String testServerInitializerBeanId = "testServerInitializer";
 
-			builder
-			.bean(testServerInitializerBeanId)
-			.beanClass(TestRemoteServerInitializeService.class)
-			.c().ref(this.getAppConfig().getAppBeans().getAppInfoBeanId())
-			.ref("appRegistry")
-			.ref("appRegistry");
+			builder.bean(testServerInitializerBeanId).beanClass(TestRemoteServerInitializeService.class).c()
+			        .ref(this.getAppConfig().getAppBeans().getAppInfoBeanId()).ref("appRegistry").ref("appRegistry");
+		}
+
+		// Service Override Configurations
+		builder.comment("Testing Overrides");
+		AppServicesConfigurer servicesConfigurer = this.getAppConfig().getAppServicesConfigurer();
+
+		if (servicesConfigurer.getAppGoogleCloudStorageServiceConfigurer() != null) {
+			builder.bean(this.getAppConfig().getAppBeans().getGoogleCloudStorageServiceBeanId())
+			        .beanClass(InMemoryGoogleCloudStorageService.class).primary().getRawXMLBuilder()
+			        .comment("Google Cloud Service override for unit tests");
 		}
 
 		return this.makeFileWithXML(TESTING_CONTEXT_XML, builder);
@@ -192,7 +201,7 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 		builder.bean("defaultSecurityServletPath").beanClass(String.class).c().ref("productionApiServletPath");
 
 		builder.stringBean("productionApiServletPath",
-		        this.getAppConfig().getAppServiceConfigurationInfo().getRootAppApiPath());
+		        this.getAppConfig().getAppServiceConfigurationInfo().getFullDomainRootAppApiPath());
 
 		builder.stringBean("productionTaskqueueServletPath", "/taskqueue");
 
@@ -239,8 +248,7 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 			String testLoginTokenEncoderDecoderBeanId = "testLoginTokenEncoderDecoder";
 			SpringBeansXMLBeanBuilder<?> loginTokenEncoderDecoderBuilder = builder
 			        .bean(testLoginTokenEncoderDecoderBeanId);
-			appSecurityBeansConfigurer.configureTokenEncoderDecoder(appConfig,
-			        loginTokenEncoderDecoderBuilder, true);
+			appSecurityBeansConfigurer.configureTokenEncoderDecoder(appConfig, loginTokenEncoderDecoderBuilder, true);
 
 			String testLoginGetterBeanId = LoginTokenAppSecurityBeansConfigurerImpl.TEST_LOGIN_TOKEN_BUILDER_LOGIN_GETTER_BEAN_ID;
 			builder.bean(testLoginGetterBeanId).beanClass(NoopGetterImpl.class);
@@ -260,14 +268,14 @@ public class TestConfigurationGenerator extends AbstractConfigurationFileGenerat
 			// TODO: Move elsewhere?
 			String systemLoginTokenServiceBeanId = appConfig.getAppBeans().getSystemLoginTokenServiceBeanId();
 
-			builder.bean(systemLoginTokenServiceBeanId).beanClass(SystemLoginTokenServiceImpl.class)
-			.c()
-			.value("1")	// Default System Encoded Roles
-			.ref(testLoginTokenServiceId);
+			builder.bean(systemLoginTokenServiceBeanId).beanClass(SystemLoginTokenServiceImpl.class).c().value("1")	// Default
+			                                                                                                       	// System
+			                                                                                                       	// Encoded
+			                                                                                                       	// Roles
+			        .ref(testLoginTokenServiceId);
 
 			builder.bean(appConfig.getAppBeans().getSystemLoginTokenFactoryBeanId())
-			        .beanClass(SystemLoginTokenFactoryImpl.class).c()
-			        .ref(systemLoginTokenServiceBeanId)
+			        .beanClass(SystemLoginTokenFactoryImpl.class).c().ref(systemLoginTokenServiceBeanId)
 			        .ref(appConfig.getAppBeans().getAppLoginSecuritySigningServiceBeanId());
 
 		}

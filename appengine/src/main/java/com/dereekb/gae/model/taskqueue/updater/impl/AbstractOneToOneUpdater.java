@@ -8,7 +8,6 @@ import com.dereekb.gae.model.taskqueue.updater.RelatedModelUpdaterResult;
 import com.dereekb.gae.server.datastore.Getter;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
-import com.dereekb.gae.server.datastore.utility.StagedTransactionAlreadyFinishedException;
 import com.dereekb.gae.server.datastore.utility.StagedTransactionChange;
 import com.dereekb.gae.server.datastore.utility.impl.StagedTransactionChangeCollection;
 import com.dereekb.gae.utilities.collections.pairs.impl.HandlerPair;
@@ -82,7 +81,7 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 	 * @param <C>
 	 *            changes result type
 	 */
-	protected abstract class SimpleAbstractInstance extends AbstractInstance<ExtendedAbstractInstanceResults, StagedTransactionChange> {
+	protected abstract class SimpleAbstractInstance extends AbstractInstance<RelatedModelUpdaterResultImpl, StagedTransactionChange> {
 
 		@Override
 		protected StagedTransactionChange performChangesForRelation(RelationChangesInput<T, R> input) {
@@ -151,7 +150,7 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 
 		// MARK: Internal - Results
 		@Override
-		protected ExtendedAbstractInstanceResults makeOutputForChanges(List<StagedTransactionChange> changes) {
+		protected RelatedModelUpdaterResultImpl makeOutputForChanges(List<StagedTransactionChange> changes) {
 			StagedTransactionChangeCollection changeCollection = new StagedTransactionChangeCollection();
 
 			for (StagedTransactionChange change : changes) {
@@ -160,29 +159,11 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 
 			changeCollection.addChange(this.includeAdditionalChanges());
 
-			return new ExtendedAbstractInstanceResults(changeCollection);
+			return new RelatedModelUpdaterResultImpl(changeCollection);
 		}
 
 		protected StagedTransactionChange includeAdditionalChanges() {
 			return null;
-		}
-
-	}
-
-	protected class ExtendedAbstractInstanceResults
-	        implements RelatedModelUpdaterResult {
-
-		private StagedTransactionChangeCollection changes;
-
-		public ExtendedAbstractInstanceResults(StagedTransactionChangeCollection changes) {
-			super();
-			this.changes = changes;
-		}
-
-		// MARK: StagedTransactionChange
-		@Override
-		public void finishChanges() throws StagedTransactionAlreadyFinishedException {
-			this.changes.finishChanges();
 		}
 
 	}
@@ -203,7 +184,7 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 		// MARK: Instance
 		@Override
 		public final O performChanges(Iterable<T> models) {
-			 List<HandlerPair<ModelKey, T>> pairs = this.buildRelationPairs(models);
+			List<HandlerPair<ModelKey, T>> pairs = this.buildRelationPairs(models);
 			List<C> changes = new ArrayList<C>();
 
 			// Perform changes for each relation independently.
@@ -234,8 +215,8 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 
 		// MARK: Internal - Relation Changes
 		private final C performSafeChangesForRelation(final ModelKey inputRelationModelKey,
-		                                              final T value) {
-			final ModelKey inputModelKey = value.getModelKey();
+		                                              final T model) {
+			final ModelKey inputModelKey = model.getModelKey();
 
 			return ObjectifyService.ofy().transactNew(new Work<C>() {
 
@@ -244,23 +225,57 @@ public abstract class AbstractOneToOneUpdater<T extends UniqueModel, R extends U
 					ModelKey relationModelKey = inputRelationModelKey;
 
 					// Read the model again for transaction safety.
-					T inputModel = AbstractOneToOneUpdater.this.inputModelGetter.get(value);
+					T inputModel = AbstractOneToOneUpdater.this.inputModelGetter.get(model);
+
+					boolean modelExists = inputModel != null;
 
 					// Re-read the relation key from the transaction-safe model.
-					// The model may have been deleted, in which case we use the original value from above.
+					// The model may have been deleted, in which case we use the
+					// original value from above.
+					if (!modelExists) {
+						inputModel = model;
+					}
+
+					// Re-read the relation key from the transaction-safe model.
+					// The model may have been deleted, in which case we use the
+					// original value from above.
 					if (inputModel != null) {
 						relationModelKey = getRelationModelKey(inputModel);
 					}
 
-					// Attempts to load the models.
-					R relationModel = (relationModelKey != null) ? AbstractOneToOneUpdater.this.relationModelGetter.get(relationModelKey) : null;
+					if (AbstractInstance.this.shouldPerformChangesWithModel(inputModel, modelExists)) {
 
-					RelationChangesInputImpl input = new RelationChangesInputImpl(inputModelKey, relationModelKey,
-					        inputModel, relationModel);
-					return AbstractInstance.this.performChangesForRelation(input);
+						// Attempts to load the models.
+						R relationModel = (relationModelKey != null)
+						        ? AbstractOneToOneUpdater.this.relationModelGetter.get(relationModelKey)
+						        : null;
+
+						RelationChangesInputImpl input = new RelationChangesInputImpl(inputModelKey, relationModelKey,
+						        inputModel, relationModel);
+						return AbstractInstance.this.performChangesForRelation(input);
+					} else {
+						return AbstractInstance.this.makeNoChangesResult(model, modelExists);
+					}
 				}
 
 			});
+		}
+
+		protected boolean shouldPerformChangesWithModel(T model,
+		                                                boolean modelExists) {
+			return true;
+		}
+
+		/**
+		 * Creates a result when no changes occur.
+		 *
+		 * @param model
+		 *            Input model.
+		 * @return Result. Can be {@code null}.
+		 */
+		protected C makeNoChangesResult(T model,
+		                                boolean modelExists) {
+			return null;
 		}
 
 		private class RelationChangesInputImpl

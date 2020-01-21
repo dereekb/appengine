@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.notification.model.token;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.dereekb.gae.server.datastore.models.DatabaseModel;
@@ -60,7 +61,7 @@ public class NotificationSettings extends DatabaseModel
 		return this.tokens;
 	}
 
-	public void setTokens(List<NotificationToken> tokens) {
+	public void setTokens(Collection<NotificationToken> tokens) {
 		this.tokens = ListUtility.newList(tokens);
 	}
 

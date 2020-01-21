@@ -28,23 +28,27 @@ export interface ApiResponseJson {
  */
 export class ApiResponse {
 
-    public static fromJson(json: ApiResponseJson): ApiResponse {
-        const success = json.success;
-
+    public static fromJson(json: ApiResponseJson | undefined): ApiResponse {
+        let success: boolean | undefined;
         let data: ApiResponseData | undefined;
         let included: Map<ApiErrorCode, ApiResponseData> | undefined;
         let errors: ApiResponseErrorSet | undefined;
 
-        if (json.data) {
-            data = ApiResponseData.fromJson(json.data);
-        }
+        if (json) {
+            // Omission of success implies success.
+            success = (json.success !== undefined) ? json.success : true;
 
-        if (json.included) {
-            included = ApiResponseData.mapFromJson(json.included);
-        }
+            if (json.data) {
+                data = ApiResponseData.fromJson(json.data);
+            }
 
-        if (json.errors) {
-            errors = ApiResponseErrorSet.fromJson(json.errors);
+            if (json.included) {
+                included = ApiResponseData.mapFromJson(json.included);
+            }
+
+            if (json.errors) {
+                errors = ApiResponseErrorSet.fromJson(json.errors);
+            }
         }
 
         return new ApiResponse(success, data, included, errors);

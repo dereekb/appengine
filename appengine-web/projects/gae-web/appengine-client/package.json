@@ -1,12 +1,11 @@
 {
   "name": "@gae-web/appengine-client",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "peerDependencies": {
     "rxjs": "*",
     "make-error": "*",
-    "@uirouter/angular": "*",
-    "@angular/common": "~8.1.0",
-    "@angular/core": "~8.1.0",
+    "@angular/common": "^8.2.0",
+    "@angular/core": "^8.2.0",
     "@gae-web/appengine-api": "*",
     "@gae-web/appengine-token": "*",
     "@gae-web/appengine-utility": "*"

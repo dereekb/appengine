@@ -1,5 +1,6 @@
 package com.dereekb.gae.utilities.data;
 
+import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -264,6 +265,10 @@ public class StringUtility {
 		}
 
 		return wrapped;
+	}
+
+	public static byte[] getUTF8Bytes(String string) throws UnsupportedEncodingException {
+		return string.getBytes("UTF-8");
 	}
 
 }

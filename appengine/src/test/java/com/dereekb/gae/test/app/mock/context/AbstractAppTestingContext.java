@@ -127,10 +127,11 @@ public class AbstractAppTestingContext extends AbstractAppContextOnlyTestingCont
 	@Override
 	@AfterEach
 	public void tearDownAppServices() {
-		super.tearDownAppServices();
 
-		// Wait for any tasks to complete first...
+		// Wait for any tasks to complete first before shutting down app services.
 		waitUntilTaskQueueCompletes();
+
+		super.tearDownAppServices();
 	}
 
 	// MARK: Initialize

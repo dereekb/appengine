@@ -2,8 +2,9 @@ package com.dereekb.gae.server.notification.model.token;
 
 import java.util.Date;
 
-import com.dereekb.gae.server.notification.service.PushNotificationToken;
+import com.dereekb.gae.server.notification.service.PushNotificationDevice;
 import com.dereekb.gae.utilities.data.StringUtility;
+import com.dereekb.gae.utilities.time.model.DatedModel;
 
 /**
  * Notification token stored within {@link NotificationSettings}.
@@ -12,13 +13,28 @@ import com.dereekb.gae.utilities.data.StringUtility;
  *
  */
 public class NotificationToken
-        implements PushNotificationToken {
+        implements PushNotificationDevice, DatedModel {
 
+	/**
+	 * Device identifier/UUID.
+	 */
 	private String device;
+
+	/**
+	 * Notification token.
+	 */
 	private String token;
+
+	/**
+	 * Date the identifier was added.
+	 */
 	private Date date;
 
 	public NotificationToken() {}
+
+	public NotificationToken(PushNotificationDevice device) {
+		this(device.getDevice(), device.getNotificationToken(), new Date());
+	}
 
 	public NotificationToken(String device, String token) {
 		this(device, token, new Date());
@@ -31,6 +47,7 @@ public class NotificationToken
 		this.setDate(date);
 	}
 
+	@Override
 	public String getDevice() {
 		return this.device;
 	}
@@ -49,17 +66,22 @@ public class NotificationToken
 
 	public void setToken(String token) {
 		if (StringUtility.isEmptyString(token)) {
-			throw new IllegalArgumentException("token cannot be null.");
+			throw new IllegalArgumentException("token cannot be null or empty.");
 		}
 
 		this.token = token;
 	}
 
+	@Override
 	public Date getDate() {
 		return this.date;
 	}
 
 	public void setDate(Date date) {
+		if (date == null) {
+			throw new IllegalArgumentException("date cannot be null.");
+		}
+
 		this.date = date;
 	}
 
@@ -71,7 +93,7 @@ public class NotificationToken
 
 	@Override
 	public String toString() {
-		return "NotificationToken [device=" + this.device + ", token=" + this.token + "]";
+		return "NotificationToken [device=" + this.device + ", token=" + this.token + ", date=" + this.date + "]";
 	}
 
 }

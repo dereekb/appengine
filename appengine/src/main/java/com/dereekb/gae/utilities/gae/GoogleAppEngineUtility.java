@@ -91,15 +91,35 @@ public class GoogleAppEngineUtility {
 
 		Environment environment = getApiEnvironment();
 
-		String app = environment.getAppId();
+		String app = sanitizeAppId(environment.getAppId());
 		String service = environment.getModuleId();
 		String version = environment.getVersionId();
 
 		return new AppServiceVersionInfoImpl(app, service, decodeAppVersion(version));
 	}
 
-	public static String getApplicationId() {
+	/**
+	 * Google App Engine's environment will occasionally append a region prefix
+	 * to appId values. This function will remove that prefix if present.
+	 *
+	 * @param appId
+	 * @return
+	 */
+	public static String sanitizeAppId(String appId) {
+		return appId.replaceFirst(".+~", "");
+	}
+
+	public static String getRawApplicationId() {
 		return ApiProxy.getCurrentEnvironment().getAppId();
+	}
+
+	/**
+	 * Returns the project id.
+	 * <p>
+	 * On development this will return "localdevapp".
+	 */
+	public static String getApplicationId() {
+		return sanitizeAppId(ApiProxy.getCurrentEnvironment().getAppId());
 	}
 
 	public static String getApplicationVersionId() {
@@ -120,6 +140,16 @@ public class GoogleAppEngineUtility {
 		return new AppVersionImpl(split[0], split[1]);
 	}
 
+	/**
+	 * Returns the domain of the current app.
+	 *
+	 * @return {@link String}. Never {@code null}.
+	 */
+	public static String urlForCurrentApp() {
+		String appId = getApplicationId();
+		return urlForService(appId, null, null);
+	}
+
 	public static String urlForCurrentService() {
 		return urlForCurrentService(false);
 	}
@@ -128,6 +158,10 @@ public class GoogleAppEngineUtility {
 		AppServiceVersionInfo appInfo = getApplicationInfo();
 		return urlForService(appInfo.getAppProjectId(), appInfo.getAppService(),
 		        (includeVersion) ? appInfo.getAppVersion().getMajorVersion() : null);
+	}
+
+	public static String urlForApp(String appProjectId) {
+		return urlForService(appProjectId, null, null);
 	}
 
 	public static String urlForService(String appProjectId,
@@ -139,6 +173,9 @@ public class GoogleAppEngineUtility {
 	                                   String appServiceName,
 	                                   String appMajorVersion) {
 
+		// Ensure if a raw app ID is passed it is sanitized.
+		appProjectId = sanitizeAppId(appProjectId);
+
 		String subdomain = StringUtility.joinValues(APP_ENGINE_HTTPS_URL_DOT, appMajorVersion, appServiceName,
 		        appProjectId);
 
@@ -146,6 +183,17 @@ public class GoogleAppEngineUtility {
 		// https://[SERVICE_ID]-dot-[MY_PROJECT_ID].appspot.com
 		// https://[VERSION_ID]-dot-[SERVICE_ID]-dot-[MY_PROJECT_ID].appspot.com
 		return "https://" + subdomain + "." + APP_ENGINE_APP_DOMAIN;
+	}
+
+	// MARK: Google Cloud Storage Bucket
+	public static String getDefaultGoogleCloudStorageBucketName() {
+		String projectId = getApplicationId();
+		return getDefaultGoogleCloudStorageBucketName(projectId);
+	}
+
+	public static String getDefaultGoogleCloudStorageBucketName(String appProjectId) {
+		appProjectId = sanitizeAppId(appProjectId);
+		return appProjectId + "." + APP_ENGINE_APP_DOMAIN;
 	}
 
 }

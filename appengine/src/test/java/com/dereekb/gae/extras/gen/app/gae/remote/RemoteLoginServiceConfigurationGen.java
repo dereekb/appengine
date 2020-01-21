@@ -22,12 +22,8 @@ public class RemoteLoginServiceConfigurationGen extends AbstractRemoteServiceCon
 
 	private boolean makeLoginGroupConfiguration = true;
 
-	public RemoteLoginServiceConfigurationGen(String projectAppId) {
-		super(new AppServiceConfigurationInfoImpl(projectAppId, DEFAULT_SERVICE_NAME));
-	}
-
-	public RemoteLoginServiceConfigurationGen(String projectAppId, String appVersion) {
-		super(new AppServiceConfigurationInfoImpl(projectAppId, DEFAULT_SERVICE_NAME, appVersion));
+	public RemoteLoginServiceConfigurationGen(String projectAppId, String appVersion, String apiVersion) {
+		super(new AppServiceConfigurationInfoImpl(projectAppId, DEFAULT_SERVICE_NAME, appVersion, apiVersion));
 	}
 
 	public boolean isMakeLoginGroupConfiguration() {

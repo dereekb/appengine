@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { ApiModuleRouteConfiguration } from '../api.config';
-import { HttpClient } from '@angular/common/http';
-import { EncodedToken, LoginTokenPair, LoginTokenPairJson } from '@gae-web/appengine-token';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { EncodedToken, LoginTokenPair, LoginTokenPairJson, NoLoginSetError } from '@gae-web/appengine-token';
 import { AuthUtility } from './auth.utility';
-import { map, share, shareReplay } from 'rxjs/operators';
+import { map, share, shareReplay, catchError } from 'rxjs/operators';
+import { LoginRegistrationError, LoginExistsRegistrationError } from './error';
+import { ApiResponse, ApiResponseJson } from '../api';
+import { ApiJwtConfigurationError } from '../error';
 
 
 /**
@@ -26,16 +29,51 @@ export class RegisterApiService {
     const url: string = this._servicePath;
     const headers = AuthUtility.buildHeaderWithAuthentication(encodedToken);
 
-    // TODO: Handle Errors
-
-    return this._httpClient.post<LoginTokenPairJson>(url, undefined, {
+    const obs = this._httpClient.post<LoginTokenPairJson>(url, undefined, {
       observe: 'response',
       headers
-    }).pipe(
-      map(LoginTokenPair.fromResponse),
-      shareReplay()
-    );
+    });
 
+    return this.handleResponseObs(obs);
+  }
+
+  private handleResponseObs(responseObs: Observable<HttpResponse<LoginTokenPairJson>>) {
+    return responseObs.pipe(
+      map(LoginTokenPair.fromResponse),
+      catchError(this.handleRequestError),
+      shareReplay(1)
+    );
+  }
+
+  private handleRequestError(error: NoLoginSetError | HttpResponse<ApiResponseJson>, caught: Observable<LoginTokenPair>): Observable<LoginTokenPair> {
+
+    if ((error instanceof NoLoginSetError)) {
+      throw new ApiJwtConfigurationError(`The OAuthLoginApiService's routes are not blacklisted.`);
+    } else if (error instanceof HttpResponse) {
+
+      let registrationError;
+
+      if (error.body) {
+        const apiResponse = ApiResponse.fromJson(error.body);
+        const apiError = apiResponse.errors.errors[0];
+
+        switch (apiError.code) {
+          case LoginExistsRegistrationError.CODE:
+            registrationError = new LoginExistsRegistrationError(apiError.detail);
+            break;
+          default:
+            break;
+        }
+      }
+
+      if (!registrationError) {
+        registrationError = new LoginRegistrationError('An error occured while registering.');
+      }
+
+      return throwError(registrationError);
+    } else {
+      return throwError(error);
+    }
   }
 
 }

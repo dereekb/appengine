@@ -1,10 +1,15 @@
 import 'jasmine-expect';
 import { TestFoo, TestFooReadService } from '@gae-web/appengine-api';
-import { MergedReadIterateSource, ReadSource } from './source';
-import { SourceState } from '@gae-web/appengine-utility';
+import {
+  MergedReadIterateSource, ReadSource, CachedKeySource, CachedKeySourceCache,
+  CachedKeySourceCacheFactory, KeyedPredictiveOrderedQueryStream, KeyedPredictiveOrderedQueryStreamEvent
+} from './source';
+import { SourceState, SourceEvent, ModelKey } from '@gae-web/appengine-utility';
 import { filter, first } from 'rxjs/operators';
 import { TestFooTestReadSourceFactory, TestFooTestKeyQuerySource } from '../../test/foo.testing';
-import { of } from 'rxjs';
+import { of, BehaviorSubject, Subject } from 'rxjs';
+import { TestFooCachedKeySourceCache } from '../../test/foo.service';
+import { KeyedPredictiveOrderedQueryDelegate } from './search.service';
 
 describe('Source', () => {
 
@@ -368,6 +373,109 @@ describe('Source', () => {
           mergedReadIterateSource.reset();
           mergedReadIterateSource.next();
         });
+      });
+
+    });
+
+  });
+
+  describe('CachedKeySource', () => {
+
+    let testQuerySource: TestFooTestKeyQuerySource;
+    let testCachedKeySourceCache: CachedKeySourceCache<TestFoo>;
+    let testCachedKeySource: CachedKeySource<TestFoo>;
+
+    let eventStream: Subject<KeyedPredictiveOrderedQueryStreamEvent>;
+    let stream: KeyedPredictiveOrderedQueryStream;
+
+    beforeEach(() => {
+      testQuerySource = new TestFooTestKeyQuerySource();
+      eventStream = new Subject<KeyedPredictiveOrderedQueryStreamEvent>();
+
+      stream = {
+        delegateStream: eventStream
+      };
+
+      testCachedKeySourceCache = new CachedKeySourceCache<TestFoo>(testQuerySource, stream);
+      testCachedKeySource = new CachedKeySource(testCachedKeySourceCache);
+    });
+
+    describe('with query results', () => {
+      const testKeyResults = [1, 2, 3, 4];
+
+      beforeEach(() => {
+        testQuerySource.testQueryService.keyResults = testKeyResults;
+      });
+
+      describe('reset()', () => {
+
+        describe('autoNextOnReset is true', () => {
+
+          beforeEach(() => {
+            testCachedKeySource.autoNextOnReset = true;
+          });
+
+          it('should call next() automatically when reset.', (done) => {
+            testCachedKeySource.reset();
+            testCachedKeySource.stream.pipe(filter(x => x.state === SourceState.Done)).subscribe((x) => {
+              expect(x.elements).toBeArrayOfNumbers();
+              done();
+            });
+          });
+
+        });
+
+        it('should not throw an error when initial is called after being reset.', (done) => {
+          testCachedKeySource.reset();
+          testCachedKeySource.initial().then(() => {
+            done();
+          });
+        });
+
+      });
+
+      describe('next()', () => {
+
+        it('it should not emit loading when already in the done state.', (done) => {
+
+          // Call initial next.
+          testCachedKeySource.initial().then((initialResult) => {
+            expect(initialResult).toBeArrayOfNumbers();
+
+            // Call next again.
+            testCachedKeySource.next().finally(() => {
+              expect(testCachedKeySource.state).toBe(SourceState.Done);
+
+              const states: SourceEvent<ModelKey>[] = [];
+
+              testCachedKeySource.stream.subscribe((x) => {
+                states.push(x);
+              });
+
+              // Call next several times back-to-back
+              testCachedKeySource.next().catch(() => undefined).finally(() =>
+                testCachedKeySource.next().catch(() => undefined).finally(() =>
+                  testCachedKeySource.next().catch(() => undefined)
+                )
+              );
+
+              testCachedKeySource.next().then(() => {
+                fail('Should have rejected as no new elements to load.');
+
+                done();
+              }, () => {
+                expect(states.length).toBe(1);
+                expect(states[0].state).toBe(SourceState.Done);
+                expect(states[0].elements).toBeArrayOfNumbers();
+
+                done();
+              });
+            });
+
+          });
+
+        });
+
       });
 
     });

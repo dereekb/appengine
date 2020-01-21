@@ -7,6 +7,7 @@ import com.dereekb.gae.client.api.service.sender.impl.ClientApiRequestSenderImpl
 import com.dereekb.gae.client.api.service.sender.impl.ClientRequestSenderFactory;
 import com.dereekb.gae.client.api.service.sender.security.impl.SecuredClientApiRequestSenderImpl;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
+import com.dereekb.gae.extras.gen.app.config.app.AppServiceConfigurationInfo;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.AppSpringContextType;
 import com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.remote.RemoteServiceSpringContextConfigurer;
@@ -122,13 +123,16 @@ public class ClientRemoteServiceSpringContextConfigurerBuilder {
 		                                                    RemoteServiceConfiguration appRemoteServiceConfiguration,
 		                                                    SpringBeansXMLBuilder builder) {
 
-			String baseApiUrl = appRemoteServiceConfiguration.getAppServiceConfigurationInfo().getRootAppApiPath();
+			AppServiceConfigurationInfo appServiceConfigurationInfo = appRemoteServiceConfiguration.getAppServiceConfigurationInfo();
+			String domainUrl = appServiceConfigurationInfo.getAppServicePath();
+			String baseApiUrl = appServiceConfigurationInfo.getFullDomainRootAppApiPath();
 
 			String clientRequestSenderBeanId = appRemoteServiceConfiguration.getServiceBeansConfiguration()
 			        .getClientRequestSenderBeanId();
 			String clientRequestSenderFactoryBeanId = clientRequestSenderBeanId + "Factory";
 
 			builder.bean(clientRequestSenderFactoryBeanId).beanClass(ClientRequestSenderFactory.class)
+	        		.property("domainUrl").value(domainUrl).up()
 			        .property("baseApiUrl").value(baseApiUrl).up()
 			        .property("developmentDomainUrl").ref(appConfig.getAppBeans().getAppDevelopmentProxyUrlBeanId());
 

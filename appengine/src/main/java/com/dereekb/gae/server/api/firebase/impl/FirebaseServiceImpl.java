@@ -20,11 +20,14 @@ import com.google.firebase.FirebaseOptions.Builder;
  *
  * @author dereekb
  *
+ * @see https://firebase.google.com/docs/admin/setup
  */
 public class FirebaseServiceImpl
         implements FirebaseService, Factory<FirebaseApp>, Source<FirebaseApp> {
 
-	public static final String CREDENTIALS_KEY_ENVIRONMENT_VARIABLE = "GOOGLE_APPLICATION_CREDENTIALS";
+	public static final String CREDENTIALS_KEY_ENV_VAR = "GOOGLE_APPLICATION_CREDENTIALS";
+
+	private static final String DEFAULT_INSTANCE_NAME = "gae";
 
 	/**
 	 * Optional key file path to specify. If provided, the key will attempt to
@@ -36,6 +39,12 @@ public class FirebaseServiceImpl
 	 * Firebase Database URL
 	 */
 	private String databaseUrl;
+
+	/**
+	 * The instance name to use.
+	 *
+	 */
+	private String instanceName = DEFAULT_INSTANCE_NAME;
 
 	private transient FirebaseApp firebaseApp;
 
@@ -69,6 +78,18 @@ public class FirebaseServiceImpl
 		this.databaseUrl = databaseUrl;
 	}
 
+	public String getInstanceName() {
+		return this.instanceName;
+	}
+
+	public void setInstanceName(String instanceName) {
+		if (StringUtility.isEmptyString(instanceName)) {
+			throw new IllegalArgumentException("instanceName cannot be null.");
+		}
+
+		this.instanceName = instanceName;
+	}
+
 	// MARK: FirebaseService
 	@Override
 	public FirebaseApp getFirebaseApp() {
@@ -95,7 +116,12 @@ public class FirebaseServiceImpl
 	}
 
 	// MARK: Initialization
-	private FirebaseApp initialize() throws RuntimeException {
+	private synchronized FirebaseApp initialize() throws RuntimeException {
+		// Sync Check
+		if (this.firebaseApp != null) {
+			return this.firebaseApp;
+		}
+
 		Builder optionsBuilder = new FirebaseOptions.Builder().setDatabaseUrl(this.getDatabaseUrl());
 
 		// Set Credentials
@@ -113,7 +139,7 @@ public class FirebaseServiceImpl
 		}
 
 		FirebaseOptions options = optionsBuilder.build();
-		return FirebaseApp.initializeApp(options);
+		return FirebaseApp.initializeApp(options, this.instanceName);
 	}
 
 	@Override

@@ -35,6 +35,10 @@ public class ModelRoleImpl
 		this.role = role;
 	}
 
+	public static ModelRole make(String role) {
+		return new ModelRoleImpl(role);
+	}
+
 	public static List<ModelRole> make(Collection<String> roles) {
 		List<ModelRole> list = new ArrayList<ModelRole>();
 

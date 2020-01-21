@@ -3,6 +3,7 @@
   <import resource="/roles.xml"/>
   <import resource="/link.xml"/>
   <import resource="/schedule.xml"/>
+  <import resource="/notification.xml"/>
   <import resource="/search.xml"/>
   <import resource="/server.xml"/>
   <import resource="/debug.xml"/>

@@ -81,6 +81,8 @@
     <security:intercept-url access="hasRole('ROLE_USER')" method="GET" pattern="/api/test/v1/login/auth/token/refresh"/>
     <security:intercept-url access="hasRole('ROLE_USER')" method="POST" pattern="/api/test/v1/login/auth/token/reset"/>
     <security:intercept-url access="hasRole('ROLE_ADMIN')" method="POST" pattern="/api/test/v1/login/auth/token/reset/*"/>
+    <!--Notification Pattern-->
+    <security:intercept-url access="hasRole('ROLE_USER')" pattern="/api/test/v1/notification/**"/>
     <!--Scheduling Pattern-->
     <security:intercept-url access="hasRole('ROLE_ADMIN')" method="POST" pattern="/api/test/v1/scheduler/schedule"/>
     <!--Everything Else Is Denied-->
@@ -132,6 +134,7 @@
     <value>query</value>
     <value>search</value>
     <value>link</value>
+    <value>image</value>
   </util:list>
   <!--Security-->
   <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher" id="securityRequestMatcher">
@@ -231,11 +234,11 @@
   </bean>
   <!--Secure Model Types-->
   <util:list id="secureModelTypes">
-    <ref bean="appHookType"/>
+    <ref bean="fooType"/>
     <ref bean="loginPointerType"/>
     <ref bean="loginKeyType"/>
     <ref bean="appType"/>
-    <ref bean="fooType"/>
+    <ref bean="appHookType"/>
     <ref bean="loginType"/>
   </util:list>
   <!--Exception Handler-->

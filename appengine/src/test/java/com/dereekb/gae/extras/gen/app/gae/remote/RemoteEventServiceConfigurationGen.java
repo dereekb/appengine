@@ -15,12 +15,8 @@ public class RemoteEventServiceConfigurationGen extends AbstractRemoteServiceCon
 
 	public static final String DEFAULT_SERVICE_NAME = "event";
 
-	public RemoteEventServiceConfigurationGen(String projectAppId) {
-		super(new AppServiceConfigurationInfoImpl(projectAppId, DEFAULT_SERVICE_NAME));
-	}
-
-	public RemoteEventServiceConfigurationGen(String projectAppId, String appVersion) {
-		super(new AppServiceConfigurationInfoImpl(projectAppId, DEFAULT_SERVICE_NAME, appVersion));
+	public RemoteEventServiceConfigurationGen(String projectAppId, String appVersion, String apiVersion) {
+		super(new AppServiceConfigurationInfoImpl(projectAppId, DEFAULT_SERVICE_NAME, appVersion, apiVersion));
 	}
 
 	// MARK: Override

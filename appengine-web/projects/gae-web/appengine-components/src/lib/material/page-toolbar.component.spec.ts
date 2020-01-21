@@ -129,7 +129,6 @@ describe('GaePageToolbarComponent', () => {
           first()
         ).subscribe((config) => {
           expect(config.title).toBe(PROVIDER_A_TITLE);
-          toolbarComponent.removeProvider(providerA);
 
           // Watch that eventually the provider is removed and the default title is restored.
           toolbarComponent.stream.pipe(
@@ -139,6 +138,8 @@ describe('GaePageToolbarComponent', () => {
             expect(configB.title).toBe(DEFAULT_TITLE);
             done();
           });
+
+          toolbarComponent.removeProvider(providerA);
         });
       });
 

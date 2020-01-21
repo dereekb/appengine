@@ -8,6 +8,8 @@ import com.dereekb.gae.extras.gen.app.config.project.app.configurer.service.remo
 /**
  * {@link RemoteServiceConfigurationGen} for the file service.
  *
+ * TODO: Rename to data
+ *
  * @author dereekb
  *
  */
@@ -15,11 +17,7 @@ public class RemoteFileServiceConfigurationGen extends AbstractRemoteServiceConf
 
 	public static final String DEFAULT_SERVICE_NAME = "file";
 
-	public RemoteFileServiceConfigurationGen(String projectAppId) {
-		super(new AppServiceConfigurationInfoImpl(projectAppId, DEFAULT_SERVICE_NAME));
-	}
-
-	public RemoteFileServiceConfigurationGen(String projectAppId, String appVersion) {
+	public RemoteFileServiceConfigurationGen(String projectAppId, String appVersion, String apiVersion) {
 		super(new AppServiceConfigurationInfoImpl(projectAppId, DEFAULT_SERVICE_NAME, appVersion));
 	}
 

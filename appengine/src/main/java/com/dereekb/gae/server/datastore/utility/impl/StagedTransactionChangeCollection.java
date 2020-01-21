@@ -9,7 +9,7 @@ import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
  * {@link StagedTransactionChange} that contains several other changes.
- * 
+ *
  * @author dereekb
  *
  */
@@ -55,10 +55,22 @@ public class StagedTransactionChangeCollection extends AbstractStagedTransaction
 	public boolean isEmpty() {
 		return this.changes.isEmpty();
 	}
-	
+
+	/**
+	 * Adds all changes to the collection.
+	 *
+	 * @param changes
+	 *            {@link Iterable}. Never {@code null}.
+	 */
+	public void addAllChange(Iterable<StagedTransactionChange> changes) {
+		for (StagedTransactionChange change : changes) {
+			this.addChange(change);
+		}
+	}
+
 	/**
 	 * Adds the change to the collection. If {@code null}, it is ignored.
-	 * 
+	 *
 	 * @param change
 	 *            {@link StagedTransactionChange}. Can be {@code null}.
 	 * @throws StagedTransactionAlreadyFinishedException

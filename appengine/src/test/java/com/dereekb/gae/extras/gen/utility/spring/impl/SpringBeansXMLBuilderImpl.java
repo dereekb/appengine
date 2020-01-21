@@ -30,6 +30,7 @@ import com.dereekb.gae.extras.gen.utility.spring.security.SpringSecurityXMLInter
 import com.dereekb.gae.extras.gen.utility.spring.security.bean.SpringSecurityXMLCustomFilterBean;
 import com.dereekb.gae.extras.gen.utility.spring.security.bean.SpringSecurityXMLHttpBean;
 import com.dereekb.gae.extras.gen.utility.spring.security.bean.SpringSecurityXMLInterceptUrlBean;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.data.ValueUtility;
 import com.jamesmurty.utils.XMLBuilder2;
@@ -335,6 +336,11 @@ public class SpringBeansXMLBuilderImpl
 
 		@Override
 		public SpringBeansXMLListBuilder<T> values(String... values) {
+			return this.values(ListUtility.toList(values));
+		}
+
+		@Override
+		public SpringBeansXMLListBuilder<T> values(Iterable<String> values) {
 			for (String value : values) {
 				this.value(value);
 			}

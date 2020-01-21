@@ -15,9 +15,12 @@ import com.dereekb.gae.extras.gen.app.config.app.model.local.impl.LocalModelConf
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.model.remote.RemoteModelConfigurationGroup;
 import com.dereekb.gae.extras.gen.app.config.app.model.shared.filter.NotInternalModelConfigurationFilter;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppFirebaseServiceConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppGoogleCloudStorageServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppSecurityBeansConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppServerInitializationConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.AppTaskSchedulerEnqueuerConfigurer;
+import com.dereekb.gae.extras.gen.app.config.app.services.AppUserNotificationServiceConfigurer;
 import com.dereekb.gae.extras.gen.app.config.app.services.remote.RemoteServiceConfiguration;
 import com.dereekb.gae.extras.gen.app.config.app.utility.AppConfigurationUtility;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractConfigurationFileGenerator;
@@ -64,6 +67,7 @@ import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerAuthenticato
 import com.dereekb.gae.server.taskqueue.scheduler.impl.TaskSchedulerImpl;
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.data.StringUtility;
+import com.dereekb.gae.utilities.misc.env.EnvStringUtility;
 import com.dereekb.gae.utilities.web.matcher.MultiRequestMatcher;
 import com.dereekb.gae.utilities.web.matcher.MultiTypeAntRequestMatcher;
 import com.dereekb.gae.utilities.web.matcher.MultiTypeMapAntRequestMatcher;
@@ -104,6 +108,9 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		folder.addFile(new DatabaseConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new KeysConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new MailConfigurationGenerator().generateConfigurationFile());
+		folder.addFile(new FirebaseConfigurationGenerator().generateConfigurationFile());
+		folder.addFile(new GoogleCloudStorageConfigurationGenerator().generateConfigurationFile());
+		folder.addFile(new UserPushNotificationConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new RefConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new TaskQueueConfigurationGenerator().generateConfigurationFile());
 		folder.addFile(new SecurityConfigurationGenerator().generateConfigurationFile());
@@ -346,6 +353,84 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 
 	}
 
+	public class FirebaseConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
+
+		public FirebaseConfigurationGenerator() {
+			super(ContextServerConfigurationsGenerator.this);
+			this.setFileName("firebase");
+		}
+
+		@Override
+		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
+			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+			AppConfiguration appConfig = this.getAppConfig();
+			AppFirebaseServiceConfigurer configurer = appConfig.getAppServicesConfigurer()
+			        .getAppFirebaseServiceConfigurer();
+
+			if (configurer != null) {
+				configurer.configureFirebaseService(appConfig, builder);
+			} else {
+				builder.comment("This app is not configured to use Firebase.");
+			}
+
+			return builder;
+		}
+
+	}
+
+	public class GoogleCloudStorageConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
+
+		public GoogleCloudStorageConfigurationGenerator() {
+			super(ContextServerConfigurationsGenerator.this);
+			this.setFileName("gcstorage");
+		}
+
+		@Override
+		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
+			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+			AppConfiguration appConfig = this.getAppConfig();
+			AppGoogleCloudStorageServiceConfigurer configurer = appConfig.getAppServicesConfigurer()
+			        .getAppGoogleCloudStorageServiceConfigurer();
+
+			if (configurer != null) {
+				configurer.configureGoogleCloudStorageService(appConfig, builder);
+			} else {
+				builder.comment("This app is not configured to use GoogleCloudStorage.");
+			}
+
+			return builder;
+		}
+
+	}
+
+	public class UserPushNotificationConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
+
+		public UserPushNotificationConfigurationGenerator() {
+			super(ContextServerConfigurationsGenerator.this);
+			this.setFileName("notifications");
+		}
+
+		@Override
+		public SpringBeansXMLBuilder makeXMLConfigurationFile() throws UnsupportedOperationException {
+			SpringBeansXMLBuilder builder = SpringBeansXMLBuilderImpl.make();
+
+			AppConfiguration appConfig = this.getAppConfig();
+			AppUserNotificationServiceConfigurer configurer = appConfig.getAppServicesConfigurer()
+			        .getAppUserNotificationServiceConfigurer();
+
+			if (configurer != null) {
+				configurer.configureUserNotificationService(appConfig, builder);
+			} else {
+				builder.comment("This app is not configured to use user push notifications.");
+			}
+
+			return builder;
+		}
+
+	}
+
 	public class RefConfigurationGenerator extends AbstractSingleConfigurationFileGenerator {
 
 		public RefConfigurationGenerator() {
@@ -443,9 +528,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			builder.bean(searchServiceBeanId).beanClass(GcsSearchServiceImpl.class);
 
 			builder.bean(appConfig.getAppBeans().getUtilityBeans().getModelSearchServiceBeanId())
-			        .beanClass(ModelSearchServiceImpl.class)
-			        .c()
-			        .ref(searchServiceBeanId)
+			        .beanClass(ModelSearchServiceImpl.class).c().ref(searchServiceBeanId)
 			        .ref(appConfig.getAppBeans().getModelKeyTypeConverterId());
 		}
 
@@ -476,8 +559,11 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 			List<LocalModelConfiguration> secureLocalModelConfigs = this.loadSecureLocalModelConfigs();
 			boolean hasSecureLocalModelConfigs = (secureLocalModelConfigs.isEmpty() == false);
 
-			builder.comment("No HTTP Security For Google App Engine Test Server");
-			builder.httpSecurity().pattern("/_ah/**").security("none");
+			// Not necessary in production.
+			if (!EnvStringUtility.isProduction()) {
+				builder.comment("No HTTP Security For Google App Engine Test Server");
+				builder.httpSecurity().pattern("/_ah/**").security("none");
+			}
 
 			builder.comment("Allow anyone to initialize the server via GET.");
 			builder.httpSecurity().pattern(serviceApiPath + "/server/initialize").security("none");
@@ -507,9 +593,11 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				        .access(HasAnyRoleConfig.not("ROLE_LOGINTYPE_API", "ROLE_ANON"));
 			}
 
-			// TODO: Add debug only building for a non-production environment.
-			http.getRawXMLBuilder().c("Allow any logged in user to debug the server");
-			http.intercept(serviceApiPath + "/debug/**", RoleConfigImpl.make("permitAll"));
+			// Only allow debug if we're not in production.
+			if (!EnvStringUtility.isProduction()) {
+				http.getRawXMLBuilder().c("Allow any logged in user to debug the server");
+				http.intercept(serviceApiPath + "/debug/**", RoleConfigImpl.make("permitAll"));
+			}
 
 			if (hasSecureLocalModelConfigs) {
 				http.getRawXMLBuilder().c("Secured Owned Model Patterns");
@@ -539,6 +627,15 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				        HttpMethod.POST);
 				http.intercept(serviceApiPath + "/login/auth/token/reset/*", HasRoleConfig.make("ROLE_ADMIN"),
 				        HttpMethod.POST);
+			}
+
+			// User Notification Routes
+			boolean hasNotificationRoute = this.getAppConfig().hasNotificationServices()
+			        && this.getAppConfig().isRootServer();
+
+			if (hasNotificationRoute) {
+				http.getRawXMLBuilder().c("Notification Pattern");
+				http.intercept(serviceApiPath + "/notification/**", HasRoleConfig.make("ROLE_USER"));
 			}
 
 			// Server Scheduler Routes
@@ -574,8 +671,14 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 				        .keyValueRefEntry("type", secureModelTypesBeanId)
 				        .keyValueRefEntry("res", securedModelResourcesBeanId);
 
-				builder.list(securedModelResourcesBeanId).values("create", "read", "update", "delete", "query",
-				        "search", "link");
+				List<String> secureModelResources = ListUtility.toList("create", "read", "update", "delete", "query",
+				        "search", "link", "image");
+
+				// Add additional resources.
+				ListUtility.addElements(secureModelResources,
+				        this.getAppConfig().getAppSecurityBeansConfigurer().getAdditionalSecureModelResources());
+
+				builder.list(securedModelResourcesBeanId).values(secureModelResources);
 			} else {
 				builder.comment("There are no models for this service.");
 			}
@@ -701,7 +804,7 @@ public class ContextServerConfigurationsGenerator extends AbstractConfigurationF
 		}
 
 		private String getServiceApiPath() {
-			return this.getAppConfig().getAppServiceConfigurationInfo().getRootAppApiPath();
+			return this.getAppConfig().getAppServiceConfigurationInfo().getFullDomainRootAppApiPath();
 		}
 
 	}

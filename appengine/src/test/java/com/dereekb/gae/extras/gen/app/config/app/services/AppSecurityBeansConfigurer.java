@@ -1,5 +1,7 @@
 package com.dereekb.gae.extras.gen.app.config.app.services;
 
+import java.util.List;
+
 import com.dereekb.gae.client.api.auth.token.ClientLoginTokenValidationService;
 import com.dereekb.gae.extras.gen.app.config.app.AppConfiguration;
 import com.dereekb.gae.extras.gen.app.config.project.test.TestConfigurationGenerator;
@@ -30,6 +32,14 @@ public interface AppSecurityBeansConfigurer
 	public String getClientLoginTokenValidationServiceBeanId();
 
 	// Models
+	/**
+	 * Returns a list of additional secure paths for the security context to
+	 * allow/protect.
+	 *
+	 * @return {@link List} or {@code null} if none.
+	 */
+	public List<String> getAdditionalSecureModelResources();
+
 	public Class<?> getLoginSecurityModelQueryTaskOverrideClass();
 
 	// Login
@@ -38,24 +48,37 @@ public interface AppSecurityBeansConfigurer
 	 *
 	 * @param appConfig
 	 * @param beanBuilder
-	 * @param forTests whether or not this is being used in a testing context only. Is true when by the {@link TestConfigurationGenerator} for remote apps.
+	 * @param forTests
+	 *            whether or not this is being used in a testing context only.
+	 *            Is true when by the {@link TestConfigurationGenerator} for
+	 *            remote apps.
 	 */
 	public void configureTokenEncoderDecoder(AppConfiguration appConfig,
 	                                         SpringBeansXMLBeanBuilder<?> beanBuilder,
-	   	                                  	 boolean forTests);
+	                                         boolean forTests);
 
 	/**
 	 * Configues the token builder.
 	 *
 	 * @param appConfig
 	 * @param beanBuilder
-	 * @param forTests whether or not this is being used in a testing context only. Is true when by the {@link TestConfigurationGenerator} for remote apps.
+	 * @param forTests
+	 *            whether or not this is being used in a testing context only.
+	 *            Is true when by the {@link TestConfigurationGenerator} for
+	 *            remote apps.
 	 */
 	public void configureTokenBuilder(AppConfiguration appConfig,
 	                                  SpringBeansXMLBeanBuilder<?> beanBuilder,
 	                                  boolean forTests);
 
 	// Security
+	/**
+	 * Configures the login token signature factory and refresh token signature
+	 * factory for the app.
+	 */
+	public void configureTokenSignatureFactories(AppConfiguration appConfig,
+	                                             SpringBeansXMLBuilder builder);
+
 	public void configureTokenAuthenticationProvider(AppConfiguration appConfig,
 	                                                 SpringBeansXMLBeanBuilder<?> beanBuilder);
 

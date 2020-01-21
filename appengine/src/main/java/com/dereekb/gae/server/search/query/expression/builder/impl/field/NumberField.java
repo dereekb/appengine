@@ -1,16 +1,12 @@
 package com.dereekb.gae.server.search.query.expression.builder.impl.field;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 import com.dereekb.gae.server.search.query.expression.builder.SearchExpressionBuilder;
 import com.dereekb.gae.server.search.query.expression.builder.impl.AbstractSearchField;
 import com.dereekb.gae.utilities.query.ExpressionOperator;
 
-
 public class NumberField extends AbstractSearchField {
 
-	private static final String DOUBLE_FORMAT = "0.#######E0";
+	// private static final String DOUBLE_FORMAT = "0.#######E0";
 	private static final String NUMBER_FIELD_FORMAT = "%s %s %s";
 
 	private Number value;
@@ -47,7 +43,7 @@ public class NumberField extends AbstractSearchField {
 		Double d = this.value.doubleValue();
 
 		// NumberFormat formatter = new DecimalFormat(DOUBLE_FORMAT);
-		String formattedDouble = d.toString(); //formatter.format(d);
+		String formattedDouble = d.toString(); // formatter.format(d);
 		String operatorString = this.operator.toString();
 
 		String queryString = String.format(NUMBER_FIELD_FORMAT, this.name, operatorString, formattedDouble);
@@ -66,8 +62,8 @@ public class NumberField extends AbstractSearchField {
 	}
 
 	@Override
-    public String toString() {
+	public String toString() {
 		return "NumberField [value=" + this.value + ", operator=" + this.operator + ", name=" + this.name + "]";
-    }
+	}
 
 }

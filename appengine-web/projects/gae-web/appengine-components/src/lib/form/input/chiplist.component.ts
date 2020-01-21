@@ -89,12 +89,12 @@ export class GaeChipListFormControlComponent extends AbstractExtendedFormControl
     let filteredOptions: Observable<string[]> = null;
 
     if (autoCompleteOptions != null) {
-      filteredOptions = combineLatest(
+      filteredOptions = combineLatest([
         this.valueInputCtrl.valueChanges.pipe(
           startWith(this.valueInputCtrl.value)
         ),
         autoCompleteOptions
-      ).pipe(
+      ]).pipe(
         map(([value, allOptions]: [string, string[]]) => {
           if (value) {
             const inputValue = value.toLowerCase();
@@ -103,7 +103,7 @@ export class GaeChipListFormControlComponent extends AbstractExtendedFormControl
             return allOptions;
           }
         }),
-        shareReplay()
+        shareReplay(1)
       );
     }
 

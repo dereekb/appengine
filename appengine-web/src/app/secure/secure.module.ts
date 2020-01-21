@@ -10,7 +10,7 @@ import {
 import { GaeClientModule } from '@gae-web/appengine-client';
 import { SECURE_STATES } from './secure.states';
 import { SecureAppModule } from './app/app.module';
-import { GaeTokenModule, StoredTokenStorageAccessor } from '@gae-web/appengine-token';
+import { GaeTokenModule, StoredTokenStorageAccessor, AsyncAppTokenStorageService } from '@gae-web/appengine-token';
 import { AppSegueService } from './segue.service';
 import { GaeGatewayModule, secureGatewayHook, GaeGatewayViewsModule, GatewaySegueService } from 'projects/gae-web/appengine-gateway/src/public-api';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,7 +18,7 @@ import { SecureComponentsModule } from './shared/components/components.module';
 import { SecureApiModule } from './shared/api/api.module';
 import { GaeComponentsModule, GaeMaterialComponentsModule, GaeComponentsPreConfiguredAppModule } from '@gae-web/appengine-components';
 import { TestApiModuleService, TestApiModule, TestApiModuleConfiguration } from './shared/api/model/test.api';
-import { FullStorageObject, FullLocalStorageObject, MemoryStorageObject } from '@gae-web/appengine-utility';
+import { FullStorageObject, FullLocalStorageObject, MemoryStorageObject, StorageObjectLimitedStorageAccessor } from '@gae-web/appengine-utility';
 
 export function routerConfigFn(router: UIRouter) {
   const transitionService = router.transitionService;
@@ -26,14 +26,15 @@ export function routerConfigFn(router: UIRouter) {
   router.trace.enable(Category.TRANSITION);
 }
 
-export function storedTokenStorageAccessorFactory() {
+export function asyncAppTokenStorageServiceFactory() {
   let storageObject: FullStorageObject = new FullLocalStorageObject(localStorage);
 
   if (!storageObject.isAvailable) {
     storageObject = new MemoryStorageObject();
   }
 
-  return new StoredTokenStorageAccessor(storageObject);
+  const accessor = new StorageObjectLimitedStorageAccessor(storageObject);
+  return new AsyncAppTokenStorageService(accessor);
 }
 
 export function gaeApiConfigurationFactory(loginService: GaeLoginApiModuleService, eventService: GaeEventApiModuleService, fooService: TestApiModuleService) {
@@ -116,8 +117,8 @@ export function testApiModuleConfigurationFactory() {
       useFactory: testApiModuleConfigurationFactory
     },
     {
-      provide: StoredTokenStorageAccessor,
-      useFactory: storedTokenStorageAccessorFactory
+      provide: AsyncAppTokenStorageService,
+      useFactory: asyncAppTokenStorageServiceFactory
     },
     GaeJwtConfiguration
   ]

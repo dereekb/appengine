@@ -19,14 +19,24 @@ public class EnvStringFactory
 	private String env;
 	private String defaultValue;
 
+	/**
+	 * Whether or not a value is required. If false, {@code null} is acceptable.
+	 */
+	private boolean required = true;
+
 	public EnvStringFactory(String env) {
 		this(env, null);
 	}
 
 	public EnvStringFactory(String env, String defaultValue) {
+		this(env, defaultValue, true);
+	}
+
+	public EnvStringFactory(String env, String defaultValue, boolean required) {
 		super();
 		this.setEnv(env);
 		this.setDefaultValue(defaultValue);
+		this.setRequired(required);
 	}
 
 	public String getEnv() {
@@ -49,6 +59,14 @@ public class EnvStringFactory
 		this.defaultValue = defaultValue;
 	}
 
+	public boolean isRequired() {
+		return this.required;
+	}
+
+	public void setRequired(boolean required) {
+		this.required = required;
+	}
+
 	// MARK: Factory
 	@Override
 	public String make() throws FactoryMakeFailureException {
@@ -69,7 +87,7 @@ public class EnvStringFactory
 			value = this.defaultValue;
 		}
 
-		if (StringUtility.isEmptyString(value)) {
+		if (StringUtility.isEmptyString(value) && (this.required || value != null)) {
 			throw new UnavailableSourceObjectException("The environment variable '" + this.env + "' was not set.");
 		}
 
@@ -78,7 +96,8 @@ public class EnvStringFactory
 
 	@Override
 	public String toString() {
-		return "EnvStringFactory [env=" + this.env + ", defaultValue=" + this.defaultValue + "]";
+		return "EnvStringFactory [env=" + this.env + ", defaultValue=" + this.defaultValue + ", required="
+		        + this.required + "]";
 	}
 
 }

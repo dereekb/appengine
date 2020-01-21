@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.dereekb.gae.server.auth.security.model.roles.ModelRole;
+import com.dereekb.gae.server.auth.security.model.roles.impl.ModelRoleImpl;
 import com.dereekb.gae.server.auth.security.model.roles.loader.builder.ModelRoleSetLoaderBuilderComponent;
 import com.dereekb.gae.server.auth.security.model.roles.loader.builder.ModelRoleSetLoadingSet;
 import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.granter.ModelRoleGranter;
+import com.dereekb.gae.server.auth.security.model.roles.loader.builder.impl.granter.impl.MultiModelRoleGranterImpl;
+import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 
 /**
  * Abstract {@link ModelRoleSetLoaderBuilderComponent}.
@@ -37,12 +41,30 @@ public abstract class AbstractModelRoleSetLoaderBuilderComponent<T>
 		this.granters = new HashMap<String, ModelRoleGranter<T>>();
 		this.potentialRoles = new ArrayList<ModelRole>();
 
+		HashMapWithList<String, ModelRoleGranter<T>> grantersListMap = new HashMapWithList<String, ModelRoleGranter<T>>();
+
 		for (ModelRoleGranter<T> granter : loadedGranters) {
 			ModelRole role = granter.getGrantedRole();
 			String roleString = role.getRole();
 
 			this.potentialRoles.add(role);
-			this.granters.put(roleString, granter);
+			grantersListMap.add(roleString, granter);
+		}
+
+		for (Entry<String, List<ModelRoleGranter<T>>> granterEntry : grantersListMap.entrySet()) {
+			String role = granterEntry.getKey();
+
+			List<ModelRoleGranter<T>> granters = granterEntry.getValue();
+
+			ModelRoleGranter<T> granter = null;
+
+			if (granters.size() == 1) {
+				granter = granters.get(0);
+			} else {
+				granter = new MultiModelRoleGranterImpl<T>(ModelRoleImpl.make(role), granters);
+			}
+
+			this.granters.put(role, granter);
 		}
 
 		this.initialized = true;

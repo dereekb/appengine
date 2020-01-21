@@ -4,11 +4,12 @@ import { map, flatMap, filter } from 'rxjs/operators';
 import { BaseError } from 'make-error';
 import { DateTime } from 'luxon';
 import * as localStorageMemory from 'localstorage-memory';
+import { ValueUtility } from './value';
 
 /**
- * Stored object accessor that can get/set objects for the input key.
+ * Stored object accessor that can get/set/remove via a key, or be cleared entirely.
  */
-export abstract class StorageAccessor<T> {
+export abstract class LimitedStorageAccessor<T> {
 
   abstract get(key: string): Observable<T>;
 
@@ -16,11 +17,18 @@ export abstract class StorageAccessor<T> {
 
   abstract remove(key: string): Observable<{}>;
 
+  abstract clear(): Observable<{}>;
+
+}
+
+/**
+ * LimitedStorageAccessor extension that has knowledge of all stored keys.
+ */
+export abstract class StorageAccessor<T> extends LimitedStorageAccessor<T> {
+
   abstract all(): Observable<T>;
 
   abstract allKeys(): Observable<string>;
-
-  abstract clear(): Observable<{}>;
 
 }
 
@@ -67,6 +75,8 @@ export abstract class FullStorageObject extends StorageObject {
 
   readonly isAvailable: boolean;
 
+  abstract removeAll(): string[];
+
 }
 
 export class StoredDataError extends BaseError {
@@ -87,9 +97,11 @@ export class DataIsExpiredError<T> extends StoredDataError {
 
 }
 
+export type StoredDataString = string;
+
 export interface StoredData {
   storedAt: string | undefined;
-  data: string;
+  data: StoredDataString;
 }
 
 export interface ReadStoredData<T> extends StoredData {
@@ -97,6 +109,164 @@ export interface ReadStoredData<T> extends StoredData {
   convertedData: T;
 }
 
+// MARK: AsyncStorageAccessor
+export interface AsyncStorageAccessorConverter<T> {
+  stringifyValue(value: T): StoredDataString;
+  parseValue(data: StoredDataString): T;
+}
+
+/**
+ * AsyncStorageAccessor delegate.
+ */
+export interface AsyncStorageAccessorDelegate<T> extends AsyncStorageAccessorConverter<T>, LimitedStorageAccessor<StoredDataString> { }
+
+/**
+ * Abstract implementation that uses JSON.stringify by default.
+ */
+export abstract class AbstractAsyncStorageAccessorDelegate<T> implements AsyncStorageAccessorDelegate<T>  {
+
+  abstract get(key: string): Observable<StoredDataString>;
+
+  abstract set(key: string, value: StoredDataString): Observable<{}>;
+
+  abstract remove(key: string): Observable<{}>;
+
+  abstract clear(): Observable<{}>;
+
+  stringifyValue(value: T): StoredDataString {
+    return JSON.stringify(value);
+  }
+
+  abstract parseValue(data: StoredDataString): T;
+
+}
+
+export class WrappedAsyncStorageAccessorDelegate<T> implements AsyncStorageAccessorDelegate<T> {
+
+  constructor(private _delegate: LimitedStorageAccessor<StoredDataString>, private _converter: AsyncStorageAccessorConverter<T>) { }
+
+  get(key: string): Observable<StoredDataString> {
+    return this._delegate.get(key);
+  }
+
+  set(key: string, value: StoredDataString): Observable<{}> {
+    return this._delegate.set(key, value);
+  }
+
+  remove(key: string): Observable<{}> {
+    return this._delegate.remove(key);
+  }
+
+  clear(): Observable<{}> {
+    return this._delegate.clear();
+  }
+
+  stringifyValue(value: T): StoredDataString {
+    return this._converter.stringifyValue(value);
+  }
+
+  parseValue(data: StoredDataString): T {
+    return this._converter.parseValue(data);
+  }
+
+}
+
+export class AsyncStorageAccessor<T> implements LimitedStorageAccessor<T> {
+
+  constructor(private readonly _delegate: AsyncStorageAccessorDelegate<T>, protected readonly prefix: string, protected readonly expiration?: number) { }
+
+  public get(inputKey: string): Observable<T> {
+    const storeKey = this.makeStorageKey(inputKey);
+    return this._delegate.get(storeKey).pipe(
+      map((storedData: string | null) => {
+        if (storedData) {
+          const readStoredData = this.readStoredData(storedData);
+
+          if (!readStoredData.expired) {
+            return readStoredData.convertedData;
+          } else {
+            throw new DataIsExpiredError<T>(readStoredData);
+          }
+        } else {
+          throw new DataDoesNotExistError();
+        }
+      })
+    );
+  }
+
+  public set(inputKey: string, inputValue: T): Observable<{ key: string, data: any }> {
+    const storeKey = this.makeStorageKey(inputKey);
+
+    const storeData: StoredData = this.buildStoredData(inputValue);
+    const data = JSON.stringify(storeData);
+
+    return this._delegate.set(storeKey, data).pipe(
+      map(x => ({
+        key: storeKey,
+        data
+      }))
+    );
+  }
+
+  public remove(key: string): Observable<{}> {
+    const storeKey = this.makeStorageKey(key);
+    return this._delegate.remove(storeKey);
+  }
+
+  public clear(): Observable<{}> {
+    return this._delegate.clear();
+  }
+
+  // MARK: Internal
+  protected makeStorageKey(key: string) {
+    return this.prefix + String(key);
+  }
+
+  protected stringifyValue(value: T): string {
+    return JSON.stringify(value);
+  }
+
+  // MARK: Stored Values
+  protected readStoredData(storedDataString: string): ReadStoredData<T> {
+    const storedData: StoredData = JSON.parse(storedDataString);
+    const expired = this.isExpiredStoredData(storedData);
+    const convertedData = this._delegate.parseValue(storedData.data);
+
+    return {
+      ...storedData,
+      expired,
+      convertedData
+    };
+  }
+
+  protected buildStoredData(value: T): StoredData {
+    return {
+      storedAt: DateTime.local().toISO(),
+      data: this.stringifyValue(value)
+    };
+  }
+
+  protected isExpiredStoredData(storeData: StoredData) {
+    if (this.expiration) {
+      if (storeData.storedAt) {
+        const expirationDate = DateTime.fromISO(storeData.storedAt).plus({ milliseconds: this.expiration });
+        return (DateTime.local() > expirationDate);
+      }
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+}
+
+// MARK: Legacy
+/**
+ * (Legacy) StorageAccessor implementation that wraps a StorageObject and implements the StorageAccessor interface.
+ *
+ * @deprecated Legacy
+ */
 export abstract class AbstractStorageAccessor<T> implements StorageAccessor<T>, InstantStorageAccessor<T> {
 
   constructor(protected readonly storageObject: StorageObject, protected readonly prefix: string, protected readonly expiration?: number) { }
@@ -293,6 +463,18 @@ export class FullLocalStorageObject implements FullStorageObject {
     return this._localStorage.key(index);
   }
 
+  removeAll(): string[] {
+    const length = this.length;
+    let keys = [];
+
+    if (length > 0) {
+      keys = ValueUtility.range(0, length).map((x) => this.key(x));
+      keys.forEach(x => this.removeItem(x));
+    }
+
+    return keys;
+  }
+
 }
 
 export class MemoryStorageObject extends FullLocalStorageObject {
@@ -307,6 +489,47 @@ export class MemoryStorageObject extends FullLocalStorageObject {
 
   constructor(memoryStorage: StorageObject = localStorageMemory) {
     super(memoryStorage);
+  }
+
+}
+
+/**
+ * LimitedStorageAccessor implementation that wraps a FullStorageObject.
+ */
+export class StorageObjectLimitedStorageAccessor implements LimitedStorageAccessor<string> {
+
+  constructor(private readonly _storage: FullStorageObject) { }
+
+  get(key: string): Observable<string> {
+    return new Observable((x) => {
+      const value = this._storage.getItem(key);
+      x.next(value);
+      x.complete();
+    });
+  }
+
+  set(key: string, value: string): Observable<{}> {
+    return new Observable((x) => {
+      const result = this._storage.setItem(key, value);
+      x.next(result);
+      x.complete();
+    });
+  }
+
+  remove(key: string): Observable<{}> {
+    return new Observable((x) => {
+      const removed = this._storage.removeItem(key);
+      x.next(removed);
+      x.complete();
+    });
+  }
+
+  clear(): Observable<{}> {
+    return new Observable((x) => {
+      const removed = this._storage.removeAll();
+      x.next(removed);
+      x.complete();
+    });
   }
 
 }

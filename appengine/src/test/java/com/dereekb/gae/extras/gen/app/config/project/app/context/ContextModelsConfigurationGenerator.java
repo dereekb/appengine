@@ -236,8 +236,7 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			// TODO: Add configuration to not add the schedule delete task.
 
 			builder.bean(modelConfig.getModelScheduleDeleteBeanId()).beanClass(ScheduleDeleteTask.class).c()
-			        .ref(modelConfig.getModelTypeBeanId())
-			        .ref(this.getAppConfig().getAppBeans().getTaskSchedulerId());
+			        .ref(modelConfig.getModelTypeBeanId()).ref(this.getAppConfig().getAppBeans().getTaskSchedulerId());
 
 			builder.comment("Setter Task");
 			builder.bean(modelConfig.getModelSetterTaskBeanId()).beanClass(IterableSetterTaskImpl.class).c()
@@ -258,7 +257,10 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 		// Crud and Security always generated
 		builder.imp("/crud.xml");
-		builder.imp("/extensions/security.xml");
+
+		if (modelConfig.isSystemModelOnly() == false) {
+			builder.imp("/extensions/security.xml");
+		}
 
 		return builder;
 	}
@@ -391,7 +393,6 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 
 		@Override
 		public void makeXMLConfigurationFile(SpringBeansXMLBuilder builder) {
-
 			builder.comment("Role Builder Components");
 
 			String modelRoleSetLoader = this.modelConfig.getModelRoleSetLoaderBeanId();
@@ -419,8 +420,10 @@ public class ContextModelsConfigurationGenerator extends AbstractModelConfigurat
 			folder.addFile(new SearchExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
 		}
 
-		// Always add security
-		folder.addFile(new SecurityExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
+		// Always add security unless it is a system model.
+		if (modelConfig.isSystemModelOnly() == false) {
+			folder.addFile(new SecurityExtensionConfigurationGenerator(modelConfig).generateConfigurationFile());
+		}
 
 		return folder;
 	}

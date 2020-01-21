@@ -130,7 +130,7 @@ public class LocalModelCrudConfigurerImpl
 			        .ref(createTask);
 
 			this.builder.comment("Create Task");
-			String attributeUpdater = this.getAttributeUpdaterBeanId();
+			String attributeUpdaterBeanId = this.getAttributeUpdaterBeanId();
 			String createAttributeUpdater = modelBeanPrefix + "CreateAttributeUpdater";
 
 			String createTaskDelegate = modelBeanPrefix + "CreateTaskDelegate";
@@ -152,9 +152,9 @@ public class LocalModelCrudConfigurerImpl
 			        .ref(this.getModelConfig().getNewModelFactoryBeanId()).ref(createAttributeUpdater);
 
 			if (this.getModelConfig().hasCreateAttributeUpdater()) {
-				this.makeCreateAttributeUpdater(createAttributeUpdater, attributeUpdater);
+				this.makeCreateAttributeUpdater(createAttributeUpdater, attributeUpdaterBeanId);
 			} else {
-				this.builder.alias(attributeUpdater, createAttributeUpdater);
+				this.builder.alias(attributeUpdaterBeanId, createAttributeUpdater);
 			}
 		}
 

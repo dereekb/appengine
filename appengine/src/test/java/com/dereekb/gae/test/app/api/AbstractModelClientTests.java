@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -94,11 +93,6 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 	@Autowired
 	@Qualifier("clientModelRolesServiceRequestSender")
 	protected ClientModelRolesServiceRequestSender modelRolesRequestSender;
-
-	@AfterEach
-	public void waitForTaskQueueAfterTest() {
-		this.waitForTaskQueueToComplete();
-	}
 
 	protected interface BasicTestUserSetup
 	        extends TestingInstanceObject {
@@ -215,6 +209,11 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 			        ClientUpdateRequestSender<T> updateRequestSender,
 			        ClientDeleteRequestSender<T> deleteRequestSender) {
 				this(readRequestSender, queryRequestSender, createRequestSender, updateRequestSender, deleteRequestSender, null);
+			}
+
+			public AbstractModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
+			        ClientUpdateRequestSender<T> updateRequestSender) {
+				this(readRequestSender, null, null, updateRequestSender, null, null);
 			}
 
 			public AbstractModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
@@ -439,6 +438,14 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 					fail("Failed search.");
 					throw new RuntimeException();
 				}
+			}
+
+			public SerializedClientApiResponse<ClientModelQueryResponse<T>> sendQuery(ConfigurableEncodedQueryParameters query)
+			        throws MultiKeyedInvalidAttributeException {
+				MutableSearchRequest queryRequest = new ModelQueryRequestImpl();
+				queryRequest.setSearchParameters(query.getParameters());
+				queryRequest.setKeysOnly(false);
+				return this.sendQuery(queryRequest);
 			}
 
 			public SerializedClientApiResponse<ClientModelQueryResponse<T>> sendQuery(SearchRequest queryRequest) {
@@ -696,7 +703,52 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 
 			try {
 				response.getSerializedResponse();
-				fail("Should have been an invalid request.");
+				fail("Should have encountered a failure response.");
+			} catch (ClientKeyedInvalidAttributeException e) {
+				List<KeyedInvalidAttribute> attributes = e.getInvalidAttributes();
+				assertFalse(attributes.isEmpty());
+				delegate.checkAndAssert(attributes);
+			} catch (ClientRequestFailureException e) {
+				e.printStackTrace();
+				fail();
+			}
+		}
+
+		public void testUpdateFails(T template) {
+			try {
+				this.instance.sendUpdate(template).getSerializedResponse();
+				fail("Update should have failed.");
+			} catch (ClientRequestFailureException e) {
+				assertTrue(e.getResponse().getStatus() < 500, "Response status was a server error.");
+			}
+		}
+
+		public void testUpdateFailsDueToKeyedAttributeFailure(T template,
+		                                                      final String attributeName) {
+			this.testUpdateFailsDueToKeyedAttributeFailure(template, attributeName, null);
+		}
+
+		public void testUpdateFailsDueToKeyedAttributeFailure(T template,
+		                                                      final String attributeName,
+		                                                      final String failureCode) {
+			UpdateRequest<T> createRequest = new UpdateRequestImpl<T>(template);
+			this.testUpdateFailsDueToKeyedAttributeFailure(createRequest, new ModelTestingSetInvalidTestDelegate() {
+
+				@Override
+				public void checkAndAssert(List<KeyedInvalidAttribute> attributes) {
+					checkAndAssertAttributeFailure(attributes, attributeName, failureCode);
+				}
+
+			});
+		}
+
+		public void testUpdateFailsDueToKeyedAttributeFailure(UpdateRequest<T> createRequest,
+		                                                      ModelTestingSetInvalidTestDelegate delegate) {
+			SerializedClientUpdateApiResponse<T> response = this.instance.sendUpdate(createRequest);
+
+			try {
+				response.getSerializedResponse();
+				fail("Should have encountered a failure response.");
 			} catch (ClientKeyedInvalidAttributeException e) {
 				List<KeyedInvalidAttribute> attributes = e.getInvalidAttributes();
 				assertFalse(attributes.isEmpty());

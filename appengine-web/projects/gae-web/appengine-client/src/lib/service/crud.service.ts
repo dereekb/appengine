@@ -1,4 +1,4 @@
-import { UniqueModel, ModelKey, ModelOrKey, SourceState, KeyedCacheLoad, ModelUtility, ValueUtility, ConversionSourceInputResult, Keyed } from '@gae-web/appengine-utility';
+import { UniqueModel, ModelKey, ModelOrKey, ModelsOrKeys, SourceState, KeyedCacheLoad, ModelUtility, ValueUtility, ConversionSourceInputResult, Keyed, OneOrMore } from '@gae-web/appengine-utility';
 import { ReadSourceFactory, ReadSourceConfiguration, ReadSource, ReadServiceReadSourceFactory } from './source';
 import { ModelServiceWrapper } from './model.service';
 import { ReadService, ReadRequest, ModelServiceResponse, ReadResponse, UpdateService, UpdateResponse, UpdateRequest, DeleteService, DeleteRequest, DeleteResponse } from '@gae-web/appengine-api';
@@ -89,6 +89,11 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
 
   constructor(private _parent: ModelServiceWrapper<T>, private _readService: ReadService<T>) { }
 
+  // MARK: Cache
+  public clearFromCache(keys: ModelsOrKeys<T>): T[] {
+    return this._parent.clearFromCache(keys);
+  }
+
   // MARK: Read Service
   public get type() {
     return this._readService.type;
@@ -119,7 +124,7 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
       return this._read(request);
     } else {
       return this.continuousRead(request, 0).pipe(
-        shareReplay()   // Share the single result with all subscribers.
+        shareReplay(1)   // Share the single result with all subscribers.
       );
     }
   }
@@ -204,7 +209,8 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
           this._parent.cache.removeAll(response.failed);  // Remove "missing" models from cache.
           this._working.delete(hash);  // Remove from working.
         }),
-        shareReplay()
+        // Share the latest response
+        shareReplay(1)
       );
 
       this._working.set(hash, obs);
@@ -218,12 +224,14 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
 // MARK: Update
 export class ModelUpdateService<T extends UniqueModel> implements UpdateService<T> {
 
-  constructor(private _parent: ModelServiceWrapper<T>, private _updateService: UpdateService<T>) { }
+  constructor(protected readonly _parent: ModelServiceWrapper<T>, protected readonly _updateService: UpdateService<T>) { }
 
   // MARK: Update Service
   public update(request: UpdateRequest<T>): Observable<UpdateResponse<T>> {
     return this._updateService.update(request).pipe(
-      tap((response) => this.updateWithUpdateResponse(request, response))
+      tap((response) => this.updateWithUpdateResponse(request, response)),
+      // Share replay to tap only once.
+      shareReplay(1)
     );
   }
 

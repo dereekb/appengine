@@ -7,6 +7,7 @@ import com.dereekb.gae.extras.gen.app.config.app.services.AppDebugApiConfigurer;
 import com.dereekb.gae.extras.gen.app.config.impl.AbstractSingleConfigurationFileGenerator;
 import com.dereekb.gae.extras.gen.utility.spring.SpringBeansXMLBuilder;
 import com.dereekb.gae.extras.gen.utility.spring.impl.SpringBeansXMLBuilderImpl;
+import com.dereekb.gae.utilities.misc.env.EnvStringUtility;
 
 /**
  * Generates debug API configuration for the initialization of an app.
@@ -31,7 +32,8 @@ public class ApiDebugConfigurationGenerator extends AbstractSingleConfigurationF
 		AppDebugApiConfigurer appDebugApiConfigurer = this.getAppConfig().getAppServicesConfigurer()
 		        .getAppDebugApiConfigurer();
 
-		if (appDebugApiConfigurer != null) {
+		// Do not generate the debug controller in a production environment.
+		if (appDebugApiConfigurer != null && !EnvStringUtility.isProduction()) {
 			appDebugApiConfigurer.configureDebugApiController(this.getAppConfig(), builder);
 		}
 

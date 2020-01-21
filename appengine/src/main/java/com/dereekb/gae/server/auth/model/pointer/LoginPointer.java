@@ -1,5 +1,7 @@
 package com.dereekb.gae.server.auth.model.pointer;
 
+import java.util.Date;
+
 import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.misc.owned.LoginOwnedModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -33,7 +35,7 @@ import com.googlecode.objectify.condition.IfNull;
 @Entity
 @ModelKeyInfo(value = ModelKeyType.NAME, generation = ModelKeyGenerationType.UNIQUE_NAME)
 public class LoginPointer extends OwnedDatabaseModel
-	implements MutableObjectifyModel<LoginPointer>, LoginOwnedModel {
+        implements MutableObjectifyModel<LoginPointer>, LoginOwnedModel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -49,6 +51,11 @@ public class LoginPointer extends OwnedDatabaseModel
 	 */
 	@Id
 	private String identifier;
+
+	/**
+	 * Creation date of the login pointer.
+	 */
+	private Date date = new Date();
 
 	/**
 	 * Identifier for the target {@link Login}.
@@ -101,6 +108,14 @@ public class LoginPointer extends OwnedDatabaseModel
 
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
+	}
+
+	public Date getDate() {
+		return this.date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public Key<Login> getLogin() {

@@ -6,9 +6,11 @@ import { GaeTokenModule, UserLoginTokenService, UserLoginTokenAuthenticator } fr
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { RegisterApiService } from '../auth/register.service';
 import { OAuthLoginApiService } from '../auth/oauth.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, first } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ApiModuleService } from '../api.service';
+import { ClientUserNotificationService, UserNotificationService } from '../model/extension/notification/notification.service';
+import { ClientServiceConfig } from '../model/client.service';
 
 /**
  * ApiModuleService for the Login API Module.
@@ -37,6 +39,15 @@ export function loginApiModuleServiceFactory(moduleConfig: GaeLoginApiModuleConf
 
 export function loginApiModuleRouteConfigurationFactory(moduleConfig: GaeLoginApiModuleConfiguration) {
   return moduleConfig.routeConfig;
+}
+
+export function clientUserNotificationServiceFactory(moduleConfig: GaeLoginApiModuleConfiguration, httpClient: HttpClient) {
+  const clientConfig: ClientServiceConfig = {
+    httpClient,
+    routeConfig: moduleConfig.routeConfig
+  };
+
+  return new ClientUserNotificationService(clientConfig);
 }
 
 /**
@@ -89,6 +100,16 @@ export class GaeLoginApiModule {
           provide: UserLoginTokenAuthenticator,
           useClass: ApiUserLoginTokenAuthenticator,
           deps: [PublicLoginTokenApiService]
+        },
+        // ClientUserNotificationService
+        {
+          provide: ClientUserNotificationService,
+          useFactory: clientUserNotificationServiceFactory,
+          deps: [GaeLoginApiModuleConfiguration, HttpClient]
+        },
+        {
+          provide: UserNotificationService,
+          useExisting: ClientUserNotificationService
         }
       ]
     };
@@ -137,7 +158,11 @@ export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, 
   return {
     tokenGetter: () => {
       const obs = userLoginTokenService.getEncodedLoginToken().pipe(
-        catchError(() => of(null))
+        first(),  // Get first token.
+        catchError((e) => {
+          console.log('Error while getting encoded token: ' + e);
+          return of(null);
+        })
       );
 
       return obs.toPromise() as Promise<string | null>;

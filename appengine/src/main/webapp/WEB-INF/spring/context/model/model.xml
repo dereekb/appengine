@@ -6,6 +6,7 @@
   <import resource="/login/loginkey/loginkey.xml"/>
   <import resource="/app/app/app.xml"/>
   <import resource="/app/apphook/apphook.xml"/>
+  <import resource="/notification/notificationsettings/notificationsettings.xml"/>
   <import resource="/foo/foo/foo.xml"/>
   <!--Extensions-->
   <import resource="/extension/link.xml"/>
@@ -20,6 +21,8 @@
         <!--APP-->
         <entry key-ref="appType" value-ref="appIdType"/>
         <entry key-ref="appHookType" value-ref="appHookIdType"/>
+        <!--NOTIFICATION-->
+        <entry key-ref="notificationSettingsType" value-ref="notificationSettingsIdType"/>
         <!--FOO-->
         <entry key-ref="fooType" value-ref="fooIdType"/>
       </map>

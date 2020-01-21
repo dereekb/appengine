@@ -9,6 +9,7 @@ import com.dereekb.gae.server.auth.security.app.AppLoginSecurityDetails;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.components.query.ObjectifyQueryService;
 import com.dereekb.gae.server.datastore.objectify.query.ObjectifyQueryRequestBuilder;
+import com.dereekb.gae.utilities.data.StringUtility;
 
 /**
  * {@link AppLoginSecurityDetails} implementation that reads the secret and
@@ -46,6 +47,8 @@ public class LocalQueryAppLoginSecurityDetailsImpl
 	public void setSystemAppInfo(SystemAppInfo systemAppInfo) {
 		if (systemAppInfo == null) {
 			throw new IllegalArgumentException("systemAppInfo cannot be null.");
+		} else if (StringUtility.isEmptyString(systemAppInfo.getSystemKey())) {
+			throw new IllegalArgumentException("systemAppInfo's system key value cannot be null or empty.");
 		}
 
 		this.systemAppInfo = systemAppInfo;

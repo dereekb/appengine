@@ -1,5 +1,8 @@
 package com.dereekb.gae.web.api.debug;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -14,10 +17,16 @@ import com.dereekb.gae.utilities.task.Task;
  */
 public class AbstractDebugController {
 
+	private static final Logger LOGGER = Logger.getLogger(AbstractDebugController.class.getName());
+
 	protected AbstractDebugController() {
 		if (!this.isDebugEnabledEnvironment()) {
-			throw new RuntimeException("Not a debug enabled environment.");
+			LOGGER.log(Level.SEVERE, "Debug Controller initialized in a non-debug environment.");
 		}
+	}
+
+	protected void assertIsDebugEnvironment() {
+		throw new RuntimeException("Not a debug enabled environment.");
 	}
 
 	protected boolean isDebugEnabledEnvironment() {

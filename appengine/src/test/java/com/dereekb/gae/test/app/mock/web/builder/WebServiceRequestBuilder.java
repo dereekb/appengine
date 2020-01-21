@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 /**
@@ -34,5 +35,10 @@ public interface WebServiceRequestBuilder {
 	public MockHttpServletRequestBuilder request(HttpMethod method,
 	                                             String urlTemplate,
 	                                             Object... uriVars);
+
+	public MockMultipartHttpServletRequestBuilder multipartRequest(URI uri);
+
+	public MockMultipartHttpServletRequestBuilder multipartRequest(String urlTemplate,
+	                                                               Object... uriVars);
 
 }

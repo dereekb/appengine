@@ -61,4 +61,40 @@ describe('ValueUtility', () => {
 
   });
 
+  describe('#isEqualIgnoreCase()', () => {
+
+    it('should return true if the two values are equal with different cases.', () => {
+      const isEqual = ValueUtility.isEqualIgnoreCase('ABC', 'abc');
+      expect(isEqual).toBeTrue();
+    });
+
+  });
+
+  describe('#takeRandomElements()', () => {
+
+    let testArray: number[];
+
+    describe('limit is bigger than the array size', () => {
+
+      let elementsToTake;
+      let shuffledArray: number[];
+
+      beforeEach(() => {
+        testArray = [1, 2, 3];
+        elementsToTake = testArray.length + 100;
+        shuffledArray = ValueUtility.takeRandomElements(testArray, elementsToTake);
+      });
+
+      it('should return all elements shuffled.', () => {
+        expect(shuffledArray.length).toBe(testArray.length);
+      });
+
+      it('should have an item at the first index.', () => {
+        expect(shuffledArray[0]).toBeDefined();
+      });
+
+    });
+
+  });
+
 });

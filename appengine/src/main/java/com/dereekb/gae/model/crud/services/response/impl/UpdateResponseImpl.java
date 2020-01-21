@@ -1,12 +1,14 @@
 package com.dereekb.gae.model.crud.services.response.impl;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.dereekb.gae.model.crud.services.response.UpdateResponse;
 import com.dereekb.gae.model.crud.services.response.pair.InvalidTemplatePair;
 import com.dereekb.gae.server.datastore.models.UniqueModel;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 
 /**
  * {@link UpdateResponse} implementation
@@ -20,6 +22,14 @@ public class UpdateResponseImpl<T extends UniqueModel> extends ModelServiceRespo
         implements UpdateResponse<T> {
 
 	private Collection<InvalidTemplatePair<T>> failurePairs;
+
+	public UpdateResponseImpl(T model) {
+		this(ListUtility.wrap(model), Collections.emptyList());
+	}
+
+	public UpdateResponseImpl(Collection<T> models) {
+		this(models, Collections.emptyList());
+	}
 
 	public UpdateResponseImpl(Collection<T> models, Collection<InvalidTemplatePair<T>> failurePairs) {
 		super(models);

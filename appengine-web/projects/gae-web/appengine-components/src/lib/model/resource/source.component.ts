@@ -3,7 +3,7 @@ import { Directive, Inject, Input, Output, OnDestroy, SkipSelf, AfterViewInit, T
 import { BaseError } from 'make-error';
 import { Source, ReadOnlySource, SourceState, ConversionSource, ConversionSourceEvent, ControllableSource, IterableSource, SourceEvent } from '@gae-web/appengine-utility';
 import { Observable, of, throwError } from 'rxjs';
-import { map, flatMap, catchError, share, shareReplay } from 'rxjs/operators';
+import { map, flatMap, catchError, share, shareReplay, first } from 'rxjs/operators';
 
 // Declarations
 export abstract class ReadOnlySourceComponent<T> extends ReadOnlySource<T> { }
@@ -180,6 +180,8 @@ export abstract class AbstractControllableSourceComponent<T>
 // MARK: IterableSourceComponent
 export abstract class IterableSourceComponent<T> extends ControllableSourceComponent<T> implements IterableSource<T> {
 
+  abstract initial(): Promise<T[]>;
+
   abstract next(): Promise<T[]>;
 
 }
@@ -199,6 +201,10 @@ export abstract class AbstractIterableSourceComponent<T> extends AbstractControl
 
   protected get source(): IterableSource<T> {
     return this._source as IterableSource<T>;
+  }
+
+  public initial(): Promise<T[]> {
+    return this.source.initial().catch(() => undefined);
   }
 
   public next(): Promise<T[]> {
@@ -226,6 +232,7 @@ export abstract class AbstractSourceComponentWrapper<T> extends IterableSourceCo
 
   private _hasNext: () => boolean;
   private _next: () => Promise<any>;
+  private _initial: () => Promise<any>;
 
   constructor(protected readonly _source: UnknownSourceComponent<T>) {
     super();
@@ -237,11 +244,21 @@ export abstract class AbstractSourceComponentWrapper<T> extends IterableSourceCo
       this._next = () => {
         return (this._source as ControllableSourceComponent<T>).next();
       };
+      this._initial = () => {
+        if (this.state === SourceState.Reset) {
+          return this.next();
+        } else {
+          return this.elements.pipe(first()).toPromise();
+        }
+      };
     } else {
       this._hasNext = () => {
         throw new AbstractSourceComponentWrapperSourceUsageException();
       };
       this._next = () => {
+        return Promise.reject(new AbstractSourceComponentWrapperSourceUsageException());
+      };
+      this._initial = () => {
         return Promise.reject(new AbstractSourceComponentWrapperSourceUsageException());
       };
     }
@@ -275,6 +292,10 @@ export abstract class AbstractSourceComponentWrapper<T> extends IterableSourceCo
   // MARK: Controllable Source
   public hasNext(): boolean {
     return this._hasNext();
+  }
+
+  public initial(): Promise<any> {
+    return this._initial();
   }
 
   public next(): Promise<any> {
@@ -411,7 +432,7 @@ export class GaeTransformationSourceDirective<I, O> extends AbstractTransformati
         console.error('Transformation error: ' + x);
         return throwError(x);
       }),
-      shareReplay()
+      shareReplay(1)
     );
   }
 

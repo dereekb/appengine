@@ -27,15 +27,24 @@ import com.dereekb.gae.utilities.misc.path.PathUtility;
  */
 public class ClientRequestSenderFactory extends GoogleAppEngineContextualFactoryImpl<ClientRequestSender> {
 
+	/**
+	 * Optional domain URL to use over the URL for the current app.
+	 */
 	private String domainUrl;
+
+	/**
+	 * Optional base API url to use.
+	 */
 	private String baseApiUrl;
+
+	/**
+	 * Domain URL to use during development.
+	 */
 	private String developmentDomainUrl;
 
 	public ClientRequestSenderFactory() {
 		super(true);
 		this.setTestSingleton(TestClientRequestSender.SINGLETON);
-		// TODO: Set development singleton that modifies the request and points
-		// them to the shared local development.
 	}
 
 	// MARK: Configuration
@@ -131,7 +140,7 @@ public class ClientRequestSenderFactory extends GoogleAppEngineContextualFactory
 		if (this.domainUrl != null) {
 			return this.domainUrl;
 		} else {
-			return GoogleAppEngineUtility.urlForCurrentService(false);
+			return GoogleAppEngineUtility.urlForCurrentApp();
 		}
 	}
 
