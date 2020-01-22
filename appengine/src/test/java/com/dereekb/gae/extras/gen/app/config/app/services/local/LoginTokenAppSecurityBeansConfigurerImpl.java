@@ -13,6 +13,8 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.impl.NewLoginGeneratorImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthClientConfigImpl;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.service.apple.SignInWithAppleOAuthService;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.service.apple.impl.SignInWithAppleOAuthConfigImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.facebook.FacebookOAuthService;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.google.GoogleOAuthService;
 import com.dereekb.gae.server.auth.security.model.query.task.impl.LoginSecurityModelQueryTaskOverrideImpl;
@@ -47,6 +49,7 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 
 	private OAuthClientConfig googleOAuthConfig;
 	private OAuthClientConfig facebookOAuthConfig;
+	private SignInWithAppleOAuthBeanConfig appleOAuthConfig;
 
 	private List<String> additionalSecureModelResources;
 
@@ -140,6 +143,18 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		}
 
 		this.facebookOAuthConfig = facebookOAuthConfig;
+	}
+
+	public SignInWithAppleOAuthBeanConfig getAppleOAuthConfig() {
+		return this.appleOAuthConfig;
+	}
+
+	public void setAppleOAuthConfig(SignInWithAppleOAuthBeanConfig appleOAuthConfig) {
+		if (appleOAuthConfig == null) {
+			throw new IllegalArgumentException("appleOAuthConfig cannot be null.");
+		}
+
+		this.appleOAuthConfig = appleOAuthConfig;
 	}
 
 	@Override
@@ -373,6 +388,23 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 			builder.enumBean(googleOAuthPointerTypeBeanId, LoginPointerType.OAUTH_GOOGLE);
 
 			map.keyRefValueRefEntry(googleOAuthPointerTypeBeanId, googleOAuthServiceBeanId);
+		}
+
+		if (this.appleOAuthConfig != null) {
+			String appleOAuthPointerTypeBeanId = "appleOAuthPointerType";
+			String appleOAuthServiceBeanId = "appleOAuthService";
+			String appleOAuthConfigBeanId = "appleOAuthConfig";
+
+			builder.bean(appleOAuthConfigBeanId).beanClass(SignInWithAppleOAuthConfigImpl.class).c()
+			        .value(this.appleOAuthConfig.getTeamId()).value(this.appleOAuthConfig.getClientId())
+			        .value(this.appleOAuthConfig.getKeyId()).value(this.appleOAuthConfig.getPrivateKeyPath());
+
+			builder.bean(appleOAuthServiceBeanId).beanClass(SignInWithAppleOAuthService.class).c()
+			        .ref(appleOAuthConfigBeanId);
+
+			builder.enumBean(appleOAuthPointerTypeBeanId, LoginPointerType.OAUTH_APPLE);
+
+			map.keyRefValueRefEntry(appleOAuthPointerTypeBeanId, appleOAuthServiceBeanId);
 		}
 
 	}
