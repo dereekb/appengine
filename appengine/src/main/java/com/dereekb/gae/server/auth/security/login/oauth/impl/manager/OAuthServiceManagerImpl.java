@@ -27,6 +27,7 @@ public class OAuthServiceManagerImpl
 		Map<String, LoginPointerType> typesMap = new CaseInsensitiveMap<>();
 		typesMap.put("google", LoginPointerType.OAUTH_GOOGLE);
 		typesMap.put("facebook", LoginPointerType.OAUTH_FACEBOOK);
+		typesMap.put("apple", LoginPointerType.OAUTH_APPLE);
 		DEFAULT_MAP = typesMap;
 	}
 
