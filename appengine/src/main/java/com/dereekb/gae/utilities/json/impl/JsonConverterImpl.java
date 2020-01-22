@@ -39,7 +39,6 @@ public class JsonConverterImpl
 	}
 
 	// MARK: Converter
-
 	@Override
 	public String convertToJson(Object object) {
 		Gson gson = this.getGson();

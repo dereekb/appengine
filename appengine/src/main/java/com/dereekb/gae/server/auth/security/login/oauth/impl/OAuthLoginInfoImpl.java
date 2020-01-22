@@ -5,7 +5,7 @@ import com.dereekb.gae.server.auth.security.login.oauth.OAuthLoginInfo;
 
 /**
  * {@link OAuthLoginInfo} implementation.
- * 
+ *
  * @author dereekb
  *
  */
@@ -20,11 +20,12 @@ public class OAuthLoginInfoImpl
 
 	public OAuthLoginInfoImpl() {}
 
+	public OAuthLoginInfoImpl(LoginPointerType loginType, String id) {
+		this(loginType, id, null, null);
+	}
+
 	public OAuthLoginInfoImpl(LoginPointerType loginType, String id, String name, String email) {
-		this.loginType = loginType;
-		this.id = id;
-		this.name = name;
-		this.email = email;
+		this(loginType, id, name, email, true);
 	}
 
 	public OAuthLoginInfoImpl(LoginPointerType loginType, String id, String name, String email, boolean acceptable) {

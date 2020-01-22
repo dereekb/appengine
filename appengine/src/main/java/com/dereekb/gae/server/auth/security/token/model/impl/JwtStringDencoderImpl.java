@@ -1,5 +1,7 @@
 package com.dereekb.gae.server.auth.security.token.model.impl;
 
+import java.security.Key;
+
 import com.dereekb.gae.server.auth.security.token.model.JwtStringDencoder;
 import com.dereekb.gae.server.auth.security.token.model.SignatureConfiguration;
 
@@ -8,6 +10,8 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
 /**
  * {@link JwtStringDencoder} implementation.
@@ -43,7 +47,10 @@ public class JwtStringDencoderImpl
 	// MARK: JwtStringDencoder
 	@Override
 	public String encodeClaims(Claims claims) {
-		JwtBuilder builder = Jwts.builder().signWith(this.signature.getAlgorithm(), this.signature.getSecret());
+		String base64hmacKey = this.signature.getSecret();
+		byte[] bytes = Decoders.BASE64.decode(base64hmacKey);
+		Key key = Keys.hmacShaKeyFor(bytes);
+		JwtBuilder builder = Jwts.builder().signWith(key, this.signature.getAlgorithm());
 		return builder.setClaims(claims).compact();
 	}
 

@@ -5,7 +5,8 @@ import com.dereekb.gae.server.auth.security.token.model.JwtStringDencoder;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.impl.DefaultJwtParser;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
 
 /**
  * {@link JwtStringDecoder} implementation that only decodes, and
@@ -20,7 +21,7 @@ public class UnsignedJwtStringDecoder
 	public static final UnsignedJwtStringDecoder SINGLETON = new UnsignedJwtStringDecoder();
 
 	// private static final String EMPTY_SIGNING_KEY = "";
-	private static final DefaultJwtParser DEFAULT_PARSER = new DefaultJwtParser();
+	private static final JwtParser DEFAULT_PARSER = Jwts.parser();
 
 	// MARK: JwtStringDencoder
 	@Override
@@ -33,8 +34,8 @@ public class UnsignedJwtStringDecoder
 		String[] splitToken = token.split("\\.");
 		String unsignedToken = splitToken[0] + "." + splitToken[1] + ".";
 
-        Jwt<?, ?> jwt = DEFAULT_PARSER.parse(unsignedToken);
-        Claims claims = (Claims) jwt.getBody();
+		Jwt<?, ?> jwt = DEFAULT_PARSER.parse(unsignedToken);
+		Claims claims = (Claims) jwt.getBody();
 		return claims;
 	}
 
