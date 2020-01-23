@@ -9,7 +9,7 @@ package com.dereekb.gae.extras.gen.app.config.app.services.local;
  */
 public class SignInWithAppleOAuthBeanConfig {
 
-	public static final String DEFAULT_PRIVATE_KEY_ENV_PATH_VAR = "APPLE_PRIVATE_KEY_FILE";
+	public static final String DEFAULT_PRIVATE_KEY_ENV_PATH_VAR = "APPLE_PRIVATE_KEY_FILE_PATH";
 
 	private String teamId;
 	private String clientId;
