@@ -4,7 +4,6 @@ import java.security.PrivateKey;
 
 import com.dereekb.gae.server.auth.security.login.oauth.impl.service.apple.SignInWithAppleOAuthConfig;
 import com.dereekb.gae.utilities.security.pem.PrivateKeyProvider;
-import com.dereekb.gae.utilities.security.pem.impl.FilePrivateKeyProviderImpl;
 
 /**
  * {@link SignInWithAppleOAuthConfig} implementation.
@@ -19,10 +18,6 @@ public class SignInWithAppleOAuthConfigImpl
 	private String clientId;
 	private String keyId;
 	private PrivateKeyProvider privateKeyProvider;
-
-	public SignInWithAppleOAuthConfigImpl(String teamId, String clientId, String keyId, String path) {
-		this(teamId, clientId, keyId, new FilePrivateKeyProviderImpl(path));
-	}
 
 	public SignInWithAppleOAuthConfigImpl(String teamId,
 	        String clientId,

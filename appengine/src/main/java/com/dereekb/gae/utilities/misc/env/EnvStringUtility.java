@@ -1,7 +1,13 @@
 package com.dereekb.gae.utilities.misc.env;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+
 import org.jboss.logging.Logger;
 
+import com.dereekb.gae.utilities.data.StringUtility;
 import com.dereekb.gae.utilities.model.lazy.exception.UnavailableSourceObjectException;
 
 /**
@@ -16,7 +22,26 @@ public class EnvStringUtility {
 
 	private static final Logger LOGGER = Logger.getLogger(EnvStringUtility.class);
 
-	// MARK: Utility
+	// MARK: Files
+	/**
+	 * Reads a string from the path defined in an env variable.
+	 *
+	 * @param env
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public static String readStringFromFileFromEnvVar(String env) throws FileNotFoundException, IOException {
+		String absoluteFilePath = readEnv(env);
+		return readStringFromFile(absoluteFilePath);
+	}
+
+	public static String readStringFromFile(String absoluteFilePath) throws FileNotFoundException, IOException {
+		Reader reader = new FileReader(absoluteFilePath);
+		return StringUtility.readStringFromReader(reader);
+	}
+
+	// MARK: Env Variables
 	public static String readEnv(String env) throws RuntimeException, UnavailableSourceObjectException {
 		return readEnv(env, null);
 	}

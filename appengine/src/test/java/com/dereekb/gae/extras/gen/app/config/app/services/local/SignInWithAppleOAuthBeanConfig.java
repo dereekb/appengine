@@ -9,26 +9,27 @@ package com.dereekb.gae.extras.gen.app.config.app.services.local;
  */
 public class SignInWithAppleOAuthBeanConfig {
 
-	public static final String DEFAULT_PATH_FORMAT = "/WEB-INF/keys/%s.p8";
-	public static final String DEFAULT_PATH = String.format(DEFAULT_PATH_FORMAT, "apple");
+	public static final String DEFAULT_PRIVATE_KEY_ENV_PATH = "apple-signin-private-key";
 
 	private String teamId;
 	private String clientId;
 	private String keyId;
-	private String privateKeyPath;
+	private String privateKeyPathEnv;
 
-	public SignInWithAppleOAuthBeanConfig(String teamId, String clientId, String keyId, String privateKeyPath) {
+	/**
+	 * Whether or not to add this to production only.
+	 */
+	private boolean prodOnly = true;
+
+	public SignInWithAppleOAuthBeanConfig(String teamId, String clientId, String keyId) {
+		this(teamId, clientId, keyId, DEFAULT_PRIVATE_KEY_ENV_PATH);
+	}
+
+	public SignInWithAppleOAuthBeanConfig(String teamId, String clientId, String keyId, String privateKeyEnvPath) {
 		this.setTeamId(teamId);
 		this.setClientId(clientId);
 		this.setKeyId(keyId);
-		this.setPrivateKeyPath(privateKeyPath);
-	}
-
-	public static SignInWithAppleOAuthBeanConfig makeSignInWithAppleOAuthBeanConfig(String teamId,
-	                                                                                String clientId,
-	                                                                                String keyId) {
-		String path = String.format(DEFAULT_PATH_FORMAT, "AuthKey_" + keyId);
-		return new SignInWithAppleOAuthBeanConfig(teamId, clientId, keyId, path);
+		this.setPrivateKeyPathEnv(privateKeyEnvPath);
 	}
 
 	public String getTeamId() {
@@ -67,22 +68,30 @@ public class SignInWithAppleOAuthBeanConfig {
 		this.keyId = keyId;
 	}
 
-	public String getPrivateKeyPath() {
-		return this.privateKeyPath;
+	public String getPrivateKeyPathEnv() {
+		return this.privateKeyPathEnv;
 	}
 
-	public void setPrivateKeyPath(String privateKeyPath) {
-		if (privateKeyPath == null) {
-			throw new IllegalArgumentException("privateKeyPath cannot be null.");
+	public void setPrivateKeyPathEnv(String privateKeyPathEnv) {
+		if (privateKeyPathEnv == null) {
+			throw new IllegalArgumentException("privateKeyPathEnv cannot be null.");
 		}
 
-		this.privateKeyPath = privateKeyPath;
+		this.privateKeyPathEnv = privateKeyPathEnv;
+	}
+
+	public boolean isProdOnly() {
+		return this.prodOnly;
+	}
+
+	public void setProdOnly(boolean prodOnly) {
+		this.prodOnly = prodOnly;
 	}
 
 	@Override
 	public String toString() {
 		return "SignInWithAppleOAuthBeanConfig [teamId=" + this.teamId + ", clientId=" + this.clientId + ", keyId="
-		        + this.keyId + ", privateKeyPath=" + this.privateKeyPath + "]";
+		        + this.keyId + ", privateKeyPathEnv=" + this.privateKeyPathEnv + "]";
 	}
 
 }

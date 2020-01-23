@@ -2,11 +2,7 @@ package com.dereekb.gae.utilities.security.pem.impl;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.security.PrivateKey;
-
-import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
-import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import java.io.Reader;
 
 import com.dereekb.gae.utilities.security.pem.PrivateKeyProvider;
 
@@ -16,12 +12,9 @@ import com.dereekb.gae.utilities.security.pem.PrivateKeyProvider;
  * @author dereekb
  *
  */
-public class FilePrivateKeyProviderImpl
-        implements PrivateKeyProvider {
+public class FilePrivateKeyProviderImpl extends AbstractPrivateKeyProvider {
 
 	private String filePath;
-
-	private transient PrivateKey privateKey;
 
 	public FilePrivateKeyProviderImpl(String absoluteFilePath) {
 		super();
@@ -40,30 +33,10 @@ public class FilePrivateKeyProviderImpl
 		this.filePath = filePath;
 	}
 
-	// MARK: PrivateKeyProvider
+	// MARK: AbstractPrivateKeyProvider
 	@Override
-	public PrivateKey getPrivateKey() throws RuntimeException {
-		if (this.privateKey == null) {
-			this.privateKey = this.readPrivateKey();
-		}
-
-		return this.privateKey;
-	}
-
-	private PrivateKey readPrivateKey() throws RuntimeException {
-		try {
-			PEMParser pemParser = new PEMParser(new FileReader(this.filePath));
-
-			PrivateKeyInfo object = (PrivateKeyInfo) pemParser.readObject();
-			pemParser.close();
-
-			JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
-			PrivateKey pKey = converter.getPrivateKey(object);
-
-			return pKey;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+	protected Reader getPrivateKeyReader() throws IOException, RuntimeException {
+		return new FileReader(this.filePath);
 	}
 
 	@Override

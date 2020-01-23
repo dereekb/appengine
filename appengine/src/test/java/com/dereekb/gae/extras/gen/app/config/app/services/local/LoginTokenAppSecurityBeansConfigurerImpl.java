@@ -25,6 +25,7 @@ import com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTok
 import com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl;
 import com.dereekb.gae.test.server.auth.impl.TestRemoteLoginSystemLoginTokenContextImpl;
 import com.dereekb.gae.utilities.misc.env.EnvStringUtility;
+import com.dereekb.gae.utilities.security.pem.impl.StringPrivateKeyProviderImpl;
 
 /**
  * Default {@link AppSecurityBeansConfigurer} implementation.
@@ -390,21 +391,30 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 			map.keyRefValueRefEntry(googleOAuthPointerTypeBeanId, googleOAuthServiceBeanId);
 		}
 
-		if (this.appleOAuthConfig != null) {
-			String appleOAuthPointerTypeBeanId = "appleOAuthPointerType";
-			String appleOAuthServiceBeanId = "appleOAuthService";
-			String appleOAuthConfigBeanId = "appleOAuthConfig";
+		if (this.appleOAuthConfig != null && (!this.appleOAuthConfig.isProdOnly() || EnvStringUtility.isProduction())) {
+			try {
+				String privateKey = EnvStringUtility.readStringFromFileFromEnvVar(this.appleOAuthConfig.getPrivateKeyPathEnv());
 
-			builder.bean(appleOAuthConfigBeanId).beanClass(SignInWithAppleOAuthConfigImpl.class).c()
-			        .value(this.appleOAuthConfig.getTeamId()).value(this.appleOAuthConfig.getClientId())
-			        .value(this.appleOAuthConfig.getKeyId()).value(this.appleOAuthConfig.getPrivateKeyPath());
+				String appleOAuthPointerTypeBeanId = "appleOAuthPointerType";
+				String appleOAuthServiceBeanId = "appleOAuthService";
+				String appleOAuthConfigBeanId = "appleOAuthConfig";
 
-			builder.bean(appleOAuthServiceBeanId).beanClass(SignInWithAppleOAuthService.class).c()
-			        .ref(appleOAuthConfigBeanId);
+				builder.bean(appleOAuthConfigBeanId).beanClass(SignInWithAppleOAuthConfigImpl.class).c()
+				        .value(this.appleOAuthConfig.getTeamId())
+				        .value(this.appleOAuthConfig.getClientId())
+				        .value(this.appleOAuthConfig.getKeyId())
+				        .bean().beanClass(StringPrivateKeyProviderImpl.class).c().value(privateKey);
 
-			builder.enumBean(appleOAuthPointerTypeBeanId, LoginPointerType.OAUTH_APPLE);
+				builder.bean(appleOAuthServiceBeanId).beanClass(SignInWithAppleOAuthService.class).c()
+				        .ref(appleOAuthConfigBeanId);
 
-			map.keyRefValueRefEntry(appleOAuthPointerTypeBeanId, appleOAuthServiceBeanId);
+				builder.enumBean(appleOAuthPointerTypeBeanId, LoginPointerType.OAUTH_APPLE);
+
+				map.keyRefValueRefEntry(appleOAuthPointerTypeBeanId, appleOAuthServiceBeanId);
+			} catch (Exception e) {
+				System.out.println("Failed creating Apple oAuth:");
+				e.printStackTrace();
+			}
 		}
 
 	}
