@@ -155,8 +155,8 @@ public class ModelKeySetQueryFieldParameterBuilder {
 		@Override
 		protected void assertSingleValueIsValid(ModelKey value) {
 			super.assertSingleValueIsValid(value);
-			if (value.getType() != ModelKeySetQueryFieldParameterBuilder.this.keyType) {
-				throw new IllegalArgumentException("Key types did not match.");
+			if (!value.getType().equals(ModelKeySetQueryFieldParameterBuilder.this.keyType)) {
+				throw new IllegalArgumentException("Key types did not match. Key '" + value.toString() + "' had type '" + value.getType().toString() + "' versus expected type '" + value.getType().toString() + "'.");
 			}
 		}
 

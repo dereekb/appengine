@@ -391,7 +391,9 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 			map.keyRefValueRefEntry(googleOAuthPointerTypeBeanId, googleOAuthServiceBeanId);
 		}
 
-		if (this.appleOAuthConfig != null && (!this.appleOAuthConfig.isProdOnly() || EnvStringUtility.isProduction())) {
+		boolean isProd = EnvStringUtility.isProduction();
+
+		if (this.appleOAuthConfig != null && (!this.appleOAuthConfig.isProdOnly() || isProd)) {
 			try {
 				String privateKey = EnvStringUtility.readStringFromFileFromEnvVar(this.appleOAuthConfig.getPrivateKeyPathEnv());
 
@@ -412,8 +414,14 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 
 				map.keyRefValueRefEntry(appleOAuthPointerTypeBeanId, appleOAuthServiceBeanId);
 			} catch (Exception e) {
-				System.out.println("Failed creating Apple oAuth:");
-				e.printStackTrace();
+
+				// Throw exceptions when building for production.
+				if (isProd) {
+					throw new RuntimeException(e);
+				} else {
+					System.out.println("Failed creating Apple oAuth:");
+					e.printStackTrace();
+				}
 			}
 		}
 
