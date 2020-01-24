@@ -161,7 +161,7 @@ public class ModelKeyQueryFieldParameterBuilder {
 			if (ModelKey.isNullKey(value)) {
 				value = null; // Use null values instead of a Null key type.
 			} else if (!value.getType().equals(ModelKeyQueryFieldParameterBuilder.this.keyType)) {
-				throw new IllegalArgumentException("Key types did not match. Key '" + value.toString() + "' had type '" + value.getType().toString() + "' versus expected type '" + value.getType().toString() + "'.");
+				throw new IllegalArgumentException("Key types did not match. Key '" + value.toString() + "' had type '" + value.getType().toString() + "' versus expected type '" + ModelKeyQueryFieldParameterBuilder.this.keyType.toString() + "'.");
 			}
 
 			super.setValue(value);
