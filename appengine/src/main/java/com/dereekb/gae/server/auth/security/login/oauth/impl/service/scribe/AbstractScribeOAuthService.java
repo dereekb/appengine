@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthCode;
@@ -105,21 +103,8 @@ public abstract class AbstractScribeOAuthService
 	@Override
 	public abstract LoginPointerType getLoginType();
 
-	@Override
 	public String getAuthorizationCodeRequestUrl() {
 		return this.scribeService.getAuthorizationUrl(this.stateSecret);
-	}
-
-	@Override
-	public OAuthAuthorizationInfo processAuthorizationCodeResponse(HttpServletRequest request)
-	        throws OAuthConnectionException,
-	            OAuthAuthorizationTokenRequestException {
-		String code = this.getAuthorizationCodeFromRequest(request);
-		return this.processAuthorizationCode(code);
-	}
-
-	protected String getAuthorizationCodeFromRequest(HttpServletRequest request) {
-		throw new UnsupportedOperationException("Responses should be handled by client first.");
 	}
 
 	@Override

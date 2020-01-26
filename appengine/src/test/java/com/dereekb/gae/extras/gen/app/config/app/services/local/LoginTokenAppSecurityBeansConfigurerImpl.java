@@ -13,6 +13,8 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.impl.NewLoginGeneratorImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthClientConfig;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthClientConfigImpl;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.service.apple.SignInWithAppleOAuthService;
+import com.dereekb.gae.server.auth.security.login.oauth.impl.service.apple.impl.SignInWithAppleOAuthConfigImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.facebook.FacebookOAuthService;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.service.scribe.google.GoogleOAuthService;
 import com.dereekb.gae.server.auth.security.model.query.task.impl.LoginSecurityModelQueryTaskOverrideImpl;
@@ -23,6 +25,7 @@ import com.dereekb.gae.server.auth.security.token.provider.details.impl.LoginTok
 import com.dereekb.gae.server.auth.security.token.provider.impl.LoginTokenAuthenticationProviderImpl;
 import com.dereekb.gae.test.server.auth.impl.TestRemoteLoginSystemLoginTokenContextImpl;
 import com.dereekb.gae.utilities.misc.env.EnvStringUtility;
+import com.dereekb.gae.utilities.security.pem.impl.StringPrivateKeyProviderImpl;
 
 /**
  * Default {@link AppSecurityBeansConfigurer} implementation.
@@ -47,6 +50,7 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 
 	private OAuthClientConfig googleOAuthConfig;
 	private OAuthClientConfig facebookOAuthConfig;
+	private SignInWithAppleOAuthBeanConfig appleOAuthConfig;
 
 	private List<String> additionalSecureModelResources;
 
@@ -140,6 +144,18 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 		}
 
 		this.facebookOAuthConfig = facebookOAuthConfig;
+	}
+
+	public SignInWithAppleOAuthBeanConfig getAppleOAuthConfig() {
+		return this.appleOAuthConfig;
+	}
+
+	public void setAppleOAuthConfig(SignInWithAppleOAuthBeanConfig appleOAuthConfig) {
+		if (appleOAuthConfig == null) {
+			throw new IllegalArgumentException("appleOAuthConfig cannot be null.");
+		}
+
+		this.appleOAuthConfig = appleOAuthConfig;
 	}
 
 	@Override
@@ -373,6 +389,40 @@ public class LoginTokenAppSecurityBeansConfigurerImpl
 			builder.enumBean(googleOAuthPointerTypeBeanId, LoginPointerType.OAUTH_GOOGLE);
 
 			map.keyRefValueRefEntry(googleOAuthPointerTypeBeanId, googleOAuthServiceBeanId);
+		}
+
+		boolean isProd = EnvStringUtility.isProduction();
+
+		if (this.appleOAuthConfig != null && (!this.appleOAuthConfig.isProdOnly() || isProd)) {
+			try {
+				String privateKey = EnvStringUtility.readStringFromFileFromEnvVar(this.appleOAuthConfig.getPrivateKeyPathEnv());
+
+				String appleOAuthPointerTypeBeanId = "appleOAuthPointerType";
+				String appleOAuthServiceBeanId = "appleOAuthService";
+				String appleOAuthConfigBeanId = "appleOAuthConfig";
+
+				builder.bean(appleOAuthConfigBeanId).beanClass(SignInWithAppleOAuthConfigImpl.class).c()
+				        .value(this.appleOAuthConfig.getTeamId())
+				        .value(this.appleOAuthConfig.getClientId())
+				        .value(this.appleOAuthConfig.getKeyId())
+				        .bean().beanClass(StringPrivateKeyProviderImpl.class).c().value(privateKey);
+
+				builder.bean(appleOAuthServiceBeanId).beanClass(SignInWithAppleOAuthService.class).c()
+				        .ref(appleOAuthConfigBeanId);
+
+				builder.enumBean(appleOAuthPointerTypeBeanId, LoginPointerType.OAUTH_APPLE);
+
+				map.keyRefValueRefEntry(appleOAuthPointerTypeBeanId, appleOAuthServiceBeanId);
+			} catch (Exception e) {
+
+				// Throw exceptions when building for production.
+				if (isProd) {
+					throw new RuntimeException(e);
+				} else {
+					System.out.println("Failed creating Apple oAuth:");
+					e.printStackTrace();
+				}
+			}
 		}
 
 	}

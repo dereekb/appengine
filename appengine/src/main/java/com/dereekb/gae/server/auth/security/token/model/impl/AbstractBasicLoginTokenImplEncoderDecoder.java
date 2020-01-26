@@ -18,7 +18,7 @@ import io.jsonwebtoken.IncorrectClaimException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MissingClaimException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.security.SecurityException;
 
 /**
  * Abstract {@link LoginTokenEncoder} and {@link LoginTokenDecoder}
@@ -121,7 +121,7 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 		try {
 			claims = this.parseClaims(token);
 			return this.decodeLoginTokenFromClaims(token, claims);
-		} catch (MissingClaimException | SignatureException | IncorrectClaimException e) {
+		} catch (MissingClaimException | SecurityException | IncorrectClaimException e) {
 			throw new TokenUnauthorizedException("Could not decode token.", e);
 		} catch (ExpiredJwtException e) {
 			throw new TokenExpiredException();

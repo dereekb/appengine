@@ -1,5 +1,7 @@
 package com.dereekb.gae.utilities.data;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -269,6 +271,28 @@ public class StringUtility {
 
 	public static byte[] getUTF8Bytes(String string) throws UnsupportedEncodingException {
 		return string.getBytes("UTF-8");
+	}
+
+	/**
+	 * Reads a string from the input reader. Reader should not be closed.
+	 *
+	 * @param reader
+	 *            {@link Reader}. Never {@code null}.
+	 * @return {@link String}. Never {@code null}.
+	 * @throws IOException
+	 */
+	public static String readStringFromReader(Reader reader) throws IOException {
+
+		StringBuilder buffer = new StringBuilder();
+		int numCharsRead;
+
+		char[] arr = new char[8 * 1024];
+		while ((numCharsRead = reader.read(arr, 0, arr.length)) != -1) {
+			buffer.append(arr, 0, numCharsRead);
+		}
+
+		reader.close();
+		return buffer.toString();
 	}
 
 }

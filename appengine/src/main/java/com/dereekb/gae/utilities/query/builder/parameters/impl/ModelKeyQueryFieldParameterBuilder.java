@@ -6,7 +6,7 @@ import com.dereekb.gae.utilities.query.ExpressionOperator;
 
 /**
  * Builder for {@link ModelKeyQueryFieldParameter} instances.
- * 
+ *
  * @author dereekb
  *
  */
@@ -160,8 +160,8 @@ public class ModelKeyQueryFieldParameterBuilder {
 		public void setValue(ModelKey value) throws IllegalArgumentException {
 			if (ModelKey.isNullKey(value)) {
 				value = null; // Use null values instead of a Null key type.
-			} else if (value.getType() != ModelKeyQueryFieldParameterBuilder.this.keyType) {
-				throw new IllegalArgumentException("Key types did not match.");
+			} else if (!value.getType().equals(ModelKeyQueryFieldParameterBuilder.this.keyType)) {
+				throw new IllegalArgumentException("Key types did not match. Key '" + value.toString() + "' had type '" + value.getType().toString() + "' versus expected type '" + ModelKeyQueryFieldParameterBuilder.this.keyType.toString() + "'.");
 			}
 
 			super.setValue(value);

@@ -1,7 +1,5 @@
 package com.dereekb.gae.web.api.auth.controller.oauth.impl;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthCode;
@@ -62,19 +60,6 @@ public class OAuthLoginControllerDelegateImpl
 	}
 
 	// MARK: OAuthLoginControllerDelegate
-	@Deprecated
-	public LoginTokenPair login(String type,
-	                            HttpServletRequest request)
-	        throws OAuthInsufficientException,
-	            OAuthServiceUnavailableException,
-	            OAuthConnectionException {
-
-		OAuthService service = this.manager.getService(type);
-		OAuthAuthorizationInfo authInfo = service.processAuthorizationCodeResponse(request);
-
-		return this.loginWithAuthInfo(authInfo);
-	}
-
 	@Override
 	public LoginTokenPair loginWithAuthCode(String type,
 	                                        String authCode,

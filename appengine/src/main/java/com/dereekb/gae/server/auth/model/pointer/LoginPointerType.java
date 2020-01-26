@@ -28,7 +28,12 @@ public enum LoginPointerType implements IndexCoded {
 
 	OAUTH_GOOGLE(6, LoginType.OAUTH, "G", false),
 
-	OAUTH_FACEBOOK(7, LoginType.OAUTH, "F", false);
+	OAUTH_FACEBOOK(7, LoginType.OAUTH, "F", false),
+
+	/**
+	 * Sign In With Apple
+	 */
+	OAUTH_APPLE(8, LoginType.OAUTH, "A", false);
 
 	/**
 	 * Login type/category.
@@ -127,6 +132,9 @@ public enum LoginPointerType implements IndexCoded {
 				break;
 			case 7:
 				type = LoginPointerType.OAUTH_FACEBOOK;
+				break;
+			case 8:
+				type = LoginPointerType.OAUTH_APPLE;
 				break;
 		}
 
