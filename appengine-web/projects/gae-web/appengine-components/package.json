@@ -1,6 +1,6 @@
 {
   "name": "@gae-web/appengine-components",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "peerDependencies": {
     "rxjs": "*",
     "make-error": "*",
