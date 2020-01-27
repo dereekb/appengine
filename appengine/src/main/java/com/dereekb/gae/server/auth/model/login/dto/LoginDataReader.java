@@ -30,8 +30,10 @@ public final class LoginDataReader extends DescribedDatabaseModelDataReader<Logi
 
 		// Data
 		model.setDate(input.getDateValue());
+		model.setRoot(input.getRoot());
 		model.setRoles(input.getRoles());
 		model.setGroup(input.getGroup());
+		model.setDisabled(input.getDisabled());
 
 		Date authReset = input.getAuthResetValue();
 		if (authReset != null) {

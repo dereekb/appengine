@@ -5,6 +5,7 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.LoginPointerKeyFormatter;
 import com.dereekb.gae.server.auth.security.login.LoginPointerService;
 import com.dereekb.gae.server.auth.security.login.LoginService;
+import com.dereekb.gae.server.auth.security.login.exception.LoginDisabledException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
@@ -26,7 +27,8 @@ public abstract class LoginServiceImpl
 		this.setPointerService(pointerService);
 	}
 
-	public LoginServiceImpl(LoginPointerKeyFormatter formatter, LoginPointerService pointerService) throws IllegalArgumentException {
+	public LoginServiceImpl(LoginPointerKeyFormatter formatter, LoginPointerService pointerService)
+	        throws IllegalArgumentException {
 		this.setFormatter(formatter);
 		this.setPointerService(pointerService);
 	}
@@ -57,7 +59,7 @@ public abstract class LoginServiceImpl
 
 	// MARK: LoginService
 	@Override
-	public LoginPointer getLogin(String username) throws LoginUnavailableException {
+	public LoginPointer getLogin(String username) throws LoginDisabledException, LoginUnavailableException {
 		LoginPointer pointer = this.loadLogin(username);
 
 		if (pointer == null) {
@@ -74,7 +76,7 @@ public abstract class LoginServiceImpl
 		return this.pointerService.createLoginPointer(key, template);
 	}
 
-	protected LoginPointer loadLogin(String username) {
+	protected LoginPointer loadLogin(String username) throws LoginDisabledException {
 		ModelKey key = this.formatter.getKeyForUsername(username);
 		return this.pointerService.getLoginPointer(key);
 	}

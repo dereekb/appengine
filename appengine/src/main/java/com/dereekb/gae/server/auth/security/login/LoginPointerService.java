@@ -5,6 +5,7 @@ import java.util.List;
 import com.dereekb.gae.model.exception.UnavailableModelException;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.login.exception.LoginDisabledException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 
@@ -24,9 +25,13 @@ public interface LoginPointerService {
 	 * @param template
 	 *            (Optional) {@link LoginPointer}.
 	 * @return {@link LoginPointer} if it exists, or {@code null}.
+	 *
+	 * @throws LoginDisabledException
+	 *             if the login exists but is disabled.
 	 */
 	public LoginPointer getOrCreateLoginPointer(ModelKey key,
-	                                            LoginPointer template);
+	                                            LoginPointer template)
+	        throws LoginDisabledException;
 
 	/**
 	 * Retrieves the {@link LoginPointer}.
@@ -34,8 +39,11 @@ public interface LoginPointerService {
 	 * @param key
 	 *            {@link ModelKey}. Never {@code null}.
 	 * @return {@link LoginPointer} if it exists, or {@code null}.
+	 *
+	 * @throws LoginDisabledException
+	 *             if the login exists but is disabled.
 	 */
-	public LoginPointer getLoginPointer(ModelKey key);
+	public LoginPointer getLoginPointer(ModelKey key) throws LoginDisabledException;
 
 	/**
 	 * Creates a new {@link LoginPointer}.
@@ -74,8 +82,11 @@ public interface LoginPointerService {
 	 * @return {@link List}. Never {@code null}.
 	 * @throws IllegalArgumentException
 	 *             thrown if email is null or empty.
+	 *
+	 * @throws LoginDisabledException
+	 *             if the login exists but is disabled.
 	 */
-	public List<LoginPointer> findWithEmail(String email) throws IllegalArgumentException;
+	public List<LoginPointer> findWithEmail(String email) throws LoginDisabledException, IllegalArgumentException;
 
 	/**
 	 * Finds the login pointer with the specified type and email.
@@ -87,9 +98,13 @@ public interface LoginPointerService {
 	 * @return {@link LoginPointer}, or {@code null} if it does not exist.
 	 * @throws IllegalArgumentException
 	 *             thrown if type or email are null.
+	 *
+	 * @throws LoginDisabledException
+	 *             if the login exists but is disabled.
 	 */
 	public LoginPointer findWithEmail(LoginPointerType type,
 	                                  String email)
-	        throws IllegalArgumentException;
+	        throws LoginDisabledException,
+	            IllegalArgumentException;
 
 }

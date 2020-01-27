@@ -25,6 +25,9 @@ public class ApiLoginException extends ApiSafeRuntimeException {
 	    // Conflict
 		EXISTS("LOGIN_EXISTS", "Login Exists"),
 
+	    // Conflict
+		DISABLED("LOGIN_DISABLED", "Login Disabled"),
+
 	    // Internal Service Error
 		ERROR("LOGIN_ERROR", "Unexpected error"),
 

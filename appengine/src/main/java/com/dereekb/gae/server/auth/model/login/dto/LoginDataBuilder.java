@@ -27,10 +27,12 @@ public final class LoginDataBuilder extends DescribedDatabaseModelDataBuilder<Lo
 		LoginData data = super.convertSingle(input);
 
 		// Data
+		data.setRoot(input.isRoot());
 		data.setDateValue(input.getDate());
 		data.setRoles(input.getRoles());
 		data.setGroup(input.getGroup());
 		data.setAuthResetValue(input.getAuthReset());
+		data.setDisabled(input.getDisabled());
 
 		return data;
 	}

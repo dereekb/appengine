@@ -24,6 +24,8 @@ public class LoginPointerData extends OwnedDatabaseModelData {
 
 	private Integer type;
 
+	private Boolean disabled;
+
 	public LoginPointerData() {}
 
 	public Long getLogin() {
@@ -48,6 +50,14 @@ public class LoginPointerData extends OwnedDatabaseModelData {
 
 	public void setType(Integer type) {
 		this.type = type;
+	}
+
+	public Boolean getDisabled() {
+		return this.disabled;
+	}
+
+	public void setDisabled(Boolean disabled) {
+		this.disabled = disabled;
 	}
 
 	// UniqueModel

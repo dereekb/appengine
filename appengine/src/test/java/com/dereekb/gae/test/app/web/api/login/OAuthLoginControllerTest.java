@@ -6,16 +6,19 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.login.exception.LoginDisabledException;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthLoginInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthServiceManager;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthAuthorizationInfoImpl;
 import com.dereekb.gae.server.auth.security.login.oauth.impl.OAuthLoginInfoImpl;
+import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
 import com.dereekb.gae.test.app.mock.context.AbstractAppTestingContext;
 import com.dereekb.gae.web.api.auth.controller.oauth.OAuthLoginController;
 import com.google.gson.JsonElement;
@@ -41,6 +44,10 @@ public class OAuthLoginControllerTest extends AbstractAppTestingContext {
 	@Autowired
 	private OAuthLoginController loginController;
 
+	@Autowired
+	@Qualifier("loginPointerRegistry")
+	private ObjectifyRegistry<LoginPointer> loginPointerRegistry;
+
 	private LoginApiTestUtility loginTestUtility = new LoginApiTestUtility(this);
 
 	// MARK: OAuthServer tests
@@ -54,6 +61,27 @@ public class OAuthLoginControllerTest extends AbstractAppTestingContext {
 		LoginPointer loginPointer = this.serverManager.login(info);
 		assertNotNull(loginPointer);
 		assertNotNull(loginPointer.getIdentifier());
+	}
+
+	@Test
+	public void testOAuthLoginWithDisabledLoginThrowsException() {
+
+		OAuthLoginInfo loginInfo = new OAuthLoginInfoImpl(LoginPointerType.OAUTH_GOOGLE, "abcde", "name",
+		        "test@test.com");
+		OAuthAuthorizationInfo info = new OAuthAuthorizationInfoImpl(loginInfo);
+
+		LoginPointer loginPointer = this.serverManager.login(info);
+		assertNotNull(loginPointer);
+
+		this.loginTestUtility.setLoginPointerDisabled(this.loginPointerRegistry, loginPointer.getModelKey());
+
+		try {
+			loginPointer = this.serverManager.login(info);
+			fail("Expected login pointer to be disabled.");
+		} catch (LoginDisabledException e) {
+			LoginPointer disabledLoginPointer = e.getLoginPointer();
+			assertNotNull(disabledLoginPointer);
+		}
 	}
 
 	// MARK: Mock Tests

@@ -1,5 +1,6 @@
 package com.dereekb.gae.web.api.auth.controller.oauth;
 
+import com.dereekb.gae.server.auth.security.login.exception.LoginDisabledException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthAuthorizationTokenRequestException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthConnectionException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
@@ -16,7 +17,7 @@ public interface OAuthLoginControllerDelegate {
 
 	/**
 	 * Performs a login using an authentication code. This server will work to
-	 * 
+	 *
 	 * @param type
 	 *            oauth type. Never {@code null},
 	 * @param authCode
@@ -24,7 +25,8 @@ public interface OAuthLoginControllerDelegate {
 	 * @param codeType
 	 *            code type. May be {@code null}.
 	 * @return {@link LoginTokenPair}. Never {@code null}.
-	 * 
+	 *
+	 * @throws LoginDisabledException
 	 * @throws OAuthConnectionException
 	 * @throws OAuthInsufficientException
 	 * @throws OAuthAuthorizationTokenRequestException
@@ -33,7 +35,8 @@ public interface OAuthLoginControllerDelegate {
 	public LoginTokenPair loginWithAuthCode(String type,
 	                                        String authCode,
 	                                        String codeType)
-	        throws OAuthConnectionException,
+	        throws LoginDisabledException,
+	        	OAuthConnectionException,
 	            OAuthInsufficientException,
 	            OAuthAuthorizationTokenRequestException,
 	            OAuthServiceUnavailableException;
@@ -47,6 +50,7 @@ public interface OAuthLoginControllerDelegate {
 	 *            token string. Never {@code null}.
 	 * @return {@link LoginTokenPair} with valid login. Never {@code null}.
 	 *
+	 * @throws LoginDisabledException
 	 * @throws OAuthConnectionException
 	 * @throws OAuthInsufficientException
 	 * @throws OAuthAuthorizationTokenRequestException
@@ -54,7 +58,8 @@ public interface OAuthLoginControllerDelegate {
 	 */
 	public LoginTokenPair loginWithAccessToken(String type,
 	                                           String accessToken)
-	        throws OAuthConnectionException,
+	        throws LoginDisabledException,
+	        	OAuthConnectionException,
 	            OAuthInsufficientException,
 	            OAuthAuthorizationTokenRequestException,
 	            OAuthServiceUnavailableException;

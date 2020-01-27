@@ -11,7 +11,10 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
+import com.dereekb.gae.server.datastore.GetterSetter;
+import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.test.app.mock.web.WebServiceTester;
 import com.dereekb.gae.test.app.mock.web.builder.WebServiceRequestBuilder;
 import com.dereekb.gae.utilities.data.impl.ObjectMapperUtilityBuilderImpl;
@@ -54,20 +57,30 @@ public class LoginApiTestUtility {
 
 	// MARK: Refresh Token
 	public String getRefreshToken(String token) throws Exception {
-		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
-		MockHttpServletRequestBuilder registerRequestBuilder = serviceRequestBuilder.get("/login/auth/token/refresh");
-		MvcResult result = this.webServiceTester.performSecureHttpRequest(registerRequestBuilder, token).andReturn();
+		MvcResult result = this.sendGetRefreshToken(token);
 		return this.getTokenFromResponse(result);
 	}
 
+	public MvcResult sendGetRefreshToken(String token) throws Exception {
+		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
+		MockHttpServletRequestBuilder registerRequestBuilder = serviceRequestBuilder.get("/login/auth/token/refresh");
+		MvcResult result = this.webServiceTester.performSecureHttpRequest(registerRequestBuilder, token).andReturn();
+		return result;
+	}
+
 	public String authWithRefreshToken(String token) throws Exception {
+		MvcResult result = this.sendAuthWithRefreshToken(token);
+		return this.getTokenFromResponse(result);
+	}
+
+	public MvcResult sendAuthWithRefreshToken(String token) throws Exception {
 		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
 		MockHttpServletRequestBuilder loginRequestBuilder = serviceRequestBuilder.post("/login/auth/token/login");
 		loginRequestBuilder.param("refreshToken", token);
 		loginRequestBuilder.contentType("application/x-www-form-urlencoded");
 
 		MvcResult result = this.webServiceTester.mockMvcPerform(loginRequestBuilder).andReturn();
-		return this.getTokenFromResponse(result);
+		return result;
 	}
 
 	public String resetTokenAuth(String token) throws Exception {
@@ -287,6 +300,14 @@ public class LoginApiTestUtility {
 		systemRequestBuilder.content(content);
 
 		return this.webServiceTester.mockMvcPerform(systemRequestBuilder).andReturn();
+	}
+
+	// MARK: Utility
+	public void setLoginPointerDisabled(GetterSetter<LoginPointer> loginPointerGetterSetter,
+	                                    ModelKey loginPointerKey) {
+		LoginPointer updatedLoginPointer = loginPointerGetterSetter.get(loginPointerKey);
+		updatedLoginPointer.setDisabled(true);
+		loginPointerGetterSetter.update(updatedLoginPointer);
 	}
 
 }

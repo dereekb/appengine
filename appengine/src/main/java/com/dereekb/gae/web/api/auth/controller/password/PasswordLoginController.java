@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dereekb.gae.server.auth.security.login.exception.InvalidLoginCredentialsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginDisabledException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginPair;
@@ -17,6 +18,7 @@ import com.dereekb.gae.server.auth.security.login.password.recover.exception.Pas
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.UnknownUsernameException;
 import com.dereekb.gae.server.auth.security.login.password.recover.exception.UnregisteredEmailException;
 import com.dereekb.gae.web.api.auth.controller.password.impl.PasswordLoginPairImpl;
+import com.dereekb.gae.web.api.auth.exception.ApiLoginDisabledException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginExistsException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginInvalidException;
@@ -65,6 +67,8 @@ public final class PasswordLoginController {
 		try {
 			PasswordLoginPair loginPair = new PasswordLoginPairImpl(username, password);
 			response = this.delegate.login(loginPair);
+		} catch (LoginDisabledException e) {
+			throw new ApiLoginDisabledException(e);
 		} catch (LoginUnavailableException e) {
 			throw new ApiLoginException(ApiLoginException.LoginExceptionReason.UNAVAILABLE, e);
 		} catch (InvalidLoginCredentialsException e) {

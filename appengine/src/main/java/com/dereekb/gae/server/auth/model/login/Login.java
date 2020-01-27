@@ -20,8 +20,10 @@ import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfDefault;
 import com.googlecode.objectify.condition.IfEmpty;
+import com.googlecode.objectify.condition.IfFalse;
 import com.googlecode.objectify.condition.IfNotDefault;
 import com.googlecode.objectify.condition.IfNull;
+import com.googlecode.objectify.condition.IfTrue;
 
 /**
  * Default login model.
@@ -62,7 +64,7 @@ public final class Login extends DescribedDatabaseModel
 	 * Whether or not this login is a root-level login.
 	 */
 	@IgnoreSave({ IfDefault.class })
-	private boolean root = true;
+	private Boolean root = true;
 
 	/**
 	 * Login group identifier
@@ -83,6 +85,24 @@ public final class Login extends DescribedDatabaseModel
 	private Long roles = DEFAULT_ROLES;
 
 	/**
+	 * Whether or not the login is disabled.
+	 */
+	@IgnoreSave({ IfNull.class, IfFalse.class })
+	private Boolean disabled = false;
+
+	/**
+	 * Reason why the login was disabled, if applicable.
+	 */
+	@IgnoreSave({ IfEmpty.class })
+	private String disabledReason;
+
+	/**
+	 * Whether or not the disabling has been synchronized.
+	 */
+	@IgnoreSave({ IfNull.class, IfTrue.class })
+	private boolean disabledSync = true;
+
+	/**
 	 * Parent Logins that have access to this login.
 	 */
 	@Deprecated
@@ -96,7 +116,8 @@ public final class Login extends DescribedDatabaseModel
 	@IgnoreSave({ IfEmpty.class })
 	private Set<Key<Login>> children = new HashSet<Key<Login>>();
 
-	// TODO: Consider adding model key string for the User model type to reduce amount of querying required
+	// TODO: Consider adding model key string for the User model type to reduce
+	// amount of querying required
 
 	public Login() {}
 
@@ -132,11 +153,11 @@ public final class Login extends DescribedDatabaseModel
 		this.authReset = authReset;
 	}
 
-	public boolean isRoot() {
+	public Boolean isRoot() {
 		return this.root;
 	}
 
-	public void setRoot(boolean root) {
+	public void setRoot(Boolean root) {
 		this.root = root;
 	}
 
@@ -163,6 +184,30 @@ public final class Login extends DescribedDatabaseModel
 		}
 
 		this.roles = roles;
+	}
+
+	public Boolean getDisabled() {
+		return this.disabled;
+	}
+
+	public void setDisabled(Boolean disabled) {
+		this.disabled = disabled;
+	}
+
+	public String getDisabledReason() {
+		return this.disabledReason;
+	}
+
+	public void setDisabledReason(String disabledReason) {
+		this.disabledReason = disabledReason;
+	}
+
+	public boolean isDisabledSync() {
+		return this.disabledSync;
+	}
+
+	public void setDisabledSync(boolean disabledSync) {
+		this.disabledSync = disabledSync;
 	}
 
 	public Set<Key<Login>> getParents() {

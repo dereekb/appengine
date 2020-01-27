@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.app.web.api.model;
+package com.dereekb.gae.test.app.web.api.model.system;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

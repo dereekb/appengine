@@ -3,6 +3,7 @@ package com.dereekb.gae.server.auth.security.login.oauth.impl.service;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.LoginPointerService;
+import com.dereekb.gae.server.auth.security.login.exception.LoginDisabledException;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthLoginInfo;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthLoginService;
@@ -48,7 +49,9 @@ public class OAuthLoginServiceImpl
 
 	// MARK: OAuthLoginService
 	@Override
-	public LoginPointer login(OAuthAuthorizationInfo authCode) throws OAuthInsufficientException {
+	public LoginPointer login(OAuthAuthorizationInfo authCode)
+	        throws LoginDisabledException,
+	            OAuthInsufficientException {
 		OAuthLoginInfo info = authCode.getLoginInfo();
 
 		LoginPointerType type = info.getLoginType();

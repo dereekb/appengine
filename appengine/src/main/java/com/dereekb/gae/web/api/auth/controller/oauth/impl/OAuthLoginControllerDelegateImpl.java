@@ -1,6 +1,7 @@
 package com.dereekb.gae.web.api.auth.controller.oauth.impl;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.security.login.exception.LoginDisabledException;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAccessToken;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthCode;
 import com.dereekb.gae.server.auth.security.login.oauth.OAuthAuthorizationInfo;
@@ -64,7 +65,8 @@ public class OAuthLoginControllerDelegateImpl
 	public LoginTokenPair loginWithAuthCode(String type,
 	                                        String authCode,
 	                                        String codeType)
-	        throws OAuthConnectionException,
+	        throws LoginDisabledException,
+	            OAuthConnectionException,
 	            OAuthInsufficientException,
 	            OAuthAuthorizationTokenRequestException,
 	            OAuthServiceUnavailableException {
@@ -78,7 +80,8 @@ public class OAuthLoginControllerDelegateImpl
 	@Override
 	public LoginTokenPair loginWithAccessToken(String type,
 	                                           String accessToken)
-	        throws OAuthInsufficientException,
+	        throws LoginDisabledException,
+	            OAuthInsufficientException,
 	            OAuthServiceUnavailableException,
 	            OAuthConnectionException {
 
@@ -88,7 +91,7 @@ public class OAuthLoginControllerDelegateImpl
 		return this.loginWithAuthInfo(authInfo);
 	}
 
-	private LoginTokenPair loginWithAuthInfo(OAuthAuthorizationInfo authInfo) {
+	private LoginTokenPair loginWithAuthInfo(OAuthAuthorizationInfo authInfo) throws LoginDisabledException {
 		LoginPointer pointer = this.manager.login(authInfo);
 		String encodedToken = this.tokenService.encodeLoginToken(pointer, this.refreshAllowed);
 		LoginTokenPair pair = new LoginTokenPair(pointer.getIdentifier(), encodedToken);

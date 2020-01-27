@@ -7,6 +7,7 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.login.LoginPointerService;
 import com.dereekb.gae.server.auth.security.login.exception.InvalidLoginCredentialsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginDisabledException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.auth.security.login.impl.LoginServiceImpl;
@@ -64,7 +65,8 @@ public class PasswordLoginServiceImpl extends LoginServiceImpl
 	// MARK: PasswordLoginService
 	@Override
 	public LoginPointer login(PasswordLoginPair pair)
-	        throws LoginUnavailableException,
+	        throws LoginDisabledException,
+	            LoginUnavailableException,
 	            InvalidLoginCredentialsException {
 
 		String username = pair.getUsername();

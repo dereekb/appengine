@@ -1,4 +1,4 @@
-package com.dereekb.gae.test.app.web.api.model;
+package com.dereekb.gae.test.app.web.api.model.system;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -7,6 +7,7 @@ import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.model.pointer.search.query.LoginPointerQueryInitializer.ObjectifyLoginPointerQuery;
 import com.dereekb.gae.server.auth.security.login.LoginPointerService;
+import com.dereekb.gae.server.auth.security.login.exception.LoginDisabledException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.datastore.models.keys.ModelKey;
 import com.dereekb.gae.server.datastore.objectify.ObjectifyRegistry;
@@ -54,13 +55,20 @@ public class LoginPointerServiceImpl
 
 	// MARK: LoginPointerService
 	@Override
-	public LoginPointer getLoginPointer(ModelKey key) {
-		return this.registry.get(key);
+	public LoginPointer getLoginPointer(ModelKey key) throws LoginDisabledException {
+		LoginPointer pointer = this.registry.get(key);
+
+		if (pointer != null && pointer.getDisabled() == true) {
+			throw new LoginDisabledException(pointer);
+		}
+
+		return pointer;
 	}
 
 	@Override
 	public LoginPointer getOrCreateLoginPointer(ModelKey key,
-	                                            LoginPointer template) {
+	                                            LoginPointer template)
+	        throws LoginDisabledException {
 		LoginPointer pointer = this.getLoginPointer(key);
 
 		if (pointer == null) {
@@ -99,7 +107,7 @@ public class LoginPointerServiceImpl
 	}
 
 	@Override
-	public List<LoginPointer> findWithEmail(String email) throws IllegalArgumentException {
+	public List<LoginPointer> findWithEmail(String email) throws LoginDisabledException, IllegalArgumentException {
 
 		if (StringUtility.isEmptyString(email)) {
 			throw new IllegalArgumentException("Email cannot be null or empty.");
@@ -117,7 +125,9 @@ public class LoginPointerServiceImpl
 
 	@Override
 	public LoginPointer findWithEmail(LoginPointerType type,
-	                                  String email) throws IllegalArgumentException {
+	                                  String email)
+	        throws LoginDisabledException,
+	            IllegalArgumentException {
 
 		if (type == null || StringUtility.isEmptyString(email)) {
 			throw new IllegalArgumentException("Both type and email cannot be null.");
@@ -136,7 +146,13 @@ public class LoginPointerServiceImpl
 		if (pointers.isEmpty()) {
 			return null;
 		} else {
-			return pointers.get(0);
+			LoginPointer pointer = pointers.get(0);
+
+			if (pointer.getDisabled()) {
+				throw new LoginDisabledException(pointer);
+			} else {
+				return pointer;
+			}
 		}
 	}
 

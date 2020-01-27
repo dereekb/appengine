@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.dereekb.gae.server.auth.security.context.exception.NoSecurityContextException;
+import com.dereekb.gae.web.api.auth.exception.ApiLoginDisabledException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginErrorException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginException;
 import com.dereekb.gae.web.api.auth.exception.ApiLoginExistsException;
@@ -52,6 +53,13 @@ public class ApiLoginExceptionHandler {
 	@ResponseStatus(value = HttpStatus.FORBIDDEN)
 	@ExceptionHandler(ApiLoginRejectedException.class)
 	public ApiResponseImpl handleInvalidException(ApiLoginRejectedException exception) {
+		return this.buildErrorResponse(exception);
+	}
+
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.FORBIDDEN)
+	@ExceptionHandler(ApiLoginDisabledException.class)
+	public ApiResponseImpl handleDisabledException(ApiLoginDisabledException exception) {
 		return this.buildErrorResponse(exception);
 	}
 

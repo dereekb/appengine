@@ -28,6 +28,7 @@ public final class LoginPointerDataReader extends OwnedDatabaseModelDataReader<L
 		// Data
 		model.setEmail(input.getEmail());
 		model.setTypeId(input.getType());
+		model.setDisabled(input.getDisabled());
 
 		// Links
 		model.setLogin(LOGIN_KEY_UTIL.keyFromId(input.getLogin()));

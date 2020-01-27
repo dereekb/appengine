@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.security.login.oauth;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.security.login.exception.LoginDisabledException;
 import com.dereekb.gae.server.auth.security.login.oauth.exception.OAuthInsufficientException;
 
 /**
@@ -19,9 +20,14 @@ public interface OAuthLoginService {
 	 * @param authCode
 	 *            {@link OAuthAuthorizationInfo}. Never {@code null}.
 	 * @return {@link LoginPointer}. Never {@code null}.
+	 *
+	 * @throws LoginDisabledException
+	 *             if the login is disabled.
 	 * @throws OAuthInsufficientException
 	 *             if the input is unacceptable.
 	 */
-	public LoginPointer login(OAuthAuthorizationInfo authorizationInfo) throws OAuthInsufficientException;
+	public LoginPointer login(OAuthAuthorizationInfo authorizationInfo)
+	        throws LoginDisabledException,
+	            OAuthInsufficientException;
 
 }

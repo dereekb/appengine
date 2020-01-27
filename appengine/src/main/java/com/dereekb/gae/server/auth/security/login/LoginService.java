@@ -1,6 +1,7 @@
 package com.dereekb.gae.server.auth.security.login;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
+import com.dereekb.gae.server.auth.security.login.exception.LoginDisabledException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 
 /**
@@ -18,10 +19,13 @@ public interface LoginService {
 	 * @param username
 	 *            Username. Never {@code null}.
 	 * @return {@Link LoginPointer} if it exists.
+	 *
+	 * @throws LoginDisabledException
+	 *             thrown if the {@link LoginPointer} is disabled.
 	 * @throws LoginUnavailableException
 	 *             Thrown if the {@link LoginPointer} for the username does not
 	 *             exist.
 	 */
-	public LoginPointer getLogin(String username) throws LoginUnavailableException;
+	public LoginPointer getLogin(String username) throws LoginDisabledException, LoginUnavailableException;
 
 }

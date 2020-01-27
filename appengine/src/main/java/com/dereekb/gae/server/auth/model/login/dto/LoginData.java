@@ -1,7 +1,6 @@
 package com.dereekb.gae.server.auth.model.login.dto;
 
 import java.util.Date;
-import java.util.List;
 
 import com.dereekb.gae.model.extension.links.descriptor.impl.dto.DescribedDatabaseModelData;
 import com.dereekb.gae.server.auth.model.login.Login;
@@ -23,11 +22,13 @@ public class LoginData extends DescribedDatabaseModelData {
 
 	private Date authReset;
 
+	private Boolean root;
+
 	private Integer group;
 
 	private Long roles;
 
-	private List<String> pointers;
+	private Boolean disabled;
 
 	public LoginData() {}
 
@@ -77,18 +78,20 @@ public class LoginData extends DescribedDatabaseModelData {
 		this.roles = roles;
 	}
 
-	public List<String> getPointers() {
-		return this.pointers;
+	public Boolean getDisabled() {
+		return this.disabled;
 	}
 
-	public void setPointers(List<String> pointers) {
-		this.pointers = pointers;
+	public void setDisabled(Boolean disabled) {
+		this.disabled = disabled;
 	}
 
-	@Override
-	public String toString() {
-		return "LoginData [group=" + this.group + ", roles=" + this.roles + ", pointers=" + this.pointers
-		        + ", key=" + this.key + ", created=" + this.date + "]";
+	public Boolean getRoot() {
+		return this.root;
+	}
+
+	public void setRoot(Boolean root) {
+		this.root = root;
 	}
 
 }

@@ -2,6 +2,7 @@ package com.dereekb.gae.server.auth.security.login.password;
 
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.login.exception.InvalidLoginCredentialsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginDisabledException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.auth.security.login.password.exception.PasswordRestrictionException;
@@ -54,11 +55,14 @@ public interface PasswordLoginService {
 	 * @param pair
 	 *            {@link PasswordLoginPair}. Never {@code null}.
 	 * @return {@link LoginPointer} for the input credentials.
+	 *
+	 * @throws LoginDisabledException
 	 * @throws LoginUnavailableException
 	 * @throws InvalidLoginCredentialsException
 	 */
 	public LoginPointer login(PasswordLoginPair pair)
-	        throws LoginUnavailableException,
+	        throws LoginDisabledException,
+	            LoginUnavailableException,
 	            InvalidLoginCredentialsException;
 
 }

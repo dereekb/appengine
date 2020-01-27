@@ -26,6 +26,7 @@ public final class LoginPointerDataBuilder extends OwnedDatabaseModelDataBuilder
 		// Data
 		data.setEmail(input.getEmail());
 		data.setType(input.getTypeId());
+		data.setDisabled(input.getDisabled());
 
 		// Links
 		data.setLogin(ObjectifyKeyUtility.readKeyIdentifier(input.getLogin()));

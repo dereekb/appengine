@@ -96,6 +96,12 @@ public class LoginPointer extends OwnedDatabaseModel
 	@IgnoreSave({ IfNull.class, IfFalse.class })
 	private Boolean verified = false;
 
+	/**
+	 * Whether or not this login pointer is disabled.
+	 */
+	@IgnoreSave({ IfNull.class, IfFalse.class })
+	private Boolean disabled = false;
+
 	public LoginPointer() {}
 
 	public LoginPointer(String identifier) {
@@ -189,6 +195,14 @@ public class LoginPointer extends OwnedDatabaseModel
 
 	public void setVerified(Boolean verified) {
 		this.verified = verified;
+	}
+
+	public Boolean getDisabled() {
+		return this.disabled;
+	}
+
+	public void setDisabled(Boolean disabled) {
+		this.disabled = disabled;
 	}
 
 	// Unique Model

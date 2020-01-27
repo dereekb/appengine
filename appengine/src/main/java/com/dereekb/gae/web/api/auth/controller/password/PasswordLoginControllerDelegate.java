@@ -1,6 +1,7 @@
 package com.dereekb.gae.web.api.auth.controller.password;
 
 import com.dereekb.gae.server.auth.security.login.exception.InvalidLoginCredentialsException;
+import com.dereekb.gae.server.auth.security.login.exception.LoginDisabledException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginExistsException;
 import com.dereekb.gae.server.auth.security.login.exception.LoginUnavailableException;
 import com.dereekb.gae.server.auth.security.login.password.PasswordLoginPair;
@@ -36,13 +37,17 @@ public interface PasswordLoginControllerDelegate
 	 * @param pair
 	 *            {@link PasswordLoginPair}. Never {@code null}.
 	 * @return {@link LoginTokenPair}. Never {@code null}.
+	 *
+	 * @throws LoginDisabledException
+	 *             thrown if the login is disabled.
 	 * @throws InvalidLoginCredentialsException
 	 *             thrown if the wrong username/password pair is entered.
 	 * @throws LoginUnavailableException
 	 *             thrown if the login is not available.s
 	 */
 	public LoginTokenPair login(PasswordLoginPair pair)
-	        throws LoginUnavailableException,
+	        throws LoginDisabledException,
+	            LoginUnavailableException,
 	            InvalidLoginCredentialsException;
 
 }
