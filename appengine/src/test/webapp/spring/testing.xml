@@ -16,7 +16,9 @@
     </constructor-arg>
   </bean>
   <bean class="com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig" id="localMemcacheServiceTestConfig"/>
-  <bean class="com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig" id="localBlobstoreServiceTestConfig"/>
+  <bean class="com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig" id="localBlobstoreServiceTestConfig">
+    <property name="noStorage" value="true"/>
+  </bean>
   <bean factory-bean="localDatastoreServiceTestConfigFactory" factory-method="make" id="localDatastoreServiceTestConfig"/>
   <bean class="com.dereekb.gae.test.app.mock.google.LocalDatastoreServiceTestConfigFactory" id="localDatastoreServiceTestConfigFactory">
     <property name="noStorage" value="true"/>

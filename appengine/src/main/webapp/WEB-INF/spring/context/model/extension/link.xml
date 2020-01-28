@@ -10,30 +10,30 @@
   </bean>
   <!--Entries-->
   <util:list id="linkSystemEntries">
-    <ref bean="fooLinkSystemBuilderEntry"/>
-    <ref bean="loginPointerLinkSystemBuilderEntry"/>
-    <ref bean="loginKeyLinkSystemBuilderEntry"/>
-    <ref bean="appLinkSystemBuilderEntry"/>
-    <ref bean="appHookLinkSystemBuilderEntry"/>
     <ref bean="loginLinkSystemBuilderEntry"/>
+    <ref bean="appLinkSystemBuilderEntry"/>
+    <ref bean="fooLinkSystemBuilderEntry"/>
+    <ref bean="loginKeyLinkSystemBuilderEntry"/>
+    <ref bean="appHookLinkSystemBuilderEntry"/>
+    <ref bean="loginPointerLinkSystemBuilderEntry"/>
   </util:list>
   <!--Accessors-->
-  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="fooLinkModelAccessor">
-    <constructor-arg index="0" ref="fooType"/>
-  </bean>
-  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="loginPointerLinkModelAccessor">
-    <constructor-arg index="0" ref="loginPointerType"/>
-  </bean>
-  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="loginKeyLinkModelAccessor">
-    <constructor-arg index="0" ref="loginKeyType"/>
+  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="loginLinkModelAccessor">
+    <constructor-arg index="0" ref="loginType"/>
   </bean>
   <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="appLinkModelAccessor">
     <constructor-arg index="0" ref="appType"/>
   </bean>
+  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="fooLinkModelAccessor">
+    <constructor-arg index="0" ref="fooType"/>
+  </bean>
+  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="loginKeyLinkModelAccessor">
+    <constructor-arg index="0" ref="loginKeyType"/>
+  </bean>
   <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="appHookLinkModelAccessor">
     <constructor-arg index="0" ref="appHookType"/>
   </bean>
-  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="loginLinkModelAccessor">
-    <constructor-arg index="0" ref="loginType"/>
+  <bean factory-bean="linkModificationSystemBuilder" factory-method="getAccessorForType" id="loginPointerLinkModelAccessor">
+    <constructor-arg index="0" ref="loginPointerType"/>
   </bean>
 </beans>

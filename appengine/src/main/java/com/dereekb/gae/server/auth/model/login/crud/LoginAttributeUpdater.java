@@ -24,9 +24,9 @@ public class LoginAttributeUpdater
 		}
 
 		// Auth Reset
-		Date authReset = target.getAuthReset();
+		Date authReset = template.getAuthReset();
 
-		if (authReset != null) {
+		if (authReset != null && !authReset.equals(target.getAuthReset())) {
 			if (DateUtility.dateIsAfterDate(authReset, target.getAuthReset())) {
 				target.setAuthReset(new Date());
 			} else {
@@ -37,22 +37,19 @@ public class LoginAttributeUpdater
 
 		// Disable
 		if (template.getDisabled() != null) {
-			if (template.getDisabled() == true && target.getDisabled() == false) {
+			if (target.getDisabled() != template.getDisabled()) {
 
 				if (!LoginSecurityContext.isAdministrator()) {
-					throw new InvalidAttributeException("disabled", true, "You are not allowed to disable this.",
+					throw new InvalidAttributeException("disabled", true, "You are not allowed to disable accounts.",
 					        DISABLING_DISALLOWED_CODE);
 				} else {
-					target.setDisabled(true);
-					target.setDisabledSync(false);
+					target.setDisabled(template.getDisabled());
 
 					String disabledReason = template.getDisabledReason();
 
 					if (disabledReason != null) {
 						target.setDisabledReason(disabledReason);
 					}
-
-					target.setAuthReset(new Date());
 				}
 			}
 		}

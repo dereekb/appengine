@@ -12,20 +12,21 @@ public class LoginPointerAttributeUpdater
 
 	@Override
 	public void updateTarget(LoginPointer target,
-	                         LoginPointer template) throws InvalidAttributeException {
+	                         LoginPointer template)
+	        throws InvalidAttributeException {
 
 		// TODO: Update using delegate depending on the type of the login
 		// pointer.
 
 		// Disable
 		if (template.getDisabled() != null) {
-			if (template.getDisabled() == true && target.getDisabled() == false) {
+			if (template.getDisabled() != target.getDisabled()) {
 
 				if (!LoginSecurityContext.isAdministrator()) {
 					throw new InvalidAttributeException("disabled", true, "You are not allowed to disable this.",
 					        DISABLING_DISALLOWED_CODE);
 				} else {
-					template.setDisabled(true);
+					template.setDisabled(template.getDisabled());
 				}
 			}
 		}

@@ -9,6 +9,7 @@
         <entry key="update" value-ref="loginTaskQueuePostUpdateTask"/>
         <entry key="delete" value-ref="loginTaskQueueProcessDeleteTask"/>
         <!--TASKS-->
+        <entry key-ref="loginLoginPointerDisableSyncTaskKey" value-ref="loginLoginPointerDisableSyncTask"/>
       </map>
     </constructor-arg>
   </bean>
@@ -36,6 +37,7 @@
             </bean>
           </constructor-arg>
         </bean>
+        <ref bean="loginLoginPointerDisableSyncTask"/>
       </list>
     </constructor-arg>
   </bean>
@@ -55,4 +57,19 @@
     </constructor-arg>
   </bean>
   <!--Iterate Controller Tasks-->
+  <!--LoginLoginPointerDisableSync Task-->
+  <!-- - - - - -->
+  <bean class="java.lang.String" id="loginLoginPointerDisableSyncTaskKey">
+    <constructor-arg index="0" value="loginLoginPointerDisableSync"/>
+  </bean>
+  <bean class="com.dereekb.gae.server.auth.model.login.taskqueue.updater.LoginLoginPointerDisableSyncTask" id="loginLoginPointerDisableSync">
+    <constructor-arg index="0" ref="loginRegistry"/>
+    <constructor-arg index="1" ref="loginPointerRegistry"/>
+    <constructor-arg index="2" ref="loginPointerConfiguredUpdater"/>
+  </bean>
+  <bean class="com.dereekb.gae.model.taskqueue.updater.task.RelatedModelUpdateTask" id="loginLoginPointerDisableSyncTask">
+    <constructor-arg index="0" value="UPDATE"/>
+    <constructor-arg index="1" ref="loginLoginPointerDisableSync"/>
+  </bean>
+  <!-- - - - - -->
 </beans>

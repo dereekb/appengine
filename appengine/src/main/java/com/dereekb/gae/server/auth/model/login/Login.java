@@ -98,9 +98,12 @@ public final class Login extends DescribedDatabaseModel
 
 	/**
 	 * Whether or not the disabling has been synchronized.
+	 * <p>
+	 * {@code true} means it is synchronized as not disabled. {@code false}
+	 * means it is synchronized as disabled.
 	 */
 	@IgnoreSave({ IfNull.class, IfTrue.class })
-	private boolean disabledSync = true;
+	private Boolean disabledSyncState = true;
 
 	/**
 	 * Parent Logins that have access to this login.
@@ -146,10 +149,6 @@ public final class Login extends DescribedDatabaseModel
 	}
 
 	public void setAuthReset(Date authReset) {
-		if (authReset == null) {
-			throw new IllegalArgumentException("AuthReset time cannot be null.");
-		}
-
 		this.authReset = authReset;
 	}
 
@@ -202,12 +201,24 @@ public final class Login extends DescribedDatabaseModel
 		this.disabledReason = disabledReason;
 	}
 
-	public boolean isDisabledSync() {
-		return this.disabledSync;
+	public Boolean getDisabledSyncState() {
+		return this.disabledSyncState;
 	}
 
-	public void setDisabledSync(boolean disabledSync) {
-		this.disabledSync = disabledSync;
+	public void setDisabledSyncState(Boolean disabledSyncState) {
+		this.disabledSyncState = disabledSyncState;
+	}
+
+	/**
+	 * The login is properly synchronized when the disabled state is the
+	 * opposite of done.
+	 */
+	public boolean isSynchronized() {
+		return this.getDisabledSyncState() != this.getDisabled();
+	}
+
+	public void setSynchronized() {
+		this.disabledSyncState = !this.disabled;
 	}
 
 	public Set<Key<Login>> getParents() {

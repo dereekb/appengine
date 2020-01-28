@@ -149,6 +149,26 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 
 	}
 
+	public class BasicTestingInstance extends AbstractTestingInstance<BasicTestUserSetupImpl> {
+
+		public final LoginTestingInstance login = new LoginTestingInstance();
+
+		public BasicTestingInstance(BasicTestUserSetupImpl testUser) {
+			super(testUser);
+		}
+
+		public BasicTestingInstance(BasicTestUserSetupImpl testUser, ClientRequestSecurity security) {
+			super(testUser, security);
+		}
+
+		// MARK: AbstractTestingInstance
+		@Override
+		protected BasicTestingInstance withContext(ClientRequestSecurity security) {
+			return new BasicTestingInstance(this.testUser, security);
+		}
+
+	}
+
 	public abstract class AbstractTestingInstance<U extends TestingInstanceObject>
 	        implements TestingInstanceObject {
 
@@ -208,7 +228,8 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 			        ClientCreateRequestSender<T> createRequestSender,
 			        ClientUpdateRequestSender<T> updateRequestSender,
 			        ClientDeleteRequestSender<T> deleteRequestSender) {
-				this(readRequestSender, queryRequestSender, createRequestSender, updateRequestSender, deleteRequestSender, null);
+				this(readRequestSender, queryRequestSender, createRequestSender, updateRequestSender,
+				        deleteRequestSender, null);
 			}
 
 			public AbstractModelTestingInstance(ClientReadRequestSender<T> readRequestSender,
@@ -461,7 +482,8 @@ public abstract class AbstractModelClientTests extends AbstractAppTestingContext
 
 			public SerializedClientTypedModelSearchApiResponse<T> sendSearch(TypedModelSearchServiceRequest searchRequest) {
 				try {
-					return this.searchRequestSender.sendRequest(searchRequest, AbstractTestingInstance.this.getSecurity());
+					return this.searchRequestSender.sendRequest(searchRequest,
+					        AbstractTestingInstance.this.getSecurity());
 				} catch (ClientRequestFailureException e) {
 					e.printStackTrace();
 					fail("Failed search.");
