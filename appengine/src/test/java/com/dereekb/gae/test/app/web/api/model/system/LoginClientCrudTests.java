@@ -1,5 +1,7 @@
 package com.dereekb.gae.test.app.web.api.model.system;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -14,8 +16,8 @@ import com.dereekb.gae.test.model.extension.generator.TestModelGenerator;
 /**
  * {@link AbstractServerModelRequestSenderTests} tests for {@link Login}.
  * <p>
- * These tests are available for other applications, but mainly serve as tests to capture
- * any potential API changes/bugs.
+ * These tests are available for other applications, but mainly serve as tests
+ * to capture any potential API changes/bugs.
  *
  * @author dereekb
  *
@@ -59,6 +61,21 @@ public class LoginClientCrudTests extends AbstractServerModelRequestSenderTests<
 
 	public LoginClientCrudTests() {
 		this.setCanCreateModel(false);
+	}
+
+	// MARK: Overrides
+	@Override
+	@Disabled
+	@Test
+	public void testNonAtomicModelClientUnavailableRequest() throws Exception {
+		// Skip.
+	}
+
+	@Override
+	@Disabled
+	@Test
+	public void testAtomicModelClientUpdateSingleRequest() throws Exception {
+		// Skip.
 	}
 
 }
