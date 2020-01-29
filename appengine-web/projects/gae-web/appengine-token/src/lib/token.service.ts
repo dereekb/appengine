@@ -73,6 +73,7 @@ export abstract class UserLoginTokenService {
   abstract isAuthenticated(): Observable<boolean>;
   abstract getAuthenticationState(): Observable<TokenAuthenticationState>;
   abstract getEncodedLoginToken(): Observable<EncodedToken>;
+  abstract getRefreshToken(): Observable<LoginTokenPair>;
   abstract getLoginToken(): Observable<LoginTokenPair>;
 
   /**
@@ -164,7 +165,13 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
 
   public getLoginToken(): Observable<LoginTokenPair | undefined> {
     return this.servicePairObs.pipe(
-      map(x => (x.token) ? x.token : undefined)
+      map(x => x.token)
+    );
+  }
+
+  public getRefreshToken(): Observable<LoginTokenPair | undefined> {
+    return this.servicePairObs.pipe(
+      map(x => x.refreshToken)
     );
   }
 
@@ -508,6 +515,10 @@ export class BasicTokenUserService implements UserLoginTokenService {
     return this._token.asObservable();
   }
 
+  getRefreshToken(): Observable<LoginTokenPair> {
+    return this._token.asObservable();
+  }
+
   login(fullToken: LoginTokenPair, selector?: AppTokenKeySelector): Observable<LoginTokenPair> {
     return new Observable((x) => {
       this._token.next(fullToken);
@@ -601,6 +612,12 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
     );
   }
 
+  public getRefreshToken(): Observable<LoginTokenPair> {
+    return this.getOrLoadAppTokenUserServicePair().pipe(
+      map((x) => x.refreshToken)
+    );
+  }
+  
   public getLoginTokenStream(): Observable<LoginTokenPair> {
     return this.getRawLoginTokenStream().pipe(
       filter((x) => Boolean(x))
