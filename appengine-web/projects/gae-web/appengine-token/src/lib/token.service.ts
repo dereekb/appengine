@@ -14,6 +14,14 @@ import { DateTime } from 'luxon';
 
 // Service
 /**
+ * Options for logging in.
+ */
+export interface UserLoginTokenAuthenticatorLoginOptions {
+  noRoles?: boolean;
+  rolesMask?: number;
+}
+
+/**
  * Class Interface used by the UserLoginTokenService to authenticate and rerieve refresh tokens.
  */
 export abstract class UserLoginTokenAuthenticator {
@@ -26,8 +34,9 @@ export abstract class UserLoginTokenAuthenticator {
   /**
    * Requests an authentication token using the input encoded refresh token.
    * @param encodedToken EncodedRefreshToken
+   * @param options UserLoginTokenAuthenticatorLoginOptions
    */
-  abstract loginWithRefreshToken(encodedToken: EncodedRefreshToken): Observable<LoginTokenPair>;
+  abstract loginWithRefreshToken(encodedToken: EncodedRefreshToken, options?: UserLoginTokenAuthenticatorLoginOptions): Observable<LoginTokenPair>;
 }
 
 export enum TokenAuthenticationState {
@@ -67,9 +76,14 @@ export abstract class UserLoginTokenService {
   abstract getLoginToken(): Observable<LoginTokenPair>;
 
   /**
-   * Optional function that requests that the refresh token to be refreshed.
+   * Optional function that requests that the login token to be refreshed.
    */
-  abstract refreshLoginToken?(): boolean;
+  abstract refreshLoginToken?(): void;
+
+  /**
+   * Sets the new login options. Existing login token should be refreshed to reflect changes.
+   */
+  abstract setLoginOptions?(options: UserLoginTokenAuthenticatorLoginOptions | undefined);
 
   abstract login(fullToken: LoginTokenPair, selector?: AppTokenKeySelector): Observable<LoginTokenPair>;
   abstract logout(): Observable<boolean>;
@@ -93,14 +107,19 @@ export class AppTokenUserServicePair extends LimitedAppTokenUserServicePair {
   public tokenError?: Error;
 }
 
+
 /**
  * Shiny new UserLoginTokenService implementation.
  */
 @Injectable()
 export class AsyncAppTokenUserService implements UserLoginTokenService {
 
+  private static readonly DEFAULT_LOGIN_OPTIONS = {
+    noRoles: true // By default log in with no roles.
+  };
+
   private _selector = new BehaviorSubject<AppTokenKeySelector>(undefined);
-  private _tokenRefresher = new BehaviorSubject<boolean>(true);
+  private _loginOptions = new BehaviorSubject<UserLoginTokenAuthenticatorLoginOptions>(AsyncAppTokenUserService.DEFAULT_LOGIN_OPTIONS);
 
   private readonly _pair: Observable<AppTokenUserServicePair>;
 
@@ -147,6 +166,16 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
     return this.servicePairObs.pipe(
       map(x => (x.token) ? x.token : undefined)
     );
+  }
+
+  // MARK: Options and Refresh
+  public refreshLoginToken() {
+    this.selector = this.selector;
+  }
+
+  public setLoginOptions(options) {
+    this._loginOptions.next(options);
+    this.refreshLoginToken();
   }
 
   // MARK: Login / Logout
@@ -335,7 +364,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
 
   /**
    * Attempts to load the limited token pair.
-   * 
+   *
    * Will clear tokens with the given selector if they cannot be retrieved.
    */
   private _loadLimitedAppTokenUserServicePairForSelector(selector: AppTokenKeySelector): Observable<LimitedAppTokenUserServicePair> {
@@ -378,7 +407,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
   }
 
   private _refreshFullToken(selector: AppTokenKeySelector, refreshToken: LoginTokenPair): Observable<LoginTokenPair> {
-    return this._tokenService.loginWithRefreshToken(refreshToken.token).pipe(
+    return this._tokenService.loginWithRefreshToken(refreshToken.token, this._loginOptions.value).pipe(
       // Catch Login Errors
       catchError((e) => {
         if (e instanceof TokenAuthorizationError) {
@@ -493,6 +522,14 @@ export class BasicTokenUserService implements UserLoginTokenService {
       x.next(true);
       x.complete();
     });
+  }
+
+  refreshLoginToken() {
+    this._token.next(this._token.value);
+  }
+
+  setLoginOptions() {
+    // Does nothing.
   }
 
 }

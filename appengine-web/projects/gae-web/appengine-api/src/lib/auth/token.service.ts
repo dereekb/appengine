@@ -10,6 +10,11 @@ import {
 import { ApiResponseJson, ApiResponse } from '../api';
 import { TokenAuthenticationError } from './error';
 
+export interface LoginTokenLoginOptions {
+  noRoles?: boolean;
+  rolesMask?: number;
+}
+
 /**
  * UserLoginTokenAuthenticator implementation.
  */
@@ -63,11 +68,23 @@ export class PublicLoginTokenApiService {
   }
 
   // MARK: Authentication
-  public loginWithRefreshToken(encodedToken: EncodedToken): Observable<LoginTokenPair> {
+  public loginWithRefreshToken(encodedToken: EncodedToken, options?: LoginTokenLoginOptions): Observable<LoginTokenPair> {
     const url = this._servicePath + '/login';
 
     const body = new HttpParams()
       .set('refreshToken', encodedToken);
+
+    if (options) {
+      let rolesMask = options.rolesMask;
+
+      if (!options.rolesMask && options.noRoles) {
+        rolesMask = 0;
+      }
+
+      if (rolesMask !== undefined) {
+        body.set('rolesMask', rolesMask.toString());
+      }
+    }
 
     return this._httpClient.post<LoginTokenPairJson | ApiResponseJson>(url, body, {
       observe: 'response',
