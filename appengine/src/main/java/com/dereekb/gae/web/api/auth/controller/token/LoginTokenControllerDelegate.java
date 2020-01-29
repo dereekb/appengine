@@ -35,11 +35,14 @@ public interface LoginTokenControllerDelegate {
 	 *
 	 * @param refreshToken
 	 *            {@link EncodedLoginToken}. Never {@code null}.
+	 * @param rolesMask
 	 * @return {@link LoginTokenPair}. Never {@code null}.
 	 * @throws RefreshTokenExpiredException
 	 *             thrown if the token has expired.
 	 */
-	public LoginTokenPair loginWithRefreshToken(EncodedLoginToken refreshToken) throws RefreshTokenExpiredException;
+	public LoginTokenPair loginWithRefreshToken(EncodedLoginToken refreshToken,
+	                                            Long rolesMask)
+	        throws RefreshTokenExpiredException;
 
 	/**
 	 * Resets token authentication for the current user, or the target user,

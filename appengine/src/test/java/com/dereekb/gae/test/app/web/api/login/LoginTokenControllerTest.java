@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 
+import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.security.app.service.AppLoginSecurityService;
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
@@ -47,6 +48,10 @@ public class LoginTokenControllerTest extends AbstractAppTestingContext {
 	@Autowired
 	@Qualifier("refreshTokenService")
 	private RefreshTokenServiceImpl refreshTokenService;
+
+	@Autowired
+	@Qualifier("loginRegistry")
+	private ObjectifyRegistry<Login> loginRegistry;
 
 	@Autowired
 	@Qualifier("loginPointerRegistry")
@@ -183,20 +188,52 @@ public class LoginTokenControllerTest extends AbstractAppTestingContext {
 
 		testUtility.setLoginPointerDisabled(this.loginPointerRegistry, ModelKey.safe(loginPointerId));
 
-
 		MvcResult loginResult = testUtility.sendLoginWithPassword(TEST_USERNAME, TEST_PASSWORD);
 		MockHttpServletResponse response = loginResult.getResponse();
 
 		assertFalse(response.getStatus() == 200);
 
 		/*
-		// Authenticating with existing refresh tokens is still valid. The authDate invalidates them.
+		 * // Authenticating with existing refresh tokens is still valid. The
+		 * authDate invalidates them.
+		 *
+		 * MvcResult reauthTokenResult =
+		 * testUtility.sendAuthWithRefreshToken(refreshToken);
+		 * MockHttpServletResponse response = reauthTokenResult.getResponse();
+		 *
+		 * assertFalse(response.getStatus() == 200);
+		 */
+	}
 
-		MvcResult reauthTokenResult = testUtility.sendAuthWithRefreshToken(refreshToken);
-		MockHttpServletResponse response = reauthTokenResult.getResponse();
+	@Test
+	public void testLoginWithPermissionsMask() throws Exception {
 
-		assertFalse(response.getStatus() == 200);
-		*/
+		// Create a password LoginPointer/Token
+		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
+		String token = testUtility.createPasswordLogin(TEST_USERNAME, TEST_PASSWORD);
+
+		// Register
+		String fullUserToken = testUtility.register(token);
+
+		// Get a refresh token.
+		String refreshToken = testUtility.getRefreshToken(fullUserToken);
+
+		DecodedLoginToken<LoginTokenImpl> decodedRefreshToken = this.refreshEncoderDecoder
+		        .decodeLoginToken(refreshToken);
+		Long loginId = decodedRefreshToken.getLoginToken().getLoginId();
+
+		Login login = this.loginRegistry.get(ModelKey.safe(loginId));
+		login.setRoles(0x1111L);
+		this.loginRegistry.update(login);
+
+		Long rolesMask = 0x0110L;
+
+		String loginToken = testUtility.authWithRefreshToken(refreshToken, rolesMask);
+
+		DecodedLoginToken<LoginToken> decodedLoginToken = this.loginTokenService.decodeLoginToken(loginToken);
+
+		Long roles = decodedLoginToken.getLoginToken().getRoles();
+		assertTrue(roles.equals(rolesMask));
 	}
 
 }

@@ -116,14 +116,13 @@ public class SystemLoginTokenServiceImpl
 		templateToken.setExpiration(expiresIn);
 		templateToken.setRefreshAllowed(false);
 
-
 		LoginToken token = this.dencoder.makeToken(templateToken);
 		return new SystemTokenResponseImpl(token);
 	}
 
 	public Long maskRoles(Long roles) {
 		if (roles == null) {
-			return this.rolesMask;
+			return 0L;	// No roles if none provided.
 		} else {
 			LongBitContainer mask = new LongBitContainer(this.getRolesMask());
 			return mask.and(roles);

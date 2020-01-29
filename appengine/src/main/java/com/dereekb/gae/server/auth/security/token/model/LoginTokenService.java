@@ -38,6 +38,18 @@ public interface LoginTokenService<T extends LoginToken>
 	 *
 	 * @param pointer
 	 *            {@link LoginPointer}. Never {@code null}.
+	 * @param options
+	 *            {@link LoginTokenBuilderOptions}. Never {@code null}.
+	 * @return Encoded string token. Never {@code null}.
+	 */
+	public String encodeLoginToken(LoginPointer pointer,
+	                               LoginTokenBuilderOptions options);
+
+	/**
+	 * Builds and encodes a {@link LoginToken} from a {@link LoginPointer}.
+	 *
+	 * @param pointer
+	 *            {@link LoginPointer}. Never {@code null}.
 	 * @param login
 	 *            {@link Login} for the pointer. May be {@code null} if the
 	 *            pointer has no login yet.
@@ -48,5 +60,21 @@ public interface LoginTokenService<T extends LoginToken>
 	public String encodeLoginToken(LoginPointer pointer,
 	                               Login login,
 	                               boolean refreshAllowed);
+
+	/**
+	 * Builds and encodes a {@link LoginToken} from a {@link LoginPointer}.
+	 *
+	 * @param pointer
+	 *            {@link LoginPointer}. Never {@code null}.
+	 * @param login
+	 *            {@link Login} for the pointer. May be {@code null} if the
+	 *            pointer has no login yet.
+	 * @param options
+	 *            {@link LoginTokenBuilderOptions}. Never {@code null}.
+	 * @return Encoded string token. Never {@code null}.
+	 */
+	public String encodeLoginToken(LoginPointer pointer,
+	                               Login login,
+	                               LoginTokenBuilderOptions options);
 
 }

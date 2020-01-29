@@ -7,6 +7,7 @@ import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedExc
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilder;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilderOptions;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
 
@@ -85,9 +86,24 @@ public class LoginTokenServiceImpl<T extends LoginToken>
 
 	@Override
 	public String encodeLoginToken(LoginPointer pointer,
+	                               LoginTokenBuilderOptions options) {
+		T token = this.buildLoginToken(pointer, options);
+		return this.encodeLoginToken(token);
+	}
+
+	@Override
+	public String encodeLoginToken(LoginPointer pointer,
 	                               Login login,
 	                               boolean refreshAllowed) {
 		T token = this.buildLoginToken(pointer, login, refreshAllowed);
+		return this.encodeLoginToken(token);
+	}
+
+	@Override
+	public String encodeLoginToken(LoginPointer pointer,
+	                               Login login,
+	                               LoginTokenBuilderOptions options) {
+		T token = this.buildLoginToken(pointer, login, options);
 		return this.encodeLoginToken(token);
 	}
 
@@ -99,9 +115,22 @@ public class LoginTokenServiceImpl<T extends LoginToken>
 
 	@Override
 	public T buildLoginToken(LoginPointer pointer,
+	                         LoginTokenBuilderOptions options) {
+		return this.builder.buildLoginToken(pointer, options);
+	}
+
+	@Override
+	public T buildLoginToken(LoginPointer pointer,
 	                         Login login,
 	                         boolean refreshAllowed) {
 		return this.builder.buildLoginToken(pointer, login, refreshAllowed);
+	}
+
+	@Override
+	public T buildLoginToken(LoginPointer pointer,
+	                         Login login,
+	                         LoginTokenBuilderOptions options) {
+		return this.builder.buildLoginToken(pointer, login, options);
 	}
 
 	@Override

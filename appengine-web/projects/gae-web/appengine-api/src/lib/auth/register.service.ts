@@ -50,7 +50,6 @@ export class RegisterApiService {
     if ((error instanceof NoLoginSetError)) {
       throw new ApiJwtConfigurationError(`The OAuthLoginApiService's routes are not blacklisted.`);
     } else if (error instanceof HttpResponse) {
-
       let registrationError;
 
       if (error.body) {

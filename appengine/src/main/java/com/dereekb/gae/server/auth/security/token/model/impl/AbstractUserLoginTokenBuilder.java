@@ -5,6 +5,7 @@ import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.login.misc.loader.LoginUserLoader;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilderOptions;
 import com.dereekb.gae.server.datastore.Getter;
 
 /**
@@ -54,23 +55,30 @@ public abstract class AbstractUserLoginTokenBuilder<U, T extends LoginTokenImpl>
 	@Override
 	public T buildLoginToken(LoginPointer pointer,
 	                         boolean refreshAllowed) {
-		T loginToken = this.makeLoginToken();
-		loginToken.setRefreshAllowed(refreshAllowed);
+		return this.buildLoginToken(pointer, new LoginTokenBuilderOptionsImpl(refreshAllowed));
+	}
 
-		this.initLoginToken(loginToken, pointer);
+	@Override
+	public T buildLoginToken(LoginPointer pointer,
+	                         LoginTokenBuilderOptions options) {
+		T loginToken = this.makeLoginToken();
+		loginToken.setRefreshAllowed(options.getRefreshAllowed() || false);
+
+		this.initLoginToken(loginToken, pointer, options);
 
 		return loginToken;
 	}
 
 	@Override
 	protected void initLoginTokenWithLogin(T loginToken,
-	                                       Login login) {
-		super.initLoginTokenWithLogin(loginToken, login);
+	                                       Login login,
+	                                       LoginTokenBuilderOptions options) {
+		super.initLoginTokenWithLogin(loginToken, login, options);
 
 		if (login != null) {
 			try {
 				U user = this.userLoader.loadUserForLogin(login);
-				this.initLoginTokenWithUser(loginToken, user);
+				this.initLoginTokenWithUser(loginToken, user, options);
 			} catch (UnavailableModelException e) {
 				// Do nothing?
 			}
@@ -78,7 +86,8 @@ public abstract class AbstractUserLoginTokenBuilder<U, T extends LoginTokenImpl>
 	}
 
 	protected abstract void initLoginTokenWithUser(T loginToken,
-	                                               U user);
+	                                               U user,
+	                                               LoginTokenBuilderOptions options);
 
 	@Override
 	protected abstract T newLoginToken();

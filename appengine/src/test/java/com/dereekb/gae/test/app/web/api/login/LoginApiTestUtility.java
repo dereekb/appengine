@@ -69,14 +69,27 @@ public class LoginApiTestUtility {
 	}
 
 	public String authWithRefreshToken(String token) throws Exception {
-		MvcResult result = this.sendAuthWithRefreshToken(token);
+		return this.authWithRefreshToken(token, null);
+	}
+
+	public String authWithRefreshToken(String token, Long rolesMask) throws Exception {
+		MvcResult result = this.sendAuthWithRefreshToken(token, rolesMask);
 		return this.getTokenFromResponse(result);
 	}
 
 	public MvcResult sendAuthWithRefreshToken(String token) throws Exception {
+		return this.sendAuthWithRefreshToken(token, null);
+	}
+
+	public MvcResult sendAuthWithRefreshToken(String token, Long rolesMask) throws Exception {
 		WebServiceRequestBuilder serviceRequestBuilder = this.webServiceTester.getRequestBuilder();
 		MockHttpServletRequestBuilder loginRequestBuilder = serviceRequestBuilder.post("/login/auth/token/login");
 		loginRequestBuilder.param("refreshToken", token);
+
+		if (rolesMask != null) {
+			loginRequestBuilder.param("rolesMask", rolesMask.toString());
+		}
+
 		loginRequestBuilder.contentType("application/x-www-form-urlencoded");
 
 		MvcResult result = this.webServiceTester.mockMvcPerform(loginRequestBuilder).andReturn();

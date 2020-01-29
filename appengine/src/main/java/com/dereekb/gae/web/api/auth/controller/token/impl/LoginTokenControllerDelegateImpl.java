@@ -15,8 +15,10 @@ import com.dereekb.gae.server.auth.security.token.exception.TokenUnauthorizedExc
 import com.dereekb.gae.server.auth.security.token.model.DecodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.EncodedLoginToken;
 import com.dereekb.gae.server.auth.security.token.model.LoginToken;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilderOptions;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenEncoderDecoder;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenService;
+import com.dereekb.gae.server.auth.security.token.model.impl.LoginTokenBuilderOptionsImpl;
 import com.dereekb.gae.server.auth.security.token.provider.LoginTokenAuthentication;
 import com.dereekb.gae.server.auth.security.token.provider.details.LoginTokenUserDetails;
 import com.dereekb.gae.server.auth.security.token.refresh.RefreshTokenService;
@@ -43,7 +45,7 @@ import io.jsonwebtoken.Claims;
 public class LoginTokenControllerDelegateImpl
         implements LoginTokenControllerDelegate {
 
-	private static final boolean ALLOW_REFRESH = false;
+	private static final boolean DISALLOW_REFRESH = false;
 
 	private LoginTokenEncoderDecoder<LoginToken> refreshTokenEncoderDecoder;
 	private LoginTokenService<LoginToken> loginTokenService;
@@ -166,11 +168,16 @@ public class LoginTokenControllerDelegateImpl
 	}
 
 	@Override
-	public LoginTokenPair loginWithRefreshToken(EncodedLoginToken refreshToken) throws RefreshTokenExpiredException {
+	public LoginTokenPair loginWithRefreshToken(EncodedLoginToken refreshToken,
+	                                            Long rolesMask)
+	        throws RefreshTokenExpiredException {
 		DecodedLoginToken<LoginToken> decodedLoginToken = this.refreshTokenEncoderDecoder
 		        .decodeLoginToken(refreshToken.getEncodedLoginToken());
 		LoginPointer pointer = this.refreshTokenService.loadRefreshTokenPointer(decodedLoginToken.getLoginToken());
-		String encodedToken = this.loginTokenService.encodeLoginToken(pointer, ALLOW_REFRESH);
+
+		LoginTokenBuilderOptions options = new LoginTokenBuilderOptionsImpl(DISALLOW_REFRESH, rolesMask);
+
+		String encodedToken = this.loginTokenService.encodeLoginToken(pointer, options);
 		return new LoginTokenPair(encodedToken);
 	}
 

@@ -76,7 +76,7 @@ public final class Login extends DescribedDatabaseModel
 	/**
 	 * A {@link Long} that encodes all roles.
 	 * <p>
-	 * The roles identifiers will differ between systems.
+	 * The roles identifiers may differ between systems.
 	 * <p>
 	 * Should never be null.
 	 */

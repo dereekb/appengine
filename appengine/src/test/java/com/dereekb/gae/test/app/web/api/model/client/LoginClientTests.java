@@ -78,7 +78,7 @@ public class LoginClientTests extends AbstractModelClientTests {
 	}
 
 	/*
-	 * TODO: Test user cannot disable their own account.
+	 * TODO: Test user cannot disable another user's account.
 	 */
 
 }

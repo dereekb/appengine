@@ -143,16 +143,23 @@ public class LoginTokenController {
 	}
 
 	/**
-	 * Authenticate using a refresh token.
+	 * Authenticate using a provided refresh token.
+	 */
+	/**
+	 *
+	 * @param refreshToken
+	 * @param mask
+	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "application/json")
-	public final LoginTokenPair login(@RequestParam("refreshToken") @NotNull String refreshToken) {
+	public final LoginTokenPair login(@RequestParam("refreshToken") @NotNull String refreshToken,
+	                                  @RequestParam(value = "rolesMask", required = false) Long mask) {
 		LoginTokenPair response = null;
 
 		try {
 			EncodedLoginToken encodedToken = new EncodedLoginTokenImpl(refreshToken);
-			response = this.delegate.loginWithRefreshToken(encodedToken);
+			response = this.delegate.loginWithRefreshToken(encodedToken, mask);
 		} catch (TokenException e) {
 			throw e;
 		} catch (RuntimeException e) {

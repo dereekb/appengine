@@ -6,6 +6,7 @@ import com.dereekb.gae.server.auth.model.login.Login;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointer;
 import com.dereekb.gae.server.auth.model.pointer.LoginPointerType;
 import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilder;
+import com.dereekb.gae.server.auth.security.token.model.LoginTokenBuilderOptions;
 
 /**
  * Abstract {@link LoginTokenBuilder} implementation.
@@ -53,10 +54,16 @@ public abstract class AbstractLoginTokenBuilder<T extends LoginTokenImpl>
 	@Override
 	public T buildLoginToken(LoginPointer pointer,
 	                         boolean refreshAllowed) {
-		T loginToken = this.makeLoginToken();
-		loginToken.setRefreshAllowed(refreshAllowed);
+		return this.buildLoginToken(pointer, new LoginTokenBuilderOptionsImpl(refreshAllowed));
+	}
 
-		this.initLoginToken(loginToken, pointer);
+	@Override
+	public T buildLoginToken(LoginPointer pointer,
+	                         LoginTokenBuilderOptions options) {
+		T loginToken = this.makeLoginToken();
+		loginToken.setRefreshAllowed(options.getRefreshAllowed() || false);
+
+		this.initLoginToken(loginToken, pointer, options);
 
 		return loginToken;
 	}
@@ -65,20 +72,29 @@ public abstract class AbstractLoginTokenBuilder<T extends LoginTokenImpl>
 	public T buildLoginToken(LoginPointer pointer,
 	                         Login login,
 	                         boolean refreshAllowed) {
-		T loginToken = this.makeLoginToken();
-		loginToken.setRefreshAllowed(refreshAllowed);
+		return this.buildLoginToken(pointer, login, new LoginTokenBuilderOptionsImpl(refreshAllowed));
+	}
 
-		this.initLoginToken(loginToken, login, pointer);
+	@Override
+	public T buildLoginToken(LoginPointer pointer,
+	                         Login login,
+	                         LoginTokenBuilderOptions options) {
+		T loginToken = this.makeLoginToken();
+		loginToken.setRefreshAllowed(options.getRefreshAllowed() || false);
+
+		this.initLoginToken(loginToken, login, pointer, options);
 
 		return loginToken;
 	}
 
 	protected abstract void initLoginToken(T loginToken,
-	                                       LoginPointer pointer);
+	                                       LoginPointer pointer,
+	                                       LoginTokenBuilderOptions options);
 
 	protected abstract void initLoginToken(T loginToken,
 	                                       Login login,
-	                                       LoginPointer pointer);
+	                                       LoginPointer pointer,
+	                                       LoginTokenBuilderOptions options);
 
 	protected T makeLoginToken() {
 		T loginToken = this.newLoginToken();
