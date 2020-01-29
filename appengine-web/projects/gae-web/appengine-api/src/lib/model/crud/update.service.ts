@@ -39,7 +39,6 @@ export const DEFAULT_UPDATE_OPTIONS: UpdateRequestOptions = {
     atomic: true
 };
 
-@Injectable()
 export class ClientUpdateService<T, O> extends AbstractTemplateCrudService<T, O> implements UpdateService<T> {
 
     constructor(config: CrudServiceConfig<T, O>) {

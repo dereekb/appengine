@@ -37,7 +37,6 @@ export abstract class ReadService<T> {
 }
 
 // MARK: Implementation
-@Injectable()
 export class ClientReadService<T, O> extends AbstractCrudService<T, O> implements ReadService<T> {
 
     public static readonly MAX_KEYS_ALLOWED_PER_REQUEST = 40;

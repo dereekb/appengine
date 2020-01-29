@@ -40,7 +40,6 @@ export function ProvidePageButton<S extends GaePageButton>(sourceType: Type<S>):
 /**
  * Service used to ensure only a single fab is visible at a time.
  */
-@Injectable()
 export class PageFabService {
 
   private _visibleButton = new Subject<GaePageFabComponent | undefined>();

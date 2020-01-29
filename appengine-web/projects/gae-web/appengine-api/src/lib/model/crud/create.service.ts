@@ -37,7 +37,6 @@ export const DEFAULT_CREATE_OPTIONS: CreateRequestOptions = {
     atomic: true
 };
 
-@Injectable()
 export class ClientCreateService<T, O> extends AbstractTemplateCrudService<T, O> implements CreateService<T> {
 
     static readonly MAX_TEMPLATES_ALLOWED_PER_REQUEST = 25;

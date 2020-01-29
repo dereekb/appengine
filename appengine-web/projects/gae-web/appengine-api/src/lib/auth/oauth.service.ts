@@ -10,7 +10,6 @@ import { ApiJwtConfigurationError } from '../error';
 /**
  * Service for interacting with an Appengine OAuth Token service.
  */
-@Injectable()
 export class OAuthLoginApiService {
 
   public static SERVICE_PATH = '/login/auth/oauth';

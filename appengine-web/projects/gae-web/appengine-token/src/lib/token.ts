@@ -54,8 +54,10 @@ export enum LoginPointerType {
 const LOGIN_KEY = 'lgn';
 const LOGIN_POINTER_KEY = 'ptr';
 const LOGIN_POINTER_TYPE_KEY = 'pt';
+const ROLES_KEY = 'r';
 
 export type LoginToken = DecodedFullToken | DecodedRegistrationToken | DecodedRefreshToken;
+export type EncodedLoginTokenRoles = number;
 
 /**
  * Shared LoginToken utility for building LoginTokens from an EncodedToken.
@@ -99,6 +101,7 @@ export abstract class DecodedLoginToken {
 
   private _pair: LoginTokenPair;
   private _pointerType: LoginPointerType;
+  private _roles: EncodedLoginTokenRoles;
 
   constructor(private _encoded: EncodedToken, private _type: TokenType, private _pointer: LoginPointerId, private _raw: any) {
     let typeId: number = this._raw[LOGIN_POINTER_TYPE_KEY];
@@ -108,6 +111,7 @@ export abstract class DecodedLoginToken {
     }
 
     this._pointerType = typeId;
+    this._roles = this._raw[ROLES_KEY];
   }
 
   get encodedToken() {
@@ -124,6 +128,10 @@ export abstract class DecodedLoginToken {
 
   get type() {
     return this._type;
+  }
+
+  get roles() {
+    return this._roles;
   }
 
   get raw() {

@@ -30,6 +30,7 @@ import io.jsonwebtoken.security.SecurityException;
 public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginTokenImpl>
         implements LoginTokenEncoderDecoder<T> {
 
+	public static final String ROLES_KEY = "r";
 	public static final String REFRESH_KEY = "e";
 	public static final String APP_KEY = "app";
 
@@ -95,12 +96,19 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 		claims.setExpiration(expiration);
 
 		String app = loginToken.getApp();
+
 		if (app != null) {
 			claims.put(APP_KEY, app);
 		}
 
 		if (loginToken.isRefreshAllowed()) {
 			claims.put(REFRESH_KEY, true);
+		}
+
+		Long roles = loginToken.getEncodedRoles();
+
+		if (roles != LoginTokenImpl.DEFAULT_ROLES) {
+			claims.put(ROLES_KEY, roles);
 		}
 
 		this.appendClaimsComponents(loginToken, claims);
@@ -166,10 +174,18 @@ public abstract class AbstractBasicLoginTokenImplEncoderDecoder<T extends LoginT
 		String app = claims.get(APP_KEY, String.class);
 		Boolean refreshAllowed = claims.get(REFRESH_KEY, Boolean.class);
 
+		Number rolesNumber = claims.get(ROLES_KEY, Number.class);
+		Long roles = null;
+
+		if (rolesNumber != null) {
+			roles = rolesNumber.longValue();
+		}
+
 		loginToken.setApp(app);
 		loginToken.setSubject(subject);
 		loginToken.setExpiration(expiration);
 		loginToken.setIssued(issued);
+		loginToken.setRoles(roles);
 
 		if (refreshAllowed != null) {
 			loginToken.setRefreshAllowed(refreshAllowed);

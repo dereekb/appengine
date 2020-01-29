@@ -34,7 +34,6 @@ export interface NotificationDeviceResponse {
 /**
  * UserNotificationService implementation
  */
-@Injectable()
 export class ClientUserNotificationService extends AbstractClientService implements UserNotificationService {
 
   constructor(config: ClientServiceConfig) {

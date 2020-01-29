@@ -35,7 +35,6 @@ export class ApiUserLoginTokenAuthenticator implements UserLoginTokenAuthenticat
 /**
  * Service for interacting with an Appengine LoginToken service.
  */
-@Injectable()
 export class PublicLoginTokenApiService {
 
   public static readonly SERVICE_PATH: string = '/login/auth/token';

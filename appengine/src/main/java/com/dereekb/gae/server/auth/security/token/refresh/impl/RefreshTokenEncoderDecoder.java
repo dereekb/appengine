@@ -86,8 +86,6 @@ public class RefreshTokenEncoderDecoder extends AbstractBasicLoginTokenImplEncod
 		if (type != null) {
 			loginToken.setPointerType(LoginPointerType.valueOf(type));
 		}
-
-		loginToken.setRoles(null);
 	}
 
 }

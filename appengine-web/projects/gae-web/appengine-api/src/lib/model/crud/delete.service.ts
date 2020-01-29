@@ -36,7 +36,6 @@ export const DEFAULT_DELETE_OPTIONS: DeleteRequestOptions = {
     atomic: true
 };
 
-@Injectable()
 export class ClientDeleteService<T extends UniqueModel, O> extends AbstractCrudService<T, O> implements DeleteService<T> {
 
     static readonly MAX_KEYS_ALLOWED_PER_REQUEST = 25;

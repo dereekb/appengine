@@ -13,7 +13,6 @@ import { ApiJwtConfigurationError } from '../error';
 /**
  * Service for interacting with an Appengine Token Register service.
  */
-@Injectable()
 export class RegisterApiService {
 
   public static SERVICE_PATH = '/login/auth/register';

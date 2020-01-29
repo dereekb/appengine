@@ -33,7 +33,6 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 	@Deprecated
 	public static final String ANONYMOUS_KEY = "anon";
 
-	public static final String ROLES_KEY = "r";
 
 	public AbstractLoginTokenImplEncoderDecoder() {
 		this((SignatureConfiguration) null);
@@ -50,10 +49,6 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 		claims.put(LOGIN_KEY, loginToken.getLoginId());
 		claims.put(LOGIN_POINTER_KEY, loginToken.getLoginPointerId());
 		claims.put(LOGIN_POINTER_TYPE_KEY, loginToken.getPointerType().getId());
-
-		if (loginToken.getRoles() != LoginTokenImpl.DEFAULT_ROLES) {
-			claims.put(ROLES_KEY, loginToken.getRoles());
-		}
 
 		// Encode Object Context
 		EncodedLoginTokenModelContextSet contextMap = loginToken.getEncodedModelContextSet();
@@ -93,14 +88,8 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 		}
 
 		String loginPointer = claims.get(LOGIN_POINTER_KEY, String.class);
-		Number rolesNumber = claims.get(ROLES_KEY, Number.class);
 		Number typeNumber = claims.get(LOGIN_POINTER_TYPE_KEY, Number.class);
-		Long roles = null;
 		Integer type = null;
-
-		if (rolesNumber != null) {
-			roles = rolesNumber.longValue();
-		}
 
 		if (typeNumber != null) {
 			type = typeNumber.intValue();
@@ -120,7 +109,6 @@ public abstract class AbstractLoginTokenImplEncoderDecoder<T extends LoginTokenI
 
 		loginToken.setLogin(login);
 		loginToken.setLoginPointer(loginPointer);
-		loginToken.setRoles(roles);
 
 		// Decode Object Context
 		String objectContexts = claims.get(OBJECT_CONTEXT_KEY, String.class);

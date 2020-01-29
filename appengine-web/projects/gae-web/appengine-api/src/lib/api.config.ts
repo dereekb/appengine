@@ -96,7 +96,6 @@ export interface ApiModuleConstructorConfiguration {
 /**
  * Contains all configuration for an Appengine Module.
  */
-@Injectable()
 export class GaeApiModuleConfiguration implements ApiModuleInfo,
   ApiModuleRouteConfiguration, ApiModuleRouteConfiguration {
 
