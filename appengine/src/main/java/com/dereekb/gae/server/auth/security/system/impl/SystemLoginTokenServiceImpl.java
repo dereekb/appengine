@@ -36,7 +36,7 @@ public class SystemLoginTokenServiceImpl
 	/**
 	 * Mask of all allowed roles.
 	 */
-	private Long rolesMask;
+	private Long systemEncodedRoles;
 
 	private LoginTokenEncoderDecoder<LoginToken> dencoder;
 
@@ -44,8 +44,8 @@ public class SystemLoginTokenServiceImpl
 		this(DEFAULT_ROLES, dencoder);
 	}
 
-	public SystemLoginTokenServiceImpl(Long rolesMask, LoginTokenEncoderDecoder<LoginToken> dencoder) {
-		this.setRolesMask(rolesMask);
+	public SystemLoginTokenServiceImpl(Long systemEncodedRoles, LoginTokenEncoderDecoder<LoginToken> dencoder) {
+		this.setSystemEncodedRoles(systemEncodedRoles);
 		this.setDencoder(dencoder);
 	}
 
@@ -73,16 +73,16 @@ public class SystemLoginTokenServiceImpl
 		this.subject = subject;
 	}
 
-	public Long getRolesMask() {
-		return this.rolesMask;
+	public Long getSystemEncodedRoles() {
+		return this.systemEncodedRoles;
 	}
 
-	public void setRolesMask(Long rolesMask) {
-		if (rolesMask == null) {
-			throw new IllegalArgumentException("rolesMask cannot be null.");
+	public void setSystemEncodedRoles(Long systemEncodedRoles) {
+		if (systemEncodedRoles == null) {
+			throw new IllegalArgumentException("systemEncodedRoles cannot be null.");
 		}
 
-		this.rolesMask = rolesMask;
+		this.systemEncodedRoles = systemEncodedRoles;
 	}
 
 	public LoginTokenEncoderDecoder<LoginToken> getDencoder() {
@@ -121,10 +121,12 @@ public class SystemLoginTokenServiceImpl
 	}
 
 	public Long maskRoles(Long roles) {
+		Long systemRoles = this.getSystemEncodedRoles();
+
 		if (roles == null) {
-			return 0L;	// No roles if none provided.
+			return systemRoles;	// No roles if none provided.
 		} else {
-			LongBitContainer mask = new LongBitContainer(this.getRolesMask());
+			LongBitContainer mask = new LongBitContainer(systemRoles);
 			return mask.and(roles);
 		}
 	}
