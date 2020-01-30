@@ -237,6 +237,37 @@ public class LoginTokenControllerTest extends AbstractAppTestingContext {
 	}
 
 	@Test
+	public void testLoginWithAZeroPermissionsMask() throws Exception {
+
+		// Create a password LoginPointer/Token
+		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
+		String token = testUtility.createPasswordLogin(TEST_USERNAME, TEST_PASSWORD);
+
+		// Register
+		String fullUserToken = testUtility.register(token);
+
+		// Get a refresh token.
+		String refreshToken = testUtility.getRefreshToken(fullUserToken);
+
+		DecodedLoginToken<LoginTokenImpl> decodedRefreshToken = this.refreshEncoderDecoder
+		        .decodeLoginToken(refreshToken);
+		Long loginId = decodedRefreshToken.getLoginToken().getLoginId();
+
+		Login login = this.loginRegistry.get(ModelKey.safe(loginId));
+		login.setRoles(0x1111L);
+		this.loginRegistry.update(login);
+
+		Long rolesMask = 0x0L;
+
+		String loginToken = testUtility.authWithRefreshToken(refreshToken, rolesMask);
+
+		DecodedLoginToken<LoginToken> decodedLoginToken = this.loginTokenService.decodeLoginToken(loginToken);
+
+		Long roles = decodedLoginToken.getLoginToken().getRoles();
+		assertTrue(roles.equals(rolesMask));
+	}
+
+	@Test
 	public void testRefreshTokenHasRolesAttached() throws Exception {
 
 		// Create a password LoginPointer/Token

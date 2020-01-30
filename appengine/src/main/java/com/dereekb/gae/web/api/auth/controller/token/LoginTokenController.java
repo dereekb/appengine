@@ -154,12 +154,12 @@ public class LoginTokenController {
 	@ResponseBody
 	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "application/json")
 	public final LoginTokenPair login(@RequestParam("refreshToken") @NotNull String refreshToken,
-	                                  @RequestParam(value = "rolesMask", required = false) Long mask) {
+	                                  @RequestParam(value = "rolesMask", required = false) Long rolesMask) {
 		LoginTokenPair response = null;
 
 		try {
 			EncodedLoginToken encodedToken = new EncodedLoginTokenImpl(refreshToken);
-			response = this.delegate.loginWithRefreshToken(encodedToken, mask);
+			response = this.delegate.loginWithRefreshToken(encodedToken, rolesMask);
 		} catch (TokenException e) {
 			throw e;
 		} catch (RuntimeException e) {

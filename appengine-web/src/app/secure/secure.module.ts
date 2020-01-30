@@ -23,6 +23,8 @@ import { FullStorageObject, FullLocalStorageObject, MemoryStorageObject, Storage
 export function routerConfigFn(router: UIRouter) {
   const transitionService = router.transitionService;
   secureGatewayHook(transitionService);
+
+  // Enable traces
   router.trace.enable(Category.TRANSITION);
 }
 
