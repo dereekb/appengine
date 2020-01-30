@@ -70,7 +70,7 @@ export class PublicLoginTokenApiService {
   public loginWithRefreshToken(encodedToken: EncodedToken, options?: LoginTokenLoginOptions): Observable<LoginTokenPair> {
     const url = this._servicePath + '/login';
 
-    const body = new HttpParams()
+    let body = new HttpParams()
       .set('refreshToken', encodedToken);
 
     if (options) {
@@ -81,7 +81,7 @@ export class PublicLoginTokenApiService {
       }
 
       if (rolesMask !== undefined) {
-        body.set('rolesMask', rolesMask.toString());
+        body = body.set('rolesMask', rolesMask.toString());
       }
     }
 
