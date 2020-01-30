@@ -236,4 +236,36 @@ public class LoginTokenControllerTest extends AbstractAppTestingContext {
 		assertTrue(roles.equals(rolesMask));
 	}
 
+	@Test
+	public void testRefreshTokenHasRolesAttached() throws Exception {
+
+		// Create a password LoginPointer/Token
+		LoginApiTestUtility testUtility = new LoginApiTestUtility(this);
+		String token = testUtility.createPasswordLogin(TEST_USERNAME, TEST_PASSWORD);
+
+		// Register
+		String fullUserToken = testUtility.register(token);
+
+		// Get a refresh token.
+		String refreshToken = testUtility.getRefreshToken(fullUserToken);
+
+		DecodedLoginToken<LoginTokenImpl> decodedRefreshToken = this.refreshEncoderDecoder
+		        .decodeLoginToken(refreshToken);
+		Long loginId = decodedRefreshToken.getLoginToken().getLoginId();
+
+		Long loginRoles = 0x1111L;
+
+		Login login = this.loginRegistry.get(ModelKey.safe(loginId));
+		login.setRoles(loginRoles);
+		this.loginRegistry.update(login);
+
+		String newRefreshToken = testUtility.getRefreshToken(fullUserToken);
+
+		DecodedLoginToken<LoginTokenImpl> decodedLoginToken = this.refreshEncoderDecoder.decodeLoginToken(newRefreshToken);
+
+		Long roles = decodedLoginToken.getLoginToken().getRoles();
+		assertNotNull(roles);
+		assertTrue(roles.equals(loginRoles));
+	}
+
 }

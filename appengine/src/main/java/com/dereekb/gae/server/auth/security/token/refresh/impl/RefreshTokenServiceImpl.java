@@ -157,6 +157,7 @@ public class RefreshTokenServiceImpl
 		refreshToken.setPointerType(LoginPointerType.REFRESH_TOKEN);
 		refreshToken.setLoginPointer(loginPointerId);
 		refreshToken.setToExpireIn(DEFAULT_EXPIRATION_TIME);
+		refreshToken.setRoles(login.getEncodedRoles());
 
 		return refreshToken;
 	}

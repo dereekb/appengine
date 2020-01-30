@@ -26,8 +26,8 @@ export class ApiUserLoginTokenAuthenticator implements UserLoginTokenAuthenticat
     return this._publicLoginTokenApiService.createRefreshToken(encodedToken);
   }
 
-  loginWithRefreshToken(encodedToken: EncodedRefreshToken): Observable<LoginTokenPair> {
-    return this._publicLoginTokenApiService.loginWithRefreshToken(encodedToken);
+  loginWithRefreshToken(encodedToken: EncodedRefreshToken, options?: LoginTokenLoginOptions): Observable<LoginTokenPair> {
+    return this._publicLoginTokenApiService.loginWithRefreshToken(encodedToken, options);
   }
 
 }
