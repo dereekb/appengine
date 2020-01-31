@@ -108,6 +108,11 @@ export interface ModelReadResponse<T> extends ReadResponse<T> {
   error?: any;
 }
 
+export interface SingleModelReadResponse<T> {
+  model?: T;
+  error?: any;
+}
+
 export class ModelReadService<T extends UniqueModel> implements CachedReadService<T> {
 
   // Used as a sort of buffer to prevent multiple of the same request from being sent.
@@ -156,24 +161,33 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
   }
 
   /**
-   * Convenience function for reading a single model.
+   * Convenience function for reading a single model. All errors are ignored.
+   * If atomic, the observable will throw errors on atomic operation exeptions.
    *
    * @param key Model or key to read.
-   * @param atomic Whether or not to throw an error. If false, the observable will return undefined if the model is unavailable.
+   * @param atomic Whether or not to throw an error if the model does not exist. If false, the observable will return undefined if the model is unavailable.
    * @param debounce Optional debounce.
    */
-  public continuousReadOne(key: ModelOrKey<T>, atomic = false, debounce?: number): Observable<T | undefined> {
+  public continuousReadOne(key: ModelOrKey<T>, atomic = false, debounce?: number): Observable<SingleModelReadResponse<T>> {
     const inputKey = ModelUtility.readModelKey(key);
     return this.continuousRead({
       modelKeys: [inputKey],
       atomic
     }, debounce).pipe(
-      map(x => x.models[0])
+      map((x) => {
+        return {
+          model: x.models[0],
+          error: x.error
+        };
+      })
     );
   }
 
   /**
    * Continuous read that checks the cache before reading more.
+   *
+   * This does not throw any errors, but instead the result wraps any errors
+   * within the read response.
    */
   public continuousRead(inputRequest: ReadRequest, debounce?: number): Observable<ModelReadResponse<T>> {
     const inputKeys = ValueUtility.normalizeArray(inputRequest.modelKeys);
