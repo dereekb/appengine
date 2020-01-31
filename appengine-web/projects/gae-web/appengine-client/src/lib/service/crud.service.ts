@@ -132,6 +132,25 @@ export interface SingleModelReadResponse<T> {
   error?: any;
 }
 
+/**
+ * Convenience function used with rxjs flatMap() to throw an error if it exists or return the model.
+ */
+export function getModelThrowReadResponseError<T>(response: SingleModelReadResponse<T>): Observable<T> {
+  const obs = throwModelReadResponseError(response).pipe(map(x => x.model));
+  return obs;
+}
+
+/**
+ * Convenience function used with rxjs flatMap() to throw an error if it exists.
+ */
+export function throwModelReadResponseError<T>(response: SingleModelReadResponse<T>): Observable<SingleModelReadResponse<T>> {
+  if (response.error) {
+    return throwError(response.error);
+  } else {
+    return of(response);
+  }
+}
+
 export class ModelReadService<T extends UniqueModel> implements CachedReadService<T> {
 
   // Used as a sort of buffer to prevent multiple of the same request from being sent.
