@@ -149,15 +149,37 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
 
   /**
    * Single read that checks the cache before sending a request.
+   *
+   * Errors are thrown by the observable.
    */
-  public read(request: ReadRequest, skipCache: boolean = false): Observable<ModelReadResponse<T>> {
+  public read(request: ReadRequest, skipCache: boolean = false): Observable<ReadResponse<T>> {
     if (skipCache) {
       return this._read(request);
     } else {
-      return this.continuousRead(request, 0).pipe(
+      return this.continuousRead(request, 10).pipe(
+        flatMap((x) => {
+          if (x.error) {
+            return throwError(x.error);
+          } else {
+            return of(x);
+          }
+        }),
         shareReplay(1)   // Share the single result with all subscribers.
       );
     }
+  }
+
+  /**
+   * Conveneince function that ignores all errors and only returns the model, 
+   * or undefined if an error occurs or the model does not exist.
+   *
+   * @param key Model or key to read.
+   * @param debounce Optional debounce.
+   */
+  public quickContinuousReadOne(key: ModelOrKey<T>, debounce?: number): Observable<T | undefined> {
+    return this.continuousReadOne(key, false, debounce).pipe(
+      map(x => x.model)
+    );
   }
 
   /**
@@ -180,6 +202,22 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
           error: x.error
         };
       })
+    );
+  }
+
+  /**
+   * Conveneince function that ignores all errors and only returns the array of models.
+   * or an empty array if an error occurs or the model does not exist.
+   *
+   * @param modelKeys Models or keys to read.
+   * @param debounce Optional debounce.
+   */
+  public quickContinuousRead(modelKeys: OneOrMore<ModelKey>, debounce?: number): Observable<T[]> {
+    return this.continuousRead({
+      modelKeys,
+      atomic: false
+    }, debounce).pipe(
+      map(x => x.models)
     );
   }
 

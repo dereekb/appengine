@@ -38,6 +38,39 @@ describe('Crud Model Services', () => {
 
     describe('#read()', () => {
 
+      describe('on generic error', () => {
+
+        const testKeys = [1, 2, 3];
+
+        beforeEach(() => {
+          testReadService.customReadDelegate = {
+            handleRead: () => {
+              return throwError(new Error('Test error.'));
+            }
+          };
+        });
+
+        it('should throw the error.', (done) => {
+          modelReadService.read({
+            modelKeys: testKeys
+          }).subscribe({
+            next: () => {
+              fail('Should not have succeeeded.');
+              done();
+            },
+            complete: () => {
+              fail('Should not have completed.');
+              done();
+            },
+            error: () => {
+              done();
+            }
+          });
+
+        });
+
+      });
+
       it('should return the requested models.', (done) => {
         const testKeys = [1, 2, 3];
 
@@ -72,6 +105,78 @@ describe('Crud Model Services', () => {
 
           done();
         });
+      });
+
+    });
+
+    describe('#quickContinuousReadOne()', () => {
+
+      const testKey = 1;
+
+      describe('on error', () => {
+
+        beforeEach(() => {
+          testReadService.customReadDelegate = {
+            handleRead: () => {
+              return throwError(new Error('Test error.'));
+            }
+          };
+        });
+
+        it('should return undefined.', (done) => {
+          modelReadService.quickContinuousReadOne(testKey).subscribe({
+            next: (result) => {
+              expect(result).toBeUndefined();
+              done();
+            },
+            complete: () => {
+              fail('Should not have completed yet.');
+              done();
+            },
+            error: () => {
+              fail('Should not have encountered the error.');
+              done();
+            }
+          });
+
+        });
+
+      });
+
+    });
+
+    describe('#quickContinuousRead()', () => {
+
+      const testKeys = [1, 2, 3];
+
+      describe('on error', () => {
+
+        beforeEach(() => {
+          testReadService.customReadDelegate = {
+            handleRead: () => {
+              return throwError(new Error('Test error.'));
+            }
+          };
+        });
+
+        it('should return undefined.', (done) => {
+          modelReadService.quickContinuousRead(testKeys).subscribe({
+            next: (result) => {
+              expect(result).toBeEmptyArray();
+              done();
+            },
+            complete: () => {
+              fail('Should not have completed yet.');
+              done();
+            },
+            error: () => {
+              fail('Should not have encountered the error.');
+              done();
+            }
+          });
+
+        });
+
       });
 
     });
