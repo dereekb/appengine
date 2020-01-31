@@ -216,8 +216,11 @@ describe('GaeModelLoadingViewComponent', () => {
             assertShowsContent();
 
             // Then simulate/trigger the delete
-            testReadService.filteredKeysSet.add(TEST_KEY);
-            fooModelServiceWrapper.cache.remove(TEST_KEY);
+
+            setTimeout(() => {
+              testReadService.filteredKeysSet.add(TEST_KEY);
+              fooModelServiceWrapper.cache.remove(TEST_KEY);
+            }, 20);
 
             source.stream.pipe(
               filter((x) => {
