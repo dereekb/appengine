@@ -2,8 +2,8 @@ import 'jasmine-expect';
 import { ModelServiceWrapper, ModelServiceWrapperSet, ModelWrapperInitializedError } from './model.service';
 import { TestFoo, TEST_FOO_MODEL_TYPE, TestFooReadService, ModelServiceResponse, ClientAtomicOperationError } from '@gae-web/appengine-api';
 import { ModelUtility } from '@gae-web/appengine-utility';
-import { ModelReadService } from './crud.service';
-import { take, takeUntil, first } from 'rxjs/operators';
+import { ModelReadService, getModelsThrowReadResponseError } from './crud.service';
+import { take, takeUntil, first, flatMap } from 'rxjs/operators';
 import { timer, throwError } from 'rxjs';
 
 
@@ -193,6 +193,35 @@ describe('Crud Model Services', () => {
               return throwError(new Error('Test error.'));
             }
           };
+        });
+
+        describe('lambda', () => {
+
+          describe('#getModelsThrowReadResponseError', () => {
+
+            it('should throw the error.', (done) => {
+
+              modelReadService.continuousRead({
+                modelKeys: testKeys
+              }).pipe(
+                flatMap(getModelsThrowReadResponseError)
+              ).subscribe({
+                next: (readResult) => {
+                  fail('Should have failed.');
+                  done();
+                },
+                complete: () => {
+                  fail('Should not have completed yet.');
+                  done();
+                },
+                error: () => {
+                  done();
+                }
+              });
+            });
+
+          });
+
         });
 
         it('should return the error.', (done) => {

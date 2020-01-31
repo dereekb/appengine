@@ -108,6 +108,25 @@ export interface ModelReadResponse<T> extends ReadResponse<T> {
   error?: any;
 }
 
+/**
+ * Convenience function used with rxjs flatMap() to throw an error if it exists or return the models.
+ */
+export function getModelsThrowReadResponseError<T>(response: ModelReadResponse<T>): Observable<T[]> {
+  const obs = throwModelsReadResponseError(response).pipe(map(x => x.models));
+  return obs;
+}
+
+/**
+ * Convenience function used with rxjs flatMap() to throw an error if it exists.
+ */
+export function throwModelsReadResponseError<T>(response: ModelReadResponse<T>): Observable<ModelReadResponse<T>> {
+  if (response.error) {
+    return throwError(response.error);
+  } else {
+    return of(response);
+  }
+}
+
 export interface SingleModelReadResponse<T> {
   model?: T;
   error?: any;
