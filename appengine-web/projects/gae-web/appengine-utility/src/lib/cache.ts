@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, asyncScheduler } from 'rxjs';
 import { ValueUtility, OneOrMore } from './value';
-import { filter, startWith, debounceTime, map } from 'rxjs/operators';
+import { filter, startWith, debounceTime, map, throttleTime, delay } from 'rxjs/operators';
 import { ModelKey, ModelOrKey, UniqueModel, ModelUtility } from './model';
 import { Keyed } from './collection';
 
@@ -292,6 +292,11 @@ export enum KeyedCacheChange {
    * When an item is removed from the cache.
    */
   Remove,
+
+  /**
+   * When an item is attempted to be removed but did not exist.
+   */
+  AttemptedRemove,
 
   /**
    * When the entire cache is cleared.
@@ -587,11 +592,7 @@ export class ObservableCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, Keye
 
   remove(key: K) {
     const removed = this._cache.remove(key);
-
-    if (removed) {
-      this.next(KeyedCacheChange.Remove, key);
-    }
-
+    this.next(((removed) ? KeyedCacheChange.Remove : KeyedCacheChange.AttemptedRemove), key);
     return removed;
   }
 
@@ -658,6 +659,7 @@ export interface KeyedAsyncCacheLoad<K, T> extends KeyedCacheLoad<K, T> {
 export interface AsyncCacheReadOptions {
   debounce?: number;
   ignoredChanges?: KeyedCacheChange[];
+  ignoreOtherKeyChanges?: boolean;
 }
 
 export class AsyncCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, ObservableKeyedCache<K, T>> implements AsyncObservableCache<K, T> {
@@ -667,8 +669,8 @@ export class AsyncCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, Observabl
   }
 
   // MARK: AsyncCache
-  public asyncRead(keys: OneOrMore<K>, { debounce = 10, ignoredChanges }: AsyncCacheReadOptions): Observable<KeyedCacheLoad<K, T>> {
-    keys = ValueUtility.normalizeArray(keys);
+  public asyncRead(keys: OneOrMore<K>, { debounce = 10, ignoredChanges, ignoreOtherKeyChanges }: AsyncCacheReadOptions): Observable<KeyedCacheLoad<K, T>> {
+    const keysArray: K[] = ValueUtility.normalizeArray(keys);
 
     let events = this._cache.events;
 
@@ -677,13 +679,35 @@ export class AsyncCacheWrap<K, T> extends AbstractKeyedCacheWrap<K, T, Observabl
       events = events.pipe(filter((event) => !ignoredTypesSet.has(event.change)));
     }
 
+    if (ignoreOtherKeyChanges) {
+      events = this.makeIgnoreOtherKeyChangesFilter(events, keysArray);
+    }
+
     return events.pipe(
       startWith({
         change: KeyedCacheChange.Clear,
         keys: new Set<K>()
       }),
-      debounceTime(debounce),
-      map((event) => ({ ...this.load(keys as K[]), event }))
+      // We use a throttle here as a debouncer/throttle to wait for the initial values to be input before firing off the first events
+      // since we don't want a ton of reloads to occur while items may be entering the cache.
+      // We do however always want to update if we recieve another event while waiting.
+      throttleTime(debounce, asyncScheduler, {
+        leading: false,
+        trailing: true
+      }),
+      map((event) => ({ ...this.load(keysArray as K[]), event }))
+    );
+  }
+
+  // MARK: Internal
+  protected makeIgnoreOtherKeyChangesFilter(events: Observable<KeyedCacheEvent<K>>, keys: K[]) {
+    const targetedKeysSet: Set<K> = ValueUtility.arrayToSet(keys);
+
+    // Event included if it is a clear event, or if any of the targeted keys are ones in the request set.
+    return events.pipe(
+      filter((x) => {
+        return x.change === KeyedCacheChange.Clear || ValueUtility.setHasAny(targetedKeysSet, x.keys);
+      })
     );
   }
 
@@ -778,6 +802,22 @@ export class AsyncModelCacheWrap<T extends UniqueModel> extends AsyncCacheWrap<M
   removeModels(models: T[]): T[] {
     const modelKeys = ModelUtility.readModelKeysFromModels(models);
     return this.removeAll(modelKeys);
+  }
+
+  // MARK: Internal
+  protected makeIgnoreOtherKeyChangesFilter(events: Observable<KeyedCacheEvent<ModelKey>>, keys: ModelKey[]) {
+    const targetedKeysSet: Set<ModelKey> = ValueUtility.arrayToSet(keys.map((x) => ModelUtility.readModelKeyString(x)));
+
+    // Event included if it is a clear event, or if any of the targeted keys are ones in the request set.
+    return events.pipe(
+      filter((x) => {
+        if (x.change === KeyedCacheChange.Clear) {
+          return true;
+        } else {
+          return ValueUtility.setHasAny(targetedKeysSet, x.keys);
+        }
+      })
+    );
   }
 
 }

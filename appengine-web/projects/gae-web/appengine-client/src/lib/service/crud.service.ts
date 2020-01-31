@@ -1,7 +1,11 @@
 import { UniqueModel, ModelKey, ModelOrKey, ModelsOrKeys, SourceState, KeyedCacheLoad, ModelUtility, ValueUtility, ConversionSourceInputResult, Keyed, OneOrMore } from '@gae-web/appengine-utility';
 import { ReadSourceFactory, ReadSourceConfiguration, ReadSource, ReadServiceReadSourceFactory } from './source';
 import { ModelServiceWrapper } from './model.service';
-import { ReadService, ReadRequest, ModelServiceResponse, ReadResponse, UpdateService, UpdateResponse, UpdateRequest, DeleteService, DeleteRequest, DeleteResponse } from '@gae-web/appengine-api';
+import {
+  ReadService, ReadRequest, ModelServiceResponse,
+  ReadResponse, UpdateService, UpdateResponse, UpdateRequest,
+  DeleteService, DeleteRequest, DeleteResponse, ClientAtomicOperationError
+} from '@gae-web/appengine-api';
 import { throwError, of, Observable } from 'rxjs';
 import { flatMap, map, catchError, first, share, tap, skip, shareReplay } from 'rxjs/operators';
 import { WrapperEventType } from './wrapper';
@@ -33,7 +37,7 @@ export class ModelReadSource<T extends UniqueModel> extends ReadSource<T>  {
 
     // Watch for the cache to change.
 
-    // TODO: Move this to the read service later.
+    // TODO: Move this to the read service later. Equivalent to continuousRead below...
     return this._parent.cache
       .asyncRead(keys, { debounce: this._debounce })
       .pipe(
@@ -56,8 +60,15 @@ export class ModelReadSource<T extends UniqueModel> extends ReadSource<T>  {
                   misses: response.failed
                 };
               }),
-              catchError((x) => {
-                return throwError(x);
+              catchError((e) => {
+                if (e instanceof ClientAtomicOperationError) {
+                  return of({
+                    hits: [],
+                    misses: keys
+                  });
+                } else {
+                  return throwError(e);
+                }
               })
             );
           } else {
@@ -69,6 +80,13 @@ export class ModelReadSource<T extends UniqueModel> extends ReadSource<T>  {
             models: result.hits,
             failed: result.misses
           };
+        }),
+        catchError((e) => {
+          return of({
+            models: [],
+            failed: keys,
+            error: e
+          });
         })
       );
   }
@@ -80,6 +98,14 @@ export class ModelReadSource<T extends UniqueModel> extends ReadSource<T>  {
  */
 export abstract class CachedReadService<T> extends ReadService<T> {
   abstract read(request: ReadRequest, skipCache?: boolean): Observable<ReadResponse<T>>;
+}
+
+/**
+ * ReadResponse extension that can have an error attached to it.
+ */
+export interface ModelReadResponse<T> extends ReadResponse<T> {
+  result?: KeyedCacheLoad<ModelKey, T>;
+  error?: any;
 }
 
 export class ModelReadService<T extends UniqueModel> implements CachedReadService<T> {
@@ -119,7 +145,7 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
   /**
    * Single read that checks the cache before sending a request.
    */
-  public read(request: ReadRequest, skipCache: boolean = false): Observable<ReadResponse<T>> {
+  public read(request: ReadRequest, skipCache: boolean = false): Observable<ModelReadResponse<T>> {
     if (skipCache) {
       return this._read(request);
     } else {
@@ -149,11 +175,11 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
   /**
    * Continuous read that checks the cache before reading more.
    */
-  public continuousRead(inputRequest: ReadRequest, debounce?: number): Observable<ReadResponse<T>> {
+  public continuousRead(inputRequest: ReadRequest, debounce?: number): Observable<ModelReadResponse<T>> {
     const inputKeys = ValueUtility.normalizeArray(inputRequest.modelKeys);
 
     return this._parent.cache
-      .asyncRead(inputRequest.modelKeys, { debounce })
+      .asyncRead(inputKeys, { debounce, ignoreOtherKeyChanges: true })
       .pipe(
         // Read requested model keys from the cache.
         flatMap((result: KeyedCacheLoad<ModelKey, T>) => {
@@ -161,6 +187,8 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
           const misses = result.misses;
 
           if (misses.length > 0) {
+
+            // Read missing models.
             const readRequest: ReadRequest = {
               modelKeys: misses,
               atomic: inputRequest.atomic
@@ -177,11 +205,29 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
                   result
                 };
               }),
-              catchError((x) => {
-                return throwError(x);
+              catchError((e) => {
+                if (e instanceof ClientAtomicOperationError) {
+                  // Return the hits, but return all failed too.
+                  return of({
+                    models: hits,
+                    failed: e.failed,
+                    result,
+                    error: e
+                  });
+                } else {
+                  // Return the error with no models returned.
+                  return of({
+                    models: [],
+                    failed: inputKeys,
+                    result,
+                    error: e
+                  });
+                }
               })
             );
           } else {
+
+            // No misses.
             return of({
               models: hits,
               failed: [],

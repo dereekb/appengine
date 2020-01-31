@@ -13,6 +13,25 @@ describe('ValueUtility', () => {
 
   });
 
+  describe('#setHasAny()', () => {
+
+    it('should return true if the set has the value.', () => {
+      const value = 1;
+      const set = ValueUtility.arrayToSet([value, 2, 3, 4, 5]);
+      const setWithValues = ValueUtility.arrayToSet([value]);
+      const result = ValueUtility.setHasAny(set, setWithValues);
+      expect(result).toBeTrue();
+    });
+
+    it('should return false if the set does not have the value.', () => {
+      const value = 1;
+      const set = ValueUtility.arrayToSet([2, 3, 4, 5]);
+      const result = ValueUtility.setHasAny(set, [value]);
+      expect(result).toBeFalse();
+    });
+
+  });
+
   describe('#separateValues()', () => {
 
     it('should include values requested to be included', () => {

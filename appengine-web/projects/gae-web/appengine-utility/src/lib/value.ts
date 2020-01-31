@@ -341,15 +341,8 @@ export class ValueUtility {
    * Converts a set to an array. If the set is undefined, returns an empty array.
    */
   static setToArray<T>(input: Set<T> | undefined): T[] {
-    const array: T[] = [];
-
-    if (input) {
-      input.forEach((item) => {
-        array.push(item);
-      });
-    }
-
-    return array;
+    const result = this.iterableToArray(input);
+    return result;
   }
 
   /**
@@ -365,6 +358,19 @@ export class ValueUtility {
     }
 
     return set;
+  }
+
+  static iterableToArray<T>(iterable: undefined | Iterable<T> | ArrayLike<T>): T[] {
+    if (iterable) {
+      return Array.from(iterable);
+    } else {
+      return [];
+    }
+  }
+
+  static setHasAny<T>(set: Set<T>, iterable: Iterable<T> | ArrayLike<T>): boolean {
+    const array = this.iterableToArray(iterable);
+    return array.findIndex((x) => set.has(x)) !== -1;
   }
 
   static reduceArray<T>(array: T[][] | undefined): T[] {
@@ -874,6 +880,7 @@ export class ValueUtility {
    * @deprecated
    */
   static normalizeTruthMap(map: object): object {
+    // tslint:disable-next-line: deprecation
     const result = this.normalizeSetObject(map, true);
     return result;
   }

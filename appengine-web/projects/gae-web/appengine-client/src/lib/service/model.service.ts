@@ -257,13 +257,14 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
 
   // MARK: Utility
   /**
-   * Attempts to load and update the specified model if it exists in the cache.
+   * Attempts to load and update the specified model if it exists in the cache. Returns true if the model was updated.
+   *
    *
    * @param key Key of model to load.
    * @param updateFn Update function. If a model is returned, the value will be replaced in the cache.
    * If false is returned, no change occurs. If undefined is returned, the original model is notified to be updated.
    */
-  public tryUpdateCachedModel(key: ModelOrKey<T>, updateFn: (model: T) => T | false | true | undefined | void) {
+  public tryUpdateCachedModel(key: ModelOrKey<T>, updateFn: (model: T) => T | false | true | undefined | void): boolean {
     const keyValue = ModelUtility.readModelKey(key);
 
     const cachedModel = this.cache.get(keyValue);
@@ -275,8 +276,11 @@ export class ModelServiceWrapper<T extends UniqueModel> implements ModelServiceE
         const updateValue = ((updateFnResult === true) ? cachedModel : updateFnResult) || cachedModel;
         this._cache.putModel(updateValue);
         this.announceUpdated([keyValue]);
+        return true;
       }
     }
+
+    return false;
   }
 
 }

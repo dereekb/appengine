@@ -174,6 +174,7 @@ export function ProvideIterableSource<S extends Source<any>>(type: Type<S>) {
 export interface ConversionSourceInputResult<I, T> {
     models: T[];
     failed?: I[];
+    error?: any;
 }
 
 export interface ConversionSourceInputConversionResult<I, T> extends ConversionSourceInputResult<I, T> {

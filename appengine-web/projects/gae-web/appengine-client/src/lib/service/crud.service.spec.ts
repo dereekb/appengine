@@ -1,10 +1,10 @@
 import 'jasmine-expect';
 import { ModelServiceWrapper, ModelServiceWrapperSet, ModelWrapperInitializedError } from './model.service';
-import { TestFoo, TEST_FOO_MODEL_TYPE, TestFooReadService, ModelServiceResponse } from '@gae-web/appengine-api';
+import { TestFoo, TEST_FOO_MODEL_TYPE, TestFooReadService, ModelServiceResponse, ClientAtomicOperationError } from '@gae-web/appengine-api';
 import { ModelUtility } from '@gae-web/appengine-utility';
 import { ModelReadService } from './crud.service';
 import { take, takeUntil, first } from 'rxjs/operators';
-import { timer } from 'rxjs';
+import { timer, throwError } from 'rxjs';
 
 
 describe('Crud Model Services', () => {
@@ -78,6 +78,90 @@ describe('Crud Model Services', () => {
 
     describe('#continuousRead()', () => {
 
+      describe('on generic error', () => {
+
+        const testKeys = [1, 2, 3];
+
+        beforeEach(() => {
+          testReadService.customReadDelegate = {
+            handleRead: () => {
+              return throwError(new Error('Test error.'));
+            }
+          };
+        });
+
+        it('should return the error.', (done) => {
+          modelReadService.continuousRead({
+            modelKeys: testKeys
+          }).subscribe({
+            next: (readResult) => {
+
+              expect(readResult.error).toBeDefined();
+
+              // Should contain all error keys.
+              testKeys.forEach((testKey) => {
+                expect(readResult.failed).toContain(testKey);
+              });
+
+              done();
+            },
+            complete: () => {
+              fail('Should not have completed yet.');
+              done();
+            },
+            error: () => {
+              fail('Should not have encountered the error.');
+              done();
+            }
+          });
+
+        });
+
+        it('should continue reading despite the error.', (done) => {
+
+          let updates = 0;
+          const debounce = 10;
+
+          modelReadService.continuousRead({
+            modelKeys: testKeys,
+          }, debounce).subscribe({
+            next: (readResult) => {
+              updates += 1;
+
+              switch (updates) {
+                case 1:
+
+                  expect(readResult.error).toBeDefined();
+
+                  // Trigger new read through cache.
+                  setTimeout(() => {
+                    modelReadService.clearFromCache(testKeys);
+                  }, debounce * 4);
+
+                  break;
+                case 2:
+                  done();
+                  break;
+              }
+
+            },
+            complete: () => {
+              if (updates < 2) {
+                fail('Should not have completed yet.');
+              }
+
+              done();
+            },
+            error: () => {
+              fail('Should not have encountered the error.');
+              done();
+            }
+          });
+
+        });
+
+      });
+
       it('should return the requested models.', (done) => {
 
         const testKeys = [1, 2, 3];
@@ -109,7 +193,11 @@ describe('Crud Model Services', () => {
           switch (updates) {
             case 1:
               expect(readResult.models).toBeNonEmptyArray();
-              modelServiceWrapper.cache.clear();
+
+              setTimeout(() => {
+                modelServiceWrapper.cache.clear();
+              }, 50);
+
               break;
             case 2:
               done();
@@ -134,7 +222,10 @@ describe('Crud Model Services', () => {
             switch (updates) {
               case 1:
                 expect(readResult.models).toBeNonEmptyArray();
-                modelReadService.read(readRequest, true).subscribe(); // Skip Cache
+
+                setTimeout(() => {
+                  modelReadService.read(readRequest, true).subscribe(); // Skip Cache
+                }, 50);
                 break;
               case 2:
                 done();
@@ -167,16 +258,20 @@ describe('Crud Model Services', () => {
               expect(readResult.models).toBeNonEmptyArray();
               expect(readResult.failed).toBeEmptyArray();
 
-              // Update read service to not return model.
-              testReadService.filteredKeysSet.add(unavailableTestKey);
+              setTimeout(() => {
 
-              // Clear cache to trigger a new read.
-              modelServiceWrapper.cache.clear();
+                // Update read service to not return model.
+                testReadService.filteredKeysSet.add(unavailableTestKey);
+
+                // Clear cache to trigger a new read.
+                modelServiceWrapper.cache.clear();
+              }, 50);
+              break;
+            case 2:
+              expect(lastReadResult.failed).not.toBeEmptyArray();
+              done();
               break;
           }
-        }).add(() => {
-          expect(lastReadResult.failed).not.toBeEmptyArray();
-          done();
         });
 
       });
@@ -194,26 +289,47 @@ describe('Crud Model Services', () => {
         };
 
         modelReadService.continuousRead(readRequest).pipe(
-          takeUntil(timer(300)) // End reading test after arbitrary amount of time.
-        ).subscribe((readResult) => {
-          updates += 1;
-          lastReadResult = readResult;
+          // takeUntil(timer(600)) // End reading test after arbitrary amount of time.
+        ).subscribe({
 
-          switch (updates) {
-            case 1:
-              expect(readResult.models).toBeNonEmptyArray();
-              expect(readResult.failed).toBeEmptyArray();
+          next: (readResult) => {
+            updates += 1;
+            lastReadResult = readResult;
 
-              // Update read service to not return model.
-              testReadService.filteredKeysSet.add(unavailableTestKey);
+            switch (updates) {
+              case 1:
+                expect(readResult.failed).toBeEmptyArray();
+                expect(readResult.models).not.toBeEmptyArray();
 
-              // Read by skipping the cache.
-              modelReadService.read(readRequest, true).subscribe();
-              break;
+                setTimeout(() => {
+
+                  // Update read service to not return model.
+                  testReadService.filteredKeysSet.add(unavailableTestKey);
+
+                  // Read by skipping the cache.
+                  modelReadService.read(readRequest, true).subscribe();
+
+                }, 20);
+
+                break;
+              case 2:
+                expect(lastReadResult.failed).not.toBeEmptyArray();
+                done();
+                break;
+
+            }
+          },
+          complete: () => {
+            if (updates < 2) {
+              fail('Should not have completed yet.');
+            }
+
+            done();
+          },
+          error: () => {
+            fail('Should not have encountered the error.');
+            done();
           }
-        }).add(() => {
-          expect(lastReadResult.failed).not.toBeEmptyArray();
-          done();
         });
 
       });

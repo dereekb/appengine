@@ -37,7 +37,7 @@ describe('UserLoginTokenService', () => {
 
   const TEST_INITIAL_LOGIN_TOKEN_PAIR = makeLoginTokenPair(TEST_INITIAL_LOGIN_TOKEN);
 
-  let tokenDelayAmount = 200;
+  const tokenDelayAmount = 200;
 
   const userLoginTokenAuthenticator: UserLoginTokenAuthenticator = {
 
@@ -178,8 +178,13 @@ describe('UserLoginTokenService', () => {
 
   describe('LegacyAppTokenUserService', () => {
 
+    // tslint:disable-next-line: deprecation
     const storedTokenStorageAccessor = new StoredTokenStorageAccessor();
+
+    // tslint:disable-next-line: deprecation
     const appTokenStorageService = new AppTokenStorageService(storedTokenStorageAccessor);
+
+    // tslint:disable-next-line: deprecation
     const legacyAppTokenUserService = new LegacyAppTokenUserService(appTokenStorageService, userLoginTokenAuthenticator);
 
     describe('if authenticated', () => {
