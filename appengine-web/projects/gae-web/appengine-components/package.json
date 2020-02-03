@@ -4,6 +4,7 @@
   "peerDependencies": {
     "rxjs": "*",
     "make-error": "*",
+    "date-fns": "2.9.0",
     "@gae-web/appengine-api": "*",
     "@gae-web/appengine-analytics": "*",
     "@gae-web/appengine-utility": "*",

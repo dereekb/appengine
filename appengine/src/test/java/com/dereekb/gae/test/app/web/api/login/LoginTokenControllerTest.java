@@ -257,7 +257,7 @@ public class LoginTokenControllerTest extends AbstractAppTestingContext {
 		login.setRoles(0x1111L);
 		this.loginRegistry.update(login);
 
-		Long rolesMask = 0x0L;
+		Long rolesMask = 0L;
 
 		String loginToken = testUtility.authWithRefreshToken(refreshToken, rolesMask);
 

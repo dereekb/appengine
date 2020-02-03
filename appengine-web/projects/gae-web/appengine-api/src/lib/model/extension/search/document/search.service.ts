@@ -14,6 +14,7 @@ export type SearchIndex = string;
 
 export interface TypedModelSearchRequest extends SearchRequest {
     index?: SearchIndex;
+    query?: string;
 }
 
 export type TypedModelSearchResponse<T extends UniqueModel> = ModelSearchResponse<T>;
@@ -47,6 +48,10 @@ export class ClientTypedModelSearchService<T extends UniqueModel, O> extends Abs
 
         if (request.index) {
             params.index = request.index;
+        }
+
+        if (request.query) {
+            params.query = request.query;
         }
 
         return params;

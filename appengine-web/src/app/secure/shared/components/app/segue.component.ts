@@ -1,10 +1,10 @@
 import { Directive, Component } from '@angular/core';
 import { AppSegueService } from '../../../segue.service';
-import { ModelKey } from '@gae-web/appengine-utility';
+import { ModelKey, ModelOrKey } from '@gae-web/appengine-utility';
 import { Foo } from '../../api/model/foo/foo';
 
 /**
- * Directive that provides functions for performing segues in TallyNote.
+ * Directive that provides functions for performing segues in the demo app.
  */
 @Directive({
     selector: '[appSegue]',
@@ -16,7 +16,7 @@ export class AppSegueDirective {
         this._service = _service;
     }
 
-    public segueToFoo(target: Foo | ModelKey) {
+    public segueToFoo(target: ModelOrKey<Foo>) {
         return this._service.segueToFoo(target);
     }
 

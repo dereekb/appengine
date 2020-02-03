@@ -6,6 +6,7 @@ import { GaeSelectionListComponentsModule } from './list/selection.module';
 import { GaeLoadingComponentsModule } from './loading/loading.module';
 import { GaeMaterialComponentsModule } from './material/material.module';
 import { GaeSegueComponentsModule } from './state/segue.module';
+import { GaeDatePipesModule } from './date/pipe/date.pipe.module';
 
 /**
  * Module that re-exports all Gae Component modules.
@@ -18,7 +19,8 @@ import { GaeSegueComponentsModule } from './state/segue.module';
     GaeLoadingComponentsModule,
     GaeModelComponentsModule,
     GaeMaterialComponentsModule,
-    GaeSegueComponentsModule
+    GaeSegueComponentsModule,
+    GaeDatePipesModule
   ]
 })
 export class GaeComponentsModule {
