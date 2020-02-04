@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild, OnDestroy } from '@angular/core';
 
-import { FormBuilder, Validators } from '@angular/forms';
-import { FormComponentState, AbstractFormGroupComponent, ProvideFormGroupComponent } from '../form/form.component';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormComponentState, AbstractFormGroupComponent, ProvideFormGroupComponent, FormComponentEvent, FormErrors } from '../form/form.component';
 import { ModelFormComponent } from '../form/model.component';
 import { Observable } from 'rxjs';
 import { IsTruthy } from './validators';
@@ -28,10 +28,11 @@ export class GaeConfirmModelFormComponent<T> extends AbstractFormGroupComponent 
     private _input: Observable<T>;
     private _sub = new SubscriptionObject();
 
-    buildFormGroup(formBuilder: FormBuilder) {
-        return formBuilder.group({
+    buildFormGroup(formBuilder: FormBuilder): FormGroup {
+        const group = formBuilder.group({
             confirm: [false, [IsTruthy(), Validators.required]]
         });
+        return group;
     }
 
     ngOnDestroy() {
@@ -47,7 +48,7 @@ export class GaeConfirmModelFormComponent<T> extends AbstractFormGroupComponent 
         }
     }
 
-    public get isComplete() {
+    public get isComplete(): boolean {
         return this.isValid && Boolean(this._model);
     }
 
@@ -107,19 +108,19 @@ export abstract class GaeConfiguredConfirmModelFormComponent<T> implements Model
         return this._form.formValue;
     }
 
-    public get stream() {
+    public get stream(): Observable<FormComponentEvent> {
         return this._form.stream;
     }
 
-    public get state() {
+    public get state(): FormComponentState {
         return this._form.state;
     }
 
-    public get controlErrorsObs() {
+    public get controlErrorsObs(): Observable<FormErrors> {
         return this._form.controlErrorsObs;
     }
 
-    public get formErrorsObs() {
+    public get formErrorsObs(): Observable<FormErrors> {
         return this._form.formErrorsObs;
     }
 

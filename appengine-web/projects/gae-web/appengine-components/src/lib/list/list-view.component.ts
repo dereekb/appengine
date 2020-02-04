@@ -34,12 +34,17 @@ export abstract class ListViewComponent<T> {
 
   // MARK: Functions
   abstract loadMore(): void;
-  abstract select(selected: T): void;
+  abstract select(selected: T, event: MouseEvent | undefined): void;
 
 }
 
 export function ProvideListViewComponent<S extends ListViewComponent<any>>(listViewType: Type<S>) {
   return [{ provide: ListViewComponent, useExisting: listViewType }];
+}
+
+export interface ListViewItemClickedEvent<T> {
+  selected: T;
+  event: MouseEvent;
 }
 
 /**
@@ -80,6 +85,9 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
 
   @Output()
   public itemSelected = new EventEmitter<T>();
+
+  @Output()
+  public itemClicked = new EventEmitter<ListViewItemClickedEvent<T>>();
 
   constructor(@Inject(ChangeDetectorRef) private cdRef: ChangeDetectorRef) { }
 
@@ -153,8 +161,16 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
   }
 
   // MARK: Component Functions
-  public select(selected: T) {
+  public select(selected: T, event: MouseEvent | undefined) {
     this.itemSelected.emit(selected);
+
+    if (event) {
+      this.itemClicked.emit({
+        selected,
+        event
+      });
+    }
+
     this._selected = selected;
   }
 

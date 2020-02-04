@@ -1,6 +1,6 @@
 import { ModelLoaderState, ModelLoader, AbstractModelLoaderStateComponent, ModelLoaderEvent } from './model-loader.component';
 import { Directive, OnDestroy, Input } from '@angular/core';
-import { BehaviorSubject, merge } from 'rxjs';
+import { BehaviorSubject, merge, Observable } from 'rxjs';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 import { map } from 'rxjs/operators';
 
@@ -62,11 +62,11 @@ export class GaeMultiModelLoaderDirective extends AbstractModelLoaderStateCompon
         return this._stream.value.error;
     }
 
-    public get stream() {
+    public get stream(): Observable<ModelLoaderEvent<any>> {
         return this._stream.asObservable();
     }
 
-    public get stateObs() {
+    public get stateObs(): Observable<ModelLoaderState> {
         return this._stream.pipe(
             map(x => x.state)
         );

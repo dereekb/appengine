@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Component, ViewChild, Input, Inject, forwardRef, ChangeDetectorRef } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { AbstractListViewComponent, ProvideListViewComponent, ListViewState } from './list-view.component';
+import { AbstractListViewComponent, ProvideListViewComponent, ListViewState, ListViewItemClickedEvent } from './list-view.component';
 import { AbstractListContentComponent } from './list-content.component';
 import { GaeListComponentsModule } from './list.module';
 import { ListViewSource, ListViewSourceState } from './source';
@@ -11,6 +11,7 @@ import { TestListViewSourceFactory } from './source.spec';
 import { filter, flatMap, tap } from 'rxjs/operators';
 import { TestFoo } from '@gae-web/appengine-api';
 import { GaeListLoadMoreComponent } from './load-more.component';
+import { By } from '@angular/platform-browser';
 
 describe('ListViewComponent', () => {
 
@@ -63,6 +64,45 @@ describe('ListViewComponent', () => {
         });
       });
 
+      describe('on click', () => {
+
+        function doClick() {
+          const element = fixture.debugElement.query(By.css(`#${LIST_VIEW_CONTENT_TEST_BUTTON_ID}`));
+          element.triggerEventHandler('click', {} as MouseEvent);
+          return fixture.whenStable();
+        }
+
+        it('should have called onItemSelected() callback.', (done) => {
+          let clicked = false;
+
+          testComponent.onItemSelected = (x) => {
+            expect(x).toBeDefined();
+            clicked = true;
+          };
+
+          doClick().then(() => {
+            expect(clicked).toBeTrue();
+            done();
+          });
+        });
+
+        it('should have called onItemClicked() callback.', (done) => {
+          let clicked = false;
+
+          testComponent.onItemClicked = (x) => {
+            expect(x.selected).toBeDefined();
+            expect(x.event).toBeDefined();
+            clicked = true;
+          };
+
+          doClick().then(() => {
+            expect(clicked).toBeTrue();
+            done();
+          });
+        });
+
+      });
+
       describe('and cannot load more', () => {
 
         it('canLoadMore() on the component should be false', (done) => {
@@ -93,11 +133,16 @@ describe('ListViewComponent', () => {
 
 });
 
+export const LIST_VIEW_CONTENT_TEST_BUTTON_ID = 'test-button';
+
 @Component({
   selector: 'gae-test-model-list-content',
   template: `
+  <div>
     <div>LIST</div>
+    <button id="${LIST_VIEW_CONTENT_TEST_BUTTON_ID}" (click)="testItemClicked($event)"></button>
     <gae-list-load-more></gae-list-load-more>
+  </div>
   `
 })
 export class GaeTestFooListContentComponent extends AbstractListContentComponent<TestFoo> {
@@ -107,6 +152,10 @@ export class GaeTestFooListContentComponent extends AbstractListContentComponent
 
   constructor(@Inject(forwardRef(() => GaeTestFooListComponent)) listView: any) {
     super(listView);
+  }
+
+  testItemClicked(event: MouseEvent) {
+    this.select(new TestFoo(), event);
   }
 
 }
@@ -134,7 +183,7 @@ export class GaeTestFooListComponent extends AbstractListViewComponent<TestFoo> 
 
 @Component({
   template: `
-    <gae-test-model-list [source]="source"></gae-test-model-list>
+    <gae-test-model-list [source]="source" (itemClicked)="onItemClicked($event)" (itemSelected)="onItemSelected($event)"></gae-test-model-list>
   `
 })
 class TestViewComponent {
@@ -143,5 +192,9 @@ class TestViewComponent {
   public component?: GaeTestFooListComponent;
 
   public source: ListViewSource<TestFoo>;
+
+  public onItemSelected = (item: TestFoo) => undefined;
+
+  public onItemClicked = (item: ListViewItemClickedEvent<TestFoo>) => undefined;
 
 }

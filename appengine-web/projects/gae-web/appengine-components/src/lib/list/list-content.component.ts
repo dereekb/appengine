@@ -1,4 +1,4 @@
-import { ListViewComponent } from './list-view.component';
+import { ListViewComponent, ListViewState } from './list-view.component';
 import { Observable } from 'rxjs';
 
 /**
@@ -14,7 +14,7 @@ export abstract class AbstractListContentComponent<T> {
 
   constructor(protected readonly _listView: ListViewComponent<T>) { }
 
-  protected get listView() {
+  protected get listView(): ListViewComponent<T> {
     return this._listView;
   }
 
@@ -22,11 +22,11 @@ export abstract class AbstractListContentComponent<T> {
     return this._listView.elements;
   }
 
-  public get canLoadMore() {
+  public get canLoadMore(): boolean {
     return this._listView.canLoadMore;
   }
 
-  public get state() {
+  public get state(): ListViewState {
     return this._listView.state;
   }
 
@@ -34,8 +34,8 @@ export abstract class AbstractListContentComponent<T> {
     this._listView.loadMore();
   }
 
-  select(selected: T) {
-    this._listView.select(selected);
+  select(selected: T, event: MouseEvent | undefined) {
+    this._listView.select(selected, event);
   }
 
 }

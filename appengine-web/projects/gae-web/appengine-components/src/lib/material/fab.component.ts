@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 
 import { StateService } from '@uirouter/angular';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { ValueUtility, SubscriptionObject } from '@gae-web/appengine-utility';
 import { throttleTime } from 'rxjs/operators';
 import { MatProgressButtonOptions } from 'mat-progress-buttons';
@@ -48,7 +48,7 @@ export class PageFabService {
 
   constructor() { }
 
-  public get visibleButtonObs() {
+  public get visibleButtonObs(): Observable<GaePageFabComponent> {
     return this._visibleButton.asObservable();
   }
 
