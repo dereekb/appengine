@@ -10,7 +10,9 @@ export class TimeDistancePipe implements PipeTransform {
   transform(input: FullDateInput | undefined, to: Date = new Date(), unavailable: string = 'Not Available') {
     if (input) {
       const from = ToJsDatePipe.toJsDate(input);
-      return formatDistance(to, from, {});
+      return formatDistance(to, from, {
+        addSuffix: true
+      });
     } else {
       return unavailable;
     }

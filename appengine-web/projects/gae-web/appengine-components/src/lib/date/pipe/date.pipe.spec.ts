@@ -35,6 +35,7 @@ describe('Date Pipe Test Component', () => {
   template: `
     <div>
       <p>{{ dateTime | dateFromPlusTo:'h:mm a':10 }}</p>
+      <p>{{ dateTime | dateFormatDistance }}</p>
       <p>{{ 500 | minutesString }}</p>
       <p>{{ dateTime | timeDistance }}</p>
       <p>{{ dateTime | toDateTime }}</p>

@@ -5,6 +5,7 @@ import { TimeDistancePipe } from './timedistance.pipe';
 import { ToDateTimePipe } from './todatetime.pipe';
 import { ToJsDatePipe } from './tojsdate.pipe';
 import { ToMinutesPipe } from './tominutes.pipe';
+import { DateFormatDistancePipe } from './dateformatdistance.pipe';
 
 /**
  * Pre-configured GaeComponentsModule that imports GaeComponentsModule and GaeMaterialComponentsModule.
@@ -12,6 +13,7 @@ import { ToMinutesPipe } from './tominutes.pipe';
 @NgModule({
   exports: [
     DateFromToTimePipe,
+    DateFormatDistancePipe,
     MinutesStringPipe,
     TimeDistancePipe,
     ToDateTimePipe,
@@ -20,6 +22,7 @@ import { ToMinutesPipe } from './tominutes.pipe';
   ],
   declarations: [
     DateFromToTimePipe,
+    DateFormatDistancePipe,
     MinutesStringPipe,
     TimeDistancePipe,
     ToDateTimePipe,
