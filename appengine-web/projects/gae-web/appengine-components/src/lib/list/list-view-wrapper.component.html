@@ -1,9 +1,9 @@
 <div class="gae-list-view">
-  <div class="gae-list-view-toolbar" *ngIf="showControls">
-    <ng-content name="toolbar" select="[toolbar]"></ng-content>
+  <div #customControls class="gae-list-view-controls" *ngIf="showControls">
+    <ng-content name="controls" select="[controls]"></ng-content>
   </div>
   <!-- List Content -->
-  <div class="gae-list-view-content">
+  <div class="gae-list-view-content" [ngClass]="{ 'gae-list-view-content-with-controls': showControls && hasControls }">
     <ng-content select="[list]"></ng-content>
   </div>
   <!-- Loading Info -->

@@ -1,10 +1,11 @@
-import { Component, OnDestroy, ViewEncapsulation, Inject, ChangeDetectorRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, ViewEncapsulation, Inject, ChangeDetectorRef, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 
 import { ListViewComponent } from './list-view.component';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 import { flatMap } from 'rxjs/operators';
 import { ListViewSourceState } from './source';
 import { SimpleLoadingContext, LoadingContext } from '../loading/loading';
+import { GaeViewUtility } from '../shared/utility';
 
 /**
  * Wraps content within a ListViewComponent implementation.
@@ -14,7 +15,9 @@ import { SimpleLoadingContext, LoadingContext } from '../loading/loading';
   templateUrl: './list-view-wrapper.component.html',
   encapsulation: ViewEncapsulation.None
 })
-export class GaeListViewWrapperComponent<T> implements OnDestroy {
+export class GaeListViewWrapperComponent<T> implements OnDestroy, AfterViewInit {
+
+  @ViewChild('customControls', { static: false }) customControlsContent: ElementRef;
 
   private _count: number;
   private _state: ListViewSourceState;
@@ -22,7 +25,7 @@ export class GaeListViewWrapperComponent<T> implements OnDestroy {
   private _context = new SimpleLoadingContext();
   private _sub = new SubscriptionObject();
 
-  constructor(@Inject(ListViewComponent) private _listView: ListViewComponent<T>, private cdRef: ChangeDetectorRef) {
+  constructor(@Inject(ListViewComponent) private _listView: ListViewComponent<T>, private _cdRef: ChangeDetectorRef) {
     this._sub.subscription = _listView.stream.pipe(
       flatMap(x => x.source)
     ).subscribe((event) => {
@@ -48,6 +51,11 @@ export class GaeListViewWrapperComponent<T> implements OnDestroy {
     });
   }
 
+  ngAfterViewInit(): void {
+    // Detect changes to hasControls.
+    GaeViewUtility.safeDetectChanges(this._cdRef);
+  }
+
   ngOnDestroy() {
     this._sub.destroy();
   }
@@ -66,6 +74,10 @@ export class GaeListViewWrapperComponent<T> implements OnDestroy {
 
   public get showControls() {
     return !this._listView.hideControls;
+  }
+
+  public get hasControls() {
+    return GaeViewUtility.checkNgContentWrapperHasContent(this.customControlsContent);
   }
 
   public get hasElements() {

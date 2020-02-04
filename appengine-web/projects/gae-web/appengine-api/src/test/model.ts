@@ -1,9 +1,10 @@
 import { of, Observable } from 'rxjs';
 import { ValueUtility, ModelKey, NumberModelKey, UniqueModel, ModelUtility } from '@gae-web/appengine-utility';
 import { ReadService, ReadResponse, ReadRequest } from '../lib/model/crud/read.service';
-import { QueryService, ModelSearchResponse, SearchRequest } from '../public-api';
 import { delay } from 'rxjs/operators';
 import { TypedModelSearchService } from '../lib/model/extension/search/document/search.service';
+import { QueryService } from '../lib/model/extension/search/query/query.service';
+import { ModelSearchResponse, SearchRequest } from '../lib/model/extension/search/search.service';
 
 export interface TestReadServiceDelegate<T> {
   handleRead(service: TestReadService<T>, modelKeys: ModelKey[], atomic?: boolean): Observable<ReadResponse<T>>;

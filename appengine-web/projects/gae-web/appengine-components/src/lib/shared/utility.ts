@@ -23,6 +23,7 @@ export class GaeViewUtility {
    *
    */
   static checkNgContentWrapperHasContent(ref: ElementRef<Element> | undefined): boolean {
+    // https://github.com/angular/angular/issues/26083
     let hasContent = false;
 
     if (ref) {

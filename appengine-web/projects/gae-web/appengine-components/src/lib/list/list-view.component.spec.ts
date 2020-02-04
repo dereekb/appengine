@@ -115,7 +115,7 @@ export class GaeTestFooListContentComponent extends AbstractListContentComponent
   selector: 'gae-test-model-list',
   template: `
   <gae-list-view-wrapper>
-    <ng-content toolbar select="[toolbar]"></ng-content>
+    <ng-content controls select="[controls]"></ng-content>
     <gae-test-model-list-content list></gae-test-model-list-content>
     <ng-content empty select="[empty]"></ng-content>
   </gae-list-view-wrapper>

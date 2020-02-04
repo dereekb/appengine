@@ -4,12 +4,6 @@
   overflow-y: scroll;
 }
 
-.gae-list-view-toolbar {
-  position: absolute;
-  width: 100%;
-  z-index: 300;
-}
+.gae-list-view-content {}
 
-.gae-list-view-content {
-  padding-top: 64px;
-}
+.gae-list-view-content-with-controls {}

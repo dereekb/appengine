@@ -41,17 +41,40 @@ describe('ListViewWrapperComponent', () => {
     expect(wrapper).toBeDefined();
   });
 
-  it('should show the toolbar', () => {
+  describe('controls content', () => {
 
-  });
-
-  describe('with hide content', () => {
-
-    describe('it should hide the toolbar', () => {
-
+    it('should be shown (since it is declared).', () => {
+      const customControls: HTMLElement = fixture.debugElement.query(By.css(`#${CUSTOM_CONTROLS_ID}`)).nativeElement;
+      expect(customControls).not.toBeNull();
+      expect(customControls.innerText).toBe(CUSTOM_CONTROLS_CONTENT);
     });
 
-    describe('it should hide the toolbar', () => {
+    it('should affect the content to add the content class.', () => {
+      const customControls: HTMLElement = fixture.debugElement.query(By.css(`.gae-list-view-content-with-controls`)).nativeElement;
+      expect(customControls).not.toBeNull();
+    });
+
+    it('should detect custom controls content.', () => {
+      fixture.detectChanges();
+      expect(fixture.componentInstance.component.wrapperComponent.showControls).toBeTrue();
+    });
+
+    describe('when hidden', () => {
+
+      beforeEach(async(() => {
+        fixture.componentInstance.component.hideControls = true;
+        fixture.detectChanges();
+      }));
+
+      it('should affect the content to remove the content class.', () => {
+        const customControls = fixture.debugElement.query(By.css(`.gae-list-view-content-with-controls`));
+        expect(customControls).toBeNull();
+      });
+
+      it('should detect hide custom controls content.', () => {
+        fixture.detectChanges();
+        expect(fixture.componentInstance.component.wrapperComponent.showControls).toBeFalse();
+      });
 
     });
 
@@ -167,14 +190,15 @@ describe('ListViewWrapperComponent', () => {
 });
 
 
-const CUSTOM_TOOLBAR_ID = 'custom-toolbar';
+const CUSTOM_CONTROLS_ID = 'custom-toolbar';
+const CUSTOM_CONTROLS_CONTENT = 'Custom Controls';
 const CUSTOM_EMPTY_ID = 'custom-empty';
 
 @Component({
   template: `
     <gae-test-model-list [source]="source">
-      <div toolbar>
-        <p id="${CUSTOM_TOOLBAR_ID}"></p>
+      <div controls>
+        <p id="${CUSTOM_CONTROLS_ID}">${CUSTOM_CONTROLS_CONTENT}</p>
       </div>
       <div empty>
         <p id="${CUSTOM_EMPTY_ID}"></p>
@@ -184,7 +208,7 @@ const CUSTOM_EMPTY_ID = 'custom-empty';
 })
 class TestViewComponent {
 
-  @ViewChild(GaeTestFooListComponent, {static: true})
+  @ViewChild(GaeTestFooListComponent, { static: true })
   public component: GaeTestFooListComponent;
 
   public source: ListViewSource<TestFoo>;
