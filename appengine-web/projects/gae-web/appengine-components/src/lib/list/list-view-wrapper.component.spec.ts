@@ -41,7 +41,7 @@ describe('ListViewWrapperComponent', () => {
     expect(wrapper).toBeDefined();
   });
 
-  describe('it should show the toolbar', () => {
+  it('should show the toolbar', () => {
 
   });
 

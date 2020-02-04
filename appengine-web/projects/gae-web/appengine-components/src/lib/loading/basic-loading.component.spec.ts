@@ -1,10 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { GaeLoadingComponentsModule } from './loading.module';
 import { By } from '@angular/platform-browser';
 import { GaeLoadingProgressComponent } from './loading-progress.component';
 import { ErrorInput } from '@gae-web/appengine-utility';
 import { GaeErrorComponent } from './error.component';
+import { GaeBasicLoadingComponent } from './basic-loading.component';
 
 describe('GaeBasicLoadingComponent', () => {
 
@@ -48,6 +49,11 @@ describe('GaeBasicLoadingComponent', () => {
         expect(loadingProgressQueryResult).not.toBeNull();
       });
 
+      it('should not detect custom loading content (that does not exist).', () => {
+        fixture.detectChanges();
+        expect(fixture.componentInstance.component.hasCustomLoading).toBeFalse();
+      });
+
     });
 
     describe('and error', () => {
@@ -69,6 +75,11 @@ describe('GaeBasicLoadingComponent', () => {
       it('should display the error view.', () => {
         const errorComponentQueryResult = fixture.debugElement.query(By.directive(GaeErrorComponent));
         expect(errorComponentQueryResult).not.toBeNull();
+      });
+
+      it('should not detect custom error content (that does not exist).', () => {
+        fixture.detectChanges();
+        expect(fixture.componentInstance.component.hasCustomError).toBeFalse();
       });
 
     });
@@ -97,6 +108,11 @@ describe('GaeBasicLoadingComponent', () => {
       expect(customError.innerText).toBe(CUSTOM_ERROR_CONTENT);
     });
 
+    it('should detect the custom loading content.', () => {
+      fixture.detectChanges();
+      expect(fixture.componentInstance.component.hasCustomError).toBeTrue();
+    });
+
   });
 
   describe('with custom loading', () => {
@@ -116,6 +132,11 @@ describe('GaeBasicLoadingComponent', () => {
       const customLoading: HTMLElement = fixture.debugElement.query(By.css('#custom-loading')).nativeElement;
       expect(customLoading).not.toBeNull();
       expect(customLoading.innerText).toBe(CUSTOM_LOADING_CONTENT);
+    });
+
+    it('should detect the custom loading content.', () => {
+      fixture.detectChanges();
+      expect(fixture.componentInstance.component.hasCustomLoading).toBeTrue();
     });
 
   });
@@ -141,6 +162,9 @@ class BasicLoadingWithContentComponent {
 
   public error: ErrorInput;
 
+  @ViewChild(GaeBasicLoadingComponent, { static: true })
+  public readonly component: GaeBasicLoadingComponent;
+
 }
 
 @Component({
@@ -155,6 +179,9 @@ class BasicLoadingWithContentComponent {
 class BasicLoadingWithCustomErrorComponent {
 
   public error: ErrorInput;
+
+  @ViewChild(GaeBasicLoadingComponent, { static: true })
+  public readonly component: GaeBasicLoadingComponent;
 
 }
 
@@ -172,5 +199,8 @@ class BasicLoadingWithCustomErrorComponent {
 class BasicLoadingWithCustomLoadingComponent {
 
   public loading = false;
+
+  @ViewChild(GaeBasicLoadingComponent, { static: true })
+  public readonly component: GaeBasicLoadingComponent;
 
 }

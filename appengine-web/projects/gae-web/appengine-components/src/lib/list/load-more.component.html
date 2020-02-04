@@ -3,5 +3,7 @@
     <mat-icon mat-list-icon>{{icon}}</mat-icon>
     <p mat-line>{{text}}</p>
   </ng-container>
-  <ng-content select="[content]"></ng-content>
+  <span #customContent>
+    <ng-content select="[content]"></ng-content>
+  </span>
 </a>

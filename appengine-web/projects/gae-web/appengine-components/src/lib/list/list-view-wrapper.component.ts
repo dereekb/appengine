@@ -14,19 +14,13 @@ import { SimpleLoadingContext, LoadingContext } from '../loading/loading';
   templateUrl: './list-view-wrapper.component.html',
   encapsulation: ViewEncapsulation.None
 })
-export class GaeListViewWrapperComponent<T> implements AfterViewInit, OnDestroy {
+export class GaeListViewWrapperComponent<T> implements OnDestroy {
 
   private _count: number;
   private _state: ListViewSourceState;
 
   private _context = new SimpleLoadingContext();
   private _sub = new SubscriptionObject();
-
-  @ViewChild('toolbar', {static: true}) customToolbarContent;
-  @ViewChild('empty', {static: true}) customEmptyContent;
-
-  private _hasCustomToolbar;
-  private _hasCustomEmpty;
 
   constructor(@Inject(ListViewComponent) private _listView: ListViewComponent<T>, private cdRef: ChangeDetectorRef) {
     this._sub.subscription = _listView.stream.pipe(
@@ -54,12 +48,6 @@ export class GaeListViewWrapperComponent<T> implements AfterViewInit, OnDestroy 
     });
   }
 
-  ngAfterViewInit() {
-    this._hasCustomToolbar = Boolean(this.customToolbarContent);
-    this._hasCustomEmpty = Boolean(this.customEmptyContent);
-    this.cdRef.detectChanges();
-  }
-
   ngOnDestroy() {
     this._sub.destroy();
   }
@@ -82,14 +70,6 @@ export class GaeListViewWrapperComponent<T> implements AfterViewInit, OnDestroy 
 
   public get hasElements() {
     return this._count !== 0;
-  }
-
-  public get hasCustomToolbar() {
-    return this._hasCustomToolbar;
-  }
-
-  public get hasCustomEmpty() {
-    return this._hasCustomEmpty;
   }
 
 }

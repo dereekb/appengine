@@ -1,5 +1,6 @@
-import { Component, Input, OnChanges, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild, ChangeDetectorRef, AfterViewInit, ElementRef, AfterContentChecked } from '@angular/core';
 import { ErrorInput, ValueUtility } from '@gae-web/appengine-utility';
+import { GaeViewUtility } from '../shared/utility';
 
 /**
  * GaeBasicLoadingComponent loading state.
@@ -21,7 +22,7 @@ export enum LoadingComponentState {
   selector: 'gae-basic-loading',
   templateUrl: './basic-loading.component.html'
 })
-export class GaeBasicLoadingComponent implements AfterViewInit, OnChanges {
+export class GaeBasicLoadingComponent implements OnChanges, AfterViewInit {
 
   private _show = true;
 
@@ -34,21 +35,17 @@ export class GaeBasicLoadingComponent implements AfterViewInit, OnChanges {
   @Input()
   public error: ErrorInput;
 
-  @ViewChild('error', {static: true}) customErrorContent;
-  @ViewChild('loading', {static: true}) customLoadingContent;
-
-  private _hasCustomError;
-  private _hasCustomLoading;
+  @ViewChild('customError', { static: false }) customErrorContent: ElementRef;
+  @ViewChild('customLoading', { static: false }) customLoadingContent: ElementRef;
 
   private _loading: boolean;
   private _state: LoadingComponentState = LoadingComponentState.Loading;
 
-  constructor(private cdRef: ChangeDetectorRef) { }
+  constructor(private _cdRef: ChangeDetectorRef) { }
 
   ngAfterViewInit() {
-    this._hasCustomError = Boolean(this.customErrorContent);
-    this._hasCustomLoading = Boolean(this.customLoadingContent);
-    this.cdRef.detectChanges();
+    this._tryUpdateState();
+    GaeViewUtility.safeDetectChanges(this._cdRef);
   }
 
   get isLoading() {
@@ -70,11 +67,11 @@ export class GaeBasicLoadingComponent implements AfterViewInit, OnChanges {
   }
 
   public get hasCustomError() {
-    return this._hasCustomError;
+    return GaeViewUtility.checkNgContentWrapperHasContent(this.customErrorContent);
   }
 
   public get hasCustomLoading() {
-    return this._hasCustomLoading;
+    return GaeViewUtility.checkNgContentWrapperHasContent(this.customLoadingContent);
   }
 
   public get state() {
@@ -82,6 +79,27 @@ export class GaeBasicLoadingComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges() {
+    this._detectStateChanges();
+  }
+
+  private _detectStateChanges() {
+    if (this._tryUpdateState()) {
+      GaeViewUtility.safeDetectChanges(this._cdRef);
+    }
+  }
+
+  private _tryUpdateState(): boolean {
+    const state = this._calculateNewState();
+
+    if (this._state !== state) {
+      this._state = state;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private _calculateNewState(): LoadingComponentState {
     let state = LoadingComponentState.Error;
 
     if (!this.error) {
@@ -92,7 +110,7 @@ export class GaeBasicLoadingComponent implements AfterViewInit, OnChanges {
       }
     }
 
-    this._state = state;
+    return state;
   }
 
 }

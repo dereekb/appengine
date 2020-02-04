@@ -116,7 +116,6 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
       const stream = this._source.stream.pipe(
         tap((x) => this._lastSourceState = x.state)
       );
-
       this.nextStreamEvent(ListViewState.SourceAvailable, stream);
     } else {
       this._lastSourceState = ListViewSourceState.Init;

@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DateTime } from 'luxon';
 import { GaeDatePipesModule } from './date.pipe.module';
 
-fdescribe('Date Pipe Test Component', () => {
+describe('Date Pipe Test Component', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

@@ -1,4 +1,4 @@
-import { Inject, Component, ChangeDetectorRef, Input, ViewRef, AfterViewInit, ViewChild } from '@angular/core';
+import { Inject, Component, ChangeDetectorRef, Input, ViewRef, AfterViewInit, ViewChild, ElementRef, OnChanges } from '@angular/core';
 import { ListViewComponent } from './list-view.component';
 import { AbstractSubscriptionComponent } from '../shared/subscription';
 import { GaeViewUtility } from '../shared/utility';
@@ -18,9 +18,8 @@ export class GaeListLoadMoreComponent extends AbstractSubscriptionComponent impl
   @Input()
   public text = 'Load More';
 
-  @ViewChild('content', { static: false }) customContent;
+  @ViewChild('customContent', { static: false }) customContent: ElementRef;
 
-  private _hasCustomContent;
   private _canLoadMore: boolean;
 
   constructor(@Inject(ListViewComponent) private readonly _listView: ListViewComponent<any>, private _cdRef: ChangeDetectorRef) {
@@ -28,14 +27,15 @@ export class GaeListLoadMoreComponent extends AbstractSubscriptionComponent impl
   }
 
   ngAfterViewInit(): void {
-    this._hasCustomContent = Boolean(this.customContent);
     this.sub = this._listView.elements.subscribe(() => {
       this._refresh();
     });
+
+    GaeViewUtility.safeDetectChanges(this._cdRef);
   }
 
   public get hasCustomContent() {
-    return this._hasCustomContent;
+    return GaeViewUtility.checkNgContentWrapperHasContent(this.customContent);
   }
 
   public get canLoadMore() {

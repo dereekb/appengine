@@ -55,7 +55,7 @@ describe('AsyncModelCacheWrap', () => {
 
   describe('#asyncRead()', () => {
 
-    fdescribe('with ignoreOtherKeyChanges true', () => {
+    describe('with ignoreOtherKeyChanges true', () => {
 
       it('should ignore other key changes.', (done) => {
         const testKeys = [testModelKey];

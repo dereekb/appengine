@@ -2,14 +2,18 @@
   <div [ngSwitch]="state">
     <ng-container *ngSwitchCase="0">
       <gae-loading-progress *ngIf="!hasCustomLoading" [text]="text" [linear]="linear"></gae-loading-progress>
-      <ng-content select="[loading]"></ng-content>
+      <div #customLoading>
+        <ng-content select="[loading]"></ng-content>
+      </div>
     </ng-container>
     <ng-container *ngSwitchCase="1">
       <ng-content select="[content]"></ng-content>
     </ng-container>
     <ng-container *ngSwitchCase="2">
       <gae-error *ngIf="!hasCustomError" [error]="error"></gae-error>
-      <ng-content select="[error]"></ng-content>
+      <div #customError>
+        <ng-content select="[error]"></ng-content>
+      </div>
     </ng-container>
   </div>
 </div>
