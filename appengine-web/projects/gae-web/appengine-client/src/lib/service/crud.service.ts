@@ -208,7 +208,7 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
   }
 
   /**
-   * Conveneince function that ignores all errors and only returns the model, 
+   * Conveneince function that ignores all errors and only returns the model,
    * or undefined if an error occurs or the model does not exist.
    *
    * @param key Model or key to read.

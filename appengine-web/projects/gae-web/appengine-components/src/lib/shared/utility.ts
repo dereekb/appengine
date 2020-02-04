@@ -10,7 +10,7 @@ export class GaeViewUtility {
 
   /**
    * Used to check an injected ElementRef that wraps an ng-content injection point whether or not any content was injected,
-   * or more specifically if the parent component passed any target content to the child. This will still return true if 
+   * or more specifically if the parent component passed any target content to the child. This will still return true if
    * passed content is empty.
    *
    * TS:

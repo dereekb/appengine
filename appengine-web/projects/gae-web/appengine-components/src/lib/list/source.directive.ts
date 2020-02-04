@@ -43,6 +43,10 @@ export class GaeListViewReadSourceDirective<T extends UniqueModel> extends Abstr
   }
 
   // MARK: ListViewSource
+  public canLoadMore(): boolean {
+    return false; // Static read source that cannot read more.
+  }
+
   public more(): void {
     // Do nothing.
   }
@@ -120,6 +124,14 @@ export class GaeListViewKeySearchSourceDirective<T extends UniqueModel> extends 
   }
 
   // MARK: ListViewSource
+  public canLoadMore(): boolean {
+    if (this._source) {
+      return this._source.hasNext();
+    } else {
+      return undefined;
+    }
+  }
+
   public more(): void {
     if (this._source) {
       this._source.next();

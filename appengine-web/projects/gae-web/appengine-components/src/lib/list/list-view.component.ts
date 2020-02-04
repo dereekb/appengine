@@ -67,7 +67,6 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
     }
   }), shareReplay(1));
 
-  private _lastSourceState = ListViewSourceState.Init;
   private _selected?: T;
 
   @Input()
@@ -113,12 +112,9 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
 
   private _bindToSource(): void {
     if (this._source) {
-      const stream = this._source.stream.pipe(
-        tap((x) => this._lastSourceState = x.state)
-      );
+      const stream = this._source.stream;
       this.nextStreamEvent(ListViewState.SourceAvailable, stream);
     } else {
-      this._lastSourceState = ListViewSourceState.Init;
       this.nextStreamEvent(ListViewState.WaitingForSource);
     }
   }
@@ -149,7 +145,7 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
   }
 
   get canLoadMore(): boolean {
-    return !this.disallowLoadMore && this._lastSourceState === ListViewSourceState.Idle;
+    return !this.disallowLoadMore && ((this._source) ? this._source.canLoadMore() : false);
   }
 
   get selected() {

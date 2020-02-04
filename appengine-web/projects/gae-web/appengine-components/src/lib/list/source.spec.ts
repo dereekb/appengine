@@ -164,6 +164,10 @@ class TestListViewSource extends AbstractListViewSource<TestFoo> {
   }
 
   // MARK: ListViewSource
+  public canLoadMore(): boolean {
+    return false;
+  }
+
   public more(): void {
     // Do nothing.
   }

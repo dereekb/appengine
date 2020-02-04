@@ -11,6 +11,7 @@ export interface ListViewSourceEvent<T> {
 
 export abstract class ListViewSource<T> {
   readonly stream: Observable<ListViewSourceEvent<T>>;
+  abstract canLoadMore(): boolean;
   abstract more(): void;
   abstract refresh(): void;
 }
@@ -47,6 +48,8 @@ export abstract class AbstractListViewSource<T> implements OnDestroy {
   public get stream(): Observable<ListViewSourceEvent<T>> {
     return this._stream;
   }
+
+  public abstract canLoadMore(): boolean;
 
   public abstract more(): void;
 
@@ -127,6 +130,10 @@ export abstract class AbstractWrappedConversionListViewSource<I, O> implements L
 
   constructor(protected readonly _inputSource: ListViewSource<I>) {
     this.stream = this.buildConversionStream(_inputSource);
+  }
+
+  canLoadMore(): boolean {
+    return this._inputSource.canLoadMore();
   }
 
   more(): void {
