@@ -80,8 +80,8 @@ export class GaeTestFooAnchorListContentComponent extends AbstractDelegatedAncho
   @ViewChild(GaeListLoadMoreComponent, { static: true })
   public loadMoreButtonComponent: GaeListLoadMoreComponent;
 
-  constructor(@Inject(forwardRef(() => GaeTestFooAnchorListComponent)) listView: any, cdRef: ChangeDetectorRef) {
-    super(listView, cdRef);
+  constructor(@Inject(forwardRef(() => GaeTestFooAnchorListComponent)) listView: any) {
+    super(listView);
   }
 
 }

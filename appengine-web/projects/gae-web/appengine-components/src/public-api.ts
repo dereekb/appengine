@@ -108,6 +108,7 @@ export * from './lib/view/anchor/anchor.component';
 export * from './lib/view/anchor/anchor.module';
 export * from './lib/view/anchor/list-content.component';
 export * from './lib/view/anchor/list-view.component';
+export * from './lib/view/anchor/list-anchor.component';
 
 // Module
 export * from './lib/module';

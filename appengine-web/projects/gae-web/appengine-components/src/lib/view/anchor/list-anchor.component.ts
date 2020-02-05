@@ -2,7 +2,7 @@ import { Input, Component } from '@angular/core';
 import { AnchorListElement } from './list-content.component';
 
 /**
- * Component that wraps a gae-anchor and is used with a 
+ * Component that wraps a gae-anchor and is used within a AbstractDelegatedAnchorListContentComponent implementation.
  */
 @Component({
   selector: 'gae-list-anchor',
