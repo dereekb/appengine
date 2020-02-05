@@ -2,8 +2,18 @@
  * Public API Surface of appengine-components
  */
 
-// Anayltics
+// Analytics
 export * from './lib/analytics/action.directive';
+
+// Date
+export * from './lib/date/pipe/date.pipe.module';
+export * from './lib/date/pipe/dateformatdistance.pipe';
+export * from './lib/date/pipe/datefromtoformat.pipe';
+export * from './lib/date/pipe/minutesstring.pipe';
+export * from './lib/date/pipe/timedistance.pipe';
+export * from './lib/date/pipe/todatetime.pipe';
+export * from './lib/date/pipe/tojsdate.pipe';
+export * from './lib/date/pipe/tominutes.pipe';
 
 // Form
 export * from './lib/form/confirm-delete-form.component';
@@ -13,6 +23,7 @@ export * from './lib/form/form.component';
 export * from './lib/form/form.module';
 export * from './lib/form/input/autocomplete.component';
 export * from './lib/form/input/checkbox.component';
+export * from './lib/form/input/chiplist.component';
 export * from './lib/form/input/date.component';
 export * from './lib/form/input/input.component';
 export * from './lib/form/input/select.component';
@@ -30,6 +41,7 @@ export * from './lib/list/selection-list.component';
 export * from './lib/list/selection.module';
 export * from './lib/list/source.directive';
 export * from './lib/list/source';
+export * from './lib/list/load-more.component';
 
 // Loading
 export * from './lib/loading/basic-loading.component';
@@ -94,6 +106,7 @@ export * from './lib/state/segue.module';
 // Anchor
 export * from './lib/view/anchor/anchor.component';
 export * from './lib/view/anchor/anchor.module';
+export * from './lib/view/anchor/list-content.component';
 export * from './lib/view/anchor/list-view.component';
 
 // Module
