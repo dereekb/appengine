@@ -1,7 +1,7 @@
 import { AbstractListContentComponent } from '../../list/list-content.component';
 import { ClickableAnchor } from './anchor.component';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
 import { Input } from '@angular/core';
 
 export interface AnchorListElement<T> {
@@ -43,20 +43,38 @@ export abstract class AbstractDelegatedAnchorListContentComponent<T> extends Abs
     anchorForElement: () => undefined
   };
 
-  private _delegate: AnchorListDelegate<T> = AbstractDelegatedAnchorListContentComponent.DEFAULT_DELEGATE;
+  private readonly _delegate = new BehaviorSubject<AnchorListDelegate<T>>(AbstractDelegatedAnchorListContentComponent.DEFAULT_DELEGATE);
+
+  /**
+   * Uses combineLatest to make sure the anchorElements pipe updates properly.
+   */
+  private readonly _anchorElements: Observable<AnchorListElement<T>[]> = combineLatest([this.elements, this._delegate]).pipe(
+    map(([elements, delegate]) => {
+      return elements.map((element) => ({
+        element,
+        anchor: delegate.anchorForElement(element)
+      }));
+    }),
+    shareReplay(1)
+  );
 
   @Input()
   get anchorDelegate(): AnchorListDelegate<T> {
-    return this._delegate;
+    return this._delegate.value;
   }
 
   set anchorDelegate(anchorDelegate: AnchorListDelegate<T>) {
-    this._delegate = anchorDelegate || AbstractDelegatedAnchorListContentComponent.DEFAULT_DELEGATE;
+    this._delegate.next(anchorDelegate || AbstractDelegatedAnchorListContentComponent.DEFAULT_DELEGATE);
   }
 
   // MARK: AbstractAnchorListContentComponent
+  public get anchorElements(): Observable<AnchorListElement<T>[]> {
+    return this._anchorElements;
+  }
+
+  // MARK: Unused
   protected anchorForElement(element: T): ClickableAnchor | undefined {
-    return this._delegate.anchorForElement(element);
+    return this.anchorDelegate.anchorForElement(element);
   }
 
 }
