@@ -40,7 +40,9 @@ export interface AnchorListDelegate<T> {
 export abstract class AbstractDelegatedAnchorListContentComponent<T> extends AbstractAnchorListContentComponent<T> {
 
   private static readonly DEFAULT_DELEGATE: AnchorListDelegate<any> = {
-    anchorForElement: () => undefined
+    anchorForElement() {
+      return undefined;
+    }
   };
 
   private readonly _delegate = new BehaviorSubject<AnchorListDelegate<T>>(AbstractDelegatedAnchorListContentComponent.DEFAULT_DELEGATE);
