@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { GaeAnchorComponent } from './anchor.component';
 import { UIRouterModule } from '@uirouter/angular';
 import { CommonModule } from '@angular/common';
+import { GaeListAnchorComponent } from './list-anchor.component';
 
 @NgModule({
   imports: [
@@ -9,10 +10,12 @@ import { CommonModule } from '@angular/common';
     UIRouterModule
   ],
   declarations: [
-    GaeAnchorComponent
+    GaeAnchorComponent,
+    GaeListAnchorComponent
   ],
   exports: [
-    GaeAnchorComponent
+    GaeAnchorComponent,
+    GaeListAnchorComponent
   ]
 })
 export class GaeAnchorModule { }

@@ -123,7 +123,7 @@ export class TestListViewSourceFactory {
 
   static makeSource(keys: ModelKey[]): TestListViewSource {
     const readService: ReadService<TestFoo> = new TestReadService<TestFoo>('testModel', (x) => {
-      return new TestFoo(x as NumberModelKey);
+      return new TestFoo(x as NumberModelKey, 'Foo ' + x.toString());
     });
 
     const readSource = new ReadSource<TestFoo>(readService);

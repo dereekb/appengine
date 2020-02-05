@@ -1,8 +1,10 @@
 import { AbstractListContentComponent } from '../../list/list-content.component';
 import { ClickableAnchor } from './anchor.component';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
-import { Input } from '@angular/core';
+import { map, shareReplay, tap } from 'rxjs/operators';
+import { Input, ChangeDetectorRef } from '@angular/core';
+import { ListViewComponent } from '../../list/list-view.component';
+import { GaeViewUtility } from '../../shared/utility';
 
 export interface AnchorListElement<T> {
   element: T;
@@ -14,18 +16,7 @@ export interface AnchorListElement<T> {
  */
 export abstract class AbstractAnchorListContentComponent<T> extends AbstractListContentComponent<T> {
 
-  public get anchorElements(): Observable<AnchorListElement<T>[]> {
-    return this.elements.pipe(
-      map((elements: T[]) => {
-        return elements.map((element) => ({
-          element,
-          anchor: this.anchorForElement(element)
-        }));
-      })
-    );
-  }
-
-  protected abstract anchorForElement(element: T): ClickableAnchor | undefined;
+  public abstract get anchorElements(): Observable<AnchorListElement<T>[]>;
 
 }
 
@@ -57,8 +48,13 @@ export abstract class AbstractDelegatedAnchorListContentComponent<T> extends Abs
         anchor: delegate.anchorForElement(element)
       }));
     }),
+    tap(() => GaeViewUtility.safeDetectChanges(this._cdRef)),
     shareReplay(1)
   );
+
+  constructor(listView: ListViewComponent<T>, private readonly _cdRef: ChangeDetectorRef) {
+    super(listView);
+  }
 
   @Input()
   get anchorDelegate(): AnchorListDelegate<T> {
@@ -72,11 +68,6 @@ export abstract class AbstractDelegatedAnchorListContentComponent<T> extends Abs
   // MARK: AbstractAnchorListContentComponent
   public get anchorElements(): Observable<AnchorListElement<T>[]> {
     return this._anchorElements;
-  }
-
-  // MARK: Unused
-  protected anchorForElement(element: T): ClickableAnchor | undefined {
-    return this.anchorDelegate.anchorForElement(element);
   }
 
 }

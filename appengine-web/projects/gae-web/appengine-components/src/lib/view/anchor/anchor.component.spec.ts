@@ -7,7 +7,7 @@ import { ClickableAnchor } from './anchor.component';
 import { GaeAnchorModule } from './anchor.module';
 import { UIRouterModule } from '@uirouter/angular';
 
-fdescribe('GaeAnchorComponent', () => {
+describe('GaeAnchorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

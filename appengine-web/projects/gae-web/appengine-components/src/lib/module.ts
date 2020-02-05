@@ -7,6 +7,8 @@ import { GaeLoadingComponentsModule } from './loading/loading.module';
 import { GaeMaterialComponentsModule } from './material/material.module';
 import { GaeSegueComponentsModule } from './state/segue.module';
 import { GaeDatePipesModule } from './date/pipe/date.pipe.module';
+import { GaeAnchorModule } from './view/anchor/anchor.module';
+import { GaeViewModule } from './view/view.module';
 
 /**
  * Module that re-exports all Gae Component modules.
@@ -20,7 +22,8 @@ import { GaeDatePipesModule } from './date/pipe/date.pipe.module';
     GaeModelComponentsModule,
     GaeMaterialComponentsModule,
     GaeSegueComponentsModule,
-    GaeDatePipesModule
+    GaeDatePipesModule,
+    GaeViewModule
   ]
 })
 export class GaeComponentsModule {
