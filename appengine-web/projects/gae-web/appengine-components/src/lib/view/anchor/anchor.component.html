@@ -1,0 +1,23 @@
+<!-- Template is proejcted into other outlets. -->
+<ng-template #content>
+  <ng-content></ng-content>
+</ng-template>
+<ng-container [ngSwitch]="type">
+  <!-- Click -->
+  <a class="gae-anchor gae-anchor-click" [ngClass]="anchorClass" (click)="anchor.onClick($event)" *ngSwitchCase="1">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </a>
+  <!-- Sref -->
+  <a class="gae-anchor gae-anchor-sref" [ngClass]="anchorClass" [uiSref]="anchor.ref" [uiParams]="anchor.refParams"
+    [uiOptions]="anchor.refOptions" *ngSwitchCase="2">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </a>
+  <!-- Href -->
+  <a class="gae-anchor gae-anchor-href" [ngClass]="anchorClass" [href]="anchor.url" *ngSwitchCase="3">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </a>
+  <!-- Disabled or None -->
+  <a class="gae-anchor gae-anchor-disabled" [ngClass]="anchorClass" *ngSwitchDefault>
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </a>
+</ng-container>

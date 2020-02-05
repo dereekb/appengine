@@ -1,15 +1,6 @@
+import { ClickableSegue, ClickableElement } from '../shared/clickable';
 
 // MARK: Interfaces
-export interface ClickableFunction {
-  onClick?: () => void;
-}
-
-export interface ClickableSegue {
-  ref?: string;
-}
-
-export interface ClickableElement extends ClickableSegue, ClickableFunction { }
-
 export interface IconElement {
   icon?: string;
 }

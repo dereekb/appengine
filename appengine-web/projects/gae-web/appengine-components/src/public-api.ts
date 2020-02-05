@@ -91,5 +91,10 @@ export * from './lib/shared/utility';
 export * from './lib/state/segue.directive';
 export * from './lib/state/segue.module';
 
+// Anchor
+export * from './lib/view/anchor/anchor.component';
+export * from './lib/view/anchor/anchor.module';
+export * from './lib/view/anchor/list-view.component';
+
 // Module
 export * from './lib/module';
