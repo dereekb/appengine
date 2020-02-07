@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import { GaeAnchorModule } from './anchor/anchor.module';
+import { GaeNavBarComponent } from './nav/navbar.component';
 
 @NgModule({
   imports: [
-    GaeAnchorModule
+    GaeAnchorModule,
+    GaeNavBarComponent
   ],
   declarations: [],
   exports: [
-    GaeAnchorModule
+    GaeAnchorModule,
+    GaeNavBarComponent
   ]
 })
 export class GaeViewModule { }

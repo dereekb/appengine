@@ -1,0 +1,6 @@
+<nav mat-tab-nav-bar mat-align-tabs="center">
+  <!-- <a mat-tab-link *ngFor="let x of anchors">Label</a> -->
+  <gae-anchor *ngFor="let x of anchors" [anchor]="x.anchor">
+    <a mat-tab-link [active]="x.selected">{{ x.anchor.title }}</a>
+  </gae-anchor>
+</nav>

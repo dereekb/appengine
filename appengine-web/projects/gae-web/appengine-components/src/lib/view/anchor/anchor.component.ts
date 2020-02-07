@@ -1,7 +1,9 @@
 import { Input, Component } from '@angular/core';
 import { ClickableElement, ClickableUrl, ConfigurableClickableSegue } from '../../shared/clickable';
 
-export interface ClickableAnchor extends ClickableElement, ConfigurableClickableSegue, ClickableUrl { }
+export interface ClickableAnchor extends ClickableElement, ConfigurableClickableSegue, ClickableUrl {
+  disabled?: boolean;
+}
 
 export enum GaeAnchorComponentType {
   None = 0,
@@ -60,7 +62,9 @@ export class GaeAnchorComponent {
     let type: GaeAnchorComponentType = GaeAnchorComponentType.Disabled;
 
     if (!this.disabled && this.anchor) {
-      if (this.anchor.ref) {
+      if (this.anchor.disabled) {
+        type = GaeAnchorComponentType.Disabled;
+      } else if (this.anchor.ref) {
         type = GaeAnchorComponentType.Sref;
       } else if (this.anchor.onClick) {
         type = GaeAnchorComponentType.Clickable;
