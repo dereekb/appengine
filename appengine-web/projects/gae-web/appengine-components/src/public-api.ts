@@ -103,12 +103,14 @@ export * from './lib/shared/utility';
 export * from './lib/state/segue.directive';
 export * from './lib/state/segue.module';
 
-// Anchor
+// Views
 export * from './lib/view/anchor/anchor.component';
 export * from './lib/view/anchor/anchor.module';
 export * from './lib/view/anchor/list-content.component';
 export * from './lib/view/anchor/list-view.component';
 export * from './lib/view/anchor/list-anchor.component';
+export * from './lib/view/nav/nav.module';
+export * from './lib/view/nav/navbar.component';
 
 // Module
 export * from './lib/module';
