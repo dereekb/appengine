@@ -3,16 +3,16 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIRouterModule } from '@uirouter/angular';
-import { PlugNavModule } from './nav.module';
+import { GaeNavModule } from './nav.module';
 import { ClickableAnchorLink } from './navbar.component';
 
-fdescribe('GaeNavbarComponent', () => {
+describe('GaeNavbarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,
-        PlugNavModule,
+        GaeNavModule,
         UIRouterModule.forRoot()
       ],
       declarations: [TestViewComponent]

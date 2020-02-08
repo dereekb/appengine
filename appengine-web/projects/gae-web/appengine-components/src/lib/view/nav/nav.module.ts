@@ -17,4 +17,4 @@ import { GaeNavBarComponent } from './navbar.component';
     GaeNavBarComponent
   ]
 })
-export class PlugNavModule { }
+export class GaeNavModule { }
