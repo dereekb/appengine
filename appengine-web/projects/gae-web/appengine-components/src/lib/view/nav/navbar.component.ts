@@ -1,6 +1,7 @@
 import { Input, Component, ChangeDetectorRef, OnInit, OnDestroy, NgZone } from '@angular/core';
-import { ClickableAnchor, AbstractSubscriptionComponent, GaeViewUtility } from '@gae-web/appengine-components';
 import { TransitionService, StateService } from '@uirouter/core';
+import { AbstractSubscriptionComponent } from '../../shared/subscription';
+import { ClickableAnchor } from '../anchor/anchor.component';
 
 export interface ClickableAnchorLink extends ClickableAnchor {
   title: string;
@@ -21,9 +22,6 @@ interface NavAnchorLink {
 export class GaeNavBarComponent extends AbstractSubscriptionComponent implements OnInit, OnDestroy {
 
   private stopWatchingTransition: () => void;
-
-  @Input()
-  public align = 'center';
 
   private _links: ClickableAnchorLink[];
   private _anchors: NavAnchorLink[];
@@ -50,6 +48,7 @@ export class GaeNavBarComponent extends AbstractSubscriptionComponent implements
   public get links(): ClickableAnchorLink[] {
     return this._links;
   }
+
   public set links(links: ClickableAnchorLink[]) {
     this._links = links;
     this._updateAnchors();
