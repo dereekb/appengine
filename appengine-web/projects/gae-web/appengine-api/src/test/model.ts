@@ -101,7 +101,7 @@ export class TestQueryService<T extends UniqueModel> implements QueryService<T> 
 
   query(request: SearchRequest): Observable<ModelSearchResponse<T>> {
 
-    let keyResults: ModelKey[] = this._keyResults;
+    let keyResults: ModelKey[] = this._keyResults || [];
     let modelResults: T[];
 
     if (request.isKeysOnly === false) {

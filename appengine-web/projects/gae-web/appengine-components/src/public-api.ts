@@ -104,6 +104,7 @@ export * from './lib/state/segue.directive';
 export * from './lib/state/segue.module';
 
 // Views
+export * from './lib/view/view.module';
 export * from './lib/view/anchor/anchor.component';
 export * from './lib/view/anchor/anchor.module';
 export * from './lib/view/anchor/list-content.component';

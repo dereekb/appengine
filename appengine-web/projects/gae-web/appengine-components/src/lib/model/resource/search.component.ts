@@ -1,12 +1,14 @@
-import { AbstractIterableSourceComponent } from './source.component';
+import { AbstractIterableSourceComponent, ProvideIterableSourceComponent } from './source.component';
 import { UniqueModel, ModelKey, IterableSource, WrappedIterableSource } from '@gae-web/appengine-utility';
-import { Observable } from 'rxjs';
-import { OnDestroy, Input } from '@angular/core';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { OnDestroy, Input, Type, Directive, AfterContentInit, Inject, Host } from '@angular/core';
 import { QueryService, TypedModelSearchService } from '@gae-web/appengine-api';
 import {
   KeyQuerySource, KeySearchSource, QuerySourceConfiguration,
   TypedModelSearchSourceConfiguration, SearchSourceConfiguration, KeyTypedModelSearchSource
 } from '@gae-web/appengine-client';
+import { AbstractSubscriptionComponent } from '../../shared/subscription';
+import { map } from 'rxjs/operators';
 
 /**
  * Basic component used to wrap a KeyQuerySource or similar iterable source.
@@ -45,6 +47,10 @@ export abstract class AbstractWrappedIterableKeySourceComponent<T extends Unique
     return (this.source as WrappedIterableSource<ModelKey>).hasSource();
   }
 
+}
+
+export function ProvideConfigurableKeySearchSourceComponent<S extends AbstractConfigurableKeySearchSourceComponent<any, any>>(sourceType: Type<S>) {
+  return [...ProvideIterableSourceComponent(sourceType), { provide: AbstractConfigurableKeySearchSourceComponent, useExisting: sourceType }];
 }
 
 /**
@@ -110,6 +116,86 @@ export abstract class AbstractConfigurableKeySearchSourceComponent<T extends Uni
 
   protected stopWaiting() {
     this._stopWaiting();
+  }
+
+}
+
+export type GaeKeyQuerySourceFilterDirectiveMakeConfigFunction<C> = (baseConfig: any, filter: any) => C;
+
+export function DEFAULT_MAKE_CONFIG(baseConfig: any, filter: any) {
+  return {
+    ...baseConfig,
+    filter
+  };
+}
+
+@Directive({
+  selector: '[gaeKeyQuerySourceFilter]',
+  exportAs: 'gaeKeyQuerySourceFilter'
+})
+export class GaeKeyQuerySourceFilterDirective<C extends SearchSourceConfiguration> extends AbstractSubscriptionComponent implements AfterContentInit {
+
+  @Input()
+  public refreshOnNewConfig = true;
+
+  private _makeConfig = new BehaviorSubject<GaeKeyQuerySourceFilterDirectiveMakeConfigFunction<C>>(undefined);
+  private _baseConfig = new BehaviorSubject<C>(undefined);
+  private _filter = new BehaviorSubject<any>(undefined);
+
+  constructor(@Inject(AbstractConfigurableKeySearchSourceComponent) @Host() public readonly component: AbstractConfigurableKeySearchSourceComponent<any, C>) {
+    super();
+  }
+
+  ngAfterContentInit() {
+    this.sub = combineLatest([this._baseConfig, this._filter, this._makeConfig]).pipe(
+      map(([config, filter, makeFn]) => {
+        if (!makeFn) {
+          makeFn = DEFAULT_MAKE_CONFIG;
+        }
+
+        return makeFn(config, filter);
+      })
+    ).subscribe({
+      next: (newConfig) => {
+        this._updateConfig(newConfig);
+      }
+    });
+  }
+
+  public get makeConfig() {
+    return this._makeConfig.value;
+  }
+
+  @Input()
+  public set makeConfig(makeConfig: GaeKeyQuerySourceFilterDirectiveMakeConfigFunction<C>) {
+    this._makeConfig.next(makeConfig);
+  }
+
+  public get baseConfig() {
+    return this._baseConfig.value;
+  }
+
+  @Input()
+  public set baseConfig(config: C) {
+    this._baseConfig.next(config);
+  }
+
+  public get filter() {
+    return this._filter.value;
+  }
+
+  @Input('gaeKeyQuerySourceFilter')
+  public set filter(filter: any) {
+    this._filter.next(filter);
+  }
+
+  // MARK: Internal
+  protected _updateConfig(config: C) {
+    this.component.config = config;
+
+    if (this.refreshOnNewConfig) {
+      this.component.reset();
+    }
   }
 
 }
