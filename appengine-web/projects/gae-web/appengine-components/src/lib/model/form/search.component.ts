@@ -4,9 +4,9 @@ import { GaeKeyQuerySourceFilterDirective } from '../resource/search.component';
 import { combineLatest, BehaviorSubject } from 'rxjs';
 import { ModelFormComponent } from '../../form/model.component';
 import { filter, flatMap, map } from 'rxjs/operators';
+import { SearchParameters } from '@gae-web/appengine-api';
 
-
-export type GaeKeyQuerySourceFormFilterDirectiveFunction = (model: any) => any;
+export type GaeKeyQuerySourceFormFilterDirectiveFunction = (model: any) => SearchParameters;
 
 @Directive({
   selector: '[gaeKeyQuerySourceFormFilter]',
@@ -14,7 +14,7 @@ export type GaeKeyQuerySourceFormFilterDirectiveFunction = (model: any) => any;
 })
 export class GaeKeyQuerySourceFormFilterDirective extends AbstractSubscriptionComponent implements AfterContentInit {
 
-  private _form = new BehaviorSubject<ModelFormComponent<any>>(undefined);
+  private _form = new BehaviorSubject<ModelFormComponent<SearchParameters>>(undefined);
   private _makeFilter = new BehaviorSubject<GaeKeyQuerySourceFormFilterDirectiveFunction>(undefined);
 
   constructor(@Inject(GaeKeyQuerySourceFilterDirective) @Host() public readonly filterDirective: GaeKeyQuerySourceFilterDirective<any>) {
@@ -44,7 +44,7 @@ export class GaeKeyQuerySourceFormFilterDirective extends AbstractSubscriptionCo
       })
     ).subscribe({
       next: (newFilter) => {
-        this._updateFilter(newFilter);
+        this._updateFilters(newFilter);
       }
     });
   }
@@ -70,8 +70,8 @@ export class GaeKeyQuerySourceFormFilterDirective extends AbstractSubscriptionCo
   }
 
   // MARK: Internal
-  protected _updateFilter(newFilter) {
-    this.filterDirective.filter = newFilter;
+  protected _updateFilters(newFilters) {
+    this.filterDirective.filters = newFilters;
   }
 
 }

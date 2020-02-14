@@ -79,6 +79,7 @@ export * from './lib/model/form/create.directive';
 export * from './lib/model/form/delete.directive';
 export * from './lib/model/form/form-submit.controller';
 export * from './lib/model/form/submit.component';
+export * from './lib/model/form/search.component';
 export * from './lib/model/form/template.directive';
 export * from './lib/model/form/update.directive';
 

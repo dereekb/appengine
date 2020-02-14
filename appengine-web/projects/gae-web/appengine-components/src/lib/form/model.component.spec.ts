@@ -6,7 +6,7 @@ import { GaeFormComponentsModule } from './form.module';
 import { Observable, of } from 'rxjs';
 import { UniqueModel } from '@gae-web/appengine-utility';
 import { GaeCheckboxFormControlComponent } from './input/checkbox.component';
-import { AbstractModelFormComponent, ProvideModelFormComponent } from './model.component';
+import { ProvideModelFormComponent, AbstractUniqueModelFormComponent } from './model.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TestFoo } from '@gae-web/appengine-api';
@@ -49,7 +49,7 @@ describe('AbstractModelFormComponent', () => {
   `,
   providers: [ProvideModelFormComponent(GaeTestFooModelFormComponent)]
 })
-export class GaeTestFooModelFormComponent extends AbstractModelFormComponent<TestFoo> {
+export class GaeTestFooModelFormComponent extends AbstractUniqueModelFormComponent<TestFoo> {
 
   public nameRequired = false;
 

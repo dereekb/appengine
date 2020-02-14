@@ -8,6 +8,16 @@ import {
 } from '@gae-web/appengine-api';
 import { Subscription, Observable, combineLatest, Subject } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { BaseError } from 'make-error';
+
+// MARK: Error
+export class NoRemainingElementsError extends BaseError {
+
+  constructor(message: string = 'No more elements to load.') {
+    super(message);
+  }
+
+}
 
 // MARK: Read Source
 export interface ReadSourceConfiguration {
@@ -187,6 +197,35 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
     }
   }
 
+  /**
+   * Repeatedly loads objects until the n-th object has been loaded, or the end is reached.
+   */
+  public nextUntil(limit: number): Promise<ModelKey[]> {
+    let promise;
+
+    if (this.currentElements.length < limit) {
+      promise = this._nextUntil(limit);
+    } else {
+      promise = Promise.resolve();
+    }
+
+    // Eventually resolve and return all current elements.
+    return promise.then(() => Promise.resolve(this.currentElements));
+  }
+
+  private _nextUntil(limit: number) {
+    return this.next().then(() => {
+      return this.nextUntil(limit);
+    }, (e) => {
+      if (e instanceof NoRemainingElementsError) {
+        return undefined;
+      }
+
+      // Throw other errors...
+      return Promise.reject(e);
+    });
+  }
+
   protected canDoNext() {
     return this.hasNext() && !this.isStopped();
   }
@@ -196,7 +235,7 @@ export abstract class KeySearchSource<T extends UniqueModel, C extends SearchSou
       this._next = this.doNext();
       return this._next;
     } else {
-      return Promise.reject(new Error('No more elements to load.'));
+      return Promise.reject(new NoRemainingElementsError());
     }
   }
 

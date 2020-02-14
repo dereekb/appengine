@@ -280,6 +280,10 @@ describe('Source', () => {
 
       });
 
+      describe('nextUntil()', () => {
+        // TODO: ...
+      });
+
     });
 
 

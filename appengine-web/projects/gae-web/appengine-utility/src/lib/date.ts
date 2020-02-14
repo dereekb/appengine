@@ -198,6 +198,16 @@ export class DateTimeUtility {
     };
   }
 
+  public static dateFromInput(dateInput: FullDateInput, defaultDate?: Date): Date {
+    if (!dateInput) {
+      return defaultDate || undefined;
+    } else if (dateInput instanceof Date) {
+      return dateInput;
+    } else {
+      return this.dateTimeFromInput(dateInput).toJSDate();
+    }
+  }
+
   public static dateTimeISOFromInput(dateInput: FullDateInput, defaultDate?: DateInput, suppressError?: boolean) {
     const date = DateTimeUtility.dateTimeFromInput(dateInput, defaultDate, suppressError);
 

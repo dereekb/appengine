@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input, DebugElement, ViewChild, Optional } from '@angular/core';
 import { GaeModelComponentsModule } from '../model.module';
 import { KeyQuerySource, TestFooTestKeyQuerySource, QuerySourceConfiguration } from '@gae-web/appengine-client';
-import { TestFoo, TestFooReadService } from '@gae-web/appengine-api';
+import { TestFoo, TestFooReadService, SearchParameters } from '@gae-web/appengine-api';
 import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
 import { ModelUtility, ModelKey, ValueUtility, SourceState, NamedUniqueModel } from '@gae-web/appengine-utility';
 import { By } from '@angular/platform-browser';
@@ -61,15 +61,15 @@ describe('Search Components', () => {
 
         describe('with filter set', () => {
 
-          let sourceFilter;
+          let sourceFilter: SearchParameters;
 
           beforeEach(() => {
-            component.filter = sourceFilter = {};
+            component.filters = sourceFilter = { parameters: {} };
             fixture.detectChanges();
           });
 
           it('should have the filter set', () => {
-            expect(querySourceFilterDirective.filter).toBe(sourceFilter);
+            expect(querySourceFilterDirective.filters).toBe(sourceFilter);
           });
 
           it('should not trigger an automatic refresh', (done) => {
@@ -99,7 +99,7 @@ describe('Search Components', () => {
               const newResults = [10, 11];
               testQuerySource.testQueryService.keyResults = newResults;
 
-              component.filter = {
+              component.filters = {
                 test: 'x'
               };
 
@@ -160,13 +160,13 @@ export class TestFooKeyQuerySourceComponent extends AbstractConfigurableKeyQuery
 
 @Component({
   template: `
-    <gae-test-model-key-query-source [gaeKeyQuerySourceFilter]="filter" [baseConfig]="baseConfig"></gae-test-model-key-query-source>
+    <gae-test-model-key-query-source [gaeKeyQuerySourceFilter]="filters" [baseConfig]="baseConfig"></gae-test-model-key-query-source>
   `
 })
 class TestViewComponent {
 
   @Input()
-  filter: any;
+  filters: any;
 
   @Input()
   baseConfig: QuerySourceConfiguration = undefined;

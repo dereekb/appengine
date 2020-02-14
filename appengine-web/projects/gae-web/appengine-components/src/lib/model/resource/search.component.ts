@@ -2,7 +2,7 @@ import { AbstractIterableSourceComponent, ProvideIterableSourceComponent } from 
 import { UniqueModel, ModelKey, IterableSource, WrappedIterableSource } from '@gae-web/appengine-utility';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { OnDestroy, Input, Type, Directive, AfterContentInit, Inject, Host } from '@angular/core';
-import { QueryService, TypedModelSearchService } from '@gae-web/appengine-api';
+import { QueryService, TypedModelSearchService, SearchParameters } from '@gae-web/appengine-api';
 import {
   KeyQuerySource, KeySearchSource, QuerySourceConfiguration,
   TypedModelSearchSourceConfiguration, SearchSourceConfiguration, KeyTypedModelSearchSource
@@ -114,19 +114,25 @@ export abstract class AbstractConfigurableKeySearchSourceComponent<T extends Uni
     });
   }
 
+  public nextUntil(limit: number): Promise<ModelKey[]> {
+    return this._waiting.then(() => {
+      return this.source.nextUntil(limit).catch(() => undefined);
+    });
+  }
+
   protected stopWaiting() {
     this._stopWaiting();
   }
 
 }
 
-export type GaeKeyQuerySourceFilterDirectiveMakeConfigFunction<C> = (baseConfig: any, filter: any) => C;
+export type GaeKeyQuerySourceFilterDirectiveMakeConfigFunction<C> = (baseConfig: C, filters: SearchParameters) => C;
 
-export function DEFAULT_MAKE_CONFIG(baseConfig: any, filter: any) {
+export function DEFAULT_MAKE_CONFIG<C extends SearchSourceConfiguration>(baseConfig: C, filters: SearchParameters) {
   return {
     ...baseConfig,
-    filter
-  };
+    filters
+  } as C;
 }
 
 @Directive({
@@ -143,20 +149,20 @@ export class GaeKeyQuerySourceFilterDirective<C extends SearchSourceConfiguratio
 
   private _makeConfig = new BehaviorSubject<GaeKeyQuerySourceFilterDirectiveMakeConfigFunction<C>>(undefined);
   private _baseConfig = new BehaviorSubject<C>(undefined);
-  private _filter = new BehaviorSubject<any>(undefined);
+  private _filters = new BehaviorSubject<SearchParameters>(undefined);
 
   constructor(@Inject(AbstractConfigurableKeySearchSourceComponent) @Host() public readonly component: AbstractConfigurableKeySearchSourceComponent<any, C>) {
     super();
   }
 
   ngAfterContentInit() {
-    this.sub = combineLatest([this._baseConfig, this._filter, this._makeConfig]).pipe(
-      map(([config, filter, makeFn]) => {
+    this.sub = combineLatest([this._baseConfig, this._filters, this._makeConfig]).pipe(
+      map(([config, filters, makeFn]) => {
         if (!makeFn) {
           makeFn = DEFAULT_MAKE_CONFIG;
         }
 
-        return makeFn(config, filter);
+        return makeFn(config, filters);
       })
     ).subscribe({
       next: (newConfig) => {
@@ -183,13 +189,13 @@ export class GaeKeyQuerySourceFilterDirective<C extends SearchSourceConfiguratio
     this._baseConfig.next(config);
   }
 
-  public get filter() {
-    return this._filter.value;
+  public get filters() {
+    return this._filters.value;
   }
 
   @Input('gaeKeyQuerySourceFilter')
-  public set filter(filter: any) {
-    this._filter.next(filter);
+  public set filters(filters: any) {
+    this._filters.next(filters);
   }
 
   // MARK: Internal

@@ -21,13 +21,13 @@ export function ProvideModelFormComponent<S extends ModelFormComponent<any>>(sou
 /**
  * AbstractFormGroupComponent used for generating a model.
  */
-export abstract class AbstractModelFormComponent<T extends MutableUniqueModel> extends AbstractFormGroupComponent implements ModelFormComponent<T> {
+export abstract class AbstractModelFormComponent<T> extends AbstractFormGroupComponent implements ModelFormComponent<T> {
 
     @Input()
     public hideBeforeInput: boolean;
 
-    private _inputModel?: T;
-    private _cachedModel?: T;
+    protected _inputModel?: T;
+    protected _cachedModel?: T;
 
     // MARK: View
     public show() {
@@ -46,10 +46,6 @@ export abstract class AbstractModelFormComponent<T extends MutableUniqueModel> e
     }
 
     // MARK: Model
-    public get isModelEdit() {
-        return Boolean(this._inputModel && this._inputModel.key);
-    }
-
     public hasInputModel() {
         return Boolean(this._inputModel);
     }
@@ -86,6 +82,44 @@ export abstract class AbstractModelFormComponent<T extends MutableUniqueModel> e
 
     protected setModelData(data: any) {
         this.form.reset(data);
+    }
+
+    protected getOrCreateModel() {
+        if (!this._cachedModel) {
+            this._cachedModel = this.makeForSubmission(this.formValue);
+            this.synchronizeCachedModelWithInputModel(this._cachedModel, this._inputModel);
+        }
+
+        return this._cachedModel;
+    }
+
+    protected synchronizeCachedModelWithInputModel(cachedModel: T, inputModel: T) { }
+
+    protected abstract makeForSubmission(value: any): T;
+
+    protected abstract convertToFormData(model: T): any;
+
+    // MARK: Update
+    protected updateForChange() {
+        super.updateForChange();
+        this._cachedModel = undefined;
+    }
+
+}
+
+/**
+ * AbstractModelFormComponent extension used for generating a unique model.
+ */
+export abstract class AbstractUniqueModelFormComponent<T extends MutableUniqueModel> extends AbstractModelFormComponent<T> {
+
+    // MARK: Model
+    public get isModelEdit() {
+        return Boolean(this._inputModel && this._inputModel.key);
+    }
+
+    // MARK: Overrides
+    protected setModelData(data: any) {
+        super.setModelData(data);
 
         if (this.isModelEdit) {
             this.resetForModelEdit(this._inputModel);
@@ -96,26 +130,10 @@ export abstract class AbstractModelFormComponent<T extends MutableUniqueModel> e
         // Do nothing by default.
     }
 
-    protected getOrCreateModel() {
-        if (!this._cachedModel) {
-            this._cachedModel = this.makeForSubmission(this.formValue);
-
-            if (!this._cachedModel.modelKey && this._inputModel) {
-                this._cachedModel.modelKey = this._inputModel.modelKey;
-            }
+    protected synchronizeCachedModelWithInputModel(cachedModel: T, inputModel: T) {
+        if (!cachedModel.modelKey && inputModel) {
+            cachedModel.modelKey = inputModel.modelKey;
         }
-
-        return this._cachedModel;
-    }
-
-    protected abstract makeForSubmission(value: any): T;
-
-    protected abstract convertToFormData(model: T): any;
-
-    // MARK: Update
-    protected updateForChange() {
-        super.updateForChange();
-        this._cachedModel = undefined;
     }
 
 }

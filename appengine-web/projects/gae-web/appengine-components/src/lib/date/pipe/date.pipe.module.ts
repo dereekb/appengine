@@ -8,7 +8,7 @@ import { ToMinutesPipe } from './tominutes.pipe';
 import { DateFormatDistancePipe } from './dateformatdistance.pipe';
 
 /**
- * Pre-configured GaeComponentsModule that imports GaeComponentsModule and GaeMaterialComponentsModule.
+ * Date Pipes Module
  */
 @NgModule({
   exports: [
