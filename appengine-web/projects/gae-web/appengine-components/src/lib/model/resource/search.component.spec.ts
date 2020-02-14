@@ -1,9 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input, DebugElement, ViewChild, Optional } from '@angular/core';
 import { GaeModelComponentsModule } from '../model.module';
-import { ProvideReadSourceComponent, AbstractReadSourceComponent, GaeReadSourceKeyDirective, ReadSourceComponent } from './read.component';
-import { ReadSourceFactory, TestFooTestReadSourceFactory, ReadSource, KeyQuerySource, TestFooTestKeyQuerySource, QuerySourceConfiguration } from '@gae-web/appengine-client';
-import { AbstractDatabaseModel, ReadRequest, ReadResponse, ReadService, TestFoo, TestFooReadService } from '@gae-web/appengine-api';
+import { KeyQuerySource, TestFooTestKeyQuerySource, QuerySourceConfiguration } from '@gae-web/appengine-client';
+import { TestFoo, TestFooReadService } from '@gae-web/appengine-api';
 import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
 import { ModelUtility, ModelKey, ValueUtility, SourceState, NamedUniqueModel } from '@gae-web/appengine-utility';
 import { By } from '@angular/platform-browser';
@@ -49,7 +48,6 @@ describe('Search Components', () => {
     describe('gaeKeyQuerySourceFilter', () => {
 
       describe('with base configuration', () => {
-
         let baseConfig;
 
         beforeEach(() => {
@@ -74,37 +72,49 @@ describe('Search Components', () => {
             expect(querySourceFilterDirective.filter).toBe(sourceFilter);
           });
 
-          it('should have loaded results', (done) => {
-            querySourceComponent.stream.pipe(
-              filter((x) => x.state === SourceState.Done)
-            ).subscribe({
+          it('should not trigger an automatic refresh', (done) => {
+            let sub;
+
+            sub = querySourceComponent.stream.subscribe({
               next: (x) => {
-                expect(x.state).toBe(SourceState.Done);
-                done();
+                expect(x.state).toBe(SourceState.Reset);
+
+                setTimeout(() => {
+                  sub.unsubscribe();
+                  done();
+                });
               }
             });
           });
 
-          it('should load new results when the filter changes', (done) => {
+          describe('with auto refresh enabled', () => {
 
-            // Set new results for the test.
-            const newResults = [10, 11];
-            testQuerySource.testQueryService.keyResults = newResults;
+            beforeEach(() => {
+              querySourceFilterDirective.resetOnNewConfig = true;
+            });
 
-            component.filter = {
-              test: 'x'
-            };
+            it('should load new results when the filter changes', (done) => {
 
-            fixture.detectChanges();
+              // Set new results for the test.
+              const newResults = [10, 11];
+              testQuerySource.testQueryService.keyResults = newResults;
 
-            querySourceComponent.stream.pipe(
-              filter((x) => x.state === SourceState.Done)
-            ).subscribe({
-              next: (x) => {
-                expect(x.state).toBe(SourceState.Done);
-                expect(x.elements.length).toBe(newResults.length);
-                done();
-              }
+              component.filter = {
+                test: 'x'
+              };
+
+              fixture.detectChanges();
+
+              querySourceComponent.stream.pipe(
+                filter((x) => x.state === SourceState.Done)
+              ).subscribe({
+                next: (x) => {
+                  expect(x.state).toBe(SourceState.Done);
+                  expect(x.elements.length).toBe(newResults.length);
+                  done();
+                }
+              });
+
             });
 
           });

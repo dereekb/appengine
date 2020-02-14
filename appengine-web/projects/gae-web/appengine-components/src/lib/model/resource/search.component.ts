@@ -135,8 +135,11 @@ export function DEFAULT_MAKE_CONFIG(baseConfig: any, filter: any) {
 })
 export class GaeKeyQuerySourceFilterDirective<C extends SearchSourceConfiguration> extends AbstractSubscriptionComponent implements AfterContentInit {
 
+  /**
+   * Whether or not to reset the query source automatically when a new configuration is generated.
+   */
   @Input()
-  public refreshOnNewConfig = true;
+  public resetOnNewConfig = false;
 
   private _makeConfig = new BehaviorSubject<GaeKeyQuerySourceFilterDirectiveMakeConfigFunction<C>>(undefined);
   private _baseConfig = new BehaviorSubject<C>(undefined);
@@ -193,7 +196,7 @@ export class GaeKeyQuerySourceFilterDirective<C extends SearchSourceConfiguratio
   protected _updateConfig(config: C) {
     this.component.config = config;
 
-    if (this.refreshOnNewConfig) {
+    if (this.resetOnNewConfig) {
       this.component.reset();
     }
   }

@@ -6,7 +6,7 @@ import { GaeModelComponentsModule } from '../model.module';
 import { GaeMultiModelLoaderDirective } from './multi-model-loader.directive';
 import { TestFooReadSourceComponent } from '../resource/read.component.spec';
 import { ModelLoaderState, GaeModelLoaderComponent, ModelLoaderFailedLoadingError } from './model-loader.component';
-import { TestFoo } from '@gae-web/appengine-api/public-api';
+import { TestFoo } from '@gae-web/appengine-api';
 import { filter } from 'rxjs/operators';
 
 const TEST_MODEL_KEY = 1;

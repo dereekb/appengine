@@ -16,6 +16,7 @@ import { MatProgressButtonsModule } from 'mat-progress-buttons';
 import { GaeActionViewComponent, GaeActionDoneViewComponent, GaeActionResetViewComponent } from './form/action.component';
 import { MatIconModule, MatButtonModule } from '@angular/material';
 import { GaeKeyQuerySourceFilterDirective } from './resource/search.component';
+import { GaeKeyQuerySourceFormFilterDirective } from './form/search.component';
 
 @NgModule({
   imports: [
@@ -37,6 +38,7 @@ import { GaeKeyQuerySourceFilterDirective } from './resource/search.component';
     GaeCreateModelFormControllerDirective,
     GaeUpdateModelFormControllerDirective,
     GaeDeleteModelFormControllerDirective,
+    GaeKeyQuerySourceFormFilterDirective,
     GaeActionViewComponent,
     GaeActionDoneViewComponent,
     GaeActionResetViewComponent,
@@ -53,6 +55,7 @@ import { GaeKeyQuerySourceFilterDirective } from './resource/search.component';
     GaeCreateModelFormControllerDirective,
     GaeUpdateModelFormControllerDirective,
     GaeDeleteModelFormControllerDirective,
+    GaeKeyQuerySourceFormFilterDirective,
     GaeActionViewComponent,
     GaeActionDoneViewComponent,
     GaeActionResetViewComponent,
