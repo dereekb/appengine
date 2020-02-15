@@ -176,13 +176,25 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
   }
 
   // MARK: Options and Refresh
-  public refreshLoginToken() {
-    this.selector = this.selector;
-  }
-
   public setLoginOptions(options) {
     this._loginOptions.next(options);
-    this.refreshLoginToken();
+    this.refreshLoginToken(true);
+  }
+
+  public refreshLoginToken(clearFullToken: boolean = false) {
+    const triggerTokenReset = () => {
+      this.selector = this.selector;
+    };
+
+    if (clearFullToken) {
+      this._clearTokensWithSelectorFromStorage(this.selector, TokenType.Full).pipe(first()).subscribe({
+        next: () => {
+          triggerTokenReset();
+        }
+      });
+    } else {
+      triggerTokenReset();
+    }
   }
 
   // MARK: Login / Logout
@@ -463,7 +475,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
   }
 
   private _clearTokensWithSelectorFromStorage(selector: AppTokenKeySelector, type?: TokenType): Observable<{}> {
-    if (type === undefined) {
+    if (type !== undefined) {
       return this._storage.clearToken(selector, type);
     } else {
       return this._storage.clearAllTokensWithKey(selector).pipe(
@@ -617,7 +629,7 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
       map((x) => x.refreshToken)
     );
   }
-  
+
   public getLoginTokenStream(): Observable<LoginTokenPair> {
     return this.getRawLoginTokenStream().pipe(
       filter((x) => Boolean(x))
