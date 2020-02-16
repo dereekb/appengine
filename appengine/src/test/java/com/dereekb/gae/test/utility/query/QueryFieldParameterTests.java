@@ -1,8 +1,9 @@
 package com.dereekb.gae.test.utility.query;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import com.dereekb.gae.utilities.query.ExpressionOperator;
@@ -13,6 +14,8 @@ import com.dereekb.gae.utilities.query.builder.parameters.impl.ModelKeyQueryFiel
 import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder;
 import com.dereekb.gae.utilities.query.builder.parameters.impl.QueryFieldParameterDencoder.EncodedQueryParameterImpl;
 import com.dereekb.gae.utilities.query.order.QueryResultsOrdering;
+import com.dereekb.gae.utilities.time.DateUtility;
+import com.dereekb.gae.utilities.time.impl.JavaTimeConverter;
 
 /**
  * {@link QueryFieldParameterDencoder} tests.
@@ -134,6 +137,24 @@ public class QueryFieldParameterTests {
 		assertTrue(decoded.getValue().equals(start));
 		assertTrue(decoded.getSecondFilter() != null);
 		assertTrue(decoded.getSecondFilter().getValue().equals(end));
+	}
+
+	@Test
+	public void testDecodingDateStringWithNowDate() {
+
+		String field = "field";
+
+		Date startDate = DateUtility.getDateIn(-DateUtility.TIME_IN_DAY);
+		String startDateString = JavaTimeConverter.SINGLETON.convertToString(startDate);
+
+		String dateString = ">=," + startDateString + ",DESC~~<=," + "now";
+
+		DateQueryFieldParameter decoded = new DateQueryFieldParameter(field, dateString);
+
+		assertTrue(decoded.getValue().equals(startDate));
+		assertTrue(decoded.getOperator().equals(ExpressionOperator.GREATER_OR_EQUAL_TO));
+		assertTrue(decoded.getOrdering().equals(QueryResultsOrdering.Descending));
+		assertTrue(decoded.getSecondFilter() != null);
 	}
 
 	@Test

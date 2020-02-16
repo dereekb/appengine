@@ -488,8 +488,8 @@ export class DefaultKeyResultPair<T> extends KeyResultPair<T> {
 
 // MARK: Merged
 /**
- * Special ControllableSource implementation that wraps both a ReadSource and a KeyQuerySource,
- * and forwards all ControllableSource requests to the KeyQuerySource.
+ * Special ControllableSource implementation that wraps both a ReadSource and an IterableSource,
+ * and forwards all ControllableSource requests to the IterableSource.
  *
  * Will automatically bind the iterateSource's keys to the readSource's input.
  */

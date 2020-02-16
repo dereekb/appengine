@@ -1,5 +1,5 @@
 import 'jasmine-expect';
-import { ValueUtility } from './value';
+import { ValueUtility, ReifyResult, ArrayDelta } from './value';
 
 describe('ValueUtility', () => {
 
@@ -110,6 +110,81 @@ describe('ValueUtility', () => {
 
       it('should have an item at the first index.', () => {
         expect(shuffledArray[0]).toBeDefined();
+      });
+
+    });
+
+  });
+
+  describe('#delta()', () => {
+
+    let from: number[];
+    let to: number[];
+
+    beforeEach(() => {
+      from = [1, 2, 3, 4, 5];
+      to = [1, 2, 8, 9];
+    });
+
+    describe('result', () => {
+
+      let result: ArrayDelta<number>;
+
+      beforeEach(() => {
+        result = ValueUtility.delta(from, to);
+      });
+
+      it('should have added the 2 values.', () => {
+        expect(result.added).toBeArrayOfSize(2);  // 8, 9 added
+      });
+
+      it('should have kept the 2 existing values.', () => {
+        expect(result.kept).toBeArrayOfSize(2); // 1, 2 kept
+      });
+
+      it('should have removed 3 values not in the target.', () => {
+        expect(result.removed).toBeArrayOfSize(3); // 3, 4, 5 removed
+      });
+
+    });
+
+  });
+
+  describe('#reify()', () => {
+
+    let existing: number[];
+    let target: number[];
+
+    beforeEach(() => {
+      existing = [1, 2, 3, 4, 5];
+      target = [1, 2, 8, 9];
+    });
+
+    describe('result', () => {
+
+      let result: ReifyResult<number, number>;
+
+      beforeEach(() => {
+        result = ValueUtility.reify(target, existing, {
+          keyForValue: (x) => x,
+          make: (x) => x
+        });
+      });
+
+      it('should have only the values specified in target.', () => {
+        expect(result.result).toBeArrayOfSize(4);
+      });
+
+      it('should have kept the 2 existing values.', () => {
+        expect(result.kept).toBeArrayOfSize(2);
+      });
+
+      it('should have removed 3 values not in the target.', () => {
+        expect(result.removed).toBeArrayOfSize(3);
+      });
+
+      it('should have the delta.', () => {
+        expect(result.delta).toBeDefined();
       });
 
     });

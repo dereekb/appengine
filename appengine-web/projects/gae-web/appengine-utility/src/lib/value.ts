@@ -25,10 +25,20 @@ export interface ObjectPropertiesReading {
   readonly missing: PropertyKey[];
 }
 
+export interface ReifyDelegate<K, T> {
+  keyForValue(value: T): K;
+  make(key: K): T;
+}
+
 export class ArrayDelta<T> {
   kept: T[] = [];
   added: T[] = [];
   removed: T[] = [];
+}
+
+export class ReifyResult<K, T> extends ArrayDelta<T> {
+  delta: ArrayDelta<K>;
+  result: T[];
 }
 
 export class ValueUtility {
@@ -383,6 +393,12 @@ export class ValueUtility {
     }
   }
 
+  static delta<T>(from: ArrayLike<T>, to: ArrayLike<T>): ArrayDelta<T> {
+    const fromArray = ValueUtility.iterableToArray(from);
+    const toArray = ValueUtility.iterableToArray(to);
+    return ValueUtility.arrayDelta(fromArray, toArray);
+  }
+
   static arrayDelta<T>(from: T[], to: T[]): ArrayDelta<T> {
     const toSet: Set<T> = this.arrayToSet(to);
     const visited = new Set<T>();
@@ -408,6 +424,32 @@ export class ValueUtility {
       added,
       removed
     };
+  }
+
+  /**
+   * Creates objects from the existing array based on the input target keys, and returns a ReifyResult.
+   */
+  static reify<K, T>(targetKeys: OneOrMore<K>, existing: OneOrMore<T>, delegate: ReifyDelegate<K, T>): ReifyResult<K, T> {
+    const existingPairs = ValueUtility.normalizeArray(existing).map((x) => ({ key: delegate.keyForValue(x), value: x }));
+    const existingKeys = existingPairs.map(x => x.key);
+    const delta = ValueUtility.arrayDelta(existingKeys, ValueUtility.normalizeArray(targetKeys));
+
+    const valuesToRemove = ValueUtility.arrayToSet(delta.removed);
+    const valuesToKeep = ValueUtility.arrayToSet(delta.kept);
+
+    const removed = existingPairs.filter((x) => valuesToRemove.has(x.key)).map(x => x.value);
+    const added = delta.added.map((k: K) => delegate.make(k));
+    const kept = existingPairs.filter((x) => valuesToKeep.has(x.key)).map(x => x.value);
+
+    const result: ReifyResult<K, T> = {
+      delta,
+      removed,
+      kept,
+      added,
+      result: kept.concat(added)
+    };
+
+    return result;
   }
 
   /**
