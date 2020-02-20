@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.dereekb.gae.utilities.collections.map.HashMapWithList;
 import com.dereekb.gae.utilities.data.ValueUtility;
 import com.dereekb.gae.utilities.misc.keyed.IndexCoded;
@@ -178,6 +179,21 @@ public class KeyedUtility {
 	}
 
 	/**
+	 * Makes a map using the input {@link Class} enum type.
+	 *
+	 * @param values
+	 *            {@link Iterable}. Never {@code null}.
+	 * @return {@link Map}. Never {@code null}.
+	 * @throws IllegalArgumentException
+	 *             thrown if the input type is not an enum.
+	 */
+	public static <T extends IndexCoded> Map<Integer, ? extends T> makeCodedMap(Class<T> codedType)
+	        throws IllegalArgumentException {
+		List<T> enumValues = readEnumValues(codedType);
+		return makeCodedMap(enumValues);
+	}
+
+	/**
 	 * Makes a map using the input {@link IndexCoded} values.
 	 *
 	 * @param values
@@ -192,6 +208,88 @@ public class KeyedUtility {
 		}
 
 		return map;
+	}
+
+	/**
+	 * Makes a list of codes using the input {@link IndexCoded} values.
+	 *
+	 * @param values
+	 *            {@link Iterable}. Never {@code null}.
+	 * @return {@link List}. Never {@code null}.
+	 */
+	public static <T extends IndexCoded> List<Integer> makeCodeList(Iterable<? extends T> values) {
+		List<Integer> codes = new ArrayList<Integer>();
+
+		for (T value : values) {
+			codes.add(value.getCode());
+		}
+
+		return codes;
+	}
+
+	/**
+	 * Makes a list of codes using the input {@link IndexCoded} values and enum
+	 * class/type.
+	 *
+	 * @param codes
+	 *            {@link Iterable} of codes to map to values.
+	 * @param codedType
+	 *            {@link Class} of the enum. Never {@code null}.
+	 * @return {@link List}. Never {@code null}.
+	 * @throws IllegalArgumentException
+	 *             thrown if the input type is not an enum.
+	 */
+	public static <T extends IndexCoded> List<T> makeValuesListFromCodes(Iterable<Integer> codes,
+	                                                                     Class<T> codedType)
+	        throws IllegalArgumentException {
+		List<T> enumValues = readEnumValues(codedType);
+		Map<Integer, ? extends T> map = KeyedUtility.makeCodedMap(enumValues);
+		return makeValuesListFromCodes(codes, map);
+	}
+
+	/**
+	 * Makes a list of codes using the input {@link Map} of codes to values.
+	 * Values that do not exist in the map or are null are ignored/filtered out.
+	 *
+	 * @param codes
+	 *            {@link Iterable} of codes to map to values.
+	 * @param map
+	 *            {@link Map}. Never {@code null}.
+	 * @return {@link List}. Never {@code null}.
+	 */
+	public static <T extends IndexCoded> List<T> makeValuesListFromCodes(Iterable<Integer> codes,
+	                                                                     Map<Integer, ? extends T> map) {
+		List<T> values = new ArrayList<T>();
+
+		for (Integer code : codes) {
+			T value = map.get(code);
+
+			if (value != null) {
+				values.add(value);
+			}
+		}
+
+		return values;
+	}
+
+	/**
+	 * Reads the list of coded values from an enum.
+	 *
+	 * @param codedType
+	 *            {@link Class}. Never {@code null}.
+	 * @return {@link List}. Never {@code null}.
+	 * @throws IllegalArgumentException
+	 *             thrown if the input type is not an enum.
+	 */
+	public static <T extends IndexCoded> List<T> readEnumValues(Class<T> codedType) throws IllegalArgumentException {
+		T[] constants = codedType.getEnumConstants();
+
+		if (codedType.isEnum() == false) {
+			throw new IllegalArgumentException("Is not an emum.");
+		}
+
+		List<T> enumValues = ListUtility.toList(constants);
+		return enumValues;
 	}
 
 }

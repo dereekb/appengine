@@ -27,6 +27,34 @@ public class SetUtility {
 		return set;
 	}
 
+	/**
+	 * Converts the input collection to a set.
+	 *
+	 * @param input
+	 *            {@link Collection} or {@code null}.
+	 * @return {@link Set}, or {@code null} if empty.
+	 */
+	public static <T> Set<T> safeToSet(Collection<? extends T> input) {
+		Set<T> set = null;
+
+		if (input != null) {
+			set = toSet(input);
+		}
+
+		return set;
+	}
+
+	/**
+	 * Converts the input collection to a set.
+	 *
+	 * @param input
+	 *            {@link Collection}. Never {@code null}.
+	 * @return {@link Set}. Never {@code null}.
+	 */
+	public static <T> Set<T> toSet(Collection<? extends T> input) {
+		return new HashSet<T>(input);
+	}
+
 	public static <T> Set<T> newHashSet(Collection<T> input) {
 		Set<T> set = new HashSet<T>();
 
@@ -60,13 +88,13 @@ public class SetUtility {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param pools
 	 * @param customPools
 	 * @return {@code true} if any value of set a exists in set b.
 	 */
 	public static <T> boolean containsAnyElementsOf(Collection<T> a,
-	                                 Collection<T> b) {
+	                                                Collection<T> b) {
 
 		SetDifferenceImpl<T> difference = makeSetInfo(a, b);
 		return (difference.getIntersection().isEmpty() == false);
