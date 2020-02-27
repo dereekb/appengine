@@ -6,6 +6,7 @@ export type PropertyKey = string | number;
 export type MakePropertyKeyFunction<T> = (input: T) => PropertyKey;
 export type MakeMapKeysFunction<K, T> = (input: T) => K | K[] | undefined;
 export type IterateFunction<T> = (x: T, index: number) => any | undefined;
+export type EnumLike<E> = Record<keyof E, number | string> & { [k: number]: string };
 
 export interface SeparateResult<T> {
   included: T[];
@@ -28,6 +29,11 @@ export interface ObjectPropertiesReading {
 export interface ReifyDelegate<K, T> {
   keyForValue(value: T): K;
   make(key: K): T;
+}
+
+export interface NumberEnumValuePair {
+  id: number;
+  name: string;
 }
 
 export class ArrayDelta<T> {
@@ -951,6 +957,42 @@ export class ValueUtility {
 
       const isSame = lowerCaseA === xString;
       return (isSame) ? keepSame : !keepSame;
+    });
+    return result;
+  }
+
+  // MARK: Enum
+  /**
+   * Returns an array of all enum values. Sorts by default.
+   */
+  static mapEnumToIdsArray<E extends EnumLike<E>>(enumType: E, sort?: boolean): number[] {
+    const pairs = ValueUtility.mapEnumToPairs(enumType);
+    const result = ValueUtility.mapEnumPairsToIdsArray(pairs, sort);
+    return result;
+  }
+
+  /**
+   * Maps enum Key/Value pairs to key ids.
+   */
+  static mapEnumPairsToIdsArray(pairs: NumberEnumValuePair[], sort = true): number[] {
+    const result: number[] = pairs.map(x => x.id);
+
+    if (sort) {
+      result.sort();
+    }
+
+    return result;
+  }
+
+  /**
+   * Maps a number enum to Key/Value pairs.
+   */
+  static mapEnumToPairs<E extends EnumLike<E>>(enumType: E): NumberEnumValuePair[] {
+    const result = Object.keys(enumType).filter((key) => (typeof (enumType[key]) === 'number')).map((name: string) => {
+      return {
+        id: enumType[name] as number,
+        name
+      };
     });
     return result;
   }

@@ -1,6 +1,14 @@
 import 'jasmine-expect';
 import { ValueUtility, ReifyResult, ArrayDelta } from './value';
 
+enum TestNumberEnum {
+  A = -1,
+  B,
+  C
+}
+
+const ENUM_ARRAY = ValueUtility.mapEnumToIdsArray(TestNumberEnum);
+
 describe('ValueUtility', () => {
 
   describe('#readValue()', () => {
@@ -185,6 +193,52 @@ describe('ValueUtility', () => {
 
       it('should have the delta.', () => {
         expect(result.delta).toBeDefined();
+      });
+
+    });
+
+  });
+
+  describe('enum', () => {
+
+    describe('ENUM_ARRAY', () => {
+
+      it('should have the number ids to an array', () => {
+        const values = ENUM_ARRAY;
+
+        expect(values).toBeArrayOfNumbers();
+        expect(values).toBeArrayOfSize(3);
+      });
+
+    });
+
+    describe('#mapEnumToIdsArray()', () => {
+
+      it('should map the number ids to an array', () => {
+        const values = ValueUtility.mapEnumToIdsArray(TestNumberEnum);
+
+        expect(values).toBeArrayOfNumbers();
+        expect(values).toBeArrayOfSize(3);
+      });
+
+      it('should sort values by default', () => {
+        const values = ValueUtility.mapEnumToIdsArray(TestNumberEnum);
+
+        // Check is sorted by default
+        expect(values[0]).toBe(-1);
+        expect(values[1]).toBe(0);
+        expect(values[2]).toBe(1);
+      });
+
+    });
+
+    describe('#mapEnumToPairs()', () => {
+
+      it('should map the enum to a map', () => {
+        const values = ValueUtility.mapEnumToPairs(TestNumberEnum);
+
+        expect(values).toBeArrayOfObjects();
+        expect(values).toBeArrayOfSize(3);
       });
 
     });
