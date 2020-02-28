@@ -245,4 +245,31 @@ describe('ValueUtility', () => {
 
   });
 
+  fdescribe('#normalizeSpace()', () => {
+
+    it('should remove all new lines', () => {
+      const text = `
+      A
+      B
+      C
+      D
+      E`;
+
+      const normalize = ValueUtility.normalizeSpace(text);
+      expect(normalize).toEqual('A B C D E');
+    });
+
+    it('should remove extra spaces', () => {
+      const text = `
+      A \nB
+      B
+      C
+      D       E`;
+
+      const normalize = ValueUtility.normalizeSpace(text);
+      expect(normalize).toEqual('A B B C D E');
+    });
+
+  });
+
 });

@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.dereekb.gae.utilities.collections.list.ListUtility;
 import com.google.common.base.Joiner;
 
@@ -32,6 +34,17 @@ public class StringUtility {
 		}
 
 		return stringList;
+	}
+
+	// MARK: Whitespace
+	/**
+	 * Removes all new lines from the input, and trims the value, leaving a string with only spaces.
+	 *
+	 * @param string {@link String}, or {@code null}.
+	 * @return {@link String}, or {@code null} if input.
+	 */
+	public static String normalizeSpace(String string) {
+		return StringUtils.normalizeSpace(string);
 	}
 
 	// MARK: Join
