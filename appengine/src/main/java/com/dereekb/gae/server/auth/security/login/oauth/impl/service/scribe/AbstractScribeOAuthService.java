@@ -216,7 +216,7 @@ public abstract class AbstractScribeOAuthService
 		// MARK: OAuthAccessToken
 		@Override
 		public String getAccessToken() {
-			return this.accessToken.getRawResponse();
+			return this.accessToken.getAccessToken();
 		}
 
 		@Override

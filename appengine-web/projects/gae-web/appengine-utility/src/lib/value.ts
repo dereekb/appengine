@@ -1001,7 +1001,7 @@ export class ValueUtility {
   /**
    * Removes all new lines and trims the text. Also removes multiple extra white spaces and formats them as a single space.
    */
-  static normalizeSpace(text: string) {
+  static normalizeSpace(text: string | undefined): string {
     const normalized = (text || '').replace((/  |\r\n|\n|\r|\t/gm), ' ').replace((/ +/gm), ' ');
     return normalized.trim();
   }
