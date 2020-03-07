@@ -267,7 +267,8 @@ export class ValueUtility {
    * Creates a new map from the input array and make keys function.
    */
   static mapFromArray<K, T>(input: T[], makeKeysFn: MakeMapKeysFunction<K, T>): Map<K, T> {
-    return this.mapFromArrayValues(input, makeKeysFn, (v) => v as any as T);
+    const result = this.mapFromArrayValues(input, makeKeysFn, (v) => v as any as T);
+    return result;
   }
 
   /**
