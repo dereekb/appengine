@@ -267,15 +267,23 @@ export class ValueUtility {
    * Creates a new map from the input array and make keys function.
    */
   static mapFromArray<K, T>(input: T[], makeKeysFn: MakeMapKeysFunction<K, T>): Map<K, T> {
-    const map: Map<K, T> = new Map();
+    return this.mapFromArrayValues(input, makeKeysFn, (v) => v as any as T);
+  }
+
+  /**
+   * mapFromArray but provides an additional parameters allowing customization of the final value being mapped.
+   */
+  static mapFromArrayValues<K, T, X>(input: T[], makeKeysFn: MakeMapKeysFunction<K, T>, mapValueFn: (value: T) => X): Map<K, X> {
+    const map: Map<K, X> = new Map();
 
     input.forEach((value: T) => {
       const keys: K | K[] | undefined = makeKeysFn(value);
       const normalizedKeys: K[] | undefined = ValueUtility.normalizeArray(keys);
+      const mapValue = mapValueFn(value);
 
       normalizedKeys.forEach((x) => {
         if (x !== undefined) {
-          map.set(x, value);
+          map.set(x, mapValue);
         }
       });
     });
