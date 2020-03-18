@@ -227,7 +227,7 @@ public class GoogleOAuthService extends AbstractGoogleOAuthService {
 			String id = JsonUtility.getString(json, "id");
 
 			if (id == null) {
-				throw new OAuthInsufficientException("This account has no identifier.");
+				throw new OAuthInsufficientException("This account has no identifier in the response json.");
 			}
 
 			return new GoogleOAuthUserResultImpl(accessToken, json);

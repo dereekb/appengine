@@ -249,6 +249,11 @@ public class LoginApiTestUtility {
 	}
 
 	public MvcResult sendCreateOAuthLoginWithCode(String serviceType,
+	                                              String authCode) throws Exception {
+		return this.sendCreateOAuthLoginWithCode(serviceType, authCode, null);
+	}
+
+	public MvcResult sendCreateOAuthLoginWithCode(String serviceType,
 	                                              String authCode,
 	                                              String codeType)
 	        throws Exception {
