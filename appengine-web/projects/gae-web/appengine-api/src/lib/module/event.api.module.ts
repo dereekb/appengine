@@ -34,7 +34,7 @@ export function eventApiModuleServiceFactory(moduleConfig: GaeEventApiModuleConf
 @NgModule()
 export class GaeEventApiModule {
 
-  static forApp(): ModuleWithProviders {
+  static forApp(): ModuleWithProviders<GaeEventApiModule> {
     return {
       ngModule: GaeEventApiModule,
       providers: [

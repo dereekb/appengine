@@ -60,7 +60,7 @@ export function clientUserNotificationServiceFactory(moduleConfig: GaeLoginApiMo
 })
 export class GaeLoginApiModule {
 
-  static forApp(): ModuleWithProviders {
+  static forApp(): ModuleWithProviders<GaeLoginApiModule> {
     return {
       ngModule: GaeLoginApiModule,
       providers: [

@@ -85,7 +85,7 @@ export function fooCachedKeySourceCacheFactoryFn(wrapper: TestFooServiceWrapper,
 })
 export class TestFooClientModule {
 
-  static forApp(): ModuleWithProviders {
+  static forApp(): ModuleWithProviders<TestFooClientModule> {
     const moduleWithProviders = {
       ngModule: TestFooClientModule,
       providers: [

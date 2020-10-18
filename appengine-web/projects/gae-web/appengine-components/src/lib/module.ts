@@ -28,7 +28,7 @@ import { GaeViewModule } from './view/view.module';
 })
 export class GaeComponentsModule {
 
-  static forApp(): ModuleWithProviders {
+  static forApp(): ModuleWithProviders<GaeComponentsModule> {
     return {
       ngModule: GaeComponentsModule,
       providers: []

@@ -40,7 +40,7 @@ import { UIRouterModule } from '@uirouter/angular';
 })
 export class GaeGatewayViewsModule {
 
-  static forRoot(configuration: GaeGatewayViewsConfiguration): ModuleWithProviders {
+  static forRoot(configuration: GaeGatewayViewsConfiguration): ModuleWithProviders<GaeGatewayViewsModule> {
     return {
       ngModule: GaeGatewayViewsModule,
       providers: [

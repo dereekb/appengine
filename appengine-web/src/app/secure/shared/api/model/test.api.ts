@@ -33,7 +33,7 @@ export function testApiModuleServiceFactory(moduleConfig: TestApiModuleConfigura
 @NgModule()
 export class TestApiModule {
 
-  static forApp(): ModuleWithProviders {
+  static forApp(): ModuleWithProviders<TestApiModule> {
     return {
       ngModule: TestApiModule,
       providers: [

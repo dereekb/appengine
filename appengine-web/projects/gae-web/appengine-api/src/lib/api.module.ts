@@ -63,7 +63,7 @@ export interface GaeApiModuleOptions {
 @NgModule()
 export class GaeApiModule {
 
-  static forApp(options: GaeApiModuleOptions): ModuleWithProviders {
+  static forApp(options: GaeApiModuleOptions): ModuleWithProviders<GaeApiModule> {
     return {
       ngModule: GaeApiModule,
       providers: [

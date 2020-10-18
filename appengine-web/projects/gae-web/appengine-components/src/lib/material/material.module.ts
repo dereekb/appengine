@@ -66,7 +66,7 @@ import { MatProgressButtonsModule } from 'mat-progress-buttons';
 })
 export class GaeMaterialComponentsModule {
 
-  static forApp(): ModuleWithProviders {
+  static forApp(): ModuleWithProviders<GaeMaterialComponentsModule> {
     return {
       ngModule: GaeMaterialComponentsModule,
       providers: [

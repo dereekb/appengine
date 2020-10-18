@@ -14,7 +14,7 @@ export interface GaeAnalyticsModuleOptions {
 @NgModule()
 export class GaeAnalyticsModule {
 
-  static forRoot(options: GaeAnalyticsModuleOptions): ModuleWithProviders {
+  static forRoot(options: GaeAnalyticsModuleOptions): ModuleWithProviders<GaeAnalyticsModule> {
     return {
       ngModule: GaeAnalyticsModule,
       providers: [

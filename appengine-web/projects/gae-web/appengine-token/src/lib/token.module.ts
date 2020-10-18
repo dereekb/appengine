@@ -19,7 +19,7 @@ export function memoryStoredTokenStorageAccessorFactory() {
 })
 export class GaeTokenModule {
 
-  public static forRoot(): ModuleWithProviders {
+  public static forRoot(): ModuleWithProviders<GaeTokenModule> {
     return {
       ngModule: GaeTokenModule,
       providers: [

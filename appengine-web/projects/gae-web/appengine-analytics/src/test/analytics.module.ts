@@ -5,7 +5,7 @@ import { GaeAnalyticsModule } from '../lib/analytics.module';
 @NgModule()
 export class TestAnalyticsModule {
 
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<GaeAnalyticsModule> {
 
     const config: AnalyticsServiceConfiguration = {
       listeners: [] // No listeners.

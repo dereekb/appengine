@@ -14,7 +14,7 @@ export function modelLinkServiceFactory(wrapperSet: ModelServiceWrapperSet, clie
 })
 export class GaeClientModule {
 
-  static forApp(): ModuleWithProviders {
+  static forApp(): ModuleWithProviders<GaeClientModule> {
     return {
       ngModule: GaeClientModule,
       providers: [

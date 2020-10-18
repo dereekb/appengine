@@ -10,7 +10,7 @@ import { GoogleSignInButtonDirective } from './button.component';
 })
 export class GaeGoogleModule {
 
-  static forRoot(preloadService?: boolean): ModuleWithProviders {
+  static forRoot(preloadService?: boolean): ModuleWithProviders<GaeGoogleModule> {
     return {
       ngModule: GaeGoogleModule,
       providers: [
