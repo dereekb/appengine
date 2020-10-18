@@ -21,8 +21,8 @@ export interface SignInGatewayEvent {
  * Interface that streams SignInGatewayEvent values and can be reset.
  */
 export abstract class SignInGateway {
-  readonly state: SignInGatewayState;
-  readonly stream: Observable<SignInGatewayEvent>;
+  abstract readonly state: SignInGatewayState;
+  abstract readonly stream: Observable<SignInGatewayEvent>;
   abstract resetSignInGateway();
 }
 

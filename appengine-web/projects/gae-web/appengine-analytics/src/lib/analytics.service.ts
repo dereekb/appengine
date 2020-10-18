@@ -70,7 +70,7 @@ export interface AnalyticsStreamEvent {
 }
 
 export abstract class AnalyticsUserSource {
-  readonly userStream: Observable<AnalyticsUser | undefined>;
+  abstract readonly userStream: Observable<AnalyticsUser | undefined>;
   abstract getAnalyticsUser(): Observable<AnalyticsUser>;
 }
 

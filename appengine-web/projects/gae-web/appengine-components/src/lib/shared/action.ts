@@ -50,22 +50,22 @@ export abstract class ActionObject {
   /**
    * ActionEvent stream for this ActionObject.
    */
-  readonly stream: Observable<ActionEvent>;
+  abstract readonly stream: Observable<ActionEvent>;
 
   /**
    * The current state.
    */
-  readonly state: ActionState;
+  abstract readonly state: ActionState;
 
   /**
    * Whether or not this ActionObject is available to do more work.
    */
-  readonly canWork: boolean;
+  abstract readonly canWork: boolean;
 
   /**
    * Whether or not the action is currently working.
    */
-  readonly isWorking: boolean;
+  abstract readonly isWorking: boolean;
 
   /**
    * Resets the ActionObject back to it's initial state.
@@ -82,5 +82,5 @@ export function ProvideTypedActionObject<S extends TypedActionObject<any>>(objec
  * ActionObject with a typed event.
  */
 export abstract class TypedActionObject<E extends ActionEvent> extends ActionObject {
-  readonly stream: Observable<E>;
+  abstract readonly stream: Observable<E>;
 }

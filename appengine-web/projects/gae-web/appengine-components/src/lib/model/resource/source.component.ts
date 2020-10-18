@@ -26,7 +26,7 @@ export function ProvideSourceComponent<S extends SourceComponent<any>>(sourceTyp
  *
  * Uses a Source.
  */
-// TODO: Add Angular decorator.
+@Directive()
 export abstract class AbstractSourceComponent<T> implements SourceComponent<T>, OnDestroy {
 
   private readonly _elements: Observable<T[]>;
@@ -322,6 +322,12 @@ export abstract class AbstractTransformationSourceComponent<I, O> extends Abstra
 
   get stream(): Observable<SourceEvent<O>> {
     return this._conversionObs;
+  }
+
+  get elements(): Observable<O[]> {
+    return this._conversionObs.pipe(
+      map((x) => x.elements)
+    );
   }
 
   protected _makeConversionObservable(source: SourceComponent<I>): Observable<SourceEvent<O>> {

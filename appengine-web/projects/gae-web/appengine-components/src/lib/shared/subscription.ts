@@ -1,11 +1,11 @@
-import { OnDestroy } from '@angular/core';
+import { OnDestroy, Directive } from '@angular/core';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 import { Subscription } from 'rxjs';
 
 /**
  * Abstract component that contains a SubscriptionObject and will clean it up automatically.
  */
-// TODO: Add Angular decorator.
+@Directive()
 export abstract class AbstractSubscriptionComponent implements OnDestroy {
 
   private _subscriptionObject = new SubscriptionObject();

@@ -1,4 +1,4 @@
-import { OnDestroy, Type, Provider } from '@angular/core';
+import { OnDestroy, Type, Provider, Directive } from '@angular/core';
 import { Subscription, BehaviorSubject, Observable, throwError } from 'rxjs';
 import { ActionState, HandleActionResult, HandleActionError, ActionFactory, ActionEvent, TypedActionObject } from './action';
 import { filter, share, shareReplay } from 'rxjs/operators';
@@ -13,7 +13,7 @@ export abstract class ActionDirective<E extends ActionEvent> extends TypedAction
 /**
  * Abstract component that provides inputs/outputs for some Observable action.
  */
-// TODO: Add Angular decorator.
+@Directive()
 export abstract class AbstractActionDirective<E extends ActionEvent> extends ActionDirective<E> implements OnDestroy {
 
   private _sub = new SubscriptionObject();
@@ -104,7 +104,7 @@ export abstract class AbstractActionDirective<E extends ActionEvent> extends Act
 /**
  * Watches an ActionObject for events.
  */
-// TODO: Add Angular decorator.
+@Directive()
 export abstract class AbstractActionWatcherDirective<E extends ActionEvent> implements OnDestroy {
 
   private _actionSub = new SubscriptionObject();

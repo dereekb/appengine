@@ -20,7 +20,7 @@ export class GaeApiModuleInfo implements ApiModuleInfo {
 
 // MARK: Route
 export abstract class ApiModuleRouteConfiguration {
-  readonly root: string;
+  abstract readonly root: string;
 }
 
 /**
@@ -50,8 +50,8 @@ export class GaeApiModuleRouteConfiguration implements ApiModuleRouteConfigurati
 
 // MARK: Types
 export abstract class ApiModuleTypesConfiguration {
-  readonly types: ModelType[];
-  readonly typeSet: Set<ModelType>;
+  abstract readonly types: ModelType[];
+  abstract readonly typeSet: Set<ModelType>;
   abstract hasType(type: ModelType): boolean;
 }
 

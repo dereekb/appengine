@@ -98,9 +98,9 @@ export abstract class SourceFactory<T> {
 }
 
 export abstract class ReadOnlySource<T> {
-    readonly state: SourceState;
-    readonly stream: Observable<SourceEvent<T>>;
-    readonly elements: Observable<T[]>;
+    abstract readonly state: SourceState;
+    abstract readonly stream: Observable<SourceEvent<T>>;
+    abstract readonly elements: Observable<T[]>;
     /**
      * Refreshes the current data, if applicable for the source.
      */
@@ -191,12 +191,12 @@ export class ConversionSourceEvent<I, T> extends SourceEvent<T> {
 
 export abstract class ReadOnlyConversionSource<I, T> extends Source<T> {
 
-    readonly stream: Observable<ConversionSourceEvent<I, T>>;
+    abstract readonly stream: Observable<ConversionSourceEvent<I, T>>;
 
 }
 
 export abstract class ConversionSource<I, T> extends ReadOnlyConversionSource<I, T> {
-    input: Observable<I | I[]> | undefined;
+    abstract input: Observable<I | I[]> | undefined;
 }
 
 export function ProvideConversionSource<S extends ConversionSource<any, any>>(type: Type<S>) {

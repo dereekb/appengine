@@ -19,9 +19,9 @@ export interface OAuthButtonEvent {
 }
 
 export abstract class OAuthLoginServiceButton {
-  readonly serviceName: string;
-  readonly state: OAuthButtonState;
-  readonly stream: Observable<OAuthButtonEvent>;
+  abstract readonly serviceName: string;
+  abstract readonly state: OAuthButtonState;
+  abstract readonly stream: Observable<OAuthButtonEvent>;
   abstract resetButton();
 }
 

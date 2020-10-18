@@ -119,15 +119,24 @@ export class GaeLoginApiModule {
 
 // MARK: Configured JWT
 export class GaeJwtConfiguration {
+  /**
+   * @deprecated use allowedDomains instead.
+   */
   whitelistedDomains?: string[];
+  /**
+   * @deprecated use disallowedRoutes instead.
+   */
   blacklistedRoutes?: RegExp[];
+  allowedDomains?: string[];
+  disallowedRoutes?: RegExp[];
   constructor() { }
 }
 
 export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, apiConfig: GaeLoginApiModuleConfiguration, gaeJwtConfiguration: GaeJwtConfiguration) {
   const throwNoTokenError = false;
   const skipWhenExpired = false;
-  const whitelistedDomains = gaeJwtConfiguration.whitelistedDomains || [];
+  // tslint:disable-next-line: deprecation
+  const allowedDomains = [...gaeJwtConfiguration.whitelistedDomains || [], ...gaeJwtConfiguration.allowedDomains || []];
 
   function makeRouteRegex(route: string, openEnd = true, addRoot = true) {
     let prefix = '.*';
@@ -148,10 +157,13 @@ export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, 
     return new RegExp(route, 'i');
   }
 
-  const blacklistedRoutes = [
+  const disallowedRoutes = [
     makeRouteRegex(OAuthLoginApiService.SERVICE_PATH),
     makeRouteRegex(PublicLoginTokenApiService.SERVICE_PATH),
-  ].concat(gaeJwtConfiguration.blacklistedRoutes || []);
+    // tslint:disable-next-line: deprecation
+    ...gaeJwtConfiguration.blacklistedRoutes || [],
+    ...gaeJwtConfiguration.disallowedRoutes || []
+  ];
 
   // TODO: Add black/white list parameters using the module's info.
 
@@ -169,8 +181,8 @@ export function jwtOptionsFactory(userLoginTokenService: UserLoginTokenService, 
     },
     throwNoTokenError,
     skipWhenExpired,
-    whitelistedDomains,
-    blacklistedRoutes
+    allowedDomains,
+    disallowedRoutes
   };
 }
 

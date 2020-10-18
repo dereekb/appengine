@@ -1,5 +1,5 @@
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { OnDestroy } from '@angular/core';
+import { OnDestroy, Directive } from '@angular/core';
 import { Source, SourceState } from '@gae-web/appengine-utility';
 import { map } from 'rxjs/operators';
 
@@ -27,7 +27,7 @@ export enum ListViewSourceState {
 }
 
 // MARK: Abstract Source
-// TODO: Add Angular decorator.
+@Directive()
 export abstract class AbstractListViewSource<T> implements OnDestroy {
 
   private _stream = new BehaviorSubject<ListViewSourceEvent<T>>({
