@@ -2,7 +2,7 @@ import { AbstractListContentComponent } from '../../list/list-content.component'
 import { ClickableAnchor } from './anchor.component';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { map, shareReplay, tap, distinctUntilChanged, startWith } from 'rxjs/operators';
-import { Input, ChangeDetectorRef } from '@angular/core';
+import { Input, ChangeDetectorRef, Directive } from '@angular/core';
 import { ListViewComponent } from '../../list/list-view.component';
 import { GaeViewUtility } from '../../shared/utility';
 
@@ -28,6 +28,7 @@ export interface AnchorListDelegate<T> {
 /**
  * AbstractAnchorListContentComponent<T> extension that provides anchors for elements using a delegate.
  */
+@Directive()
 export abstract class AbstractDelegatedAnchorListContentComponent<T> extends AbstractAnchorListContentComponent<T> {
 
   private static readonly DEFAULT_DELEGATE: AnchorListDelegate<any> = {

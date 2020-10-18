@@ -45,6 +45,7 @@ export class GaeFormGroupErrorsDirective implements OnDestroy {
 /**
  * Abstract form control component.
  */
+@Directive()
 export abstract class AbstractFormControlComponent {
 
     @Input()
@@ -78,6 +79,7 @@ export abstract class AbstractFormControlComponent {
 
 }
 
+@Directive()
 export abstract class AbstractExtendedFormControlComponent extends AbstractFormControlComponent implements AfterContentInit, OnDestroy {
 
     @Input()

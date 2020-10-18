@@ -58,6 +58,7 @@ export function ProvideConfigurableKeySearchSourceComponent<S extends AbstractCo
  *
  * If you don't need to configure the query through this type, extend AbstractIterableKeySourceComponent.
  */
+@Directive()
 export abstract class AbstractConfigurableKeySearchSourceComponent<T extends UniqueModel, C extends SearchSourceConfiguration> extends AbstractIterableKeySourceComponent implements OnDestroy {
 
   private _waitForConfiguration = true;
@@ -214,6 +215,7 @@ export class GaeKeyQuerySourceFilterDirective<C extends SearchSourceConfiguratio
  *
  * If you don't need to configure the query through this type, extend AbstractIterableKeySourceComponent.
  */
+@Directive()
 export abstract class AbstractConfigurableKeyQuerySourceComponent<T extends UniqueModel> extends AbstractConfigurableKeySearchSourceComponent<T, QuerySourceConfiguration> {
 
   static makeKeyQuerySource<T extends UniqueModel>(input: QueryService<T> | KeyQuerySource<T>): KeyQuerySource<T> {
@@ -235,6 +237,7 @@ export abstract class AbstractConfigurableKeyQuerySourceComponent<T extends Uniq
  *
  * If you don't need to configure the search through this type, extend AbstractIterableKeySourceComponent.
  */
+@Directive()
 export abstract class AbstractConfigurableKeyTypedModelSearchSourceComponent<T extends UniqueModel> extends AbstractConfigurableKeySearchSourceComponent<T, TypedModelSearchSourceConfiguration> {
 
   static makeKeySearchSource<T extends UniqueModel>(input: TypedModelSearchService<T> | KeyTypedModelSearchSource<T>): KeyTypedModelSearchSource<T> {

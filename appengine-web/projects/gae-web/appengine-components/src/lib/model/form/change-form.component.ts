@@ -1,5 +1,5 @@
 import { Observable, of, empty } from 'rxjs';
-import { Input } from '@angular/core';
+import { Input, Directive } from '@angular/core';
 import { UniqueModel, ModelOrKey, ModelKey, ModelUtility } from '@gae-web/appengine-utility';
 import { map, filter } from 'rxjs/operators';
 
@@ -10,6 +10,7 @@ import { map, filter } from 'rxjs/operators';
  * This is used primarily by a model's concrete create, update, or delete
  * views that take in a single model or key as a target for the edit.
  */
+@Directive()
 export abstract class AbstractModelChangeFormComponent<T extends UniqueModel> {
 
   private _output: Observable<ModelKey>;

@@ -12,6 +12,7 @@ import { MatProgressButtonOptions } from 'mat-progress-buttons';
 /**
  * Abstract page button component.
  */
+@Directive()
 export abstract class GaePageButton {
 
   @Input()

@@ -1,4 +1,4 @@
-import { Output, OnDestroy, EventEmitter, Optional, Host, Inject } from '@angular/core';
+import { Output, OnDestroy, EventEmitter, Optional, Host, Inject, Directive } from '@angular/core';
 import { AbstractFormActionSubmitController } from './form-submit.controller';
 import { TemplateResponse } from '@gae-web/appengine-api';
 import { UniqueModel } from '@gae-web/appengine-utility';
@@ -19,6 +19,7 @@ export class TemplateModelFormEvent<R extends TemplateResponse<T>, T extends Uni
 /**
  * Abstract ModelFormController directive for a TemplateResponse.
  */
+@Directive()
 export abstract class AbstractTemplateModelFormControllerDirective<R extends TemplateResponse<T>, T extends UniqueModel>
     extends AbstractFormActionSubmitController<T> implements OnDestroy {
 

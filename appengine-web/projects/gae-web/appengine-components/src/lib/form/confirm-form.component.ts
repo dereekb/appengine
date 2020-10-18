@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, OnDestroy } from '@angular/core';
+import { Component, Input, ViewChild, OnDestroy, Directive } from '@angular/core';
 
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FormComponentState, AbstractFormGroupComponent, ProvideFormGroupComponent, FormComponentEvent, FormErrors } from '../form/form.component';
@@ -88,6 +88,7 @@ export class GaeConfirmModelFormComponent<T> extends AbstractFormGroupComponent 
 /**
  * Abstract component used for views that pre-configure a GaeConfirmModelFormComponent.
  */
+@Directive()
 export abstract class GaeConfiguredConfirmModelFormComponent<T> implements ModelFormComponent<T> {
 
     @ViewChild(GaeConfirmModelFormComponent, { static: true })

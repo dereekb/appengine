@@ -74,6 +74,7 @@ export function ProvideGaeSubmitComponent<S extends GaeSubmitComponent>(listView
     return [{ provide: GaeSubmitComponent, useExisting: listViewType }];
 }
 
+@Directive()
 export abstract class GaeAbstractSubmitComponent implements OnDestroy {
 
     @Output()

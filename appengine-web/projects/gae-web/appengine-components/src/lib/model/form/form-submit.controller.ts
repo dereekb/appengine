@@ -1,4 +1,4 @@
-import { Input, OnDestroy, Optional, Host, Inject } from '@angular/core';
+import { Input, OnDestroy, Optional, Host, Inject, Directive } from '@angular/core';
 import { ActionSubmitController, AbstractActionObject } from './action-submit.controller';
 import { Subscription } from 'rxjs';
 import { ModelFormComponent } from '../../form/model.component';
@@ -12,6 +12,7 @@ import { ActionEvent, ActionState } from '../../shared/action';
  *
  * Will enable/disable the submit button based on the current form state.
  */
+@Directive()
 export abstract class AbstractFormActionSubmitController<T> extends ActionSubmitController implements OnDestroy {
 
     private _form: ModelFormComponent<T>;

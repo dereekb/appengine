@@ -53,6 +53,7 @@ export class SignInGatewayGroupDirective extends AbstractSignInGateway implement
 /**
  * Abstract directive that encapsulates a SignIn Gateway and emits login events when it fires.
  */
+@Directive()
 export abstract class AbstractSignInGatewayDirective extends AbstractSignInGateway implements OnDestroy {
 
     @Output()

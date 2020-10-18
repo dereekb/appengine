@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Directive } from '@angular/core';
 import { ModelKey } from '@gae-web/appengine-utility';
 import { SingleElementConversionSource } from '@gae-web/appengine-utility';
 import { Foo } from 'src/app/secure/shared/api/model/foo/foo';
 
 // MARK: Shared
+@Directive()
 export abstract class AbstractModelViewComponent {
 
   @Input()

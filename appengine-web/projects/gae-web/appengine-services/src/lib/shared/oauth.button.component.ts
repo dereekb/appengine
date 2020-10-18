@@ -1,4 +1,4 @@
-import { HostListener, OnDestroy } from '@angular/core';
+import { HostListener, OnDestroy, Directive } from '@angular/core';
 import { OAuthLoginService, OAuthLoginServiceTokenResponse } from './oauth.service';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { first } from 'rxjs/operators';
@@ -28,6 +28,7 @@ export abstract class OAuthLoginServiceButton {
 /**
  * Abstract oauth button that listens for a click and triggers loading if
  */
+@Directive()
 export abstract class AbstractOAuthLoginServiceButton implements OAuthLoginServiceButton, OnDestroy {
 
   protected _sub = new SubscriptionObject();

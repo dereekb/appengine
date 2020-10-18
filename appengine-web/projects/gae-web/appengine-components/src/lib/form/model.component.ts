@@ -1,4 +1,4 @@
-import { Input, Output, Provider, Type, ChangeDetectorRef, Inject } from '@angular/core';
+import { Input, Output, Provider, Type, ChangeDetectorRef, Inject, Directive } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormComponentEvent, FormComponentState, AbstractFormGroupComponent, FormComponent, ProvideFormGroupComponent, ProvideFormComponent, FormGroupComponent } from './form.component';
 import { Observable } from 'rxjs';
@@ -21,6 +21,7 @@ export function ProvideModelFormComponent<S extends ModelFormComponent<any>>(sou
 /**
  * AbstractFormGroupComponent used for generating a model.
  */
+@Directive()
 export abstract class AbstractModelFormComponent<T> extends AbstractFormGroupComponent implements ModelFormComponent<T> {
 
     @Input()
@@ -110,6 +111,7 @@ export abstract class AbstractModelFormComponent<T> extends AbstractFormGroupCom
 /**
  * AbstractModelFormComponent extension used for generating a unique model.
  */
+@Directive()
 export abstract class AbstractUniqueModelFormComponent<T extends MutableUniqueModel> extends AbstractModelFormComponent<T> {
 
     // MARK: Model

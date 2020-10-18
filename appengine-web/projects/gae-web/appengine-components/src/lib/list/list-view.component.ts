@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnDestroy, AfterContentInit, EventEmitter, Type, ChangeDetectorRef, Inject } from '@angular/core';
+import { Component, Input, Output, OnDestroy, AfterContentInit, EventEmitter, Type, ChangeDetectorRef, Inject, Directive } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription, of } from 'rxjs';
 import { map, flatMap, share, startWith, tap, catchError, shareReplay } from 'rxjs/operators';
 import { ListViewSourceEvent, ListViewSource, ListViewSourceState } from './source';
@@ -50,6 +50,7 @@ export interface ListViewItemClickedEvent<T> {
 /**
  * Abstract list component that takes in a ListViewSource and and provides actions for interacting with that source.
  */
+@Directive()
 export abstract class AbstractListViewComponent<T> implements ListViewComponent<T>, OnDestroy, AfterContentInit {
 
   private static readonly INITIAL_SOURCE = of({

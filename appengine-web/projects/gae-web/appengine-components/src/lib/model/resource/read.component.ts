@@ -24,6 +24,7 @@ export function ProvideReadSourceComponent<S extends ReadSourceComponent<any>>(s
  *
  * Wraps a unique ReadSource.
  */
+@Directive()
 export abstract class AbstractReadSourceComponent<T extends UniqueModel> extends AbstractConversionSourceComponent<ModelKey, T>
   implements ReadSourceComponent<T>, SingleElementConversionSource<ModelKey, T> {
 

@@ -1,4 +1,4 @@
-import { Input, OnDestroy } from '@angular/core';
+import { Input, OnDestroy, Directive } from '@angular/core';
 import { GaeSubmitComponent } from './submit.component';
 import { ActionState, ActionObject, ActionEvent } from '../../shared/action';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
@@ -6,6 +6,7 @@ import { SubscriptionObject } from '@gae-web/appengine-utility';
 /**
  * Abstract controller used to direct an action and submit button.
  */
+@Directive()
 export abstract class ActionSubmitController implements OnDestroy {
 
     private _submit: GaeSubmitComponent;
