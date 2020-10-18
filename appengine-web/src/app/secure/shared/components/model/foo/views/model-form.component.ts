@@ -17,6 +17,8 @@ import { of } from 'rxjs';
     providers: ProvideModelFormComponent(FooModelFormComponent)
 })
 export class FooModelFormComponent extends AbstractUniqueModelFormComponent<Foo> {
+  // TODO: add explicit constructor
+
 
     readonly stringSetOptions = of(['a', 'b', 'c']);
 

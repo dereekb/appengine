@@ -11,6 +11,7 @@ import { IterableSourceComponent } from '../model/resource/source.component';
 /**
  * Abstract source directive that auto-binds to a ListViewComponent.
  */
+@Directive()
 export abstract class AbstractListViewSourceDirective<T> extends AbstractListViewSource<T> implements AfterViewInit {
 
   constructor(@Host() @Optional() @Inject(ListViewComponent) private readonly listViewComponent?: ListViewComponent<T>) {

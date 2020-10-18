@@ -1,5 +1,6 @@
 import { ListViewComponent, ListViewState } from './list-view.component';
 import { Observable } from 'rxjs';
+import { Directive } from "@angular/core";
 
 /**
  * Abstract list content that displays a list of items.
@@ -10,6 +11,7 @@ import { Observable } from 'rxjs';
  *
  * That said, I think these still can be useful as a step towards alternate content components.
  */
+@Directive()
 export abstract class AbstractListContentComponent<T> {
 
   constructor(protected readonly _listView: ListViewComponent<T>) { }

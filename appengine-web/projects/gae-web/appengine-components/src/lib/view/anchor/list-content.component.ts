@@ -14,6 +14,7 @@ export interface AnchorListElement<T> {
 /**
  * AbstractListContentComponent extension that configures functions for building elements that are represented by anchors.
  */
+@Directive()
 export abstract class AbstractAnchorListContentComponent<T> extends AbstractListContentComponent<T> {
 
   public abstract get anchorElements(): Observable<AnchorListElement<T>[]>;

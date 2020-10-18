@@ -7,4 +7,6 @@ import { ProvideListViewComponent, AbstractListViewComponent } from '@gae-web/ap
     templateUrl: './list-view.component.html',
     providers: ProvideListViewComponent(FooListViewComponent)
 })
-export class FooListViewComponent extends AbstractListViewComponent<Foo> { }
+export class FooListViewComponent extends AbstractListViewComponent<Foo> {
+  // TODO: add explicit constructor
+ }

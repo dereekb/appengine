@@ -1,4 +1,4 @@
-import { OnDestroy, AfterContentInit, Provider, Type, Inject, ChangeDetectorRef, OnInit } from '@angular/core';
+import { OnDestroy, AfterContentInit, Provider, Type, Inject, ChangeDetectorRef, OnInit, Directive } from '@angular/core';
 
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
@@ -91,6 +91,7 @@ export enum FormComponentState {
 /**
  * Base component that wraps a FormGroup and provides validation.
  */
+@Directive()
 export abstract class AbstractFormGroupComponent implements FormGroupComponent, OnDestroy, OnInit, AfterContentInit {
 
     private _initialized = false;

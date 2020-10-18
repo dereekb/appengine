@@ -8,6 +8,8 @@ import { ModelOrKey } from '@gae-web/appengine-utility';
   templateUrl: 'delete-modal.component.html',
 })
 export class FooDeleteDialogComponent extends AbstractDeleteActionDialogCompoment<Foo> {
+  // TODO: add explicit constructor
+
 
   @Input()
   public segueRef: StateOrName;
