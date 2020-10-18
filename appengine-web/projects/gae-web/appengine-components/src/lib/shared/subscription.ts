@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 /**
  * Abstract component that contains a SubscriptionObject and will clean it up automatically.
  */
+// TODO: Add Angular decorator.
 export abstract class AbstractSubscriptionComponent implements OnDestroy {
 
   private _subscriptionObject = new SubscriptionObject();

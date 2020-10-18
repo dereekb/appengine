@@ -13,6 +13,7 @@ export abstract class ActionDirective<E extends ActionEvent> extends TypedAction
 /**
  * Abstract component that provides inputs/outputs for some Observable action.
  */
+// TODO: Add Angular decorator.
 export abstract class AbstractActionDirective<E extends ActionEvent> extends ActionDirective<E> implements OnDestroy {
 
   private _sub = new SubscriptionObject();
@@ -103,6 +104,7 @@ export abstract class AbstractActionDirective<E extends ActionEvent> extends Act
 /**
  * Watches an ActionObject for events.
  */
+// TODO: Add Angular decorator.
 export abstract class AbstractActionWatcherDirective<E extends ActionEvent> implements OnDestroy {
 
   private _actionSub = new SubscriptionObject();

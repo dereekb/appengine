@@ -8,6 +8,7 @@ import { SingleElementSource } from '@gae-web/appengine-utility';
 /**
  * Abstract action delegate that wraps a controller.
  */
+@Directive()
 export abstract class AbstractSelectionListControllerActionController implements AfterViewInit, OnDestroy {
 
     private _hasKeyChange: boolean;
@@ -56,6 +57,7 @@ export abstract class AbstractSelectionListControllerActionController implements
 /**
  * AbstractSelectionListControllerActionDelegate extension that watches an element source.
  */
+@Directive()
 export abstract class AbstractObjectSelectionListControllerActionController<T> extends AbstractSelectionListControllerActionController implements OnDestroy {
 
     private _element?: T;

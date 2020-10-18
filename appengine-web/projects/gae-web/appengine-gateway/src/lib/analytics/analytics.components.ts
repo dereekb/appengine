@@ -6,6 +6,7 @@ import { SignInGatewayDirective } from '../components/login.directive';
 import { SignInGatewayRegisterDirective } from '../components/register.directive';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
 
+// TODO: Add Angular decorator.
 export abstract class AbstractLoginTokenAnalyticsDirective implements OnDestroy {
 
     private _sub = new SubscriptionObject();

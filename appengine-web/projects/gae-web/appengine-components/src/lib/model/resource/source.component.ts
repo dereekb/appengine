@@ -26,6 +26,7 @@ export function ProvideSourceComponent<S extends SourceComponent<any>>(sourceTyp
  *
  * Uses a Source.
  */
+// TODO: Add Angular decorator.
 export abstract class AbstractSourceComponent<T> implements SourceComponent<T>, OnDestroy {
 
   private readonly _elements: Observable<T[]>;
@@ -141,6 +142,7 @@ export function ProvideControllableSourceComponent<S extends ControllableSourceC
  *
  * Use AbstractConfigurableKeyQuerySourceComponent for queries that must be configured.
  */
+@Directive()
 export abstract class AbstractControllableSourceComponent<T>
   extends AbstractSourceComponent<T> implements ControllableSourceComponent<T>, AfterViewInit {
 
@@ -193,6 +195,7 @@ export function ProvideIterableSourceComponent<S extends IterableSourceComponent
 /**
  * AbstractControllableSourceComponent implementation.
  */
+@Directive()
 export abstract class AbstractIterableSourceComponent<T> extends AbstractControllableSourceComponent<T> implements IterableSourceComponent<T> {
 
   constructor(source: IterableSource<T>, callNextOnReset?: boolean) {

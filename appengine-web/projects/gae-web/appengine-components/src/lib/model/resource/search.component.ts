@@ -17,6 +17,7 @@ import { map } from 'rxjs/operators';
  *
  * Use AbstractConfigurableKeyQuerySourceComponent for queries that must be configured.
  */
+@Directive()
 export abstract class AbstractIterableKeySourceComponent extends AbstractIterableSourceComponent<ModelKey> {
 
   constructor(iterableSource: IterableSource<ModelKey>, callNextOnReset = true) {
@@ -32,6 +33,7 @@ export abstract class AbstractIterableKeySourceComponent extends AbstractIterabl
 /**
  * AbstractIterableKeySourceComponent that creates a WrappedIterableSource initially.
  */
+@Directive()
 export abstract class AbstractWrappedIterableKeySourceComponent<T extends UniqueModel> extends AbstractIterableKeySourceComponent {
 
   constructor() {

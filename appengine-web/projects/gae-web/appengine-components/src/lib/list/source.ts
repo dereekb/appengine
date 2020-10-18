@@ -27,6 +27,7 @@ export enum ListViewSourceState {
 }
 
 // MARK: Abstract Source
+// TODO: Add Angular decorator.
 export abstract class AbstractListViewSource<T> implements OnDestroy {
 
   private _stream = new BehaviorSubject<ListViewSourceEvent<T>>({
