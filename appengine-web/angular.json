@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/appengine-web",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -54,6 +55,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
@@ -157,7 +162,12 @@
             "tsConfig": "projects/gae-web/appengine-client/tsconfig.lib.json",
             "project": "projects/gae-web/appengine-client/ng-package.json"
           }
-        },
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "projects/gae-web/appengine-client/tsconfig.lib.prod.json"
+            }
+          }
+},
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -192,7 +202,12 @@
             "tsConfig": "projects/gae-web/appengine-utility/tsconfig.lib.json",
             "project": "projects/gae-web/appengine-utility/ng-package.json"
           }
-        },
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "projects/gae-web/appengine-utility/tsconfig.lib.prod.json"
+            }
+          }
+},
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -227,7 +242,12 @@
             "tsConfig": "projects/gae-web/appengine-token/tsconfig.lib.json",
             "project": "projects/gae-web/appengine-token/ng-package.json"
           }
-        },
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "projects/gae-web/appengine-token/tsconfig.lib.prod.json"
+            }
+          }
+},
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -262,7 +282,12 @@
             "tsConfig": "projects/gae-web/appengine-api/tsconfig.lib.json",
             "project": "projects/gae-web/appengine-api/ng-package.json"
           }
-        },
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "projects/gae-web/appengine-api/tsconfig.lib.prod.json"
+            }
+          }
+},
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -297,7 +322,12 @@
             "tsConfig": "projects/gae-web/appengine-analytics/tsconfig.lib.json",
             "project": "projects/gae-web/appengine-analytics/ng-package.json"
           }
-        },
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "projects/gae-web/appengine-analytics/tsconfig.lib.prod.json"
+            }
+          }
+},
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -337,7 +367,12 @@
             "tsConfig": "projects/gae-web/appengine-services/tsconfig.lib.json",
             "project": "projects/gae-web/appengine-services/ng-package.json"
           }
-        },
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "projects/gae-web/appengine-services/tsconfig.lib.prod.json"
+            }
+          }
+},
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -377,7 +412,12 @@
             "tsConfig": "projects/gae-web/appengine-gateway/tsconfig.lib.json",
             "project": "projects/gae-web/appengine-gateway/ng-package.json"
           }
-        },
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "projects/gae-web/appengine-gateway/tsconfig.lib.prod.json"
+            }
+          }
+},
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -417,7 +457,12 @@
             "tsConfig": "projects/gae-web/appengine-components/tsconfig.lib.json",
             "project": "projects/gae-web/appengine-components/ng-package.json"
           }
-        },
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "projects/gae-web/appengine-components/tsconfig.lib.prod.json"
+            }
+          }
+},
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
