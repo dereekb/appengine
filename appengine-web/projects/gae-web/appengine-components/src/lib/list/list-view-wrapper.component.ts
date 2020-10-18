@@ -2,7 +2,7 @@ import { Component, OnDestroy, ViewEncapsulation, Inject, ChangeDetectorRef, Vie
 
 import { ListViewComponent } from './list-view.component';
 import { SubscriptionObject } from '@gae-web/appengine-utility';
-import { flatMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { ListViewSourceState } from './source';
 import { SimpleLoadingContext, LoadingContext } from '../loading/loading';
 import { GaeViewUtility } from '../shared/utility';
@@ -27,7 +27,7 @@ export class GaeListViewWrapperComponent<T> implements OnDestroy, AfterViewInit 
 
   constructor(@Inject(ListViewComponent) private _listView: ListViewComponent<T>, private _cdRef: ChangeDetectorRef) {
     this._sub.subscription = _listView.stream.pipe(
-      flatMap(x => x.source)
+      mergeMap(x => x.source)
     ).subscribe((event) => {
       let showLoading: boolean;
 

@@ -1,7 +1,7 @@
 import { Type } from '@angular/core';
 import { BaseError } from 'make-error';
 import { Observable, Subscription, BehaviorSubject, of, throwError, EMPTY, Subject } from 'rxjs';
-import { map, flatMap, debounceTime, share, catchError, tap } from 'rxjs/operators';
+import { map, mergeMap, debounceTime, share, catchError, tap } from 'rxjs/operators';
 import { SubscriptionObject } from './subscription';
 import { ValueUtility } from './value';
 
@@ -432,7 +432,7 @@ export abstract class AbstractConversionSource<I, T> extends AbstractCustomSourc
     }
 
     protected makeFirstObs() {
-        return this._streamObs.pipe(flatMap((event: ConversionSourceEvent<I, T>) => {
+        return this._streamObs.pipe(mergeMap((event: ConversionSourceEvent<I, T>) => {
             const first = event.elements[0];
 
             if (!first) {

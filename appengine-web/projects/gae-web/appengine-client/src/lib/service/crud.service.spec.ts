@@ -3,7 +3,7 @@ import { ModelServiceWrapper, ModelServiceWrapperSet, ModelWrapperInitializedErr
 import { TestFoo, TEST_FOO_MODEL_TYPE, TestFooReadService, ModelServiceResponse, ClientAtomicOperationError } from '@gae-web/appengine-api';
 import { ModelUtility } from '@gae-web/appengine-utility';
 import { ModelReadService, getModelsThrowReadResponseError } from './crud.service';
-import { take, takeUntil, first, flatMap } from 'rxjs/operators';
+import { take, takeUntil, first, mergeMap } from 'rxjs/operators';
 import { timer, throwError } from 'rxjs';
 
 
@@ -204,7 +204,7 @@ describe('Crud Model Services', () => {
               modelReadService.continuousRead({
                 modelKeys: testKeys
               }).pipe(
-                flatMap(getModelsThrowReadResponseError)
+                mergeMap(getModelsThrowReadResponseError)
               ).subscribe({
                 next: (readResult) => {
                   fail('Should have failed.');

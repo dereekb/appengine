@@ -2,7 +2,7 @@ import { Component, Input, Inject, AfterViewInit, OnDestroy, ChangeDetectorRef, 
 import { ClickableButton } from './nav.component';
 import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
 import { AbstractSubscriptionComponent } from '../shared/subscription';
-import { map, flatMap, tap, shareReplay } from 'rxjs/operators';
+import { map, mergeMap, tap, shareReplay } from 'rxjs/operators';
 import { Destroyable } from '@gae-web/appengine-utility';
 import { GaeSidenavControllerDirective } from './sidenav.component';
 import { GaeViewUtility } from '../shared/utility';
@@ -31,7 +31,7 @@ export class GaePageToolbarComponent extends AbstractSubscriptionComponent imple
       map((x) => {
         return x.filter(y => Boolean(y)).map(y => y.stream);
       }),
-      flatMap((x: Observable<GaePageToolbarConfiguration>[]) => {
+      mergeMap((x: Observable<GaePageToolbarConfiguration>[]) => {
         if (x.length > 0) {
           return combineLatest(x).pipe(
             map((y: GaePageToolbarConfiguration[]) => {

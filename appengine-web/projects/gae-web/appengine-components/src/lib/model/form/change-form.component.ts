@@ -1,4 +1,4 @@
-import { Observable, of, empty } from 'rxjs';
+import { Observable, of, empty, EMPTY } from 'rxjs';
 import { Input, Directive } from '@angular/core';
 import { UniqueModel, ModelOrKey, ModelKey, ModelUtility } from '@gae-web/appengine-utility';
 import { map, filter } from 'rxjs/operators';
@@ -25,7 +25,7 @@ export abstract class AbstractModelChangeFormComponent<T extends UniqueModel> {
   @Input()
   public set targetObs(input: Observable<ModelOrKey<T>>) {
     if (!input) {
-      input = empty();
+      input = EMPTY;
     }
 
     this._output = input.pipe(
@@ -35,7 +35,7 @@ export abstract class AbstractModelChangeFormComponent<T extends UniqueModel> {
   }
 
   public get targetKey(): Observable<ModelKey> {
-    return this._output || empty();
+    return this._output || EMPTY;
   }
 
 }

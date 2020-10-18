@@ -11,7 +11,7 @@ import { Observable, of, from, forkJoin, throwError } from 'rxjs';
 import { ModelUtility, ValueUtility, OneOrMore } from '@gae-web/appengine-utility';
 import { ApiResponseJson } from '../../api';
 import { HttpResponse } from '@angular/common/http';
-import { map, flatMap, concatMapTo, toArray } from 'rxjs/operators';
+import { map, mergeMap, concatMapTo, toArray } from 'rxjs/operators';
 import { ModelKey } from '@gae-web/appengine-utility';
 
 // MARK: Generic Interfaces
@@ -74,7 +74,7 @@ export class ClientReadService<T, O> extends AbstractCrudService<T, O> implement
             });
 
             const parallelObs = from(requestBatches).pipe(
-                flatMap((x: ReadRequest) => this._read(x))
+                mergeMap((x: ReadRequest) => this._read(x))
             );
 
             return parallelObs.pipe(

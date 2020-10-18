@@ -1,6 +1,6 @@
 import { Component, Input, Output, OnDestroy, AfterContentInit, EventEmitter, Type, ChangeDetectorRef, Inject, Directive } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription, of } from 'rxjs';
-import { map, flatMap, share, startWith, tap, catchError, shareReplay } from 'rxjs/operators';
+import { map, mergeMap, share, startWith, tap, catchError, shareReplay } from 'rxjs/operators';
 import { ListViewSourceEvent, ListViewSource, ListViewSourceState } from './source';
 
 // MARK: List View Component
@@ -65,7 +65,7 @@ export abstract class AbstractListViewComponent<T> implements ListViewComponent<
     source: AbstractListViewComponent.INITIAL_SOURCE
   });
 
-  private _elementsStream = this._stream.pipe(flatMap((x) => {
+  private _elementsStream = this._stream.pipe(mergeMap((x) => {
     if (x.source) {
       return x.source.pipe(map(y => y.elements || []));
     } else {

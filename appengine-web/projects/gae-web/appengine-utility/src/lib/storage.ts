@@ -1,5 +1,5 @@
 import { Observable, of, range } from 'rxjs';
-import { map, flatMap, filter } from 'rxjs/operators';
+import { map, mergeMap, filter } from 'rxjs/operators';
 
 import { BaseError } from 'make-error';
 import { DateTime } from 'luxon';
@@ -320,7 +320,7 @@ export abstract class AbstractStorageAccessor<T> implements StorageAccessor<T>, 
 
   public clear(): Observable<{}> {
     return this.allKeys().pipe(
-      flatMap((storeKey: string) => {
+      mergeMap((storeKey: string) => {
         return this.removeWithStoreKey(storeKey);
       })
     );

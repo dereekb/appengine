@@ -7,7 +7,7 @@ import {
 import { ModelServiceWrapper } from './model.service';
 import { ModelReadService } from './crud.service';
 import { Observable, of, empty, from, EMPTY } from 'rxjs';
-import { flatMap, filter, map } from 'rxjs/operators';
+import { mergeMap, filter, map } from 'rxjs/operators';
 import { KeyedPredictiveOrderedQueryStreamEvent, KeyedPredictiveOrderedQueryStream } from './source';
 import { WrapperEventFilter, ModelWrapperEvent, WrapperEventType } from './wrapper';
 
@@ -56,7 +56,7 @@ abstract class AbstractModelSearchService<T extends UniqueModel, I extends Searc
       const keysOnlyRequest = { ...request, isKeysOnly: true };
 
       return this.doSearchWithService(keysOnlyRequest).pipe(
-        flatMap((response: O) => {
+        mergeMap((response: O) => {
           const keys = response.keyResults;
 
           if (keys.length > 0) {
@@ -220,13 +220,13 @@ export class ModelFilteredKeyedPredictiveOrderedQueryDelegate<T extends UniqueMo
 
     if (this._strictFilter) {
       base = base.pipe(
-        flatMap((event: ModelWrapperEvent) => {
+        mergeMap((event: ModelWrapperEvent) => {
           return this._strictFilterMap(event);
         })
       );
     } else {
       base = base.pipe(
-        flatMap((event: ModelWrapperEvent) => {
+        mergeMap((event: ModelWrapperEvent) => {
           return this._addRemoveFilterMap(event);
         })
       );

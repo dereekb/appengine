@@ -7,7 +7,7 @@ import {
   DeleteService, DeleteRequest, DeleteResponse, ClientAtomicOperationError
 } from '@gae-web/appengine-api';
 import { throwError, of, Observable } from 'rxjs';
-import { flatMap, map, catchError, first, share, tap, skip, shareReplay } from 'rxjs/operators';
+import { mergeMap, map, catchError, first, share, tap, skip, shareReplay } from 'rxjs/operators';
 import { WrapperEventType } from './wrapper';
 
 // MARK: Read
@@ -41,7 +41,7 @@ export class ModelReadSource<T extends UniqueModel> extends ReadSource<T>  {
     return this._parent.cache
       .asyncRead(keys, { debounce: this._debounce })
       .pipe(
-        flatMap((result: KeyedCacheLoad<ModelKey, T>) => {
+        mergeMap((result: KeyedCacheLoad<ModelKey, T>) => {
           this.setState(SourceState.Loading);
 
           const hits = result.hits;
@@ -109,7 +109,7 @@ export interface ModelReadResponse<T> extends ReadResponse<T> {
 }
 
 /**
- * Convenience function used with rxjs flatMap() to throw an error if it exists or return the models.
+ * Convenience function used with rxjs mergeMap() to throw an error if it exists or return the models.
  */
 export function getModelsThrowReadResponseError<T>(response: ModelReadResponse<T>): Observable<T[]> {
   const obs = throwModelsReadResponseError(response).pipe(map(x => x.models));
@@ -117,7 +117,7 @@ export function getModelsThrowReadResponseError<T>(response: ModelReadResponse<T
 }
 
 /**
- * Convenience function used with rxjs flatMap() to throw an error if it exists.
+ * Convenience function used with rxjs mergeMap() to throw an error if it exists.
  */
 export function throwModelsReadResponseError<T>(response: ModelReadResponse<T>): Observable<ModelReadResponse<T>> {
   if (response.error) {
@@ -133,7 +133,7 @@ export interface SingleModelReadResponse<T> {
 }
 
 /**
- * Convenience function used with rxjs flatMap() to throw an error if it exists or return the model.
+ * Convenience function used with rxjs mergeMap() to throw an error if it exists or return the model.
  */
 export function getModelThrowReadResponseError<T>(response: SingleModelReadResponse<T>): Observable<T> {
   const obs = throwModelReadResponseError(response).pipe(map(x => x.model));
@@ -141,7 +141,7 @@ export function getModelThrowReadResponseError<T>(response: SingleModelReadRespo
 }
 
 /**
- * Convenience function used with rxjs flatMap() to throw an error if it exists.
+ * Convenience function used with rxjs mergeMap() to throw an error if it exists.
  */
 export function throwModelReadResponseError<T>(response: SingleModelReadResponse<T>): Observable<SingleModelReadResponse<T>> {
   if (response.error) {
@@ -195,7 +195,7 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
       return this._read(request);
     } else {
       return this.continuousRead(request, 10).pipe(
-        flatMap((x) => {
+        mergeMap((x) => {
           if (x.error) {
             return throwError(x.error);
           } else {
@@ -272,7 +272,7 @@ export class ModelReadService<T extends UniqueModel> implements CachedReadServic
       .asyncRead(inputKeys, { debounce, ignoreOtherKeyChanges: true })
       .pipe(
         // Read requested model keys from the cache.
-        flatMap((result: KeyedCacheLoad<ModelKey, T>) => {
+        mergeMap((result: KeyedCacheLoad<ModelKey, T>) => {
           const hits = result.hits;
           const misses = result.misses;
 

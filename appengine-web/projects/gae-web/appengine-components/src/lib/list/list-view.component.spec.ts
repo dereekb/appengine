@@ -8,7 +8,7 @@ import { GaeListComponentsModule } from './list.module';
 import { ListViewSource, ListViewSourceState } from './source';
 import { GaeListViewWrapperComponent } from './list-view-wrapper.component';
 import { TestListViewSourceFactory } from './source.spec';
-import { filter, flatMap, tap } from 'rxjs/operators';
+import { filter, mergeMap, tap } from 'rxjs/operators';
 import { TestFoo } from '@gae-web/appengine-api';
 import { GaeListLoadMoreComponent } from './load-more.component';
 import { By } from '@angular/platform-browser';
@@ -107,7 +107,7 @@ describe('ListViewComponent', () => {
 
         it('canLoadMore() on the component should be false', (done) => {
           component.stream.pipe(
-            flatMap((x) => x.source),
+            mergeMap((x) => x.source),
             filter((x) => x.state === ListViewSourceState.Done)
           ).subscribe((x) => {
             expect(component.canLoadMore).toBe(false);

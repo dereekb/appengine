@@ -7,7 +7,7 @@ import { FullStorageObject, MemoryStorageObject, StorageObject } from '@gae-web/
 import { AppTokenStorageService, StoredTokenUnavailableError, AsyncAppTokenStorageService } from './storage.service';
 
 import { Observable, BehaviorSubject, of, throwError, empty, forkJoin, from, concat, EMPTY, merge, interval } from 'rxjs';
-import { map, catchError, filter, flatMap, first, toArray, throwIfEmpty, share, tap, finalize, shareReplay, distinctUntilChanged, timeoutWith, throttleTime } from 'rxjs/operators';
+import { map, catchError, filter, mergeMap, first, toArray, throwIfEmpty, share, tap, finalize, shareReplay, distinctUntilChanged, timeoutWith, throttleTime } from 'rxjs/operators';
 import { InvalidLoginTokenError } from './error';
 import { BaseError } from 'make-error';
 import { DateTime } from 'luxon';
@@ -207,7 +207,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
 
   public logout(): Observable<boolean> {
     return this._clearAllTokens().pipe(
-      flatMap((_) => {
+      mergeMap((_) => {
         // Watch for the token to no longer be set.
         return this.servicePairObs.pipe(
           filter(x => !x.token)
@@ -256,7 +256,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
    */
   public setLoginToken(fullToken: LoginTokenPair, selector: AppTokenKeySelector = this.selector): Observable<LoginTokenPair> {
     return this.updateLoginToken(fullToken, selector).pipe(
-      flatMap((_) => {
+      mergeMap((_) => {
 
         // Set the new selector.
         this.selector = selector;
@@ -277,7 +277,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
    */
   public updateLoginToken(fullToken: LoginTokenPair, selector: AppTokenKeySelector = this.selector): Observable<LoginTokenPair> {
     return this._tokenService.createRefreshToken(fullToken.token).pipe(
-      flatMap((refreshToken) => {
+      mergeMap((refreshToken) => {
         return this._storeRefreshToken(refreshToken, selector).pipe(
           map(_ => refreshToken)
         );
@@ -310,7 +310,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
         return !allow;  // distinctUntilChanged uses equality.
       }),
       */
-      flatMap((x) => {
+      mergeMap((x) => {
         const selector = x[0];
         return this._loadAppTokenUserServicePairForSelector(selector).pipe(
           // On errors, return a service pair that has just the selector.
@@ -333,7 +333,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
       // Subsequent calls should not hit the chain again.
       shareReplay(1),
       // Always check the token and refresh if necesary.
-      flatMap((x) => this._refreshFullTokenIfNecessary(x))
+      mergeMap((x) => this._refreshFullTokenIfNecessary(x))
       // tap((x) => console.log(`Pipe called > S: ${ x.selector} T: ${ x.token }`)),
     );
   }
@@ -362,7 +362,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
   private _loadAppTokenUserServicePairForSelector(selector: AppTokenKeySelector): Observable<AppTokenUserServicePair> {
     // Load the refresh token
     return this._loadLimitedAppTokenUserServicePairForSelector(selector).pipe(
-      flatMap((pair) => {
+      mergeMap((pair) => {
         return this._loadFullToken(selector, pair.refreshToken).pipe(
           // Map to a pair
           map(token => ({
@@ -398,7 +398,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
           if (e instanceof TokenLoginError) {
             return this._clearTokensWithSelectorFromStorage(selector).pipe(
               catchError(_ => of(undefined)),
-              flatMap(_ => throwError(e))
+              mergeMap(_ => throwError(e))
             );
           } else {
             return throwError(e);
@@ -440,7 +440,7 @@ export class AsyncAppTokenUserService implements UserLoginTokenService {
         }
       }),
       // Try to Store In Storage
-      flatMap((fullToken: LoginTokenPair) => {
+      mergeMap((fullToken: LoginTokenPair) => {
         return this._storeFullToken(fullToken, selector).pipe(
           map(_ => fullToken),
           catchError(_ => of(fullToken))
@@ -649,14 +649,14 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
     );
 
     return rememberObs.pipe(
-      flatMap(() => this.setLoginToken(fullToken))
+      mergeMap(() => this.setLoginToken(fullToken))
     );
   }
 
   public setLoginToken(loginTokenPair: LoginTokenPair): Observable<LoginTokenPair> {
     return this.addLoginToken(loginTokenPair).pipe(
-      flatMap(() => this.loadAppTokenUserServicePairForLoginPointer(loginTokenPair.pointer)),
-      flatMap((pair: AppTokenUserServicePair) => this.switchToAppTokenUserServicePair(pair)),
+      mergeMap(() => this.loadAppTokenUserServicePairForLoginPointer(loginTokenPair.pointer)),
+      mergeMap((pair: AppTokenUserServicePair) => this.switchToAppTokenUserServicePair(pair)),
       map((x) => x.token)
     );
   }
@@ -677,7 +677,7 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
 
   public logout(): Observable<boolean> {
     return this._storage.clear().pipe(
-      flatMap(() => this._accessor.clearLogin()),
+      mergeMap(() => this._accessor.clearLogin()),
       map((x) => {
         this._pair.next(undefined);
         return x;
@@ -689,7 +689,7 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
   private getOrLoadAppTokenUserServicePair(): Observable<AppTokenUserServicePair> {
     return this._pair.pipe(
       first(),
-      flatMap((servicePair) => {
+      mergeMap((servicePair) => {
         let obs: Observable<[AppTokenUserServicePair, boolean]>;
 
         // Load a login token from the Subject or Last Used Token.
@@ -703,9 +703,9 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
 
         return obs;
       }),
-      flatMap(([pair, loaded]) => {
+      mergeMap(([pair, loaded]) => {
         return this.getFullTokenAndUpdateStorageRaw(pair).pipe(
-          flatMap(([updatedPair, updated]) => {
+          mergeMap(([updatedPair, updated]) => {
             if (loaded || updated) {
               return this.setLastLogin(updatedPair).pipe(map(() => updatedPair));
             } else {
@@ -720,7 +720,7 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
   private switchToAppTokenUserServicePair(pair: AppTokenUserServicePair): Observable<AppTokenUserServicePair> {
     // Refesh the token if needed.
     return this.getFullTokenAndUpdateStorage(pair).pipe(
-      flatMap((x) => {
+      mergeMap((x) => {
         return this.setLastLogin(x).pipe(map(() => x));
       })
     );
@@ -742,7 +742,7 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
   // MARK: Loading
   private loadStoredTokenServicePair(): Observable<AppTokenUserServicePair> {
     return this.loadLastLoginId().pipe(
-      flatMap((login) => this.loadAppTokenUserServicePairForLogin(login))
+      mergeMap((login) => this.loadAppTokenUserServicePairForLogin(login))
     );
   }
 
@@ -762,7 +762,7 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
     return this.loadStoredTokens().pipe(
       filter(pairFilter),
       toArray(),
-      flatMap((pairs) => this.makeTokenServicePair(pairs))
+      mergeMap((pairs) => this.makeTokenServicePair(pairs))
     );
   }
 
@@ -861,7 +861,7 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
 
         throw e;
       }),
-      flatMap((updated: [AppTokenUserServicePair, boolean]) => {
+      mergeMap((updated: [AppTokenUserServicePair, boolean]) => {
         const fullToken = updated[0].token;
 
         if (fullToken) {
@@ -932,7 +932,7 @@ export class LegacyAppTokenUserService implements UserLoginTokenService {
 
   private getAndAddRememberMe(fullToken: LoginTokenPair): Observable<LoginTokenPair> {
     return this._tokenService.createRefreshToken(fullToken.token).pipe(
-      flatMap((refreshToken) => {
+      mergeMap((refreshToken) => {
         return this.addTokenToStorage(refreshToken).pipe(map(() => refreshToken));
       })
     );

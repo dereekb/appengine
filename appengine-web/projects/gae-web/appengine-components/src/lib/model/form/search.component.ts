@@ -3,7 +3,7 @@ import { Directive, AfterContentInit, Inject, Host, Input } from '@angular/core'
 import { GaeKeyQuerySourceFilterDirective } from '../resource/search.component';
 import { combineLatest, BehaviorSubject } from 'rxjs';
 import { ModelFormComponent } from '../../form/model.component';
-import { filter, flatMap, map } from 'rxjs/operators';
+import { filter, mergeMap, map } from 'rxjs/operators';
 import { SearchParameters } from '@gae-web/appengine-api';
 
 export type GaeKeyQuerySourceFormFilterDirectiveFunction = (model: any) => SearchParameters;
@@ -24,7 +24,7 @@ export class GaeKeyQuerySourceFormFilterDirective extends AbstractSubscriptionCo
   ngAfterContentInit() {
     this.sub = this._form.pipe(
       filter((x) => Boolean(x)),
-      flatMap((x) => {
+      mergeMap((x) => {
         const modelObs = x.stream.pipe(
           filter((y) => y.isComplete),
           map(() => x.model)

@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Component, ViewChild, Input, Inject, forwardRef, ChangeDetectorRef } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { filter, flatMap, tap } from 'rxjs/operators';
+import { filter, mergeMap, tap } from 'rxjs/operators';
 import { TestFoo } from '@gae-web/appengine-api';
 import { By } from '@angular/platform-browser';
 import { ListViewSource } from '../../list/source';
