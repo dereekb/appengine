@@ -1,13 +1,13 @@
 {
   "name": "@gae-web/appengine-components",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "peerDependencies": {
     "rxjs": "*",
     "make-error": "*",
     "date-fns": "2.9.0",
-    "@gae-web/appengine-api": "*",
-    "@gae-web/appengine-analytics": "*",
-    "@gae-web/appengine-utility": "*",
+    "@gae-web/appengine-api": "2.4.0",
+    "@gae-web/appengine-analytics": "2.4.0",
+    "@gae-web/appengine-utility": "2.4.0",
     "@angular/common": "^8.2.0",
     "@angular/core": "^8.2.0",
     "@angular/flex-layout": "^8.0.0-beta.26"

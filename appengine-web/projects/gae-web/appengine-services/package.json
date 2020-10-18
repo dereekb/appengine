@@ -1,10 +1,10 @@
 {
   "name": "@gae-web/appengine-services",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "peerDependencies": {
     "rxjs": "*",
     "make-error": "*",
-    "@gae-web/appengine-analytics": "*",
+    "@gae-web/appengine-analytics": "2.4.0",
     "@angular/common": "^8.2.0",
     "@angular/core": "^8.2.0"
   }
