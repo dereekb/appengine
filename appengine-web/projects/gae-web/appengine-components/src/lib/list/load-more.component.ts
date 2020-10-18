@@ -18,7 +18,7 @@ export class GaeListLoadMoreComponent extends AbstractSubscriptionComponent impl
   @Input()
   public text = 'Load More';
 
-  @ViewChild('customContent', { static: false }) customContent: ElementRef;
+  @ViewChild('customContent') customContent: ElementRef;
 
   private _canLoadMore: boolean;
 

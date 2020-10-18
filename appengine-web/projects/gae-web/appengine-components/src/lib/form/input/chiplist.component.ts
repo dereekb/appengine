@@ -60,10 +60,10 @@ export class GaeChipListFormControlComponent extends AbstractExtendedFormControl
 
   public readonly valueInputCtrl = new FormControl();
 
-  @ViewChild('textInput', { static: false })
+  @ViewChild('textInput')
   public readonly textInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild('autoCompleteView', { static: false })
+  @ViewChild('autoCompleteView')
   public readonly matAutocomplete: MatAutocomplete;
 
   constructor(@Optional() errors: GaeFormGroupErrorsDirective) {

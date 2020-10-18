@@ -17,7 +17,7 @@ import { GaeViewUtility } from '../shared/utility';
 })
 export class GaeListViewWrapperComponent<T> implements OnDestroy, AfterViewInit {
 
-  @ViewChild('customControls', { static: false }) customControlsContent: ElementRef;
+  @ViewChild('customControls') customControlsContent: ElementRef;
 
   private _count: number;
   private _state: ListViewSourceState;
