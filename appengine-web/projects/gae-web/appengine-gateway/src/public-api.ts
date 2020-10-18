@@ -34,5 +34,6 @@ export * from './lib/view/signup/signup.component';
 export * from './lib/gateway.component';
 export * from './lib/gateway.hook';
 export * from './lib/gateway.module';
+export * from './lib/material.module';
 export * from './lib/gateway.states';
 export * from './lib/state.service';
