@@ -7,7 +7,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
 import { By } from '@angular/platform-browser';
-import { MatChip, MatChipList } from '@angular/material';
+import { MatChip } from '@angular/material/chips';
 import { filter } from 'rxjs/operators';
 
 describe('GaeChipListFormControlComponent', () => {

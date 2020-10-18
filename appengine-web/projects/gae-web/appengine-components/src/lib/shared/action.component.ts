@@ -11,9 +11,9 @@ import { OnDestroy, Inject, Directive } from '@angular/core';
  * is recieved this will close itself and return the result.
  */
 @Directive()
-export abstract class AbstractActionDialogCompoment<E extends ActionEvent> extends AbstractActionDirectiveWatcherDirective<E> {
+export abstract class AbstractActionDialogComponent<E extends ActionEvent> extends AbstractActionDirectiveWatcherDirective<E> {
 
-  constructor(@Inject(MatDialogRef) public readonly dialogRef: MatDialogRef<AbstractActionDialogCompoment<E>>) {
+  constructor(@Inject(MatDialogRef) public readonly dialogRef: MatDialogRef<AbstractActionDialogComponent<E>>) {
     super();
   }
 

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MatTabsModule } from '@angular/material';
+import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { GaeAnchorModule } from '../anchor/anchor.module';
 import { GaeNavBarComponent } from './navbar.component';

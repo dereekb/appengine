@@ -1,7 +1,9 @@
 import { Component, ViewEncapsulation, Input, Optional, ElementRef, ViewChild, OnChanges, AfterViewInit, AfterContentInit } from '@angular/core';
 import { AbstractExtendedFormControlComponent, GaeFormGroupErrorsDirective } from '../control.component';
 import { Observable, combineLatest } from 'rxjs';
-import { MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete } from '@angular/material';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { FormControl } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { map, startWith, shareReplay } from 'rxjs/operators';

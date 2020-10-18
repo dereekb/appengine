@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AbstractModelViewComponent } from './view.component';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FooDeleteDialogComponent } from '../../../../shared/components/model/foo/views/delete-modal.component';
 
 @Component({

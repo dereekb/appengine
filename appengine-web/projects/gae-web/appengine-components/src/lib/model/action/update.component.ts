@@ -1,15 +1,20 @@
 import { SubscriptionObject, UniqueModel } from '@gae-web/appengine-utility';
-import { AbstractActionDialogCompoment } from '../../shared/action.component';
+import { AbstractActionDialogComponent } from '../../shared/action.component';
 import { UpdateActionDirective, UpdateActionDirectiveEvent } from './update.directive';
-import { ViewChild, Directive } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { ViewChild, Directive, Inject } from '@angular/core';
 
 /**
- * AbstractActionDialogCompoment for a UpdateActionDirective.
+ * AbstractActionDialogComponent for a UpdateActionDirective.
  */
 @Directive()
-export abstract class AbstractUpdateActionDialogCompoment<T extends UniqueModel> extends AbstractActionDialogCompoment<UpdateActionDirectiveEvent<T>> {
+export abstract class AbstractUpdateActionDialogComponent<T extends UniqueModel> extends AbstractActionDialogComponent<UpdateActionDirectiveEvent<T>> {
 
-  @ViewChild(UpdateActionDirective, {static: true})
+  constructor(@Inject(MatDialogRef) public readonly dialogRef: MatDialogRef<AbstractUpdateActionDialogComponent<T>>) {
+    super(dialogRef);
+  }
+
+  @ViewChild(UpdateActionDirective, { static: true })
   set updateActionDirective(directive: UpdateActionDirective<T>) {
     super.setActionDirective(directive);
   }

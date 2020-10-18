@@ -29,7 +29,7 @@ export abstract class KeySelection<K> {
   }
 
   public get onSelectionChange(): Observable<SelectionChange<K>> {
-    return this._selection.onChange.asObservable() as Observable<SelectionChange<K>>;
+    return this._selection.changed.asObservable() as Observable<SelectionChange<K>>;
   }
 
   public selectKey(key: K) {
@@ -184,7 +184,7 @@ export class GaeSelectionListContentComponent<T> extends AbstractListContentComp
       this._updateOptionsMap(queryList);
     });
 
-    this._changeSub = this.selectionList.selectedOptions.onChange.subscribe((x) => {
+    this._changeSub = this.selectionList.selectedOptions.changed.subscribe((x) => {
       this._selectOptions(x.added);
       this._deselectOptions(x.removed);
     });

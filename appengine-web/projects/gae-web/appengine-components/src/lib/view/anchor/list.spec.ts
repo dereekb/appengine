@@ -10,7 +10,8 @@ import { GaeListViewWrapperComponent } from '../../list/list-view-wrapper.compon
 import { AnchorListDelegate, AbstractAnchorListContentComponent, AbstractDelegatedAnchorListContentComponent } from './list-content.component';
 import { ProvideListViewComponent } from '../../list/list-view.component';
 import { AbstractDelegatedAnchorListViewComponent } from './list-view.component';
-import { MatListModule, MatIconModule } from '@angular/material';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 import { GaeListLoadMoreComponent } from '../../list/load-more.component';
 import { GaeAnchorModule } from './anchor.module';
 import { GaeListComponentsModule } from '../../list/list.module';

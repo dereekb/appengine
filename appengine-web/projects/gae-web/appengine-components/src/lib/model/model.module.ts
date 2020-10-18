@@ -14,7 +14,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { MatProgressButtonsModule } from 'mat-progress-buttons';
 import { GaeActionViewComponent, GaeActionDoneViewComponent, GaeActionResetViewComponent } from './form/action.component';
-import { MatIconModule, MatButtonModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { GaeKeyQuerySourceFilterDirective } from './resource/search.component';
 import { GaeKeyQuerySourceFormFilterDirective } from './form/search.component';
 

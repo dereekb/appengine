@@ -17,7 +17,8 @@ import { GaeTextareaFormControlComponent } from './input/textarea.component';
 import { GaeCheckboxFormControlComponent } from './input/checkbox.component';
 import { GaeConfirmDeleteModelFormComponent } from './confirm-delete-form.component';
 import { GaeChipListFormControlComponent } from './input/chiplist.component';
-import { MatChipsModule, MatIconModule } from '@angular/material';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   imports: [
